@@ -9,10 +9,24 @@ return new class extends Migration {
     {
         Schema::create('registrations', function (Blueprint $table) {
             $table->id();
-            $table->string('student_name');
-            $table->string('parent_name');
-            $table->string('parent_email');
-            $table->string('status')->default('pending');
+            $table->string('kode_pendaftaran')->unique();
+            // Data Siswa
+            $table->string('nama_lengkap');
+            $table->string('tempat_lahir');
+            $table->date('tanggal_lahir');
+            $table->enum('jenis_kelamin', ['L', 'P']);
+            $table->text('alamat_siswa');
+            // Data Orang Tua
+            $table->string('nama_ayah');
+            $table->string('nama_ibu');
+            $table->string('pekerjaan_ayah')->nullable();
+            $table->string('pekerjaan_ibu')->nullable();
+            $table->string('telepon');
+            $table->string('email');
+            $table->text('alamat_ortu');
+            // Status pendaftaran
+            $table->enum('status', ['pending', 'review', 'approved', 'rejected'])->default('pending');
+            $table->text('catatan_admin')->nullable();
             $table->timestamps();
         });
     }

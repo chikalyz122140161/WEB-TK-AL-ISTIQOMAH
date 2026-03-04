@@ -9,6 +9,28 @@ class Registration extends Model
     use HasFactory;
 
     protected $fillable = [
-        'student_name', 'parent_name', 'parent_email', 'status',
+        'nama_lengkap',
+        'tempat_lahir',
+        'tanggal_lahir',
+        'jenis_kelamin',
+        'alamat_siswa',
+        'nama_ayah',
+        'nama_ibu',
+        'pekerjaan_ayah',
+        'pekerjaan_ibu',
+        'telepon',
+        'email',
+        'alamat_ortu',
+        'status',
+        'catatan_admin',
     ];
+
+    protected $casts = [
+        'tanggal_lahir' => 'date',
+    ];
+
+    public function dokumen()
+    {
+        return $this->hasMany(DokumenPendaftaran::class);
+    }
 }

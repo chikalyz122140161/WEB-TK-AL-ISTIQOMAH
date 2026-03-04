@@ -96,9 +96,19 @@ class DummySeeder extends Seeder
 
         // Pendaftaran Siswa Baru
         Registration::create([
-            'student_name' => 'Siswa Baru',
-            'parent_name' => 'Orang Tua Baru',
-            'parent_email' => 'ortu2@example.com',
+            'kode_pendaftaran' => 'REG-' . strtoupper(substr(md5(time()), 0, 6)),
+            'nama_lengkap' => 'Siswa Baru',
+            'tempat_lahir' => 'Jakarta',
+            'tanggal_lahir' => '2020-06-15',
+            'jenis_kelamin' => 'L',
+            'alamat_siswa' => 'Jl. Contoh No.2, Jakarta',
+            'nama_ayah' => 'Ayah Siswa Baru',
+            'nama_ibu' => 'Ibu Siswa Baru',
+            'pekerjaan_ayah' => 'Wiraswasta',
+            'pekerjaan_ibu' => 'Ibu Rumah Tangga',
+            'telepon' => '08123456789',
+            'email' => 'ortu.baru@example.com',
+            'alamat_ortu' => 'Jl. Contoh No.2, Jakarta',
             'status' => 'pending',
         ]);
     }

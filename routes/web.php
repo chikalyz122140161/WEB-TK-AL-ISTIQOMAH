@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\OrangTuaController;
+use App\Http\Controllers\PendaftaranController;
 
 // AUTH 
 Route::get('/', function () {
@@ -15,7 +16,13 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout');
 
-#LOGIN autentikasi dengan role
+// PENDAFTARAN (Public - tanpa login)
+Route::get('/pendaftaran', [PendaftaranController::class, 'create'])->name('pendaftaran.create');
+Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
+Route::get('/pendaftaran/success/{kode}', [PendaftaranController::class, 'success'])->name('pendaftaran.success');
+Route::get('/pendaftaran/cek-status', [PendaftaranController::class, 'cekStatus'])->name('pendaftaran.cek-status');
+
+// LOGIN autentikasi dengan role
 Route::middleware(['auth', 'role:admin'])->group(function () {
     // route khusus admin
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
