@@ -6,16 +6,32 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\OrangTuaController;
 
-// ===================== AUTH =====================
+// AUTH 
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout');
 
-// ===================== DASHBOARD (perlu login) =====================
+#LOGIN autentikasi dengan role
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    // route khusus admin
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
+});
+
+Route::middleware(['auth', 'role:guru'])->group(function () {
+    // route khusus guru
+    Route::get('/guru/dashboard', [GuruController::class, 'dashboard']);
+});
+
+Route::middleware(['auth', 'role:orangtua'])->group(function () {
+    // route khusus orang tua
+    Route::get('/orangtua/dashboard', [OrangTuaController::class, 'dashboard']);
+});
+
+// DASHBOARD (butuh login) 
 Route::middleware('auth')->group(function () {
     // Dashboard Admin
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
@@ -26,3 +42,4 @@ Route::get('/guru/dashboard', [GuruController::class, 'dashboard'])->name('guru.
     // Dashboard Orang Tua
     Route::get('/orangtua/dashboard', [OrangTuaController::class, 'dashboard'])->name('orangtua.dashboard');
 });
+
