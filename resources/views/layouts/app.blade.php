@@ -4,18 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'SISTEM BK TK AL-ISTIQOMAH')</title>
+    <title>@yield('title', 'SISTEM TK AL-ISTIQOMAH')</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
     <style>
         /*
-         * COLOR PALETTE â€” Sage & Neutral
-         *   sage-900 #2D4A33 | sage-700 #3D6B45 | sage-600 #4F7A56 | sage-100 #EAF2EB | sage-50 #F4F8F5
+         * COLOR PALETTE — Warm Orange & Neutral (TK Theme)
+         *   orange-600 #ea580c | orange-500 #f97316 | orange-400 #fb923c | orange-300 #fdba74 | orange-200 #fed7aa
+         *   orange-100 #ffedd5 | orange-50 #fff7ed
+         *   amber-600 #d97706 | amber-500 #f59e0b
          *   gray-900 #111827 | gray-700 #374151 | gray-500 #6B7280 | gray-400 #9CA3AF
          *   gray-200 #E5E7EB | gray-100 #F3F4F6 | gray-50 #F9FAFB  | white #FFFFFF
          *   success #ECFDF5/#047857 | warning #FFFBEB/#B45309 | error #FEF2F2/#B91C1C | info #EFF6FF/#1D4ED8
          *
-         * SPACING â€” kelipatan 8px
+         * SPACING — kelipatan 8px
          *   4 8 12 16 24 32 40 48 56 64
          *
          * TYPOGRAPHY SCALE
@@ -47,8 +49,8 @@
         â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .sidebar {
             width: 240px;
-            background: #63E6BE;
-            border-right: 1px solid #38D9A9;
+            background: linear-gradient(180deg, #fdba74 0%, #fb923c 100%);
+            border-right: 1px solid #f97316;
             position: fixed;
             top: 0; bottom: 0; left: 0;
             overflow-y: auto;
@@ -73,18 +75,18 @@
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
         }
-        .sidebar__logo-icon svg { width: 20px; height: 20px; fill: #065F46; }
+        .sidebar__logo-icon svg { width: 20px; height: 20px; fill: #9a3412; }
         .sidebar__logo-text {
             font-size: 14px;
             font-weight: 600;
-            color: #065F46;
+            color: #7c2d12;
             line-height: 1.2;
         }
         .sidebar__logo-text span {
             display: block;
             font-size: 12px;
             font-weight: 400;
-            color: rgba(0,0,0,0.45);
+            color: rgba(124,45,18,0.7);
             margin-top: 1px;
         }
 
@@ -107,14 +109,14 @@
             margin: 1px 8px;
             font-size: 14px;
             font-weight: 500;
-            color: #065F46;
+            color: #7c2d12;
             border: none;
             background: transparent;
             cursor: pointer;
             border-radius: 6px;
         }
-        .sidebar__item:hover { background: rgba(0,0,0,0.08); color: #064E3B; }
-        .sidebar__item.active { background: rgba(0,0,0,0.12); color: #064E3B; font-weight: 600; }
+        .sidebar__item:hover { background: rgba(255,255,255,0.3); color: #7c2d12; }
+        .sidebar__item.active { background: rgba(255,255,255,0.4); color: #7c2d12; font-weight: 600; }
         .sidebar__item svg { width: 18px; height: 18px; flex-shrink: 0; fill: currentColor; }
         .sidebar__divider { height: 1px; background: rgba(0,0,0,0.1); margin: 4px 16px; }
 
@@ -130,29 +132,29 @@
         .sidebar__avatar {
             width: 36px; height: 36px;
             border-radius: 50%;
-            background: rgba(0,0,0,0.1);
-            color: #065F46;
+            background: rgba(255,255,255,0.3);
+            color: #7c2d12;
             display: flex; align-items: center; justify-content: center;
             font-size: 14px; font-weight: 700;
             flex-shrink: 0;
         }
         .sidebar__profile-info { flex: 1; min-width: 0; line-height: 1.3; }
-        .sidebar__profile-name { font-size: 14px; font-weight: 600; color: #065F46; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .sidebar__profile-role { font-size: 12px; color: rgba(0,0,0,0.5); }
+        .sidebar__profile-name { font-size: 14px; font-weight: 600; color: #7c2d12; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sidebar__profile-role { font-size: 12px; color: rgba(124,45,18,0.7); }
         .sidebar__logout {
             display: inline-flex;
             align-items: center;
             gap: 6px;
             padding: 6px 10px;
             border-radius: 6px;
-            background: rgba(0,0,0,0.1);
-            color: #065F46;
+            background: rgba(255,255,255,0.3);
+            color: #7c2d12;
             font-size: 12px;
             font-weight: 600;
             flex-shrink: 0;
             white-space: nowrap;
         }
-        .sidebar__logout:hover { background: rgba(0,0,0,0.18); }
+        .sidebar__logout:hover { background: rgba(255,255,255,0.5); }
         .sidebar__logout svg { width: 14px; height: 14px; fill: currentColor; }
 
         /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -171,8 +173,8 @@
         â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .content-header {
             height: 56px;
-            background: #63E6BE;
-            border-bottom: 1px solid #38D9A9;
+            background: linear-gradient(90deg, #fdba74 0%, #fb923c 100%);
+            border-bottom: 1px solid #f97316;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -189,7 +191,7 @@
             font-size: 14px;
             color: rgba(0,0,0,0.55);
         }
-        .content-header__breadcrumb strong { color: #065F46; font-weight: 600; }
+        .content-header__breadcrumb strong { color: #7c2d12; font-weight: 600; }
         .content-header__breadcrumb svg { width: 14px; height: 14px; fill: rgba(0,0,0,0.3); }
         .content-header__right {
             display: flex;
@@ -202,35 +204,35 @@
             width: 36px; height: 36px;
             border-radius: 8px;
             display: flex; align-items: center; justify-content: center;
-            color: #065F46;
-            border: 1px solid rgba(0,0,0,0.15);
-            background: rgba(0,0,0,0.08);
+            color: #7c2d12;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.3);
             cursor: pointer;
             position: relative;
         }
-        .icon-btn:hover { background: rgba(0,0,0,0.14); }
+        .icon-btn:hover { background: rgba(255,255,255,0.5); }
         .icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
         .notif-dot {
             position: absolute;
             top: 6px; right: 6px;
             width: 7px; height: 7px;
             border-radius: 50%;
-            background: #FEF08A;
-            border: 1.5px solid #63E6BE;
+            background: #ef4444;
+            border: 1.5px solid #fb923c;
         }
         /* Header avatar */
         .header-avatar {
             width: 36px; height: 36px;
             border-radius: 50%;
-            background: rgba(0,0,0,0.1);
-            color: #065F46;
+            background: rgba(255,255,255,0.3);
+            color: #7c2d12;
             display: flex; align-items: center; justify-content: center;
             font-size: 14px; font-weight: 700;
             cursor: pointer;
         }
         .header-account { line-height: 1.3; }
-        .header-account__name { font-size: 13px; font-weight: 600; color: #065F46; }
-        .header-account__role { font-size: 11px; color: rgba(0,0,0,0.5); }
+        .header-account__name { font-size: 13px; font-weight: 600; color: #7c2d12; }
+        .header-account__role { font-size: 11px; color: rgba(124,45,18,0.7); }
 
         /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
            CONTENT BODY
@@ -254,8 +256,8 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: #63E6BE;
-            color: #065F46;
+            background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+            color: #fff;
             padding: 0 16px;
             height: 36px;
             font-size: 14px;
@@ -264,8 +266,9 @@
             cursor: pointer;
             border-radius: 8px;
             white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(249, 115, 22, 0.3);
         }
-        .btn-primary:hover { background: #38D9A9; }
+        .btn-primary:hover { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
         .btn-primary svg { width: 16px; height: 16px; fill: currentColor; }
 
         /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -328,7 +331,7 @@
         .card__badge {
             font-size: 12px; font-weight: 600;
             padding: 4px 8px; border-radius: 4px;
-            background: #F0FDF4; color: #166534;
+            background: #fff7ed; color: #c2410c;
         }
         .card__body { padding: 16px; }
 
@@ -344,7 +347,7 @@
         .update-list__title { font-size: 14px; font-weight: 600; color: #111827; }
         .update-list__count {
             font-size: 12px; font-weight: 600;
-            color: #166534; background: #F0FDF4;
+            color: #c2410c; background: #fff7ed;
             padding: 4px 8px; border-radius: 4px;
         }
         .update-item {
@@ -367,7 +370,7 @@
         .update-item__meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
         .update-item__time { font-size: 12px; color: #9CA3AF; white-space: nowrap; }
         .update-item__badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; white-space: nowrap; }
-        .update-item__badge--done { background: #ECFDF5; color: #065F46; }
+        .update-item__badge--done { background: #fff7ed; color: #c2410c; }
         .update-item__badge--new  { background: #EFF6FF; color: #1D4ED8; }
         .update-item__badge--info { background: #FFFBEB; color: #B45309; }
         .update-item__arrow { width: 16px; height: 16px; fill: #D1D5DB; flex-shrink: 0; }
@@ -402,7 +405,7 @@
             margin-top: 12px;
             font-size: 12px;
             font-weight: 600;
-            color: #065F46;
+            color: #ea580c;
             text-decoration: none;
         }
         .jadwal-box .link:hover { text-decoration: underline; }
@@ -432,7 +435,7 @@
                 </div>
                 <div class="sidebar__logo-text">
                     TK Al-Istiqomah
-                    <span>Sistem BK</span>
+                    <span>Sistem Sekolah</span>
                 </div>
             </div>
             <nav class="sidebar__nav">
@@ -453,7 +456,7 @@
                     <div class="header-avatar">{{ strtoupper(substr($userName ?? 'P', 0, 1)) }}</div>
                     <div class="header-account">
                         <div class="header-account__name">{{ $userName ?? 'Pengguna' }}</div>
-                        <div class="header-account__role">Guru BK</div>
+                        <div class="header-account__role">Guru</div>
                     </div>
                     <a href="{{ url('/logout') }}" class="sidebar__logout" title="Logout">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>

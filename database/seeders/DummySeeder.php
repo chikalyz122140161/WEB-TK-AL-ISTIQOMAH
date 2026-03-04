@@ -26,7 +26,7 @@ class DummySeeder extends Seeder
 
         // Guru
         $guru = User::create([
-            'name' => 'Guru BK',
+            'name' => 'Guru',
             'email' => 'guru@example.com',
             'password' => Hash::make('password'),
             'role' => 'guru',

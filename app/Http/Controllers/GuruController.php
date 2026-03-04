@@ -215,5 +215,138 @@ class GuruController extends Controller
 
         return view('guru.dashboard', $data);
     }
-    // Tambahkan method kehadiran, laporan, jadwal, perkembangan, chat
+
+    // ==================== ADMINISTRASI ====================
+
+    /**
+     * Kehadiran - Index (Form & List)
+     */
+    public function kehadiranIndex(Request $request)
+    {
+        // Dummy data siswa
+        $siswaList = [
+            ['id' => 1, 'nama' => 'Ahmad Fauzi', 'kelas' => 'TK A'],
+            ['id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A'],
+            ['id' => 3, 'nama' => 'Budi Santoso', 'kelas' => 'TK B'],
+            ['id' => 4, 'nama' => 'Dewi Lestari', 'kelas' => 'TK A'],
+            ['id' => 5, 'nama' => 'Eko Prasetyo', 'kelas' => 'TK B'],
+        ];
+
+        // Dummy data kehadiran
+        $kehadiranList = [
+            ['id' => 1, 'nama' => 'Ahmad Fauzi', 'kelas' => 'TK A', 'tanggal' => '04 Mar 2026', 'status' => 'hadir', 'keterangan' => '-'],
+            ['id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A', 'tanggal' => '04 Mar 2026', 'status' => 'hadir', 'keterangan' => '-'],
+            ['id' => 3, 'nama' => 'Budi Santoso', 'kelas' => 'TK B', 'tanggal' => '04 Mar 2026', 'status' => 'izin', 'keterangan' => 'Acara keluarga'],
+            ['id' => 4, 'nama' => 'Dewi Lestari', 'kelas' => 'TK A', 'tanggal' => '04 Mar 2026', 'status' => 'sakit', 'keterangan' => 'Demam'],
+            ['id' => 5, 'nama' => 'Eko Prasetyo', 'kelas' => 'TK B', 'tanggal' => '04 Mar 2026', 'status' => 'hadir', 'keterangan' => '-'],
+        ];
+
+        return view('guru.kehadiran.index', compact('siswaList', 'kehadiranList'));
+    }
+
+    /**
+     * Kehadiran - Store
+     */
+    public function kehadiranStore(Request $request)
+    {
+        $request->validate([
+            'tanggal' => 'required|date',
+            'status' => 'required|array',
+        ]);
+
+        // TODO: simpan ke database
+        // foreach ($request->status as $siswaId => $status) {
+        //     Attendance::create([...]);
+        // }
+
+        return redirect()->route('guru.kehadiran.index')->with('success', 'Kehadiran berhasil disimpan.');
+    }
+
+    /**
+     * Laporan Administrasi - Index (Form & List)
+     */
+    public function laporanIndex(Request $request)
+    {
+        // Dummy data siswa
+        $siswaList = [
+            ['id' => 1, 'nama' => 'Ahmad Fauzi'],
+            ['id' => 2, 'nama' => 'Siti Nurhaliza'],
+            ['id' => 3, 'nama' => 'Budi Santoso'],
+            ['id' => 4, 'nama' => 'Dewi Lestari'],
+            ['id' => 5, 'nama' => 'Eko Prasetyo'],
+        ];
+
+        // Dummy data laporan
+        $laporanList = [
+            ['id' => 1, 'judul' => 'Laporan Kehadiran TK A', 'jenis' => 'Kehadiran', 'periode' => '1 - 28 Feb 2026', 'tanggal' => '01 Mar 2026', 'status' => 'generated'],
+            ['id' => 2, 'judul' => 'Laporan Perkembangan Ahmad Fauzi', 'jenis' => 'Perkembangan', 'periode' => 'Feb 2026', 'tanggal' => '28 Feb 2026', 'status' => 'generated'],
+            ['id' => 3, 'judul' => 'Laporan Bulanan TK B', 'jenis' => 'Bulanan', 'periode' => 'Feb 2026', 'tanggal' => '28 Feb 2026', 'status' => 'generated'],
+            ['id' => 4, 'judul' => 'Laporan Kehadiran TK B', 'jenis' => 'Kehadiran', 'periode' => '1 - 4 Mar 2026', 'tanggal' => '04 Mar 2026', 'status' => 'pending'],
+            ['id' => 5, 'judul' => 'Laporan Perkembangan Siti', 'jenis' => 'Perkembangan', 'periode' => 'Mar 2026', 'tanggal' => '03 Mar 2026', 'status' => 'draft'],
+        ];
+
+        return view('guru.laporan.index', compact('siswaList', 'laporanList'));
+    }
+
+    /**
+     * Laporan Administrasi - Generate
+     */
+    public function laporanGenerate(Request $request)
+    {
+        $request->validate([
+            'jenis_laporan' => 'required|in:kehadiran,perkembangan,bulanan',
+            'periode_awal' => 'required|date',
+            'periode_akhir' => 'required|date|after_or_equal:periode_awal',
+        ]);
+
+        // TODO: generate laporan ke database/PDF
+
+        return redirect()->route('guru.laporan.index')->with('success', 'Laporan berhasil di-generate.');
+    }
+
+    /**
+     * Jadwal - Index (Form & List)
+     */
+    public function jadwalIndex(Request $request)
+    {
+        // Dummy data jadwal kegiatan
+        $jadwalKegiatan = [
+            ['id' => 1, 'nama' => 'Upacara Bendera', 'tanggal' => 'Senin, 10 Mar 2026', 'waktu' => '07:00 - 08:00', 'lokasi' => 'Lapangan', 'kelas' => 'Semua'],
+            ['id' => 2, 'nama' => 'Senam Pagi', 'tanggal' => 'Selasa, 11 Mar 2026', 'waktu' => '07:30 - 08:00', 'lokasi' => 'Lapangan', 'kelas' => 'Semua'],
+            ['id' => 3, 'nama' => 'Outing Class', 'tanggal' => 'Rabu, 12 Mar 2026', 'waktu' => '08:00 - 12:00', 'lokasi' => 'Kebun Binatang', 'kelas' => 'TK B'],
+            ['id' => 4, 'nama' => 'Lomba Mewarnai', 'tanggal' => 'Kamis, 13 Mar 2026', 'waktu' => '09:00 - 11:00', 'lokasi' => 'Aula', 'kelas' => 'Semua'],
+        ];
+
+        // Dummy data jadwal pembelajaran
+        $jadwalPembelajaran = [
+            ['id' => 1, 'hari' => 'Senin', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Balok', 'kelas' => 'TK A', 'guru' => 'Bu Siti'],
+            ['id' => 2, 'hari' => 'Senin', 'waktu' => '09:00 - 10:00', 'mapel' => 'Sentra Seni', 'kelas' => 'TK A', 'guru' => 'Bu Ani'],
+            ['id' => 3, 'hari' => 'Senin', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Alam', 'kelas' => 'TK B', 'guru' => 'Bu Dewi'],
+            ['id' => 4, 'hari' => 'Selasa', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Peran', 'kelas' => 'TK A', 'guru' => 'Bu Siti'],
+            ['id' => 5, 'hari' => 'Selasa', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Balok', 'kelas' => 'TK B', 'guru' => 'Bu Ani'],
+            ['id' => 6, 'hari' => 'Rabu', 'waktu' => '08:00 - 09:00', 'mapel' => 'Agama Islam', 'kelas' => 'TK A', 'guru' => 'Ustadzah Maya'],
+            ['id' => 7, 'hari' => 'Rabu', 'waktu' => '08:00 - 09:00', 'mapel' => 'Agama Islam', 'kelas' => 'TK B', 'guru' => 'Ustadzah Maya'],
+        ];
+
+        return view('guru.jadwal.index', compact('jadwalKegiatan', 'jadwalPembelajaran'));
+    }
+
+    /**
+     * Jadwal - Store
+     */
+    public function jadwalStore(Request $request)
+    {
+        $request->validate([
+            'jenis_jadwal' => 'required|in:kegiatan,pembelajaran',
+            'nama' => 'required|string|max:255',
+            'tanggal' => 'required|date',
+            'waktu_mulai' => 'required',
+            'waktu_selesai' => 'required',
+        ]);
+
+        // TODO: simpan ke database
+        // Schedule::create([...]);
+
+        return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil ditambahkan.');
+    }
 }
