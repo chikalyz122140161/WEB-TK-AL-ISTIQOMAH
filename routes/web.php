@@ -40,10 +40,36 @@ Route::middleware(['auth', 'role:orangtua'])->group(function () {
 
 // DASHBOARD (butuh login) 
 Route::middleware('auth')->group(function () {
-    // Dashboard Admin
+    // ═══════════════════════════════════════════════════════
+    // ADMIN ROUTES
+    // ═══════════════════════════════════════════════════════
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    
+    // Admin - Kelola Pengguna
+    Route::get('/admin/pengguna', [AdminController::class, 'penggunaIndex'])->name('admin.pengguna.index');
+    Route::get('/admin/pengguna/create', [AdminController::class, 'penggunaCreate'])->name('admin.pengguna.create');
+    Route::post('/admin/pengguna', [AdminController::class, 'penggunaStore'])->name('admin.pengguna.store');
+    Route::get('/admin/pengguna/{id}/edit', [AdminController::class, 'penggunaEdit'])->name('admin.pengguna.edit');
+    Route::put('/admin/pengguna/{id}', [AdminController::class, 'penggunaUpdate'])->name('admin.pengguna.update');
+    Route::delete('/admin/pengguna/{id}', [AdminController::class, 'penggunaDestroy'])->name('admin.pengguna.destroy');
+    
+    // Admin - Kelola Siswa
+    Route::get('/admin/siswa', [AdminController::class, 'siswaIndex'])->name('admin.siswa.index');
+    Route::get('/admin/siswa/create', [AdminController::class, 'siswaCreate'])->name('admin.siswa.create');
+    Route::post('/admin/siswa', [AdminController::class, 'siswaStore'])->name('admin.siswa.store');
+    Route::get('/admin/siswa/{id}/edit', [AdminController::class, 'siswaEdit'])->name('admin.siswa.edit');
+    Route::put('/admin/siswa/{id}', [AdminController::class, 'siswaUpdate'])->name('admin.siswa.update');
+    Route::delete('/admin/siswa/{id}', [AdminController::class, 'siswaDestroy'])->name('admin.siswa.destroy');
+    
+    // Admin - Backup Database
+    Route::get('/admin/backup', [AdminController::class, 'backupIndex'])->name('admin.backup.index');
+    Route::post('/admin/backup/create', [AdminController::class, 'backupCreate'])->name('admin.backup.create');
+    Route::post('/admin/backup/restore', [AdminController::class, 'backupRestore'])->name('admin.backup.restore');
+    Route::delete('/admin/backup/{filename}', [AdminController::class, 'backupDelete'])->name('admin.backup.delete');
 
-    // Dashboard Guru
+    // ═══════════════════════════════════════════════════════
+    // GURU ROUTES
+    // ═══════════════════════════════════════════════════════
     Route::get('/guru/dashboard', [GuruController::class, 'dashboard'])->name('guru.dashboard');
 
     // Guru - Administrasi: Kehadiran
