@@ -228,7 +228,7 @@
                 @endforeach
             </div>
 
-            <form class="chat-input" method="POST" action="{{ route('guru.chat.kirim') }}">
+            <form class="chat-input" method="POST" action="{{ route('guru.kirim_chat') }}">
                 @csrf
                 <input type="hidden" name="kontak_id" value="{{ $aktifId }}">
                 <input

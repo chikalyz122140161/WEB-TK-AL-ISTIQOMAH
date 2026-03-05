@@ -5,7 +5,7 @@
 
 @push('styles')
 <style>
-    /* ── Toolbar ─────────────────────────────────────── */
+    /* Toolbar  */
     .toolbar {
         background: #fff;
         border: 1px solid #E5E7EB;
@@ -312,7 +312,7 @@
     <div class="modal-overlay" id="modalBuat" onclick="if(event.target===this)this.classList.remove('open')">
         <div class="modal">
             <p class="modal__title">Buat Jadwal Baru</p>
-            <form method="POST" action="{{ route('guru.jadwal_konseling.store') }}">
+            <form method="POST" action="{{ route('guru.store_jadwal_konseling') }}">
                 @csrf
                 <div class="field-group">
                     <label class="field-label" for="m_tanggal">Tanggal</label>

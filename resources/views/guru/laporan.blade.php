@@ -130,7 +130,7 @@
     .aksi-pdf    { background: #FEF2F2; color: #B91C1C; }
     .aksi-pdf:hover    { background: #FEE2E2; }
 
-    /* ── Empty state ─────────────────────────────────────── */
+    /* Empty state  */
     .empty-state {
         text-align: center;
         padding: 48px 24px;
@@ -153,7 +153,7 @@
     </h2>
 
     {{-- Filter bar --}}
-    <form method="GET" action="{{ route('guru.laporan') }}" class="filter-bar">
+    <form method="GET" action="{{ route('guru.laporan_bk') }}" class="filter-bar">
         <select class="filter-select" name="siswa_id">
             <option value="">Semua Siswa</option>
             @foreach ($daftarSiswa as $s)

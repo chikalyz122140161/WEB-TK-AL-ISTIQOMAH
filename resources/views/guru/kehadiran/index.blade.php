@@ -9,10 +9,10 @@
 
 @push('styles')
 <style>
-    /* Orange Theme Colors */
+    /* Teal/Golden Theme Colors */
     .form-section {
         background: #fff;
-        border: 1px solid #E5E7EB;
+        border: 1px solid #00473e20;
         border-radius: 8px;
         padding: 20px;
         margin-bottom: 20px;
@@ -20,10 +20,10 @@
     .form-section__title {
         font-size: 16px;
         font-weight: 600;
-        color: #111827;
+        color: #00473e;
         margin-bottom: 16px;
         padding-bottom: 12px;
-        border-bottom: 2px solid #f97316;
+        border-bottom: 2px solid #faae2b;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -31,7 +31,7 @@
     .form-section__title svg {
         width: 20px;
         height: 20px;
-        fill: #f97316;
+        fill: #faae2b;
     }
     .form-grid {
         display: grid;
@@ -46,43 +46,43 @@
     .form-group label {
         font-size: 13px;
         font-weight: 500;
-        color: #374151;
+        color: #475d5b;
     }
     .form-group input,
     .form-group select {
         padding: 10px 12px;
-        border: 1px solid #E5E7EB;
+        border: 1px solid #00473e20;
         border-radius: 6px;
         font-size: 14px;
-        color: #374151;
-        background: #F9FAFB;
+        color: #475d5b;
+        background: #f2f7f5;
         transition: all 0.2s;
     }
     .form-group input:focus,
     .form-group select:focus {
         outline: none;
-        border-color: #f97316;
+        border-color: #faae2b;
         background: #fff;
-        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+        box-shadow: 0 0 0 3px rgba(250, 174, 43, 0.15);
     }
     .btn-orange {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-        color: white;
+        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
+        color: #00473e;
         padding: 10px 20px;
         font-size: 14px;
         font-weight: 600;
         border: none;
         cursor: pointer;
         border-radius: 8px;
-        box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);
+        box-shadow: 0 4px 14px rgba(250, 174, 43, 0.3);
         transition: all 0.3s;
     }
     .btn-orange:hover {
         transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+        box-shadow: 0 6px 20px rgba(250, 174, 43, 0.4);
     }
     .btn-orange svg {
         width: 16px;
@@ -93,8 +93,8 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: #E5E7EB;
-        color: #374151;
+        background: #00473e20;
+        color: #00473e;
         padding: 10px 20px;
         font-size: 14px;
         font-weight: 500;
@@ -104,7 +104,7 @@
         transition: all 0.2s;
     }
     .btn-secondary:hover {
-        background: #D1D5DB;
+        background: #00473e30;
     }
     .btn-row {
         display: flex;
@@ -121,22 +121,22 @@
     .data-table td {
         padding: 12px;
         text-align: left;
-        border-bottom: 1px solid #E5E7EB;
+        border-bottom: 1px solid #00473e20;
     }
     .data-table th {
-        background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+        background: linear-gradient(135deg, #faae2b20 0%, #faae2b30 100%);
         font-size: 12px;
         font-weight: 600;
-        color: #9a3412;
+        color: #00473e;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
     .data-table td {
         font-size: 14px;
-        color: #374151;
+        color: #475d5b;
     }
     .data-table tr:hover td {
-        background: #FAFAFA;
+        background: #f2f7f5;
     }
     .status-badge {
         display: inline-flex;
@@ -202,13 +202,13 @@
         gap: 16px;
         align-items: center;
         padding: 12px 16px;
-        background: #F9FAFB;
+        background: #f2f7f5;
         border-radius: 8px;
-        border: 1px solid #E5E7EB;
+        border: 1px solid #00473e20;
     }
     .student-attendance-row:hover {
-        background: #fff7ed;
-        border-color: #fdba74;
+        background: #faae2b15;
+        border-color: #faae2b;
     }
     .student-info {
         display: flex;
@@ -219,8 +219,8 @@
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-        color: white;
+        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
+        color: #00473e;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -229,12 +229,12 @@
     }
     .student-name {
         font-weight: 600;
-        color: #111827;
+        color: #00473e;
         font-size: 14px;
     }
     .student-class {
         font-size: 12px;
-        color: #6B7280;
+        color: #475d5b;
     }
     .status-options {
         display: flex;
@@ -242,7 +242,7 @@
     }
     .status-option {
         padding: 6px 12px;
-        border: 2px solid #E5E7EB;
+        border: 2px solid #00473e20;
         border-radius: 6px;
         font-size: 12px;
         font-weight: 500;
@@ -251,26 +251,26 @@
         background: white;
     }
     .status-option:hover {
-        border-color: #f97316;
+        border-color: #faae2b;
     }
     .status-option.active {
-        border-color: #f97316;
-        background: #fff7ed;
-        color: #c2410c;
+        border-color: #faae2b;
+        background: #faae2b20;
+        color: #00473e;
     }
     .status-option input {
         display: none;
     }
     .note-input {
         padding: 8px 12px;
-        border: 1px solid #E5E7EB;
+        border: 1px solid #00473e20;
         border-radius: 6px;
         font-size: 13px;
         width: 100%;
     }
     .note-input:focus {
         outline: none;
-        border-color: #f97316;
+        border-color: #faae2b;
     }
     
     @media (max-width: 768px) {
@@ -387,7 +387,7 @@
             List Kehadiran
         </div>
         
-        <form action="" method="GET" class="filter-row">
+        <form action="{{ route('guru.kehadiran.index') }}" method="GET" class="filter-row">
             <div class="form-group">
                 <label>Tanggal</label>
                 <input type="date" name="tanggal" value="{{ request('tanggal', date('Y-m-d')) }}">
@@ -458,6 +458,21 @@
                 opt.classList.remove('active');
             });
             this.classList.add('active');
+        });
+    });
+
+    // Filter students by class in attendance form
+    document.getElementById('filterKelas').addEventListener('change', function() {
+        const selectedKelas = this.value;
+        const rows = document.querySelectorAll('.student-attendance-row');
+        
+        rows.forEach(function(row) {
+            const studentClass = row.querySelector('.student-class').textContent.trim();
+            if (selectedKelas === '' || studentClass === selectedKelas) {
+                row.style.display = 'grid';
+            } else {
+                row.style.display = 'none';
+            }
         });
     });
 </script>
