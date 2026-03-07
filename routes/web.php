@@ -102,7 +102,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/orangtua/presensi', [OrangTuaController::class, 'presensi'])->name('orangtua.presensi');
     Route::get('/orangtua/laporan', [OrangTuaController::class, 'laporan'])->name('orangtua.laporan');
     Route::get('/orangtua/laporan/{id}', [OrangTuaController::class, 'laporanDetail'])->name('orangtua.laporan.detail');
+    
+    // Rapot Semester
+    Route::get('/orangtua/rapot', [OrangTuaController::class, 'rapot'])->name('orangtua.rapot');
+    Route::get('/orangtua/rapot/{id}', [OrangTuaController::class, 'rapotDetail'])->name('orangtua.rapot.detail');
+    Route::get('/orangtua/rapot/{id}/download', [OrangTuaController::class, 'rapotDownload'])->name('orangtua.rapot.download');
+    
+    // Jadwal (dengan sub-fitur)
     Route::get('/orangtua/jadwal', [OrangTuaController::class, 'jadwal'])->name('orangtua.jadwal');
+    Route::get('/orangtua/jadwal/pembelajaran', [OrangTuaController::class, 'jadwalPembelajaran'])->name('orangtua.jadwal.pembelajaran');
+    Route::get('/orangtua/jadwal/kegiatan', [OrangTuaController::class, 'jadwalKegiatan'])->name('orangtua.jadwal.kegiatan');
 
     // Bimbingan Konseling
     Route::get('/orangtua/report-mingguan', [OrangTuaController::class, 'reportMingguan'])->name('orangtua.report_mingguan');

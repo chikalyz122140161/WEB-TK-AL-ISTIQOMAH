@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Lihat Jadwal Kegiatan - SISTEM TK AL-ISTIQOMAH')
-@section('page_title', 'Lihat Jadwal Kegiatan')
+@section('title', 'Jadwal - SISTEM TK AL-ISTIQOMAH')
+@section('page_title', 'Jadwal')
 
 @section('sidebar')
     @include('orangtua.partials.sidebar')
@@ -9,6 +9,50 @@
 
 @push('styles')
 <style>
+    /* Tab Navigation */
+    .tab-navigation {
+        display: flex;
+        gap: 0;
+        margin-bottom: 24px;
+        background: #fff;
+        border-radius: 12px;
+        padding: 6px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .tab-btn {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 14px 24px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #475d5b;
+        background: transparent;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+    }
+    .tab-btn:hover {
+        background: #f2f7f5;
+        color: #00473e;
+    }
+    .tab-btn.active {
+        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        color: #fff;
+    }
+    .tab-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+    .tab-btn.active svg {
+        fill: #faae2b;
+    }
+
+    /* Filter Bar */
     .filter-bar {
         display: flex;
         align-items: flex-end;
@@ -60,63 +104,197 @@
         box-shadow: 0 4px 12px rgba(250, 174, 43, 0.3);
     }
 
-    /* Jadwal Section */
-    .jadwal-section {
-        background: #fff;
-        border: 1px solid #00473e20;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-    .jadwal-section__header {
-        padding: 16px 20px;
-        border-bottom: 1px solid #00473e10;
-        font-size: 14px;
-        font-weight: 600;
-        color: #00473e;
-        text-transform: uppercase;
-    }
-    .jadwal-list {
-        padding: 0;
-    }
-    .jadwal-item {
+    /* Info Banner */
+    .info-banner {
+        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        border-radius: 12px;
         padding: 20px 24px;
-        border-bottom: 1px solid #00473e10;
-        transition: background 0.2s;
-    }
-    .jadwal-item:last-child {
-        border-bottom: none;
-    }
-    .jadwal-item:hover {
-        background: #f2f7f5;
-    }
-    .jadwal-item__title {
-        font-size: 15px;
-        font-weight: 700;
-        color: #00473e;
-        margin-bottom: 8px;
-    }
-    .jadwal-item__detail {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-    }
-    .jadwal-item__row {
+        margin-bottom: 24px;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 16px;
+    }
+    .info-banner__icon {
+        width: 48px;
+        height: 48px;
+        background: rgba(250, 174, 43, 0.2);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .info-banner__icon svg {
+        width: 24px;
+        height: 24px;
+        fill: #faae2b;
+    }
+    .info-banner__content h3 {
+        color: #fff;
+        font-size: 16px;
+        margin: 0 0 4px 0;
+    }
+    .info-banner__content p {
+        color: rgba(255,255,255,0.8);
+        font-size: 13px;
+        margin: 0;
+    }
+
+    /* Schedule Table - Pembelajaran */
+    .schedule-card {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .schedule-card__header {
+        background: #f8fafc;
+        padding: 16px 20px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .schedule-card__day {
+        font-size: 16px;
+        font-weight: 700;
+        color: #00473e;
+    }
+    .schedule-card__badge {
+        background: #faae2b;
+        color: #00473e;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    .schedule-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .schedule-table th,
+    .schedule-table td {
+        padding: 14px 20px;
+        text-align: left;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .schedule-table th {
+        background: #fafbfc;
+        font-size: 12px;
+        font-weight: 600;
+        color: #475d5b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .schedule-table td {
+        font-size: 14px;
+        color: #00473e;
+    }
+    .schedule-table tr:last-child td {
+        border-bottom: none;
+    }
+    .schedule-table tr:hover td {
+        background: #f8fafc;
+    }
+    .time-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(0, 71, 62, 0.1);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #00473e;
+    }
+    .time-badge svg {
+        width: 14px;
+        height: 14px;
+        fill: #00473e;
+    }
+
+    /* Kegiatan Cards */
+    .kegiatan-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    .kegiatan-card {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+    }
+    .kegiatan-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .kegiatan-card__header {
+        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        padding: 16px 20px;
+    }
+    .kegiatan-card__title {
+        color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0;
+    }
+    .kegiatan-card__body {
+        padding: 16px 20px;
+    }
+    .kegiatan-info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .kegiatan-info__item {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
         font-size: 13px;
         color: #475d5b;
     }
-    .jadwal-item__row svg {
-        width: 16px;
-        height: 16px;
+    .kegiatan-info__item svg {
+        width: 18px;
+        height: 18px;
         fill: #faae2b;
         flex-shrink: 0;
+        margin-top: 1px;
     }
+    .kegiatan-info__item span {
+        flex: 1;
+    }
+    .kegiatan-badge {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(250, 174, 43, 0.15);
+        color: #d4920c;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    /* Empty State */
     .empty-state {
         text-align: center;
-        padding: 40px;
+        padding: 60px 40px;
         color: #475d5b;
+    }
+    .empty-state svg {
+        width: 64px;
+        height: 64px;
+        fill: #d1d5db;
+        margin-bottom: 16px;
+    }
+    .empty-state h3 {
+        color: #00473e;
+        margin: 0 0 8px 0;
+    }
+    .empty-state p {
+        margin: 0;
         font-size: 14px;
     }
 </style>
@@ -124,63 +302,156 @@
 
 @section('content')
 
-    {{-- Filter --}}
-    <form action="{{ route('orangtua.jadwal') }}" method="GET" class="filter-bar">
-        <div class="filter-group">
-            <label>Pilih Bulan</label>
-            <select name="bulan">
-                @for ($m = 1; $m <= 12; $m++)
-                    <option value="{{ $m }}" {{ (request('bulan', now()->month) == $m) ? 'selected' : '' }}>
-                        {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
-                    </option>
-                @endfor
-            </select>
-        </div>
-        <div class="filter-group">
-            <label>Pilih Tahun</label>
-            <select name="tahun">
-                @for ($y = now()->year; $y >= now()->year - 2; $y--)
-                    <option value="{{ $y }}" {{ (request('tahun', now()->year) == $y) ? 'selected' : '' }}>{{ $y }}</option>
-                @endfor
-            </select>
-        </div>
-        <button type="submit" class="btn-tampilkan">TAMPILKAN</button>
-    </form>
+    {{-- Tab Navigation --}}
+    <div class="tab-navigation">
+        <a href="{{ route('orangtua.jadwal.pembelajaran') }}" class="tab-btn {{ ($activeTab ?? 'pembelajaran') == 'pembelajaran' ? 'active' : '' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 4.8 11.06a.75.75 0 0 1-.231-1.337A60.65 60.65 0 0 1 11.7 2.805Z"/><path d="M13.06 15.473a48.45 48.45 0 0 1 7.666-3.282c.134 1.414.22 2.843.255 4.284a.75.75 0 0 1-.46.711 47.87 47.87 0 0 0-8.105 4.342.75.75 0 0 1-.833 0 47.87 47.87 0 0 0-8.104-4.342.75.75 0 0 1-.461-.71c.035-1.442.121-2.87.255-4.286a48.45 48.45 0 0 1 7.667 3.282.75.75 0 0 0 1.12 0Z"/></svg>
+            Jadwal Pembelajaran
+        </a>
+        <a href="{{ route('orangtua.jadwal.kegiatan') }}" class="tab-btn {{ ($activeTab ?? '') == 'kegiatan' ? 'active' : '' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/></svg>
+            Jadwal Kegiatan
+        </a>
+    </div>
 
-    @php
-        $bulan = request('bulan', now()->month);
-        $tahun = request('tahun', now()->year);
-        $namaBulan = \Carbon\Carbon::create()->month($bulan)->translatedFormat('F');
-    @endphp
-
-    {{-- Jadwal List --}}
-    <div class="jadwal-section">
-        <div class="jadwal-section__header">
-            JADWAL KEGIATAN – {{ $namaBulan }} {{ $tahun }}
+    @if(($activeTab ?? 'pembelajaran') == 'pembelajaran')
+        {{-- JADWAL PEMBELAJARAN --}}
+        
+        {{-- Info Banner --}}
+        <div class="info-banner">
+            <div class="info-banner__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 4.8 11.06a.75.75 0 0 1-.231-1.337A60.65 60.65 0 0 1 11.7 2.805Z"/></svg>
+            </div>
+            <div class="info-banner__content">
+                <h3>Jadwal Pembelajaran {{ $student->name ?? 'Anak Anda' }}</h3>
+                <p>Kelas: {{ $kelas ?? 'TK A' }} | Tahun Ajaran 2025/2026</p>
+            </div>
         </div>
-        <div class="jadwal-list">
-            @forelse ($jadwalList ?? [
-                ['nama' => 'Upacara Bendera', 'tanggal' => 'Senin, 16 Mar 2026 | 07:00 - 09:00', 'tempat' => 'Tempat: Lapangan | Kelas: Semua Kelas'],
-                ['nama' => 'Outing Class', 'tanggal' => 'Minggu, 21 Mar 2026 | 10:00 - 12:00', 'tempat' => 'Tempat: Kebun Binatang | Kelas: TK A'],
-                ['nama' => 'Lomba Mewarnai', 'tanggal' => 'Kamis, 24 Mar 2026 | 09:00 - 11:00', 'tempat' => 'Tempat: Ruang Kelas A | Kelas: TK A, TK B'],
-            ] as $jadwal)
-                <div class="jadwal-item">
-                    <div class="jadwal-item__title">{{ $jadwal['nama'] }}</div>
-                    <div class="jadwal-item__detail">
-                        <div class="jadwal-item__row">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75Z" clip-rule="evenodd"/></svg>
-                            {{ $jadwal['tanggal'] }}
+
+        {{-- Schedule per Hari --}}
+        @forelse($jadwalPembelajaran ?? [] as $hari => $jadwal)
+            <div class="schedule-card">
+                <div class="schedule-card__header">
+                    <span class="schedule-card__day">{{ $hari }}</span>
+                    <span class="schedule-card__badge">{{ count($jadwal) }} Kegiatan</span>
+                </div>
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 180px;">Waktu</th>
+                            <th>Kegiatan</th>
+                            <th style="width: 200px;">Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($jadwal as $item)
+                        <tr>
+                            <td>
+                                <span class="time-badge">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-13a.75.75 0 0 0-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 0 0 0-1.5h-3.25V5Z" clip-rule="evenodd"/></svg>
+                                    {{ $item['waktu'] }}
+                                </span>
+                            </td>
+                            <td><strong>{{ $item['kegiatan'] }}</strong></td>
+                            <td>{{ $item['keterangan'] }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @empty
+            <div class="schedule-card">
+                <div class="empty-state">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/></svg>
+                    <h3>Belum Ada Jadwal</h3>
+                    <p>Jadwal pembelajaran belum tersedia.</p>
+                </div>
+            </div>
+        @endforelse
+
+    @else
+        {{-- JADWAL KEGIATAN --}}
+        
+        {{-- Filter --}}
+        <form action="{{ route('orangtua.jadwal.kegiatan') }}" method="GET" class="filter-bar">
+            <div class="filter-group">
+                <label>Pilih Bulan</label>
+                <select name="bulan">
+                    @for ($m = 1; $m <= 12; $m++)
+                        <option value="{{ $m }}" {{ (request('bulan', now()->month) == $m) ? 'selected' : '' }}>
+                            {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
+                        </option>
+                    @endfor
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Pilih Tahun</label>
+                <select name="tahun">
+                    @for ($y = now()->year; $y >= now()->year - 2; $y--)
+                        <option value="{{ $y }}" {{ (request('tahun', now()->year) == $y) ? 'selected' : '' }}>{{ $y }}</option>
+                    @endfor
+                </select>
+            </div>
+            <button type="submit" class="btn-tampilkan">TAMPILKAN</button>
+        </form>
+
+        @php
+            $bulan = request('bulan', now()->month);
+            $tahun = request('tahun', now()->year);
+            $namaBulan = \Carbon\Carbon::create()->month($bulan)->translatedFormat('F');
+        @endphp
+
+        {{-- Info Banner --}}
+        <div class="info-banner">
+            <div class="info-banner__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
+            </div>
+            <div class="info-banner__content">
+                <h3>Jadwal Kegiatan {{ $namaBulan }} {{ $tahun }}</h3>
+                <p>Daftar kegiatan dan acara TK Al-Istiqomah</p>
+            </div>
+        </div>
+
+        {{-- Kegiatan Grid --}}
+        @if(!empty($jadwalKegiatan))
+            <div class="kegiatan-grid">
+                @foreach($jadwalKegiatan as $kegiatan)
+                    <div class="kegiatan-card">
+                        <div class="kegiatan-card__header">
+                            <h3 class="kegiatan-card__title">{{ $kegiatan['nama'] }}</h3>
                         </div>
-                        <div class="jadwal-item__row">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 0 0 .281-.145c.164-.093.413-.237.658-.42.528-.394 1.065-.957 1.065-1.857v-4.756l4.928-2.464A1.5 1.5 0 0 0 18 7.856V6.145a1.5 1.5 0 0 0-1.99-1.418L12 6.31V3.5A1.5 1.5 0 0 0 10.5 2h-1A1.5 1.5 0 0 0 8 3.5v2.81l-4.01-1.583A1.5 1.5 0 0 0 2 6.145v1.711a1.5 1.5 0 0 0 .734 1.424L7.5 11.744V16.5c0 .9.537 1.463 1.065 1.857.245.183.494.327.658.42a5.738 5.738 0 0 0 .28.145l.019.009.006.003Z" clip-rule="evenodd"/></svg>
-                            {{ $jadwal['tempat'] }}
+                        <div class="kegiatan-card__body">
+                            <div class="kegiatan-info">
+                                <div class="kegiatan-info__item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/></svg>
+                                    <span>{{ $kegiatan['tanggal'] }}</span>
+                                </div>
+                                <div class="kegiatan-info__item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
+                                    <span>{{ $kegiatan['waktu'] }}</span>
+                                </div>
+                                <div class="kegiatan-info__item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd"/></svg>
+                                    <span>{{ $kegiatan['tempat'] }}</span>
+                                </div>
+                                <div class="kegiatan-info__item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z" clip-rule="evenodd"/></svg>
+                                    <span class="kegiatan-badge">{{ $kegiatan['kelas'] }}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                @endforeach
+            </div>
+        @else
+            <div class="schedule-card">
+                <div class="empty-state">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
+                    <h3>Belum Ada Kegiatan</h3>
+                    <p>Tidak ada kegiatan untuk bulan {{ $namaBulan }} {{ $tahun }}.</p>
                 </div>
-            @empty
-                <div class="empty-state">Belum ada jadwal kegiatan untuk bulan ini.</div>
-            @endforelse
-        </div>
-    </div>
+            </div>
+        @endif
+    @endif
 
 @endsection
