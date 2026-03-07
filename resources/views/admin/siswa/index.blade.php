@@ -54,6 +54,7 @@
                 <label for="status">Status</label>
                 <select id="status" class="form-select">
                     <option value="">Semua Status</option>
+                    <option value="pending">Pending</option>
                     <option value="aktif">Aktif</option>
                     <option value="lulus">Lulus</option>
                     <option value="pindah">Pindah</option>
@@ -102,7 +103,14 @@
                             </div>
                         </td>
                         <td>
-                            <span class="badge badge--{{ $s['status'] == 'Aktif' ? 'success' : 'secondary' }}">{{ $s['status'] }}</span>
+                            @php
+                                $statusClass = match($s['status']) {
+                                    'Pending' => 'warning',
+                                    'Aktif' => 'success',
+                                    default => 'secondary'
+                                };
+                            @endphp
+                            <span class="badge badge--{{ $statusClass }}">{{ $s['status'] }}</span>
                         </td>
                         <td>
                             <div class="action-buttons">
@@ -274,6 +282,11 @@
 .badge--secondary {
     background: #f1f5f9;
     color: #64748b;
+}
+
+.badge--warning {
+    background: rgba(245, 158, 11, 0.15);
+    color: #d97706;
 }
 
 /* Action Buttons */

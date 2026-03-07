@@ -63,9 +63,22 @@
                 </div>
                 
                 <div class="form-group">
+                    <label for="status" class="form-label required">Status Akun</label>
+                    <select id="status" name="status" class="form-select status-select" required>
+                        <option value="Pending" {{ old('status', $pengguna['status'] ?? 'Aktif') == 'Pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="Aktif" {{ old('status', $pengguna['status'] ?? 'Aktif') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                        <option value="Nonaktif" {{ old('status', $pengguna['status'] ?? 'Aktif') == 'Nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                    </select>
+                    <small class="form-hint">Status "Pending" untuk akun dari pendaftaran online yang belum diaktivasi</small>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
                     <label for="nomor_telepon" class="form-label">Nomor Telepon</label>
                     <input type="tel" id="nomor_telepon" name="nomor_telepon" class="form-input" value="{{ old('nomor_telepon', $pengguna['nomor_telepon'] ?? '') }}">
                 </div>
+                <div class="form-group"></div>
             </div>
             
             <div class="form-divider">
@@ -198,5 +211,27 @@
 }
 
 .mb-0 { margin-bottom: 0; }
+
+/* Status Select Styling */
+.status-select option[value="Pending"] {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.status-select option[value="Aktif"] {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.status-select option[value="Nonaktif"] {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.form-hint {
+    color: #64748b;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
 </style>
 @endsection

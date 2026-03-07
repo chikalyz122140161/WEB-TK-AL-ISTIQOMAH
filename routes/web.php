@@ -19,27 +19,11 @@ Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->nam
 // PENDAFTARAN (Public - tanpa login)
 Route::get('/pendaftaran', [PendaftaranController::class, 'create'])->name('pendaftaran.create');
 Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
-Route::get('/pendaftaran/success/{kode}', [PendaftaranController::class, 'success'])->name('pendaftaran.success');
+Route::get('/pendaftaran/success', [PendaftaranController::class, 'success'])->name('pendaftaran.success');
 Route::get('/pendaftaran/cek-status', [PendaftaranController::class, 'cekStatus'])->name('pendaftaran.cek-status');
 
-// LOGIN autentikasi dengan role
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    // route khusus admin
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
-});
-
-Route::middleware(['auth', 'role:guru'])->group(function () {
-    // route khusus guru
-    Route::get('/guru/dashboard', [GuruController::class, 'dashboard']);
-});
-
-Route::middleware(['auth', 'role:orangtua'])->group(function () {
-    // route khusus orang tua
-    Route::get('/orangtua/dashboard', [OrangTuaController::class, 'dashboard']);
-});
-
-// DASHBOARD (butuh login) 
-Route::middleware('auth')->group(function () {
+// DASHBOARD (butuh login dengan dummy auth) 
+Route::middleware('dummy.auth')->group(function () {
     // ═══════════════════════════════════════════════════════
     // ADMIN ROUTES
     // ═══════════════════════════════════════════════════════

@@ -47,6 +47,7 @@
                 <label for="status">Status</label>
                 <select id="status" class="form-select">
                     <option value="">Semua Status</option>
+                    <option value="pending">Pending</option>
                     <option value="aktif">Aktif</option>
                     <option value="nonaktif">Nonaktif</option>
                 </select>
@@ -86,7 +87,14 @@
                             <span class="badge badge--{{ strtolower($user['role']) }}">{{ $user['role'] }}</span>
                         </td>
                         <td>
-                            <span class="badge badge--{{ $user['status'] == 'Aktif' ? 'success' : 'danger' }}">{{ $user['status'] }}</span>
+                            @php
+                                $statusClass = match($user['status']) {
+                                    'Pending' => 'warning',
+                                    'Aktif' => 'success',
+                                    default => 'danger'
+                                };
+                            @endphp
+                            <span class="badge badge--{{ $statusClass }}">{{ $user['status'] }}</span>
                         </td>
                         <td>{{ $user['tgl_daftar'] }}</td>
                         <td>
@@ -243,6 +251,11 @@
 .badge--danger {
     background: rgba(239, 68, 68, 0.1);
     color: #dc2626;
+}
+
+.badge--warning {
+    background: rgba(245, 158, 11, 0.15);
+    color: #d97706;
 }
 
 /* Action Buttons */

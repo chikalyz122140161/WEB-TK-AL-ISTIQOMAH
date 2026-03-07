@@ -182,6 +182,40 @@
             background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
         }
 
+        .section-icon.purple {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+
+        .section-desc {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: -16px;
+            margin-bottom: 20px;
+        }
+
+        .subsection-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #374151;
+            margin: 20px 0 12px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #d1d5db;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-top: -8px;
+            margin-bottom: 12px;
+        }
+
+        .form-hint {
+            display: block;
+            color: #64748b;
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+
         /* Form Grid */
         .form-row {
             display: grid;
@@ -450,20 +484,39 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                     </span>
-                    Data Calon Siswa
+                    I. Identitas Anak
                 </h2>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Nama Lengkap <span class="required">*</span></label>
-                        <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}" placeholder="Masukkan nama lengkap anak" required>
+                        <label>Nama Anak <span class="required">*</span></label>
+                        <input type="text" name="nama" value="{{ old('nama') }}" placeholder="Masukkan nama lengkap anak" required>
                     </div>
+                    <div class="form-group">
+                        <label>Nama Panggilan <span class="required">*</span></label>
+                        <input type="text" name="nama_panggilan" value="{{ old('nama_panggilan') }}" placeholder="Nama panggilan sehari-hari" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
                     <div class="form-group">
                         <label>Jenis Kelamin <span class="required">*</span></label>
                         <select name="jenis_kelamin" required>
                             <option value="">Pilih jenis kelamin</option>
-                            <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki</option>
-                            <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan</option>
+                            <option value="Laki-laki" {{ old('jenis_kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="Perempuan" {{ old('jenis_kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Agama <span class="required">*</span></label>
+                        <select name="agama" required>
+                            <option value="">Pilih agama</option>
+                            <option value="Islam" {{ old('agama') == 'Islam' ? 'selected' : '' }}>Islam</option>
+                            <option value="Kristen" {{ old('agama') == 'Kristen' ? 'selected' : '' }}>Kristen</option>
+                            <option value="Katolik" {{ old('agama') == 'Katolik' ? 'selected' : '' }}>Katolik</option>
+                            <option value="Hindu" {{ old('agama') == 'Hindu' ? 'selected' : '' }}>Hindu</option>
+                            <option value="Buddha" {{ old('agama') == 'Buddha' ? 'selected' : '' }}>Buddha</option>
+                            <option value="Konghucu" {{ old('agama') == 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
                         </select>
                     </div>
                 </div>
@@ -471,7 +524,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Tempat Lahir <span class="required">*</span></label>
-                        <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" placeholder="Contoh: Jakarta" required>
+                        <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" placeholder="Contoh: Bandar Lampung" required>
                     </div>
                     <div class="form-group">
                         <label>Tanggal Lahir <span class="required">*</span></label>
@@ -479,10 +532,50 @@
                     </div>
                 </div>
 
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Anak ke <span class="required">*</span></label>
+                        <input type="number" name="anak_ke" value="{{ old('anak_ke') }}" placeholder="Contoh: 2" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Jumlah Saudara <span class="required">*</span></label>
+                        <input type="number" name="jumlah_saudara" value="{{ old('jumlah_saudara') }}" placeholder="Contoh: 1" min="0" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Suku Bangsa</label>
+                        <input type="text" name="suku_bangsa" value="{{ old('suku_bangsa') }}" placeholder="Contoh: Jawa, Lampung, dll">
+                    </div>
+                    <div class="form-group">
+                        <label>Riwayat Penyakit</label>
+                        <input type="text" name="riwayat_penyakit" value="{{ old('riwayat_penyakit') }}" placeholder="Kosongkan jika tidak ada">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Berat Badan (kg)</label>
+                        <input type="text" name="berat_badan" value="{{ old('berat_badan') }}" placeholder="Contoh: 13">
+                    </div>
+                    <div class="form-group">
+                        <label>Tinggi Badan (cm)</label>
+                        <input type="text" name="tinggi_badan" value="{{ old('tinggi_badan') }}" placeholder="Contoh: 95">
+                    </div>
+                </div>
+
                 <div class="form-row single">
                     <div class="form-group">
-                        <label>Alamat Anak <span class="required">*</span></label>
-                        <textarea name="alamat_siswa" placeholder="Masukkan alamat lengkap tempat tinggal anak" required>{{ old('alamat_siswa') }}</textarea>
+                        <label>Alamat <span class="required">*</span></label>
+                        <textarea name="alamat" placeholder="Masukkan alamat lengkap tempat tinggal" required>{{ old('alamat') }}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-row single">
+                    <div class="form-group">
+                        <label>No. Telp / HP <span class="required">*</span></label>
+                        <input type="text" name="no_telp" value="{{ old('no_telp') }}" placeholder="Contoh: 0822 8965 2973" required>
                     </div>
                 </div>
             </div>
@@ -495,46 +588,98 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
                     </span>
-                    Data Orang Tua / Wali
+                    II. Identitas Orang Tua / Wali Murid
                 </h2>
 
+                <h3 class="subsection-title">1. Ayah</h3>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Nama Ayah <span class="required">*</span></label>
                         <input type="text" name="nama_ayah" value="{{ old('nama_ayah') }}" placeholder="Masukkan nama lengkap ayah" required>
                     </div>
                     <div class="form-group">
-                        <label>Pekerjaan Ayah</label>
-                        <input type="text" name="pekerjaan_ayah" value="{{ old('pekerjaan_ayah') }}" placeholder="Contoh: Wiraswasta">
+                        <label>Pekerjaan / Pendidikan</label>
+                        <input type="text" name="pekerjaan_ayah" value="{{ old('pekerjaan_ayah') }}" placeholder="Contoh: Buruh">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tempat Lahir Ayah</label>
+                        <input type="text" name="tempat_lahir_ayah" value="{{ old('tempat_lahir_ayah') }}" placeholder="Contoh: Pemalang">
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Lahir Ayah</label>
+                        <input type="date" name="tanggal_lahir_ayah" value="{{ old('tanggal_lahir_ayah') }}">
                     </div>
                 </div>
 
+                <h3 class="subsection-title">2. Ibu</h3>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Nama Ibu <span class="required">*</span></label>
                         <input type="text" name="nama_ibu" value="{{ old('nama_ibu') }}" placeholder="Masukkan nama lengkap ibu" required>
                     </div>
                     <div class="form-group">
-                        <label>Pekerjaan Ibu</label>
-                        <input type="text" name="pekerjaan_ibu" value="{{ old('pekerjaan_ibu') }}" placeholder="Contoh: Ibu Rumah Tangga">
+                        <label>Pekerjaan / Pendidikan</label>
+                        <input type="text" name="pekerjaan_ibu" value="{{ old('pekerjaan_ibu') }}" placeholder="Contoh: Pengurus Rumah Tangga">
                     </div>
                 </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tempat Lahir Ibu</label>
+                        <input type="text" name="tempat_lahir_ibu" value="{{ old('tempat_lahir_ibu') }}" placeholder="Contoh: Teratkulon">
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Lahir Ibu</label>
+                        <input type="date" name="tanggal_lahir_ibu" value="{{ old('tanggal_lahir_ibu') }}">
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">3. Wali (Opsional)</h3>
+                <p class="subsection-desc">Isi jika ada wali selain orang tua</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nama Wali</label>
+                        <input type="text" name="nama_wali" value="{{ old('nama_wali') }}" placeholder="Nama lengkap wali">
+                    </div>
+                    <div class="form-group">
+                        <label>Pekerjaan / Pendidikan</label>
+                        <input type="text" name="pekerjaan_wali" value="{{ old('pekerjaan_wali') }}" placeholder="Pekerjaan wali">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tempat Lahir Wali</label>
+                        <input type="text" name="tempat_lahir_wali" value="{{ old('tempat_lahir_wali') }}" placeholder="Tempat lahir wali">
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Lahir Wali</label>
+                        <input type="date" name="tanggal_lahir_wali" value="{{ old('tanggal_lahir_wali') }}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Akun Orang Tua -->
+            <div class="form-card">
+                <h2 class="section-title">
+                    <span class="section-icon purple">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                        </svg>
+                    </span>
+                    Akun Orang Tua
+                </h2>
+                <p class="section-desc">Akun ini akan digunakan untuk login ke sistem dan memantau perkembangan anak</p>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>No. Telepon / WhatsApp <span class="required">*</span></label>
-                        <input type="text" name="telepon" value="{{ old('telepon') }}" placeholder="Contoh: 08123456789" required>
-                    </div>
-                    <div class="form-group">
                         <label>Email <span class="required">*</span></label>
-                        <input type="email" name="email" value="{{ old('email') }}" placeholder="Contoh: email@example.com" required>
+                        <input type="email" name="email_ortu" value="{{ old('email_ortu') }}" placeholder="Contoh: email@example.com" required>
+                        <span class="form-hint">Email ini akan digunakan untuk login</span>
                     </div>
-                </div>
-
-                <div class="form-row single">
                     <div class="form-group">
-                        <label>Alamat Orang Tua <span class="required">*</span></label>
-                        <textarea name="alamat_ortu" placeholder="Masukkan alamat lengkap orang tua" required>{{ old('alamat_ortu') }}</textarea>
+                        <label>Password <span class="required">*</span></label>
+                        <input type="password" name="password_ortu" placeholder="Minimal 6 karakter" required>
                     </div>
                 </div>
             </div>

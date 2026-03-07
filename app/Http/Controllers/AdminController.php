@@ -45,6 +45,8 @@ class AdminController extends Controller
             ['id' => 3, 'nama' => 'Ibu Siti', 'email' => 'ibu.siti@gmail.com', 'role' => 'Orang Tua', 'status' => 'Aktif', 'tgl_daftar' => '05 Jan 2024'],
             ['id' => 4, 'nama' => 'Bapak Budi', 'email' => 'budi@gmail.com', 'role' => 'Orang Tua', 'status' => 'Aktif', 'tgl_daftar' => '06 Jan 2024'],
             ['id' => 5, 'nama' => 'Ibu Dewi', 'email' => 'dewi@gmail.com', 'role' => 'Orang Tua', 'status' => 'Aktif', 'tgl_daftar' => '07 Jan 2024'],
+            ['id' => 6, 'nama' => 'Julia Sari', 'email' => 'julia.sari@email.com', 'role' => 'Orang Tua', 'status' => 'Pending', 'tgl_daftar' => '05 Mar 2026'],
+            ['id' => 7, 'nama' => 'Ratna Sari', 'email' => 'ratna@gmail.com', 'role' => 'Orang Tua', 'status' => 'Pending', 'tgl_daftar' => '06 Mar 2026'],
         ];
         
         return view('admin.pengguna.index', compact('pengguna'));
@@ -68,7 +70,8 @@ class AdminController extends Controller
             'id' => $id,
             'nama' => 'User Name',
             'email' => 'user@example.com',
-            'role' => 'guru',
+            'role' => 'orangtua',
+            'status' => 'Pending',
             'nomor_telepon' => '08123456789',
         ];
         
@@ -91,12 +94,14 @@ class AdminController extends Controller
     // KELOLA SISWA
     public function siswaIndex(Request $request)
     {
-        // Dummy data - with orangtua relation
+        // Dummy data - with orangtua relation (sesuai form pendaftaran fisik)
         $siswa = [
-            ['id' => 1, 'nis' => '2024001', 'nama' => 'Ahmad Fauzi', 'kelas' => 'TK A', 'jk' => 'L', 'status' => 'Aktif', 'nama_ortu' => 'Budi Santoso', 'email_ortu' => 'budi@email.com'],
-            ['id' => 2, 'nis' => '2024002', 'nama' => 'Siti Aisyah', 'kelas' => 'TK A', 'jk' => 'P', 'status' => 'Aktif', 'nama_ortu' => 'Ahmad Ibrahim', 'email_ortu' => 'ahmad@email.com'],
-            ['id' => 3, 'nis' => '2024003', 'nama' => 'Budi Santoso', 'kelas' => 'TK B', 'jk' => 'L', 'status' => 'Aktif', 'nama_ortu' => 'Hendra Wijaya', 'email_ortu' => 'hendra@email.com'],
-            ['id' => 4, 'nis' => '2024004', 'nama' => 'Dewi Rahayu', 'kelas' => 'TK B', 'jk' => 'P', 'status' => 'Aktif', 'nama_ortu' => 'Eko Prasetyo', 'email_ortu' => 'eko@email.com'],
+            ['id' => 1, 'nis' => '2024001', 'nama' => 'Ahmad Fauzi', 'kelas' => 'TK A', 'jk' => 'L', 'status' => 'Aktif', 'nama_ortu' => 'Budi Santoso / Siti Rahayu', 'email_ortu' => 'budi@email.com'],
+            ['id' => 2, 'nis' => '2024002', 'nama' => 'Siti Aisyah', 'kelas' => 'TK A', 'jk' => 'P', 'status' => 'Aktif', 'nama_ortu' => 'Ahmad Ibrahim / Fatimah', 'email_ortu' => 'ahmad@email.com'],
+            ['id' => 3, 'nis' => '2024003', 'nama' => 'Budi Santoso Jr', 'kelas' => 'TK B', 'jk' => 'L', 'status' => 'Aktif', 'nama_ortu' => 'Hendra Wijaya / Dewi', 'email_ortu' => 'hendra@email.com'],
+            ['id' => 4, 'nis' => '2024004', 'nama' => 'Dewi Rahayu', 'kelas' => 'TK B', 'jk' => 'P', 'status' => 'Aktif', 'nama_ortu' => 'Eko Prasetyo / Sri', 'email_ortu' => 'eko@email.com'],
+            ['id' => 5, 'nis' => '2026001', 'nama' => 'Erlangga Pradipa Bimantara', 'kelas' => 'TK A', 'jk' => 'L', 'status' => 'Pending', 'nama_ortu' => 'Sudir / Julia Sari', 'email_ortu' => 'julia.sari@email.com'],
+            ['id' => 6, 'nis' => '2026002', 'nama' => 'Putri Amelia', 'kelas' => 'TK A', 'jk' => 'P', 'status' => 'Pending', 'nama_ortu' => 'Ratna Sari / Indah', 'email_ortu' => 'ratna@gmail.com'],
         ];
         
         return view('admin.siswa.index', compact('siswa'));
@@ -115,22 +120,52 @@ class AdminController extends Controller
     
     public function siswaEdit($id)
     {
-        // Get siswa by id with related orangtua data
+        // Get siswa by id with related orangtua data - sesuai form pendaftaran fisik
         $siswa = [
             'id' => $id,
             'nis' => '2024001',
-            'nama' => 'Ahmad Fauzi',
+            // I. Identitas Anak
+            'nama' => 'Erlangga Pradipa Bimantara',
+            'nama_panggilan' => 'Angga',
+            'jenis_kelamin' => 'Laki-laki',
+            'tempat_lahir' => 'Bandar Lampung',
+            'tanggal_lahir' => '2021-09-25',
+            'anak_ke' => 2,
+            'jumlah_saudara' => 1,
+            'agama' => 'Islam',
+            'suku_bangsa' => '',
+            'berat_badan' => '13',
+            'tinggi_badan' => '',
+            'riwayat_penyakit' => '',
+            'alamat' => 'Jl. Harum Bunga Perumahan Panca Bakti Bandar Lampung',
+            'no_telp' => '0822 8965 2973',
             'kelas' => 'TK A',
-            'jenis_kelamin' => 'L',
-            'tanggal_lahir' => '2020-05-15',
-            'alamat' => 'Jl. Contoh No. 123',
-            'status' => 'Aktif',
-            // Data Orang Tua (berelasi)
-            'nama_ayah' => 'Budi Santoso',
-            'nama_ibu' => 'Siti Rahayu',
-            'nomor_telepon_ortu' => '081234567890',
-            'pekerjaan_ortu' => 'Wiraswasta',
-            'email_ortu' => 'budi.santoso@email.com',
+            'status' => 'Pending',
+            // II. Identitas Orang Tua / Wali Murid
+            // 1. Ayah
+            'nama_ayah' => 'Sudir',
+            'tempat_lahir_ayah' => 'Pemalang',
+            'tanggal_lahir_ayah' => '1982-09-01',
+            'pekerjaan_ayah' => 'Buruh',
+            // 2. Ibu
+            'nama_ibu' => 'Julia Sari',
+            'tempat_lahir_ibu' => 'Teratkulon',
+            'tanggal_lahir_ibu' => '1994-07-04',
+            'pekerjaan_ibu' => 'Pengurus Rumah Tangga',
+            // 3. Wali
+            'nama_wali' => '',
+            'tempat_lahir_wali' => '',
+            'tanggal_lahir_wali' => '',
+            'pekerjaan_wali' => '',
+            // Akun Orang Tua
+            'email_ortu' => 'julia.sari@email.com',
+            'status_akun_ortu' => 'Pending',
+            // Dokumen siswa
+            'dokumen' => [
+                ['id' => 1, 'nama' => 'Akta Kelahiran', 'file' => 'akta_kelahiran_001.pdf', 'type' => 'akta_kelahiran'],
+                ['id' => 2, 'nama' => 'Kartu Keluarga', 'file' => 'kk_001.pdf', 'type' => 'kartu_keluarga'],
+                ['id' => 3, 'nama' => 'Pas Foto', 'file' => 'foto_001.jpg', 'type' => 'foto'],
+            ],
         ];
         
         return view('admin.siswa.edit', compact('siswa'));

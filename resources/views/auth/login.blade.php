@@ -551,6 +551,87 @@
                 padding: 60px 50px;
             }
         }
+
+        /* Demo Credentials Styles */
+        .demo-credentials {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 100%);
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #166534;
+            margin-bottom: 0.5rem;
+        }
+
+        .demo-list {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.5rem;
+        }
+
+        .demo-item {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 0.35rem 0.6rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.75rem;
+        }
+
+        .demo-item:hover {
+            border-color: #00473e;
+            background: #f0fdf4;
+        }
+
+        .demo-role {
+            font-weight: 600;
+            font-size: 0.65rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        .demo-role.admin {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .demo-role.guru {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .demo-role.ortu {
+            background: #fce7f3;
+            color: #9d174d;
+        }
+
+        .demo-email {
+            color: #374151;
+        }
+
+        .demo-password {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .demo-password strong {
+            color: #00473e;
+            font-family: monospace;
+            background: #f3f4f6;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -656,6 +737,26 @@
                     <p class="login-subtitle">Masuk ke akun Anda</p>
                 </div>
 
+                <!-- Demo Credentials -->
+                <div class="demo-credentials">
+                    <p class="demo-title">Demo Login:</p>
+                    <div class="demo-list">
+                        <div class="demo-item" onclick="fillCredentials('admin@mail.com')">
+                            <span class="demo-role admin">Admin</span>
+                            <span class="demo-email">admin@mail.com</span>
+                        </div>
+                        <div class="demo-item" onclick="fillCredentials('guru@mail.com')">
+                            <span class="demo-role guru">Guru</span>
+                            <span class="demo-email">guru@mail.com</span>
+                        </div>
+                        <div class="demo-item" onclick="fillCredentials('ortu@mail.com')">
+                            <span class="demo-role ortu">Ortu</span>
+                            <span class="demo-email">ortu@mail.com</span>
+                        </div>
+                    </div>
+                    <p class="demo-password">Password: <strong>password</strong></p>
+                </div>
+
                 @if ($errors->any())
                     <div class="error-message">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -735,5 +836,13 @@
             </div>
         </div>
     </div>
+
+    <script>
+    function fillCredentials(email) {
+        document.querySelector('input[name="email"]').value = email;
+        document.querySelector('input[name="password"]').value = 'password';
+        document.querySelector('input[name="email"]').focus();
+    }
+    </script>
 </body>
 </html>
