@@ -284,15 +284,15 @@
                     </td>
                     <td>
                         <div class="aksi-links">
-                            <a href="#" class="aksi-lihat">[LIHAT]</a>
+                            <a href="javascript:void(0)" class="aksi-lihat" onclick="alert('Melihat detail jadwal konseling {{ $row['siswa'] }}')">[LIHAT]</a>
                             @if ($row['status'] === 'disetujui')
-                                <a href="#" class="aksi-edit">[EDIT]</a>
-                                <a href="#" class="aksi-batalkan">[BATALKAN]</a>
+                                <a href="javascript:void(0)" class="aksi-edit" onclick="alert('Edit jadwal konseling {{ $row['siswa'] }}')">[EDIT]</a>
+                                <a href="javascript:void(0)" class="aksi-batalkan" onclick="if(confirm('Yakin ingin membatalkan jadwal konseling ini?')) alert('Jadwal dibatalkan')">[BATALKAN]</a>
                             @elseif ($row['status'] === 'pending')
-                                <a href="#" class="aksi-setuju">[SETUJU]</a>
-                                <a href="#" class="aksi-tolak">[TOLAK]</a>
+                                <a href="javascript:void(0)" class="aksi-setuju" onclick="alert('Jadwal konseling {{ $row['siswa'] }} disetujui')">[SETUJU]</a>
+                                <a href="javascript:void(0)" class="aksi-tolak" onclick="if(confirm('Yakin ingin menolak jadwal ini?')) alert('Jadwal ditolak')">[TOLAK]</a>
                             @elseif ($row['status'] === 'selesai')
-                                <a href="#" class="aksi-catatan">[CATATAN]</a>
+                                <a href="javascript:void(0)" class="aksi-catatan" onclick="alert('Catatan konseling: Sesi berjalan dengan baik.')">[CATATAN]</a>
                             @endif
                         </div>
                     </td>

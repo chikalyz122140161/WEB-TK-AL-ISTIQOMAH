@@ -2,13 +2,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Report;
-use App\Models\Student;
-use App\Models\Attendance;
-use App\Models\Schedule;
-use App\Models\Registration;
-use App\Models\SemesterReport;
-use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class OrangTuaController extends Controller
@@ -23,72 +16,60 @@ class OrangTuaController extends Controller
         $bulan = $request->input('bulan', now()->month);
         $tahun = $request->input('tahun', now()->year);
 
-        $students = Student::where('parent_id', Auth::id())->get();
-        $student = $students->first();
+        // Dummy student data
+        $student = [
+            'id' => 1,
+            'nama' => 'Ahmad Fauzi',
+            'class' => 'TK A',
+        ];
 
-        $presensiData = ['hadir' => 0, 'izin' => 0, 'sakit' => 0, 'alpa' => 0];
-        $detailPresensi = [];
-
-        if ($student) {
-            $attendances = Attendance::where('student_id', $student->id)
-                ->whereMonth('date', $bulan)
-                ->whereYear('date', $tahun)
-                ->orderBy('date', 'asc')
-                ->get();
-
-            foreach ($attendances as $att) {
-                $status = strtolower($att->status);
-                if (isset($presensiData[$status])) {
-                    $presensiData[$status]++;
-                }
-                $detailPresensi[] = [
-                    'tanggal' => \Carbon\Carbon::parse($att->date)->format('d M Y'),
-                    'hari' => \Carbon\Carbon::parse($att->date)->translatedFormat('l'),
-                    'status' => $status,
-                    'keterangan' => $att->note ?? '-',
-                ];
-            }
-        }
+        // Dummy presensi data
+        $presensiData = ['hadir' => 18, 'izin' => 2, 'sakit' => 1, 'alpa' => 0];
+        $detailPresensi = [
+            ['tanggal' => '02 Mar 2026', 'hari' => 'Senin', 'status' => 'hadir', 'keterangan' => '-'],
+            ['tanggal' => '03 Mar 2026', 'hari' => 'Selasa', 'status' => 'hadir', 'keterangan' => '-'],
+            ['tanggal' => '04 Mar 2026', 'hari' => 'Rabu', 'status' => 'izin', 'keterangan' => 'Acara keluarga'],
+            ['tanggal' => '05 Mar 2026', 'hari' => 'Kamis', 'status' => 'hadir', 'keterangan' => '-'],
+            ['tanggal' => '06 Mar 2026', 'hari' => 'Jumat', 'status' => 'sakit', 'keterangan' => 'Demam'],
+        ];
 
         return view('orangtua.presensi', compact('student', 'presensiData', 'detailPresensi'));
     }
 
     public function laporan(Request $request)
     {
-        $students = Student::where('parent_id', Auth::id())->get();
-        $student = $students->first();
+        // Dummy student data
+        $student = [
+            'id' => 1,
+            'nama' => 'Ahmad Fauzi',
+            'class' => 'TK A',
+        ];
 
-        $laporanList = [];
-
-        if ($student) {
-            $reports = Report::where('student_id', $student->id)
-                ->orderBy('week_start', 'desc')
-                ->get();
-
-            foreach ($reports as $index => $report) {
-                $weekStart = \Carbon\Carbon::parse($report->week_start);
-                $weekEnd = $weekStart->copy()->endOfWeek();
-                $weekNum = $weekStart->weekOfMonth;
-
-                $laporanList[] = [
-                    'id' => $report->id,
-                    'minggu' => "Minggu {$weekNum} ({$weekStart->format('d')}-{$weekEnd->format('d M Y')})",
-                    'kognitif' => $report->cognitive,
-                    'motorik' => $report->motoric,
-                    'sosial' => $report->social,
-                    'bahasa' => $report->language,
-                ];
-            }
-        }
+        // Dummy laporan list
+        $laporanList = [
+            ['id' => 1, 'minggu' => 'Minggu 1 (02-08 Mar 2026)', 'kognitif' => 4, 'motorik' => 4, 'sosial' => 3, 'bahasa' => 4],
+            ['id' => 2, 'minggu' => 'Minggu 4 (23-28 Feb 2026)', 'kognitif' => 3, 'motorik' => 4, 'sosial' => 4, 'bahasa' => 3],
+            ['id' => 3, 'minggu' => 'Minggu 3 (16-22 Feb 2026)', 'kognitif' => 4, 'motorik' => 3, 'sosial' => 4, 'bahasa' => 4],
+        ];
 
         return view('orangtua.laporan', compact('student', 'laporanList'));
     }
 
     public function laporanDetail($id)
     {
-        $report = Report::with(['student', 'teacher'])->findOrFail($id);
-        $student = $report->student;
-        $teacher = $report->teacher;
+        // Dummy data
+        $student = ['id' => 1, 'nama' => 'Ahmad Fauzi', 'class' => 'TK A'];
+        $teacher = ['nama' => 'Bu Siti, S.Pd'];
+        
+        $report = [
+            'id' => $id,
+            'week_start' => '2026-03-02',
+            'cognitive' => 4,
+            'motoric' => 4,
+            'social' => 3,
+            'language' => 4,
+            'notes' => 'Anak menunjukkan perkembangan yang baik dalam berbagai aspek.',
+        ];
 
         return view('orangtua.laporan_detail', compact('report', 'student', 'teacher'));
     }
@@ -105,9 +86,9 @@ class OrangTuaController extends Controller
     
     public function jadwalPembelajaran(Request $request)
     {
-        $students = Student::where('parent_id', Auth::id())->get();
-        $student = $students->first();
-        $kelas = $student ? ($student->class ?? 'TK A') : 'TK A';
+        // Dummy data
+        $student = ['id' => 1, 'nama' => 'Ahmad Fauzi', 'class' => 'TK A'];
+        $kelas = 'TK A';
         
         // Jadwal pembelajaran harian (dummy data - bisa diganti dengan data dari database)
         $jadwalPembelajaran = [
@@ -162,63 +143,39 @@ class OrangTuaController extends Controller
         $bulan = $request->input('bulan', now()->month);
         $tahun = $request->input('tahun', now()->year);
 
-        $students = Student::where('parent_id', Auth::id())->get();
-        $student = $students->first();
-        $studentIds = $students->pluck('id');
+        // Dummy data
+        $student = ['id' => 1, 'nama' => 'Ahmad Fauzi', 'class' => 'TK A'];
 
-        // Ambil jadwal kegiatan dari database
-        $schedules = Schedule::whereIn('student_id', $studentIds)
-            ->whereMonth('date', $bulan)
-            ->whereYear('date', $tahun)
-            ->where('type', 'kegiatan')
-            ->orderBy('date', 'asc')
-            ->get();
-
-        $jadwalKegiatan = [];
-        foreach ($schedules as $schedule) {
-            $date = \Carbon\Carbon::parse($schedule->date);
-            $jadwalKegiatan[] = [
-                'nama' => $schedule->description,
-                'tanggal' => $date->translatedFormat('l, d F Y'),
-                'waktu' => $schedule->time ?? '07:00 - Selesai',
-                'tempat' => $schedule->location ?? 'TK Al-Istiqomah',
-                'kelas' => $schedule->class ?? 'Semua Kelas',
-            ];
-        }
-        
-        // Dummy data jika belum ada data
-        if (empty($jadwalKegiatan)) {
-            $jadwalKegiatan = [
-                [
-                    'nama' => 'Upacara Bendera',
-                    'tanggal' => 'Senin, 16 Maret 2026',
-                    'waktu' => '07:00 - 09:00',
-                    'tempat' => 'Lapangan',
-                    'kelas' => 'Semua Kelas',
-                ],
-                [
-                    'nama' => 'Outing Class ke Kebun Binatang',
-                    'tanggal' => 'Sabtu, 21 Maret 2026',
-                    'waktu' => '08:00 - 12:00',
-                    'tempat' => 'Kebun Binatang',
-                    'kelas' => 'TK A & TK B',
-                ],
-                [
-                    'nama' => 'Lomba Mewarnai',
-                    'tanggal' => 'Kamis, 26 Maret 2026',
-                    'waktu' => '09:00 - 11:00',
-                    'tempat' => 'Aula TK',
-                    'kelas' => 'TK A & TK B',
-                ],
-                [
-                    'nama' => 'Pentas Seni Akhir Bulan',
-                    'tanggal' => 'Sabtu, 28 Maret 2026',
-                    'waktu' => '08:00 - 11:00',
-                    'tempat' => 'Aula TK',
-                    'kelas' => 'Semua Kelas',
-                ],
-            ];
-        }
+        $jadwalKegiatan = [
+            [
+                'nama' => 'Upacara Bendera',
+                'tanggal' => 'Senin, 16 Maret 2026',
+                'waktu' => '07:00 - 09:00',
+                'tempat' => 'Lapangan',
+                'kelas' => 'Semua Kelas',
+            ],
+            [
+                'nama' => 'Outing Class ke Kebun Binatang',
+                'tanggal' => 'Sabtu, 21 Maret 2026',
+                'waktu' => '08:00 - 12:00',
+                'tempat' => 'Kebun Binatang',
+                'kelas' => 'TK A & TK B',
+            ],
+            [
+                'nama' => 'Lomba Mewarnai',
+                'tanggal' => 'Kamis, 26 Maret 2026',
+                'waktu' => '09:00 - 11:00',
+                'tempat' => 'Aula TK',
+                'kelas' => 'TK A & TK B',
+            ],
+            [
+                'nama' => 'Pentas Seni Akhir Bulan',
+                'tanggal' => 'Sabtu, 28 Maret 2026',
+                'waktu' => '08:00 - 11:00',
+                'tempat' => 'Aula TK',
+                'kelas' => 'Semua Kelas',
+            ],
+        ];
         
         $activeTab = 'kegiatan';
         
@@ -232,55 +189,98 @@ class OrangTuaController extends Controller
     
     public function rapot(Request $request)
     {
-        $students = Student::where('parent_id', Auth::id())->get();
-        $student = $students->first();
+        // Dummy data
+        $student = ['id' => 1, 'nama' => 'Ahmad Fauzi', 'class' => 'TK A'];
 
-        $rapotList = [];
-
-        if ($student) {
-            $rapots = SemesterReport::where('student_id', $student->id)
-                ->orderBy('tahun_ajaran', 'desc')
-                ->orderBy('semester', 'desc')
-                ->get();
-
-            foreach ($rapots as $rapot) {
-                $rapotList[] = [
-                    'id' => $rapot->id,
-                    'tahun_ajaran' => $rapot->tahun_ajaran,
-                    'semester' => $rapot->semester,
-                    'kelas' => $rapot->kelas,
-                    'tanggal_terbit' => $rapot->tanggal_terbit ? $rapot->tanggal_terbit->format('d M Y') : '-',
-                ];
-            }
-        }
+        $rapotList = [
+            [
+                'id' => 1,
+                'tahun_ajaran' => '2025/2026',
+                'semester' => 'Ganjil',
+                'kelas' => 'TK A',
+                'tanggal_terbit' => '20 Des 2025',
+            ],
+            [
+                'id' => 2,
+                'tahun_ajaran' => '2024/2025',
+                'semester' => 'Genap',
+                'kelas' => 'Kelompok Bermain',
+                'tanggal_terbit' => '15 Jun 2025',
+            ],
+            [
+                'id' => 3,
+                'tahun_ajaran' => '2024/2025',
+                'semester' => 'Ganjil',
+                'kelas' => 'Kelompok Bermain',
+                'tanggal_terbit' => '18 Des 2024',
+            ],
+        ];
 
         return view('orangtua.rapot', compact('student', 'rapotList'));
     }
     
     public function rapotDetail($id)
     {
-        $rapot = SemesterReport::with(['student', 'teacher'])->findOrFail($id);
-        $student = $rapot->student;
-        $teacher = $rapot->teacher;
+        // Dummy data
+        $student = (object)[
+            'id' => 1,
+            'name' => 'Ahmad Fauzi',
+            'class' => 'TK A',
+            'nis' => '20240001',
+        ];
+        $teacher = (object)[
+            'name' => 'Bu Siti, S.Pd',
+        ];
 
-        // Verifikasi bahwa rapot ini milik anak dari orangtua yang login
-        if ($student->parent_id !== Auth::id()) {
-            abort(403, 'Unauthorized');
-        }
+        $rapot = (object)[
+            'id' => $id,
+            'tahun_ajaran' => '2025/2026',
+            'semester' => 'Ganjil',
+            'kelas' => 'TK A',
+            'tanggal_terbit' => now(),
+            'nilai_agama' => 85,
+            'nilai_motorik' => 88,
+            'nilai_kognitif' => 90,
+            'nilai_bahasa' => 85,
+            'nilai_sosial' => 87,
+            'nilai_seni' => 92,
+            'catatan' => 'Ahmad menunjukkan perkembangan yang sangat baik. Terus pertahankan!',
+            'student' => $student,
+            'teacher' => $teacher,
+        ];
 
         return view('orangtua.rapot_detail', compact('rapot', 'student', 'teacher'));
     }
     
     public function rapotDownload($id)
     {
-        $rapot = SemesterReport::with(['student', 'teacher'])->findOrFail($id);
-        $student = $rapot->student;
-        $teacher = $rapot->teacher;
+        // Dummy data
+        $student = (object)[
+            'id' => 1,
+            'name' => 'Ahmad Fauzi',
+            'class' => 'TK A',
+            'nis' => '20240001',
+        ];
+        $teacher = (object)[
+            'name' => 'Bu Siti, S.Pd',
+        ];
 
-        // Verifikasi bahwa rapot ini milik anak dari orangtua yang login
-        if ($student->parent_id !== Auth::id()) {
-            abort(403, 'Unauthorized');
-        }
+        $rapot = (object)[
+            'id' => $id,
+            'tahun_ajaran' => '2025/2026',
+            'semester' => 'Ganjil',
+            'kelas' => 'TK A',
+            'tanggal_terbit' => now(),
+            'nilai_agama' => 85,
+            'nilai_motorik' => 88,
+            'nilai_kognitif' => 90,
+            'nilai_bahasa' => 85,
+            'nilai_sosial' => 87,
+            'nilai_seni' => 92,
+            'catatan' => 'Ahmad menunjukkan perkembangan yang sangat baik. Terus pertahankan!',
+            'student' => $student,
+            'teacher' => $teacher,
+        ];
 
         $pdf = Pdf::loadView('orangtua.rapot_pdf', compact('rapot', 'student', 'teacher'));
         $pdf->setPaper('a4', 'portrait');
@@ -311,15 +311,7 @@ class OrangTuaController extends Controller
 
     public function kirimChat(Request $request)
     {
-        $request->validate(['message' => 'required|string']);
-
-        \App\Models\Chat::create([
-            'sender_id' => Auth::id(),
-            'receiver_id' => $request->receiver_id ?? 1,
-            'message' => $request->message,
-            'is_read' => false,
-        ]);
-
+        // Hanya redirect dengan pesan sukses (dummy)
         return redirect()->route('orangtua.chat')->with('success', 'Pesan berhasil dikirim!');
     }
 
@@ -330,24 +322,7 @@ class OrangTuaController extends Controller
 
     public function ajukanKonseling(Request $request)
     {
-        $request->validate([
-            'tanggal' => 'required|date',
-            'keterangan' => 'required|string',
-        ]);
-
-        $students = Student::where('parent_id', Auth::id())->get();
-        $student = $students->first();
-
-        if ($student) {
-            Schedule::create([
-                'student_id' => $student->id,
-                'teacher_id' => $request->teacher_id ?? 1,
-                'type' => 'bk',
-                'date' => $request->tanggal,
-                'description' => $request->keterangan,
-            ]);
-        }
-
+        // Hanya redirect dengan pesan sukses (dummy)
         return redirect()->route('orangtua.konseling')->with('success', 'Konseling berhasil diajukan!');
     }
 }

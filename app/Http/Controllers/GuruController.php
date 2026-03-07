@@ -71,15 +71,8 @@ class GuruController extends Controller
 
     public function kirimChat(Request $request)
     {
-        $request->validate([
-            'kontak_id' => 'required|integer',
-            'pesan'     => 'required|string|max:1000',
-        ]);
-
-        // TODO: simpan pesan ke database
-        // Chat::create(['dari'=>'guru','kontak_id'=>$request->kontak_id,'teks'=>$request->pesan]);
-
-        return redirect()->route('guru.chat', ['kontak_id' => $request->kontak_id]);
+        // Dummy - redirect with success
+        return redirect()->route('guru.chat', ['kontak_id' => $request->kontak_id ?? 1]);
     }
 
     public function laporan(Request $request)
@@ -171,21 +164,7 @@ class GuruController extends Controller
 
     public function storeInputPerkembangan(Request $request)
     {
-        $request->validate([
-            'siswa_id'              => 'required',
-            'minggu_ke'             => 'required|integer|min:1|max:52',
-            'tanggal'               => 'required|date',
-            'nilai_fisik_motorik'   => 'required|integer|between:1,5',
-            'nilai_kognitif'        => 'required|integer|between:1,5',
-            'nilai_bahasa'          => 'required|integer|between:1,5',
-            'nilai_sosial_emosional'=> 'required|integer|between:1,5',
-            'nilai_nilai_agama_moral'=> 'required|integer|between:1,5',
-            'nilai_seni'            => 'required|integer|between:1,5',
-        ]);
-
-        // TODO: simpan ke database
-        // PerkembanganAnak::create($request->validated());
-
+        // Dummy - redirect with success
         return redirect()->route('guru.input_perkembangan')
             ->with('success', 'Data perkembangan berhasil disimpan.');
     }
@@ -249,16 +228,7 @@ class GuruController extends Controller
      */
     public function kehadiranStore(Request $request)
     {
-        $request->validate([
-            'tanggal' => 'required|date',
-            'status' => 'required|array',
-        ]);
-
-        // TODO: simpan ke database
-        // foreach ($request->status as $siswaId => $status) {
-        //     Attendance::create([...]);
-        // }
-
+        // Dummy - redirect with success
         return redirect()->route('guru.kehadiran.index')->with('success', 'Kehadiran berhasil disimpan.');
     }
 
@@ -290,17 +260,7 @@ class GuruController extends Controller
      */
     public function kehadiranUpdate(Request $request, $id)
     {
-        $request->validate([
-            'status' => 'required|in:hadir,izin,sakit,alpa',
-            'keterangan' => 'nullable|string|max:255',
-        ]);
-
-        // TODO: update di database
-        // Attendance::findOrFail($id)->update([
-        //     'status' => $request->status,
-        //     'note' => $request->keterangan,
-        // ]);
-
+        // Dummy - redirect with success
         return redirect()->route('guru.kehadiran.index')->with('success', 'Data kehadiran berhasil diperbarui.');
     }
 
@@ -335,14 +295,7 @@ class GuruController extends Controller
      */
     public function laporanGenerate(Request $request)
     {
-        $request->validate([
-            'jenis_laporan' => 'required|in:kehadiran,perkembangan,bulanan',
-            'periode_awal' => 'required|date',
-            'periode_akhir' => 'required|date|after_or_equal:periode_awal',
-        ]);
-
-        // TODO: generate laporan ke database/PDF
-
+        // Dummy - redirect with success
         return redirect()->route('guru.laporan.index')->with('success', 'Laporan berhasil di-generate.');
     }
 
@@ -378,21 +331,50 @@ class GuruController extends Controller
      */
     public function jadwalStore(Request $request)
     {
-        $request->validate([
-            'jenis_jadwal' => 'required|in:kegiatan,pembelajaran',
-            'nama' => 'required|string|max:255',
-            'tanggal' => 'required|date',
-            'waktu_mulai' => 'required',
-            'waktu_selesai' => 'required',
-        ]);
-
-        // TODO: simpan ke database
-        // Schedule::create([...]);
-
+        // Dummy - redirect with success
         return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil ditambahkan.');
     }
 
-<<<<<<< HEAD
+/**
+     * Jadwal - Edit
+     */
+    public function jadwalEdit($id)
+    {
+        // Dummy data jadwal
+        $allJadwal = [
+            1 => ['id' => 1, 'jenis' => 'kegiatan', 'nama' => 'Upacara Bendera', 'tanggal_raw' => '2026-03-10', 'waktu_mulai' => '07:00', 'waktu_selesai' => '08:00', 'lokasi' => 'Lapangan', 'kelas' => 'Semua', 'deskripsi' => ''],
+            2 => ['id' => 2, 'jenis' => 'kegiatan', 'nama' => 'Senam Pagi', 'tanggal_raw' => '2026-03-11', 'waktu_mulai' => '07:30', 'waktu_selesai' => '08:00', 'lokasi' => 'Lapangan', 'kelas' => 'Semua', 'deskripsi' => ''],
+            3 => ['id' => 3, 'jenis' => 'kegiatan', 'nama' => 'Outing Class', 'tanggal_raw' => '2026-03-12', 'waktu_mulai' => '08:00', 'waktu_selesai' => '12:00', 'lokasi' => 'Kebun Binatang', 'kelas' => 'TK B', 'deskripsi' => ''],
+            4 => ['id' => 4, 'jenis' => 'kegiatan', 'nama' => 'Lomba Mewarnai', 'tanggal_raw' => '2026-03-13', 'waktu_mulai' => '09:00', 'waktu_selesai' => '11:00', 'lokasi' => 'Aula', 'kelas' => 'Semua', 'deskripsi' => ''],
+        ];
+
+        if (!isset($allJadwal[$id])) {
+            return redirect()->route('guru.jadwal.index')->with('error', 'Jadwal tidak ditemukan.');
+        }
+
+        $jadwal = $allJadwal[$id];
+
+        return view('guru.jadwal.edit', compact('jadwal'));
+    }
+
+    /**
+     * Jadwal - Update
+     */
+    public function jadwalUpdate(Request $request, $id)
+    {
+        // Dummy - redirect with success
+        return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil diperbarui.');
+    }
+
+    /**
+     * Jadwal - Delete
+     */
+    public function jadwalDestroy($id)
+    {
+        // Dummy - redirect with success
+        return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil dihapus.');
+    }
+
     // ═══════════════════════════════════════════════════════
     // RAPOT SEMESTER
     // ═══════════════════════════════════════════════════════
@@ -408,51 +390,11 @@ class GuruController extends Controller
 
         // Dummy data rapot
         $rapotList = [
-            [
-                'id' => 1,
-                'siswa' => 'Ahmad Fauzi',
-                'kelas' => 'TK A',
-                'tahun_ajaran' => '2025/2026',
-                'semester' => 'Ganjil',
-                'tanggal_terbit' => '15 Des 2025',
-                'status' => 'Terbit',
-            ],
-            [
-                'id' => 2,
-                'siswa' => 'Siti Nurhaliza',
-                'kelas' => 'TK A',
-                'tahun_ajaran' => '2025/2026',
-                'semester' => 'Ganjil',
-                'tanggal_terbit' => '15 Des 2025',
-                'status' => 'Terbit',
-            ],
-            [
-                'id' => 3,
-                'siswa' => 'Budi Santoso',
-                'kelas' => 'TK B',
-                'tahun_ajaran' => '2025/2026',
-                'semester' => 'Ganjil',
-                'tanggal_terbit' => '15 Des 2025',
-                'status' => 'Terbit',
-            ],
-            [
-                'id' => 4,
-                'siswa' => 'Dewi Lestari',
-                'kelas' => 'TK A',
-                'tahun_ajaran' => '2025/2026',
-                'semester' => 'Ganjil',
-                'tanggal_terbit' => null,
-                'status' => 'Draft',
-            ],
-            [
-                'id' => 5,
-                'siswa' => 'Eko Prasetyo',
-                'kelas' => 'TK B',
-                'tahun_ajaran' => '2024/2025',
-                'semester' => 'Genap',
-                'tanggal_terbit' => '20 Jun 2025',
-                'status' => 'Terbit',
-            ],
+            ['id' => 1, 'siswa' => 'Ahmad Fauzi', 'kelas' => 'TK A', 'tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil', 'tanggal_terbit' => '15 Des 2025', 'status' => 'Terbit'],
+            ['id' => 2, 'siswa' => 'Siti Nurhaliza', 'kelas' => 'TK A', 'tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil', 'tanggal_terbit' => '15 Des 2025', 'status' => 'Terbit'],
+            ['id' => 3, 'siswa' => 'Budi Santoso', 'kelas' => 'TK B', 'tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil', 'tanggal_terbit' => '15 Des 2025', 'status' => 'Terbit'],
+            ['id' => 4, 'siswa' => 'Dewi Lestari', 'kelas' => 'TK A', 'tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil', 'tanggal_terbit' => null, 'status' => 'Draft'],
+            ['id' => 5, 'siswa' => 'Eko Prasetyo', 'kelas' => 'TK B', 'tahun_ajaran' => '2024/2025', 'semester' => 'Genap', 'tanggal_terbit' => '20 Jun 2025', 'status' => 'Terbit'],
         ];
 
         // Filter data
@@ -490,9 +432,7 @@ class GuruController extends Controller
      */
     public function rapotStore(Request $request)
     {
-        // TODO: validasi dan simpan ke database
-        // SemesterReport::create([...]);
-
+        // Dummy - redirect with success
         return redirect()->route('guru.rapot.index')->with('success', 'Rapot berhasil ditambahkan.');
     }
 
@@ -501,31 +441,38 @@ class GuruController extends Controller
      */
     public function rapotShow($id)
     {
-        // Dummy data rapot detail
+        // Dummy data rapot detail dengan struktur nested
         $rapot = [
             'id' => $id,
-            'siswa' => 'Ahmad Fauzi',
+            'siswa' => [
+                'id' => 1,
+                'nama' => 'Ahmad Fauzi',
+            ],
             'kelas' => 'TK A',
             'tahun_ajaran' => '2025/2026',
             'semester' => 'Ganjil',
-            'tanggal_terbit' => '15 Des 2025',
+            'tanggal_terbit' => '2025-12-15',
             'status' => 'Terbit',
-            'agama_moral' => 'BSH',
-            'agama_moral_deskripsi' => 'Anak sudah mampu melaksanakan ibadah sederhana (berdoa sebelum dan sesudah makan), mengenal ciptaan Tuhan, serta menunjukkan sikap santun dan hormat kepada guru dan teman.',
-            'fisik_motorik' => 'BSB',
-            'fisik_motorik_deskripsi' => 'Anak sangat aktif dalam kegiatan motorik kasar seperti berlari dan melompat. Motorik halus juga berkembang baik, mampu memegang pensil dengan benar dan mewarnai dalam garis.',
-            'kognitif' => 'BSH',
-            'kognitif_deskripsi' => 'Anak mampu mengenal angka 1-10, menghitung benda konkrit, mengenal warna dasar, dan menyelesaikan puzzle sederhana dengan baik.',
-            'bahasa' => 'BSH',
-            'bahasa_deskripsi' => 'Anak mampu berkomunikasi dengan jelas, menceritakan pengalaman sederhana, mengenal huruf vokal, dan menyimak cerita dengan antusias.',
-            'sosial_emosional' => 'BSH',
-            'sosial_emosional_deskripsi' => 'Anak dapat bermain bersama teman, berbagi mainan, mengantri dengan tertib, dan menunjukkan empati ketika teman sedih.',
-            'seni' => 'BSB',
-            'seni_deskripsi' => 'Anak sangat kreatif dalam kegiatan seni, suka menggambar dan mewarnai, aktif bernyanyi dan mengikuti gerak lagu dengan semangat.',
-            'hadir' => 85,
-            'izin' => 3,
-            'sakit' => 2,
-            'alpa' => 0,
+            'nilai' => [
+                'agama_moral' => 'BSH',
+                'agama_moral_deskripsi' => 'Anak sudah mampu melaksanakan ibadah sederhana (berdoa sebelum dan sesudah makan), mengenal ciptaan Tuhan, serta menunjukkan sikap santun dan hormat kepada guru dan teman.',
+                'fisik_motorik' => 'BSB',
+                'fisik_motorik_deskripsi' => 'Anak sangat aktif dalam kegiatan motorik kasar seperti berlari dan melompat. Motorik halus juga berkembang baik, mampu memegang pensil dengan benar dan mewarnai dalam garis.',
+                'kognitif' => 'BSH',
+                'kognitif_deskripsi' => 'Anak mampu mengenal angka 1-10, menghitung benda konkrit, mengenal warna dasar, dan menyelesaikan puzzle sederhana dengan baik.',
+                'bahasa' => 'BSH',
+                'bahasa_deskripsi' => 'Anak mampu berkomunikasi dengan jelas, menceritakan pengalaman sederhana, mengenal huruf vokal, dan menyimak cerita dengan antusias.',
+                'sosial_emosional' => 'BSH',
+                'sosial_emosional_deskripsi' => 'Anak dapat bermain bersama teman, berbagi mainan, mengantri dengan tertib, dan menunjukkan empati ketika teman sedih.',
+                'seni' => 'BSB',
+                'seni_deskripsi' => 'Anak sangat kreatif dalam kegiatan seni, suka menggambar dan mewarnai, aktif bernyanyi dan mengikuti gerak lagu dengan semangat.',
+            ],
+            'kehadiran' => [
+                'hadir' => 85,
+                'izin' => 3,
+                'sakit' => 2,
+                'alpa' => 0,
+            ],
             'catatan_guru' => 'Ananda menunjukkan perkembangan yang sangat baik selama semester ini. Aktif dalam setiap kegiatan pembelajaran dan dapat bekerja sama dengan teman-temannya.',
             'rekomendasi' => 'Disarankan untuk terus memberikan stimulasi membaca di rumah dengan buku cerita bergambar. Ajak anak berdiskusi tentang lingkungan sekitar.',
         ];
@@ -547,32 +494,38 @@ class GuruController extends Controller
             ['id' => 5, 'nama' => 'Eko Prasetyo', 'kelas' => 'TK B'],
         ];
 
-        // Dummy data rapot untuk edit
+        // Dummy data rapot untuk edit dengan struktur nested
         $rapot = [
             'id' => $id,
-            'siswa_id' => 1,
-            'siswa' => 'Ahmad Fauzi',
+            'siswa' => [
+                'id' => 1,
+                'nama' => 'Ahmad Fauzi',
+            ],
             'kelas' => 'TK A',
             'tahun_ajaran' => '2025/2026',
             'semester' => 'Ganjil',
             'tanggal_terbit' => '2025-12-15',
             'status' => 'Terbit',
-            'agama_moral' => 'BSH',
-            'agama_moral_deskripsi' => 'Anak sudah mampu melaksanakan ibadah sederhana (berdoa sebelum dan sesudah makan), mengenal ciptaan Tuhan, serta menunjukkan sikap santun dan hormat kepada guru dan teman.',
-            'fisik_motorik' => 'BSB',
-            'fisik_motorik_deskripsi' => 'Anak sangat aktif dalam kegiatan motorik kasar seperti berlari dan melompat. Motorik halus juga berkembang baik, mampu memegang pensil dengan benar dan mewarnai dalam garis.',
-            'kognitif' => 'BSH',
-            'kognitif_deskripsi' => 'Anak mampu mengenal angka 1-10, menghitung benda konkrit, mengenal warna dasar, dan menyelesaikan puzzle sederhana dengan baik.',
-            'bahasa' => 'BSH',
-            'bahasa_deskripsi' => 'Anak mampu berkomunikasi dengan jelas, menceritakan pengalaman sederhana, mengenal huruf vokal, dan menyimak cerita dengan antusias.',
-            'sosial_emosional' => 'BSH',
-            'sosial_emosional_deskripsi' => 'Anak dapat bermain bersama teman, berbagi mainan, mengantri dengan tertib, dan menunjukkan empati ketika teman sedih.',
-            'seni' => 'BSB',
-            'seni_deskripsi' => 'Anak sangat kreatif dalam kegiatan seni, suka menggambar dan mewarnai, aktif bernyanyi dan mengikuti gerak lagu dengan semangat.',
-            'hadir' => 85,
-            'izin' => 3,
-            'sakit' => 2,
-            'alpa' => 0,
+            'nilai' => [
+                'agama_moral' => 'BSH',
+                'agama_moral_deskripsi' => 'Anak sudah mampu melaksanakan ibadah sederhana (berdoa sebelum dan sesudah makan), mengenal ciptaan Tuhan, serta menunjukkan sikap santun dan hormat kepada guru dan teman.',
+                'fisik_motorik' => 'BSB',
+                'fisik_motorik_deskripsi' => 'Anak sangat aktif dalam kegiatan motorik kasar seperti berlari dan melompat. Motorik halus juga berkembang baik, mampu memegang pensil dengan benar dan mewarnai dalam garis.',
+                'kognitif' => 'BSH',
+                'kognitif_deskripsi' => 'Anak mampu mengenal angka 1-10, menghitung benda konkrit, mengenal warna dasar, dan menyelesaikan puzzle sederhana dengan baik.',
+                'bahasa' => 'BSH',
+                'bahasa_deskripsi' => 'Anak mampu berkomunikasi dengan jelas, menceritakan pengalaman sederhana, mengenal huruf vokal, dan menyimak cerita dengan antusias.',
+                'sosial_emosional' => 'BSH',
+                'sosial_emosional_deskripsi' => 'Anak dapat bermain bersama teman, berbagi mainan, mengantri dengan tertib, dan menunjukkan empati ketika teman sedih.',
+                'seni' => 'BSB',
+                'seni_deskripsi' => 'Anak sangat kreatif dalam kegiatan seni, suka menggambar dan mewarnai, aktif bernyanyi dan mengikuti gerak lagu dengan semangat.',
+            ],
+            'kehadiran' => [
+                'hadir' => 85,
+                'izin' => 3,
+                'sakit' => 2,
+                'alpa' => 0,
+            ],
             'catatan_guru' => 'Ananda menunjukkan perkembangan yang sangat baik selama semester ini. Aktif dalam setiap kegiatan pembelajaran dan dapat bekerja sama dengan teman-temannya.',
             'rekomendasi' => 'Disarankan untuk terus memberikan stimulasi membaca di rumah dengan buku cerita bergambar. Ajak anak berdiskusi tentang lingkungan sekitar.',
         ];
@@ -585,9 +538,7 @@ class GuruController extends Controller
      */
     public function rapotUpdate(Request $request, $id)
     {
-        // TODO: validasi dan update ke database
-        // SemesterReport::find($id)->update([...]);
-
+        // Dummy - redirect with success
         return redirect()->route('guru.rapot.index')->with('success', 'Rapot berhasil diupdate.');
     }
 
@@ -596,61 +547,7 @@ class GuruController extends Controller
      */
     public function rapotDestroy($id)
     {
-        // TODO: hapus dari database
-        // SemesterReport::find($id)->delete();
-
+        // Dummy - redirect with success
         return redirect()->route('guru.rapot.index')->with('success', 'Rapot berhasil dihapus.');
-=======
-    /**
-     * Jadwal - Edit
-     */
-    public function jadwalEdit($id)
-    {
-        // Dummy data - nanti bisa diganti dengan query database
-        $allJadwal = [
-            1 => ['id' => 1, 'jenis' => 'kegiatan', 'nama' => 'Upacara Bendera', 'tanggal_raw' => '2026-03-10', 'waktu_mulai' => '07:00', 'waktu_selesai' => '08:00', 'lokasi' => 'Lapangan', 'kelas' => 'Semua', 'deskripsi' => ''],
-            2 => ['id' => 2, 'jenis' => 'kegiatan', 'nama' => 'Senam Pagi', 'tanggal_raw' => '2026-03-11', 'waktu_mulai' => '07:30', 'waktu_selesai' => '08:00', 'lokasi' => 'Lapangan', 'kelas' => 'Semua', 'deskripsi' => ''],
-            3 => ['id' => 3, 'jenis' => 'kegiatan', 'nama' => 'Outing Class', 'tanggal_raw' => '2026-03-12', 'waktu_mulai' => '08:00', 'waktu_selesai' => '12:00', 'lokasi' => 'Kebun Binatang', 'kelas' => 'TK B', 'deskripsi' => ''],
-            4 => ['id' => 4, 'jenis' => 'kegiatan', 'nama' => 'Lomba Mewarnai', 'tanggal_raw' => '2026-03-13', 'waktu_mulai' => '09:00', 'waktu_selesai' => '11:00', 'lokasi' => 'Aula', 'kelas' => 'Semua', 'deskripsi' => ''],
-        ];
-
-        if (!isset($allJadwal[$id])) {
-            return redirect()->route('guru.jadwal.index')->with('error', 'Jadwal tidak ditemukan.');
-        }
-
-        $jadwal = $allJadwal[$id];
-
-        return view('guru.jadwal.edit', compact('jadwal'));
-    }
-
-    /**
-     * Jadwal - Update
-     */
-    public function jadwalUpdate(Request $request, $id)
-    {
-        $request->validate([
-            'jenis_jadwal' => 'required|in:kegiatan,pembelajaran',
-            'nama' => 'required|string|max:255',
-            'tanggal' => 'required|date',
-            'waktu_mulai' => 'required',
-            'waktu_selesai' => 'required',
-        ]);
-
-        // TODO: update di database
-        // Schedule::findOrFail($id)->update([...]);
-
-        return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil diperbarui.');
-    }
-
-    /**
-     * Jadwal - Delete
-     */
-    public function jadwalDestroy($id)
-    {
-        // TODO: hapus dari database
-        // Schedule::findOrFail($id)->delete();
-
-        return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil dihapus.');
->>>>>>> af5449291182cebda04364c1a91a3d4f2efd142b
     }
 }

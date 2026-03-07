@@ -57,16 +57,7 @@ class AdminController extends Controller
     
     public function penggunaStore(Request $request)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed',
-            'role' => 'required|in:admin,guru,orangtua',
-        ]);
-        
-        // Create user logic here
-        // User::create([...]);
-        
+        // Dummy - redirect with success
         return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil ditambahkan!');
     }
     
@@ -86,14 +77,7 @@ class AdminController extends Controller
     
     public function penggunaUpdate(Request $request, $id)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email',
-            'role' => 'required|in:admin,guru,orangtua',
-        ]);
-        
-        // Update user logic here
-        
+        // Dummy - redirect with success
         return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil diupdate!');
     }
     
@@ -125,16 +109,7 @@ class AdminController extends Controller
     
     public function siswaStore(Request $request)
     {
-        $request->validate([
-            'nis' => 'required|string|unique:siswa,nis',
-            'nama' => 'required|string|max:255',
-            'kelas' => 'required|in:TK A,TK B',
-            'jenis_kelamin' => 'required|in:L,P',
-            'tanggal_lahir' => 'required|date',
-        ]);
-        
-        // Create siswa logic here
-        
+        // Dummy - redirect with success
         return redirect()->route('admin.siswa.index')->with('success', 'Data siswa berhasil ditambahkan!');
     }
     
@@ -157,13 +132,7 @@ class AdminController extends Controller
     
     public function siswaUpdate(Request $request, $id)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'kelas' => 'required|in:TK A,TK B',
-        ]);
-        
-        // Update siswa logic here
-        
+        // Dummy - redirect with success
         return redirect()->route('admin.siswa.index')->with('success', 'Data siswa berhasil diupdate!');
     }
     
@@ -196,13 +165,7 @@ class AdminController extends Controller
     
     public function backupRestore(Request $request)
     {
-        $request->validate([
-            'backup_file' => 'required',
-            'konfirmasi' => 'required|in:RESTORE',
-        ]);
-        
-        // Restore backup logic here
-        
+        // Dummy - redirect with success
         return redirect()->route('admin.backup.index')->with('success', 'Database berhasil di-restore!');
     }
     

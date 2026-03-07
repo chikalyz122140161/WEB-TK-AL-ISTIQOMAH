@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -14,33 +13,24 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|string',
-            'password' => 'required|string',
-        ]);
-
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            $user = Auth::user();
-
-            // Redirect berdasarkan role
-            return match ($user->role) {
-                'admin' => redirect()->route('admin.dashboard'),
-                'guru' => redirect()->route('guru.dashboard'),
-                'orangtua' => redirect()->route('orangtua.dashboard'),
-                default => redirect('/'),
-            };
+        // Dummy login - redirect berdasarkan email yang dimasukkan
+        $email = $request->input('email', '');
+        
+        // Simpan role di session untuk akses dummy
+        if (str_contains(strtolower($email), 'admin')) {
+            session(['dummy_role' => 'admin', 'dummy_email' => $email]);
+            return redirect()->route('admin.dashboard');
+        } elseif (str_contains(strtolower($email), 'guru')) {
+            session(['dummy_role' => 'guru', 'dummy_email' => $email]);
+            return redirect()->route('guru.dashboard');
+        } else {
+            session(['dummy_role' => 'orangtua', 'dummy_email' => $email]);
+            return redirect()->route('orangtua.dashboard');
         }
-
-        return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ])->onlyInput('email');
     }
 
     public function logout(Request $request)
     {
-        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

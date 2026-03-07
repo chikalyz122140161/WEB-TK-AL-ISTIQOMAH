@@ -113,11 +113,11 @@
                     <span class="update-list__count">{{ count($updateAdmin ?? [1,2,3]) }} baru</span>
                 </div>
                 @forelse ($updateAdmin ?? [
-                    ['title' => 'Laporan Ahmad Fauzi Dibuat', 'subtitle' => 'Laporan kehadiran', 'time' => '1 jam lalu', 'badge' => 'Laporan', 'badge_type' => 'done', 'initial' => 'L'],
-                    ['title' => 'Kehadiran Hari Ini Dicatat', 'subtitle' => '22 siswa tercatat', 'time' => '3 jam lalu', 'badge' => 'Kehadiran', 'badge_type' => 'new', 'initial' => 'K'],
-                    ['title' => 'Jadwal Upacara Ditambahkan', 'subtitle' => 'Senin, 10 Maret 2026', 'time' => 'Kemarin', 'badge' => 'Jadwal', 'badge_type' => 'info', 'initial' => 'J'],
+                    ['title' => 'Laporan Ahmad Fauzi Dibuat', 'subtitle' => 'Laporan kehadiran', 'time' => '1 jam lalu', 'badge' => 'Laporan', 'badge_type' => 'done', 'initial' => 'L', 'link' => 'guru.laporan.index'],
+                    ['title' => 'Kehadiran Hari Ini Dicatat', 'subtitle' => '22 siswa tercatat', 'time' => '3 jam lalu', 'badge' => 'Kehadiran', 'badge_type' => 'new', 'initial' => 'K', 'link' => 'guru.kehadiran.index'],
+                    ['title' => 'Jadwal Upacara Ditambahkan', 'subtitle' => 'Senin, 10 Maret 2026', 'time' => 'Kemarin', 'badge' => 'Jadwal', 'badge_type' => 'info', 'initial' => 'J', 'link' => 'guru.jadwal.index'],
                 ] as $update)
-                    <div class="update-item">
+                    <a href="{{ route($update['link']) }}" class="update-item" style="text-decoration:none;display:flex;">
                         <div class="update-item__avatar">{{ $update['initial'] ?? 'U' }}</div>
                         <div class="update-item__body">
                             <div class="update-item__title">{{ $update['title'] }}</div>
@@ -128,7 +128,7 @@
                             <span class="update-item__badge update-item__badge--{{ $update['badge_type'] ?? 'info' }}">{{ $update['badge'] ?? '' }}</span>
                         </div>
                         <svg class="update-item__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
-                    </div>
+                    </a>
                 @empty
                     <div style="padding:16px;font-size:13px;color:#475d5b;">Belum ada update.</div>
                 @endforelse
@@ -220,11 +220,11 @@
                     <span class="update-list__count">{{ count($updateBK ?? [1,2,3]) }} baru</span>
                 </div>
                 @forelse ($updateBK ?? [
-                    ['title' => 'Konseling Selesai - Muhammad', 'subtitle' => 'Sesi konseling individual', 'time' => '2 jam lalu', 'badge' => 'Selesai', 'badge_type' => 'done', 'initial' => 'M'],
-                    ['title' => 'Input Perkembangan - Anisa', 'subtitle' => 'Data perkembangan baru', 'time' => '1 hari lalu', 'badge' => 'Baru', 'badge_type' => 'new', 'initial' => 'A'],
-                    ['title' => 'Pesan dari Orang Tua Tika', 'subtitle' => 'Konsultasi jadwal', 'time' => '2 hari lalu', 'badge' => 'Pesan', 'badge_type' => 'info', 'initial' => 'T'],
+                    ['title' => 'Konseling Selesai - Muhammad', 'subtitle' => 'Sesi konseling individual', 'time' => '2 jam lalu', 'badge' => 'Selesai', 'badge_type' => 'done', 'initial' => 'M', 'link' => 'guru.jadwal_konseling'],
+                    ['title' => 'Input Perkembangan - Anisa', 'subtitle' => 'Data perkembangan baru', 'time' => '1 hari lalu', 'badge' => 'Baru', 'badge_type' => 'new', 'initial' => 'A', 'link' => 'guru.input_perkembangan'],
+                    ['title' => 'Pesan dari Orang Tua Tika', 'subtitle' => 'Konsultasi jadwal', 'time' => '2 hari lalu', 'badge' => 'Pesan', 'badge_type' => 'info', 'initial' => 'T', 'link' => 'guru.chat'],
                 ] as $update)
-                    <div class="update-item">
+                    <a href="{{ route($update['link']) }}" class="update-item" style="text-decoration:none;display:flex;">
                         <div class="update-item__avatar">{{ $update['initial'] ?? 'U' }}</div>
                         <div class="update-item__body">
                             <div class="update-item__title">{{ $update['title'] }}</div>
@@ -235,7 +235,7 @@
                             <span class="update-item__badge update-item__badge--{{ $update['badge_type'] ?? 'info' }}">{{ $update['badge'] ?? '' }}</span>
                         </div>
                         <svg class="update-item__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
-                    </div>
+                    </a>
                 @empty
                     <div style="padding:16px;font-size:13px;color:#475d5b;">Belum ada update.</div>
                 @endforelse
