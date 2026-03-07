@@ -53,12 +53,12 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="role" class="form-label required">Role</label>
-                    <select id="role" name="role" class="form-select" required>
+                    <select id="role" name="role" class="form-select" required onchange="handleRoleChange(this.value)">
                         <option value="">Pilih Role</option>
                         <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                         <option value="guru" {{ old('role') == 'guru' ? 'selected' : '' }}>Guru</option>
-                        <option value="orangtua" {{ old('role') == 'orangtua' ? 'selected' : '' }}>Orang Tua</option>
                     </select>
+                    <small class="form-hint">Untuk menambah akun Orang Tua, silakan tambah melalui menu <a href="{{ route('admin.siswa.create') }}">Tambah Siswa</a></small>
                 </div>
                 
                 <div class="form-group">
@@ -147,6 +147,17 @@
 
 .form-input::placeholder {
     color: #9ca3af;
+}
+
+.form-hint {
+    color: #64748b;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.form-hint a {
+    color: #00473e;
+    font-weight: 500;
 }
 
 .form-actions {

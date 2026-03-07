@@ -96,6 +96,66 @@
                 </div>
             </div>
             
+            <div class="form-section">
+                <h4 class="form-section__title">Data Orang Tua / Wali</h4>
+                <p class="form-section__desc">Data orang tua yang terhubung dengan siswa ini</p>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nama_ayah" class="form-label">Nama Ayah</label>
+                        <input type="text" id="nama_ayah" name="nama_ayah" class="form-input" value="{{ old('nama_ayah', $siswa['nama_ayah'] ?? '') }}" placeholder="Nama lengkap ayah">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="nama_ibu" class="form-label">Nama Ibu</label>
+                        <input type="text" id="nama_ibu" name="nama_ibu" class="form-input" value="{{ old('nama_ibu', $siswa['nama_ibu'] ?? '') }}" placeholder="Nama lengkap ibu">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nomor_telepon_ortu" class="form-label">Nomor Telepon</label>
+                        <input type="tel" id="nomor_telepon_ortu" name="nomor_telepon_ortu" class="form-input" value="{{ old('nomor_telepon_ortu', $siswa['nomor_telepon_ortu'] ?? '') }}" placeholder="08xxxxxxxxxx">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pekerjaan_ortu" class="form-label">Pekerjaan Orang Tua</label>
+                        <input type="text" id="pekerjaan_ortu" name="pekerjaan_ortu" class="form-input" value="{{ old('pekerjaan_ortu', $siswa['pekerjaan_ortu'] ?? '') }}" placeholder="Pekerjaan orang tua">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h4 class="form-section__title">Akun Orang Tua</h4>
+                <p class="form-section__desc">Akun login orang tua untuk memantau perkembangan anak</p>
+                
+                <div class="linked-account-box">
+                    <div class="linked-account-info">
+                        <div class="linked-account-avatar">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd"/></svg>
+                        </div>
+                        <div class="linked-account-detail">
+                            <span class="linked-account-name">{{ $siswa['nama_ayah'] ?? 'Orang Tua' }} / {{ $siswa['nama_ibu'] ?? '' }}</span>
+                            <span class="linked-account-email">{{ $siswa['email_ortu'] ?? 'orangtua@example.com' }}</span>
+                        </div>
+                    </div>
+                    <span class="badge badge--success">Terhubung</span>
+                </div>
+                
+                <div class="form-row" style="margin-top: 1rem;">
+                    <div class="form-group">
+                        <label for="email_ortu" class="form-label">Email Orang Tua</label>
+                        <input type="email" id="email_ortu" name="email_ortu" class="form-input" value="{{ old('email_ortu', $siswa['email_ortu'] ?? '') }}" placeholder="email@contoh.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password_ortu" class="form-label">Password Baru</label>
+                        <input type="password" id="password_ortu" name="password_ortu" class="form-input" placeholder="Kosongkan jika tidak diubah">
+                        <small class="form-hint">Biarkan kosong jika tidak ingin mengubah password</small>
+                    </div>
+                </div>
+            </div>
+            
             <div class="form-actions">
                 <button type="reset" class="btn btn--secondary">Reset</button>
                 <button type="submit" class="btn btn--primary">
@@ -115,13 +175,31 @@
 
 .form-section {
     margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.form-section:last-of-type {
+    border-bottom: none;
 }
 
 .form-section__title {
     color: #00473e;
     font-size: 1rem;
     font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-section__desc {
+    color: #64748b;
+    font-size: 0.85rem;
     margin-bottom: 1rem;
+}
+
+.form-hint {
+    color: #64748b;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
 }
 
 .form-row {
@@ -200,6 +278,58 @@
 .alert--danger ul {
     margin: 0;
     padding-left: 1.25rem;
+}
+
+/* Linked Account Box */
+.linked-account-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.linked-account-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.linked-account-avatar {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #00473e, #0d9488);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.linked-account-detail {
+    display: flex;
+    flex-direction: column;
+}
+
+.linked-account-name {
+    font-weight: 600;
+    color: #00473e;
+}
+
+.linked-account-email {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.badge--success {
+    background: rgba(34, 197, 94, 0.1);
+    color: #16a34a;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
 }
 
 .mb-0 { margin-bottom: 0; }

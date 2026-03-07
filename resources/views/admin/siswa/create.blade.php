@@ -92,7 +92,8 @@
             </div>
             
             <div class="form-section">
-                <h4 class="form-section__title">Data Orang Tua</h4>
+                <h4 class="form-section__title">Data Orang Tua / Wali</h4>
+                <p class="form-section__desc">Data orang tua akan otomatis terhubung dengan akun siswa</p>
                 
                 <div class="form-row">
                     <div class="form-group">
@@ -115,6 +116,24 @@
                     <div class="form-group">
                         <label for="pekerjaan_ortu" class="form-label">Pekerjaan Orang Tua</label>
                         <input type="text" id="pekerjaan_ortu" name="pekerjaan_ortu" class="form-input" value="{{ old('pekerjaan_ortu') }}" placeholder="Pekerjaan orang tua">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h4 class="form-section__title">Akun Orang Tua</h4>
+                <p class="form-section__desc">Buat akun untuk orang tua agar dapat login ke sistem dan memantau perkembangan anak</p>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email_ortu" class="form-label required">Email Orang Tua</label>
+                        <input type="email" id="email_ortu" name="email_ortu" class="form-input" value="{{ old('email_ortu') }}" required placeholder="email@contoh.com">
+                        <small class="form-hint">Email ini akan digunakan untuk login</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password_ortu" class="form-label required">Password</label>
+                        <input type="password" id="password_ortu" name="password_ortu" class="form-input" required placeholder="Minimal 6 karakter">
                     </div>
                 </div>
             </div>
@@ -150,7 +169,19 @@
     color: #00473e;
     font-size: 1rem;
     font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-section__desc {
+    color: #64748b;
+    font-size: 0.85rem;
     margin-bottom: 1rem;
+}
+
+.form-hint {
+    color: #64748b;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
 }
 
 .form-row {
