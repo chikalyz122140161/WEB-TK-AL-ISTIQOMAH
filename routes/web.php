@@ -75,6 +75,8 @@ Route::middleware('auth')->group(function () {
     // Guru - Administrasi: Kehadiran
     Route::get('/guru/kehadiran', [GuruController::class, 'kehadiranIndex'])->name('guru.kehadiran.index');
     Route::post('/guru/kehadiran', [GuruController::class, 'kehadiranStore'])->name('guru.kehadiran.store');
+    Route::get('/guru/kehadiran/{id}/edit', [GuruController::class, 'kehadiranEdit'])->name('guru.kehadiran.edit');
+    Route::put('/guru/kehadiran/{id}', [GuruController::class, 'kehadiranUpdate'])->name('guru.kehadiran.update');
 
     // Guru - Administrasi: Laporan
     Route::get('/guru/laporan-administrasi', [GuruController::class, 'laporanIndex'])->name('guru.laporan.index');
@@ -83,6 +85,9 @@ Route::middleware('auth')->group(function () {
     // Guru - Administrasi: Jadwal
     Route::get('/guru/jadwal', [GuruController::class, 'jadwalIndex'])->name('guru.jadwal.index');
     Route::post('/guru/jadwal', [GuruController::class, 'jadwalStore'])->name('guru.jadwal.store');
+    Route::get('/guru/jadwal/{id}/edit', [GuruController::class, 'jadwalEdit'])->name('guru.jadwal.edit');
+    Route::put('/guru/jadwal/{id}', [GuruController::class, 'jadwalUpdate'])->name('guru.jadwal.update');
+    Route::delete('/guru/jadwal/{id}', [GuruController::class, 'jadwalDestroy'])->name('guru.jadwal.destroy');
 
     // Guru - Bimbingan Konseling
     Route::get('/guru/input-perkembangan', [GuruController::class, 'inputPerkembangan'])->name('guru.input_perkembangan');
