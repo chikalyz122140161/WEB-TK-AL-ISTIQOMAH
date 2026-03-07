@@ -263,6 +263,48 @@ class GuruController extends Controller
     }
 
     /**
+     * Kehadiran - Edit
+     */
+    public function kehadiranEdit($id)
+    {
+        // Dummy data - nanti bisa diganti dengan query database
+        $allKehadiran = [
+            1 => ['id' => 1, 'nama' => 'Ahmad Fauzi', 'kelas' => 'TK A', 'tanggal' => '2026-03-04', 'status' => 'hadir', 'keterangan' => '-'],
+            2 => ['id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A', 'tanggal' => '2026-03-04', 'status' => 'hadir', 'keterangan' => '-'],
+            3 => ['id' => 3, 'nama' => 'Budi Santoso', 'kelas' => 'TK B', 'tanggal' => '2026-03-04', 'status' => 'izin', 'keterangan' => 'Acara keluarga'],
+            4 => ['id' => 4, 'nama' => 'Dewi Lestari', 'kelas' => 'TK A', 'tanggal' => '2026-03-04', 'status' => 'sakit', 'keterangan' => 'Demam'],
+            5 => ['id' => 5, 'nama' => 'Eko Prasetyo', 'kelas' => 'TK B', 'tanggal' => '2026-03-04', 'status' => 'hadir', 'keterangan' => '-'],
+        ];
+
+        if (!isset($allKehadiran[$id])) {
+            return redirect()->route('guru.kehadiran.index')->with('error', 'Data kehadiran tidak ditemukan.');
+        }
+
+        $kehadiran = $allKehadiran[$id];
+
+        return view('guru.kehadiran.edit', compact('kehadiran'));
+    }
+
+    /**
+     * Kehadiran - Update
+     */
+    public function kehadiranUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:hadir,izin,sakit,alpa',
+            'keterangan' => 'nullable|string|max:255',
+        ]);
+
+        // TODO: update di database
+        // Attendance::findOrFail($id)->update([
+        //     'status' => $request->status,
+        //     'note' => $request->keterangan,
+        // ]);
+
+        return redirect()->route('guru.kehadiran.index')->with('success', 'Data kehadiran berhasil diperbarui.');
+    }
+
+    /**
      * Laporan Administrasi - Index (Form & List)
      */
     public function laporanIndex(Request $request)
@@ -348,5 +390,57 @@ class GuruController extends Controller
         // Schedule::create([...]);
 
         return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil ditambahkan.');
+    }
+
+    /**
+     * Jadwal - Edit
+     */
+    public function jadwalEdit($id)
+    {
+        // Dummy data - nanti bisa diganti dengan query database
+        $allJadwal = [
+            1 => ['id' => 1, 'jenis' => 'kegiatan', 'nama' => 'Upacara Bendera', 'tanggal_raw' => '2026-03-10', 'waktu_mulai' => '07:00', 'waktu_selesai' => '08:00', 'lokasi' => 'Lapangan', 'kelas' => 'Semua', 'deskripsi' => ''],
+            2 => ['id' => 2, 'jenis' => 'kegiatan', 'nama' => 'Senam Pagi', 'tanggal_raw' => '2026-03-11', 'waktu_mulai' => '07:30', 'waktu_selesai' => '08:00', 'lokasi' => 'Lapangan', 'kelas' => 'Semua', 'deskripsi' => ''],
+            3 => ['id' => 3, 'jenis' => 'kegiatan', 'nama' => 'Outing Class', 'tanggal_raw' => '2026-03-12', 'waktu_mulai' => '08:00', 'waktu_selesai' => '12:00', 'lokasi' => 'Kebun Binatang', 'kelas' => 'TK B', 'deskripsi' => ''],
+            4 => ['id' => 4, 'jenis' => 'kegiatan', 'nama' => 'Lomba Mewarnai', 'tanggal_raw' => '2026-03-13', 'waktu_mulai' => '09:00', 'waktu_selesai' => '11:00', 'lokasi' => 'Aula', 'kelas' => 'Semua', 'deskripsi' => ''],
+        ];
+
+        if (!isset($allJadwal[$id])) {
+            return redirect()->route('guru.jadwal.index')->with('error', 'Jadwal tidak ditemukan.');
+        }
+
+        $jadwal = $allJadwal[$id];
+
+        return view('guru.jadwal.edit', compact('jadwal'));
+    }
+
+    /**
+     * Jadwal - Update
+     */
+    public function jadwalUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'jenis_jadwal' => 'required|in:kegiatan,pembelajaran',
+            'nama' => 'required|string|max:255',
+            'tanggal' => 'required|date',
+            'waktu_mulai' => 'required',
+            'waktu_selesai' => 'required',
+        ]);
+
+        // TODO: update di database
+        // Schedule::findOrFail($id)->update([...]);
+
+        return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil diperbarui.');
+    }
+
+    /**
+     * Jadwal - Delete
+     */
+    public function jadwalDestroy($id)
+    {
+        // TODO: hapus dari database
+        // Schedule::findOrFail($id)->delete();
+
+        return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil dihapus.');
     }
 }

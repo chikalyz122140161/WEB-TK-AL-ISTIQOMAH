@@ -163,6 +163,30 @@
         background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
         color: #dc2626;
     }
+    .btn-edit {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        padding: 6px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .btn-edit:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    .btn-edit svg {
+        width: 14px;
+        height: 14px;
+        fill: currentColor;
+    }
     
     /* Filter Row */
     .filter-row {
@@ -413,6 +437,7 @@
                         <th>Tanggal</th>
                         <th>Status</th>
                         <th>Keterangan</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -434,10 +459,18 @@
                                 </span>
                             </td>
                             <td>{{ $item['keterangan'] }}</td>
+                            <td>
+                                <a href="{{ route('guru.kehadiran.edit', $item['id']) }}" class="btn-edit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/>
+                                    </svg>
+                                    Edit
+                                </a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" style="text-align: center; color: #6B7280; padding: 40px;">
+                            <td colspan="7" style="text-align: center; color: #6B7280; padding: 40px;">
                                 Belum ada data kehadiran.
                             </td>
                         </tr>
