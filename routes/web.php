@@ -94,7 +94,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/guru/jadwal-konseling', [GuruController::class, 'jadwalKonseling'])->name('guru.jadwal_konseling');
     Route::post('/guru/jadwal-konseling', [GuruController::class, 'storeJadwalKonseling'])->name('guru.store_jadwal_konseling');
 
-    // Dashboard Orang Tua
+    // ═══════════════════════════════════════════════════════
+    // ORANG TUA ROUTES
+    // ═══════════════════════════════════════════════════════
+    // Administrasi
     Route::get('/orangtua/dashboard', [OrangTuaController::class, 'dashboard'])->name('orangtua.dashboard');
+    Route::get('/orangtua/presensi', [OrangTuaController::class, 'presensi'])->name('orangtua.presensi');
+    Route::get('/orangtua/laporan', [OrangTuaController::class, 'laporan'])->name('orangtua.laporan');
+    Route::get('/orangtua/laporan/{id}', [OrangTuaController::class, 'laporanDetail'])->name('orangtua.laporan.detail');
+    Route::get('/orangtua/jadwal', [OrangTuaController::class, 'jadwal'])->name('orangtua.jadwal');
+
+    // Bimbingan Konseling
+    Route::get('/orangtua/report-mingguan', [OrangTuaController::class, 'reportMingguan'])->name('orangtua.report_mingguan');
+    Route::get('/orangtua/grafik', [OrangTuaController::class, 'grafik'])->name('orangtua.grafik');
+    Route::get('/orangtua/chat', [OrangTuaController::class, 'chat'])->name('orangtua.chat');
+    Route::post('/orangtua/chat', [OrangTuaController::class, 'kirimChat'])->name('orangtua.kirim_chat');
+    Route::get('/orangtua/konseling', [OrangTuaController::class, 'konseling'])->name('orangtua.konseling');
+    Route::post('/orangtua/konseling', [OrangTuaController::class, 'ajukanKonseling'])->name('orangtua.ajukan_konseling');
 });
 
