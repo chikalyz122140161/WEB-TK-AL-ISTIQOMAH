@@ -94,6 +94,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/guru/jadwal-konseling', [GuruController::class, 'jadwalKonseling'])->name('guru.jadwal_konseling');
     Route::post('/guru/jadwal-konseling', [GuruController::class, 'storeJadwalKonseling'])->name('guru.store_jadwal_konseling');
 
+    // Guru - Rapot Semester
+    Route::get('/guru/rapot', [GuruController::class, 'rapotIndex'])->name('guru.rapot.index');
+    Route::get('/guru/rapot/create', [GuruController::class, 'rapotCreate'])->name('guru.rapot.create');
+    Route::post('/guru/rapot', [GuruController::class, 'rapotStore'])->name('guru.rapot.store');
+    Route::get('/guru/rapot/{id}', [GuruController::class, 'rapotShow'])->name('guru.rapot.show');
+    Route::get('/guru/rapot/{id}/edit', [GuruController::class, 'rapotEdit'])->name('guru.rapot.edit');
+    Route::put('/guru/rapot/{id}', [GuruController::class, 'rapotUpdate'])->name('guru.rapot.update');
+    Route::delete('/guru/rapot/{id}', [GuruController::class, 'rapotDestroy'])->name('guru.rapot.destroy');
+
     // ═══════════════════════════════════════════════════════
     // ORANG TUA ROUTES
     // ═══════════════════════════════════════════════════════

@@ -349,4 +349,213 @@ class GuruController extends Controller
 
         return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil ditambahkan.');
     }
+
+    // ═══════════════════════════════════════════════════════
+    // RAPOT SEMESTER
+    // ═══════════════════════════════════════════════════════
+
+    /**
+     * Rapot - Index (Daftar semua rapot)
+     */
+    public function rapotIndex(Request $request)
+    {
+        $filterKelas = $request->input('kelas', '');
+        $filterSemester = $request->input('semester', '');
+        $filterTahun = $request->input('tahun', '');
+
+        // Dummy data rapot
+        $rapotList = [
+            [
+                'id' => 1,
+                'siswa' => 'Ahmad Fauzi',
+                'kelas' => 'TK A',
+                'tahun_ajaran' => '2025/2026',
+                'semester' => 'Ganjil',
+                'tanggal_terbit' => '15 Des 2025',
+                'status' => 'Terbit',
+            ],
+            [
+                'id' => 2,
+                'siswa' => 'Siti Nurhaliza',
+                'kelas' => 'TK A',
+                'tahun_ajaran' => '2025/2026',
+                'semester' => 'Ganjil',
+                'tanggal_terbit' => '15 Des 2025',
+                'status' => 'Terbit',
+            ],
+            [
+                'id' => 3,
+                'siswa' => 'Budi Santoso',
+                'kelas' => 'TK B',
+                'tahun_ajaran' => '2025/2026',
+                'semester' => 'Ganjil',
+                'tanggal_terbit' => '15 Des 2025',
+                'status' => 'Terbit',
+            ],
+            [
+                'id' => 4,
+                'siswa' => 'Dewi Lestari',
+                'kelas' => 'TK A',
+                'tahun_ajaran' => '2025/2026',
+                'semester' => 'Ganjil',
+                'tanggal_terbit' => null,
+                'status' => 'Draft',
+            ],
+            [
+                'id' => 5,
+                'siswa' => 'Eko Prasetyo',
+                'kelas' => 'TK B',
+                'tahun_ajaran' => '2024/2025',
+                'semester' => 'Genap',
+                'tanggal_terbit' => '20 Jun 2025',
+                'status' => 'Terbit',
+            ],
+        ];
+
+        // Filter data
+        $rapotList = collect($rapotList)->filter(function ($item) use ($filterKelas, $filterSemester, $filterTahun) {
+            if ($filterKelas && $item['kelas'] !== $filterKelas) return false;
+            if ($filterSemester && $item['semester'] !== $filterSemester) return false;
+            if ($filterTahun && $item['tahun_ajaran'] !== $filterTahun) return false;
+            return true;
+        })->values()->all();
+
+        return view('guru.rapot.index', compact('rapotList', 'filterKelas', 'filterSemester', 'filterTahun'));
+    }
+
+    /**
+     * Rapot - Create (Form tambah rapot baru)
+     */
+    public function rapotCreate()
+    {
+        // Dummy data siswa
+        $siswaList = [
+            ['id' => 1, 'nama' => 'Ahmad Fauzi', 'kelas' => 'TK A'],
+            ['id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A'],
+            ['id' => 3, 'nama' => 'Budi Santoso', 'kelas' => 'TK B'],
+            ['id' => 4, 'nama' => 'Dewi Lestari', 'kelas' => 'TK A'],
+            ['id' => 5, 'nama' => 'Eko Prasetyo', 'kelas' => 'TK B'],
+            ['id' => 6, 'nama' => 'Rina Susanti', 'kelas' => 'TK A'],
+            ['id' => 7, 'nama' => 'Doni Saputra', 'kelas' => 'TK B'],
+        ];
+
+        return view('guru.rapot.create', compact('siswaList'));
+    }
+
+    /**
+     * Rapot - Store (Simpan rapot baru)
+     */
+    public function rapotStore(Request $request)
+    {
+        // TODO: validasi dan simpan ke database
+        // SemesterReport::create([...]);
+
+        return redirect()->route('guru.rapot.index')->with('success', 'Rapot berhasil ditambahkan.');
+    }
+
+    /**
+     * Rapot - Show (Detail rapot)
+     */
+    public function rapotShow($id)
+    {
+        // Dummy data rapot detail
+        $rapot = [
+            'id' => $id,
+            'siswa' => 'Ahmad Fauzi',
+            'kelas' => 'TK A',
+            'tahun_ajaran' => '2025/2026',
+            'semester' => 'Ganjil',
+            'tanggal_terbit' => '15 Des 2025',
+            'status' => 'Terbit',
+            'agama_moral' => 'BSH',
+            'agama_moral_deskripsi' => 'Anak sudah mampu melaksanakan ibadah sederhana (berdoa sebelum dan sesudah makan), mengenal ciptaan Tuhan, serta menunjukkan sikap santun dan hormat kepada guru dan teman.',
+            'fisik_motorik' => 'BSB',
+            'fisik_motorik_deskripsi' => 'Anak sangat aktif dalam kegiatan motorik kasar seperti berlari dan melompat. Motorik halus juga berkembang baik, mampu memegang pensil dengan benar dan mewarnai dalam garis.',
+            'kognitif' => 'BSH',
+            'kognitif_deskripsi' => 'Anak mampu mengenal angka 1-10, menghitung benda konkrit, mengenal warna dasar, dan menyelesaikan puzzle sederhana dengan baik.',
+            'bahasa' => 'BSH',
+            'bahasa_deskripsi' => 'Anak mampu berkomunikasi dengan jelas, menceritakan pengalaman sederhana, mengenal huruf vokal, dan menyimak cerita dengan antusias.',
+            'sosial_emosional' => 'BSH',
+            'sosial_emosional_deskripsi' => 'Anak dapat bermain bersama teman, berbagi mainan, mengantri dengan tertib, dan menunjukkan empati ketika teman sedih.',
+            'seni' => 'BSB',
+            'seni_deskripsi' => 'Anak sangat kreatif dalam kegiatan seni, suka menggambar dan mewarnai, aktif bernyanyi dan mengikuti gerak lagu dengan semangat.',
+            'hadir' => 85,
+            'izin' => 3,
+            'sakit' => 2,
+            'alpa' => 0,
+            'catatan_guru' => 'Ananda menunjukkan perkembangan yang sangat baik selama semester ini. Aktif dalam setiap kegiatan pembelajaran dan dapat bekerja sama dengan teman-temannya.',
+            'rekomendasi' => 'Disarankan untuk terus memberikan stimulasi membaca di rumah dengan buku cerita bergambar. Ajak anak berdiskusi tentang lingkungan sekitar.',
+        ];
+
+        return view('guru.rapot.show', compact('rapot'));
+    }
+
+    /**
+     * Rapot - Edit (Form edit rapot)
+     */
+    public function rapotEdit($id)
+    {
+        // Dummy data siswa
+        $siswaList = [
+            ['id' => 1, 'nama' => 'Ahmad Fauzi', 'kelas' => 'TK A'],
+            ['id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A'],
+            ['id' => 3, 'nama' => 'Budi Santoso', 'kelas' => 'TK B'],
+            ['id' => 4, 'nama' => 'Dewi Lestari', 'kelas' => 'TK A'],
+            ['id' => 5, 'nama' => 'Eko Prasetyo', 'kelas' => 'TK B'],
+        ];
+
+        // Dummy data rapot untuk edit
+        $rapot = [
+            'id' => $id,
+            'siswa_id' => 1,
+            'siswa' => 'Ahmad Fauzi',
+            'kelas' => 'TK A',
+            'tahun_ajaran' => '2025/2026',
+            'semester' => 'Ganjil',
+            'tanggal_terbit' => '2025-12-15',
+            'status' => 'Terbit',
+            'agama_moral' => 'BSH',
+            'agama_moral_deskripsi' => 'Anak sudah mampu melaksanakan ibadah sederhana (berdoa sebelum dan sesudah makan), mengenal ciptaan Tuhan, serta menunjukkan sikap santun dan hormat kepada guru dan teman.',
+            'fisik_motorik' => 'BSB',
+            'fisik_motorik_deskripsi' => 'Anak sangat aktif dalam kegiatan motorik kasar seperti berlari dan melompat. Motorik halus juga berkembang baik, mampu memegang pensil dengan benar dan mewarnai dalam garis.',
+            'kognitif' => 'BSH',
+            'kognitif_deskripsi' => 'Anak mampu mengenal angka 1-10, menghitung benda konkrit, mengenal warna dasar, dan menyelesaikan puzzle sederhana dengan baik.',
+            'bahasa' => 'BSH',
+            'bahasa_deskripsi' => 'Anak mampu berkomunikasi dengan jelas, menceritakan pengalaman sederhana, mengenal huruf vokal, dan menyimak cerita dengan antusias.',
+            'sosial_emosional' => 'BSH',
+            'sosial_emosional_deskripsi' => 'Anak dapat bermain bersama teman, berbagi mainan, mengantri dengan tertib, dan menunjukkan empati ketika teman sedih.',
+            'seni' => 'BSB',
+            'seni_deskripsi' => 'Anak sangat kreatif dalam kegiatan seni, suka menggambar dan mewarnai, aktif bernyanyi dan mengikuti gerak lagu dengan semangat.',
+            'hadir' => 85,
+            'izin' => 3,
+            'sakit' => 2,
+            'alpa' => 0,
+            'catatan_guru' => 'Ananda menunjukkan perkembangan yang sangat baik selama semester ini. Aktif dalam setiap kegiatan pembelajaran dan dapat bekerja sama dengan teman-temannya.',
+            'rekomendasi' => 'Disarankan untuk terus memberikan stimulasi membaca di rumah dengan buku cerita bergambar. Ajak anak berdiskusi tentang lingkungan sekitar.',
+        ];
+
+        return view('guru.rapot.edit', compact('rapot', 'siswaList'));
+    }
+
+    /**
+     * Rapot - Update (Update rapot)
+     */
+    public function rapotUpdate(Request $request, $id)
+    {
+        // TODO: validasi dan update ke database
+        // SemesterReport::find($id)->update([...]);
+
+        return redirect()->route('guru.rapot.index')->with('success', 'Rapot berhasil diupdate.');
+    }
+
+    /**
+     * Rapot - Destroy (Hapus rapot)
+     */
+    public function rapotDestroy($id)
+    {
+        // TODO: hapus dari database
+        // SemesterReport::find($id)->delete();
+
+        return redirect()->route('guru.rapot.index')->with('success', 'Rapot berhasil dihapus.');
+    }
 }
