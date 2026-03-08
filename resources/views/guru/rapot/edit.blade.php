@@ -361,13 +361,6 @@
                         <input type="hidden" name="siswa_id" value="{{ $rapot['siswa']['id'] }}">
                     </div>
                     <div class="form-group">
-                        <label>Kelas <span class="required">*</span></label>
-                        <select name="kelas" required>
-                            <option value="TK A" {{ $rapot['kelas'] == 'TK A' ? 'selected' : '' }}>TK A</option>
-                            <option value="TK B" {{ $rapot['kelas'] == 'TK B' ? 'selected' : '' }}>TK B</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label>Tahun Ajaran <span class="required">*</span></label>
                         <select name="tahun_ajaran" required>
                             <option value="2025/2026" {{ $rapot['tahun_ajaran'] == '2025/2026' ? 'selected' : '' }}>2025/2026</option>

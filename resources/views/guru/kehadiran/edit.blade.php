@@ -58,6 +58,11 @@
         background: #f2f7f5;
         transition: all 0.2s;
         font-family: inherit;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .form-group textarea {
+        resize: vertical;
     }
     .form-group input:focus,
     .form-group select:focus,

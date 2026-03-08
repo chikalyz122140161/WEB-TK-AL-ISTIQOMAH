@@ -293,14 +293,6 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Kelas <span class="required">*</span></label>
-                        <select name="kelas" required>
-                            <option value="">-- Pilih Kelas --</option>
-                            <option value="TK A">TK A</option>
-                            <option value="TK B">TK B</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label>Tahun Ajaran <span class="required">*</span></label>
                         <select name="tahun_ajaran" required>
                             <option value="">-- Pilih Tahun Ajaran --</option>

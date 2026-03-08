@@ -222,7 +222,7 @@
     }
     .student-attendance-row {
         display: grid;
-        grid-template-columns: 1fr 200px 1fr;
+        grid-template-columns: 1.2fr auto 1fr;
         gap: 16px;
         align-items: center;
         padding: 12px 16px;
@@ -291,6 +291,7 @@
         border-radius: 6px;
         font-size: 13px;
         width: 100%;
+        box-sizing: border-box;
     }
     .note-input:focus {
         outline: none;
@@ -335,6 +336,21 @@
         <form action="{{ route('guru.kehadiran.store') }}" method="POST">
             @csrf
             <div class="form-grid" style="margin-bottom: 20px;">
+                <div class="form-group">
+                    <label>Tahun Ajaran</label>
+                    <select name="tahun_ajaran" required>
+                        <option value="2025/2026" selected>2025/2026</option>
+                        <option value="2024/2025">2024/2025</option>
+                        <option value="2023/2024">2023/2024</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Semester</label>
+                    <select name="semester" required>
+                        <option value="Ganjil">Ganjil</option>
+                        <option value="Genap">Genap</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label>Tanggal</label>
                     <input type="date" name="tanggal" value="{{ date('Y-m-d') }}" required>
