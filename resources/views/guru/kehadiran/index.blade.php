@@ -65,6 +65,15 @@
         background: #fff;
         box-shadow: 0 0 0 3px rgba(250, 174, 43, 0.15);
     }
+    .form-group input[type="number"] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+    .form-group input[type="number"]::-webkit-outer-spin-button,
+    .form-group input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
     .btn-orange {
         display: inline-flex;
         align-items: center;

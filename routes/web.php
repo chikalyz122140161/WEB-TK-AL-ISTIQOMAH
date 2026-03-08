@@ -78,10 +78,19 @@ Route::middleware('dummy.auth')->group(function () {
     Route::post('/guru/input-perkembangan', [GuruController::class, 'storeInputPerkembangan'])->name('guru.store_input_perkembangan');
     Route::get('/guru/grafik', [GuruController::class, 'grafik'])->name('guru.grafik');
     Route::get('/guru/laporan-bk', [GuruController::class, 'laporan'])->name('guru.laporan_bk');
+    Route::get('/guru/laporan-bk/{id}', [GuruController::class, 'laporanBkShow'])->name('guru.laporan_bk.show');
+    Route::get('/guru/laporan-bk/{id}/edit', [GuruController::class, 'laporanBkEdit'])->name('guru.laporan_bk.edit');
+    Route::put('/guru/laporan-bk/{id}', [GuruController::class, 'laporanBkUpdate'])->name('guru.laporan_bk.update');
     Route::get('/guru/chat', [GuruController::class, 'chat'])->name('guru.chat');
     Route::post('/guru/chat', [GuruController::class, 'kirimChat'])->name('guru.kirim_chat');
     Route::get('/guru/jadwal-konseling', [GuruController::class, 'jadwalKonseling'])->name('guru.jadwal_konseling');
     Route::post('/guru/jadwal-konseling', [GuruController::class, 'storeJadwalKonseling'])->name('guru.store_jadwal_konseling');
+    Route::get('/guru/jadwal-konseling/{id}', [GuruController::class, 'jadwalKonselingShow'])->name('guru.jadwal_konseling.show');
+    Route::get('/guru/jadwal-konseling/{id}/edit', [GuruController::class, 'jadwalKonselingEdit'])->name('guru.jadwal_konseling.edit');
+    Route::put('/guru/jadwal-konseling/{id}', [GuruController::class, 'jadwalKonselingUpdate'])->name('guru.jadwal_konseling.update');
+    Route::post('/guru/jadwal-konseling/{id}/setuju', [GuruController::class, 'jadwalKonselingSetuju'])->name('guru.jadwal_konseling.setuju');
+    Route::post('/guru/jadwal-konseling/{id}/tolak', [GuruController::class, 'jadwalKonselingTolak'])->name('guru.jadwal_konseling.tolak');
+    Route::post('/guru/jadwal-konseling/{id}/batalkan', [GuruController::class, 'jadwalKonselingBatalkan'])->name('guru.jadwal_konseling.batalkan');
 
     // Guru - Rapot Semester
     Route::get('/guru/rapot', [GuruController::class, 'rapotIndex'])->name('guru.rapot.index');

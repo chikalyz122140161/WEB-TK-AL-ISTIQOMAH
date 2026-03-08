@@ -208,6 +208,30 @@
             </div>
 
             <div class="field-group">
+                <label class="field-label" for="tahun_ajaran">Tahun Ajaran</label>
+                <input
+                    class="field-control"
+                    type="number"
+                    id="tahun_ajaran"
+                    name="tahun_ajaran"
+                    min="2000"
+                    max="2100"
+                    value="{{ date('Y') }}"
+                    placeholder="Contoh: 2025"
+                    required
+                    style="-moz-appearance:textfield;appearance:textfield;"
+                >
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" for="semester">Semester</label>
+                <select class="field-control" id="semester" name="semester" required>
+                    <option value="Ganjil">Ganjil</option>
+                    <option value="Genap">Genap</option>
+                </select>
+            </div>
+
+            <div class="field-group">
                 <label class="field-label" for="minggu_ke">Minggu Ke</label>
                 <input
                     class="field-control"

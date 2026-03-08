@@ -123,47 +123,16 @@
         margin-top: 4px;
     }
 
-    /* Time Slots */
-    .time-slots {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
+    /* Time inputs */
+    .time-inputs {
+        display: flex;
+        align-items: center;
         gap: 12px;
     }
-    @media (max-width: 768px) {
-        .time-slots { grid-template-columns: repeat(2, 1fr); }
-    }
-    .time-slot {
-        padding: 12px;
-        border: 2px solid #00473e20;
-        border-radius: 8px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    .time-slot:hover {
-        border-color: #faae2b;
-    }
-    .time-slot.selected {
-        border-color: #faae2b;
-        background: linear-gradient(135deg, #faae2b20 0%, #f5a62320 100%);
-    }
-    .time-slot.disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        background: #f3f4f6;
-    }
-    .time-slot__time {
-        font-size: 14px;
-        font-weight: 600;
-        color: #00473e;
-        margin-bottom: 2px;
-    }
-    .time-slot__status {
-        font-size: 11px;
-        color: #10B981;
-    }
-    .time-slot.disabled .time-slot__status {
-        color: #EF4444;
+    .time-inputs span {
+        font-size: 13px;
+        color: #6B7280;
+        white-space: nowrap;
     }
 
     /* Submit Button */
@@ -363,35 +332,13 @@
                     <option value="2">Bu Siti - Guru Kelas TK A</option>
                 </select>
             </div>
-            <div class="form-group form-group--full">
-                <label>Pilih Waktu <span>*</span></label>
-                <div class="time-slots">
-                    <div class="time-slot" onclick="selectTime(this, '08:00')">
-                        <div class="time-slot__time">08:00 - 09:00</div>
-                        <div class="time-slot__status">Tersedia</div>
-                    </div>
-                    <div class="time-slot" onclick="selectTime(this, '09:00')">
-                        <div class="time-slot__time">09:00 - 10:00</div>
-                        <div class="time-slot__status">Tersedia</div>
-                    </div>
-                    <div class="time-slot disabled">
-                        <div class="time-slot__time">10:00 - 11:00</div>
-                        <div class="time-slot__status">Tidak Tersedia</div>
-                    </div>
-                    <div class="time-slot" onclick="selectTime(this, '11:00')">
-                        <div class="time-slot__time">11:00 - 12:00</div>
-                        <div class="time-slot__status">Tersedia</div>
-                    </div>
-                    <div class="time-slot disabled">
-                        <div class="time-slot__time">13:00 - 14:00</div>
-                        <div class="time-slot__status">Tidak Tersedia</div>
-                    </div>
-                    <div class="time-slot" onclick="selectTime(this, '14:00')">
-                        <div class="time-slot__time">14:00 - 15:00</div>
-                        <div class="time-slot__status">Tersedia</div>
-                    </div>
-                </div>
-                <input type="hidden" name="waktu" id="selectedTime" required>
+            <div class="form-group">
+                <label>Jam Mulai <span>*</span></label>
+                <input type="time" name="waktu_mulai" required>
+            </div>
+            <div class="form-group">
+                <label>Jam Selesai <span>*</span></label>
+                <input type="time" name="waktu_selesai" required>
             </div>
             <div class="form-group form-group--full">
                 <label>Topik/Permasalahan yang Ingin Dibahas <span>*</span></label>
@@ -451,21 +398,6 @@
     </div>
 </div>
 
-@push('scripts')
-<script>
-    function selectTime(element, time) {
-        if (element.classList.contains('disabled')) return;
-        
-        // Remove selected class from all
-        document.querySelectorAll('.time-slot').forEach(slot => {
-            slot.classList.remove('selected');
-        });
-        
-        // Add selected to clicked
-        element.classList.add('selected');
-        document.getElementById('selectedTime').value = time;
-    }
-</script>
-@endpush
+
 
 @endsection

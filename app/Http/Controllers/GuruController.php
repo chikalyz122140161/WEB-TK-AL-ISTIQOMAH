@@ -7,26 +7,95 @@ class GuruController extends Controller
 {
     public function jadwalKonseling(Request $request)
     {
-        $bulan = (int) $request->get('bulan', date('n'));
+        $bulanTahun = $request->get('bulan_tahun', date('Y-m'));
+        [$tahunFilter, $bulan] = array_map('intval', explode('-', $bulanTahun));
 
-        // TODO: query database
-        $semua = [
-            ['tanggal' => '29 Nov 2024', 'waktu' => '10:00 - 11:00', 'orang_tua' => 'Ibu Siti',   'siswa' => 'Ahmad Fauzi',    'topik' => 'Perkembangan Sosial',   'status' => 'disetujui', 'bulan' => 11],
-            ['tanggal' => '28 Nov 2024', 'waktu' => '09:00 - 10:00', 'orang_tua' => 'Bapak Budi', 'siswa' => 'Siti Nurhaliza', 'topik' => 'Konsultasi Umum',       'status' => 'pending',   'bulan' => 11],
-            ['tanggal' => '27 Nov 2024', 'waktu' => '13:00 - 14:00', 'orang_tua' => 'Ibu Dewi',   'siswa' => 'Eko Prasetyo',   'topik' => 'Perkembangan Kognitif', 'status' => 'disetujui', 'bulan' => 11],
-            ['tanggal' => '22 Nov 2024', 'waktu' => '10:00 - 11:00', 'orang_tua' => 'Ibu Ani',    'siswa' => 'Rina Susanti',   'topik' => 'Perkembangan Bahasa',   'status' => 'selesai',   'bulan' => 11],
-            ['tanggal' => '20 Nov 2024', 'waktu' => '14:00 - 15:00', 'orang_tua' => 'Bapak Hadi', 'siswa' => 'Doni Saputra',   'topik' => 'Perkembangan Motorik',  'status' => 'selesai',   'bulan' => 11],
+        $daftarSiswa = [
+            ['id' => 1, 'nama' => 'Ahmad Fauzi',    'orang_tua_id' => 1],
+            ['id' => 2, 'nama' => 'Siti Nurhaliza', 'orang_tua_id' => 2],
+            ['id' => 3, 'nama' => 'Eko Prasetyo',   'orang_tua_id' => 3],
+            ['id' => 4, 'nama' => 'Rina Susanti',   'orang_tua_id' => 4],
+            ['id' => 5, 'nama' => 'Doni Saputra',   'orang_tua_id' => 5],
         ];
 
-        $jadwal = collect($semua)->where('bulan', $bulan)->values()->all();
+        $daftarOrangTua = [
+            ['id' => 1, 'nama' => 'Ibu Siti'],
+            ['id' => 2, 'nama' => 'Bapak Budi'],
+            ['id' => 3, 'nama' => 'Ibu Dewi'],
+            ['id' => 4, 'nama' => 'Ibu Ani'],
+            ['id' => 5, 'nama' => 'Bapak Hadi'],
+        ];
 
-        return view('guru.jadwal_konseling', compact('jadwal', 'bulan'));
+        $jadwal = collect($this->getDummyJadwalKonseling())->where('bulan', $bulan)->values()->all();
+
+        return view('guru.jadwal_konseling', compact('jadwal', 'bulan', 'bulanTahun', 'daftarSiswa', 'daftarOrangTua'));
     }
 
     public function storeJadwalKonseling(Request $request)
     {
         // TODO: simpan ke database
         return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal berhasil dibuat.');
+    }
+
+    private function getDummyJadwalKonseling(): array
+    {
+        return [
+            1 => ['id' => 1, 'tanggal' => '29 Nov 2024', 'waktu' => '10:00 - 11:00', 'orang_tua' => 'Ibu Siti',   'siswa' => 'Ahmad Fauzi',    'topik' => 'Perkembangan Sosial',   'status' => 'disetujui', 'bulan' => 11, 'catatan' => 'Anak menunjukkan perkembangan sosial yang baik.'],
+            2 => ['id' => 2, 'tanggal' => '28 Nov 2024', 'waktu' => '09:00 - 10:00', 'orang_tua' => 'Bapak Budi', 'siswa' => 'Siti Nurhaliza', 'topik' => 'Konsultasi Umum',       'status' => 'pending',   'bulan' => 11, 'catatan' => ''],
+            3 => ['id' => 3, 'tanggal' => '27 Nov 2024', 'waktu' => '13:00 - 14:00', 'orang_tua' => 'Ibu Dewi',   'siswa' => 'Eko Prasetyo',   'topik' => 'Perkembangan Kognitif', 'status' => 'disetujui', 'bulan' => 11, 'catatan' => ''],
+            4 => ['id' => 4, 'tanggal' => '22 Nov 2024', 'waktu' => '10:00 - 11:00', 'orang_tua' => 'Ibu Ani',    'siswa' => 'Rina Susanti',   'topik' => 'Perkembangan Bahasa',   'status' => 'selesai',   'bulan' => 11, 'catatan' => 'Sesi berjalan dengan baik.'],
+            5 => ['id' => 5, 'tanggal' => '20 Nov 2024', 'waktu' => '14:00 - 15:00', 'orang_tua' => 'Bapak Hadi', 'siswa' => 'Doni Saputra',   'topik' => 'Perkembangan Motorik',  'status' => 'selesai',   'bulan' => 11, 'catatan' => ''],
+            6 => ['id' => 6, 'tanggal' => '05 Mar 2026', 'waktu' => '09:00 - 10:00', 'orang_tua' => 'Ibu Siti',   'siswa' => 'Ahmad Fauzi',    'topik' => 'Perkembangan Sosial',   'status' => 'disetujui', 'bulan' => 3,  'catatan' => ''],
+            7 => ['id' => 7, 'tanggal' => '07 Mar 2026', 'waktu' => '10:00 - 11:00', 'orang_tua' => 'Bapak Budi', 'siswa' => 'Siti Nurhaliza', 'topik' => 'Konsultasi Umum',       'status' => 'pending',   'bulan' => 3,  'catatan' => ''],
+            8 => ['id' => 8, 'tanggal' => '10 Mar 2026', 'waktu' => '13:00 - 14:00', 'orang_tua' => 'Ibu Dewi',   'siswa' => 'Eko Prasetyo',   'topik' => 'Perkembangan Kognitif', 'status' => 'pending',   'bulan' => 3,  'catatan' => ''],
+            9 => ['id' => 9, 'tanggal' => '12 Mar 2026', 'waktu' => '08:00 - 09:00', 'orang_tua' => 'Ibu Ani',    'siswa' => 'Rina Susanti',   'topik' => 'Perkembangan Bahasa',   'status' => 'disetujui', 'bulan' => 3,  'catatan' => ''],
+        ];
+    }
+
+    public function jadwalKonselingShow($id)
+    {
+        $jadwal = $this->getDummyJadwalKonseling()[$id] ?? abort(404);
+        return view('guru.jadwal_konseling_show', compact('jadwal'));
+    }
+
+    public function jadwalKonselingEdit($id)
+    {
+        $jadwal = $this->getDummyJadwalKonseling()[$id] ?? abort(404);
+        $daftarSiswa = [
+            ['id' => 1, 'nama' => 'Ahmad Fauzi'],
+            ['id' => 2, 'nama' => 'Siti Nurhaliza'],
+            ['id' => 3, 'nama' => 'Eko Prasetyo'],
+            ['id' => 4, 'nama' => 'Rina Susanti'],
+            ['id' => 5, 'nama' => 'Doni Saputra'],
+        ];
+        $daftarOrangTua = [
+            ['id' => 1, 'nama' => 'Ibu Siti'],
+            ['id' => 2, 'nama' => 'Bapak Budi'],
+            ['id' => 3, 'nama' => 'Ibu Dewi'],
+            ['id' => 4, 'nama' => 'Ibu Ani'],
+            ['id' => 5, 'nama' => 'Bapak Hadi'],
+        ];
+        return view('guru.jadwal_konseling_edit', compact('jadwal', 'daftarSiswa', 'daftarOrangTua'));
+    }
+
+    public function jadwalKonselingUpdate(Request $request, $id)
+    {
+        return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal berhasil diperbarui.');
+    }
+
+    public function jadwalKonselingSetuju(Request $request, $id)
+    {
+        return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal konseling disetujui.');
+    }
+
+    public function jadwalKonselingTolak(Request $request, $id)
+    {
+        return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal konseling ditolak.');
+    }
+
+    public function jadwalKonselingBatalkan(Request $request, $id)
+    {
+        return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal konseling dibatalkan.');
     }
 
     public function chat(Request $request)
@@ -107,6 +176,76 @@ class GuruController extends Controller
             'laporan'     => $laporan->values()->all(),
             'daftarSiswa' => $daftarSiswa,
         ]);
+    }
+
+    public function laporanBkShow($id)
+    {
+        // Dummy data — nanti diganti query database
+        $semua = [
+            1 => ['id' => 1, 'nama' => 'Ahmad Fauzi',   'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.2,
+                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>5,'bahasa'=>4,'sosial_emosional'=>3,'nilai_agama_moral'=>5,'seni'=>4],
+                  'catatan' => 'Ahmad menunjukkan perkembangan yang sangat baik. Aktif dan antusias dalam kegiatan belajar.'],
+            2 => ['id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.5,
+                  'nilai' => ['fisik_motorik'=>5,'kognitif'=>4,'bahasa'=>5,'sosial_emosional'=>4,'nilai_agama_moral'=>5,'seni'=>4],
+                  'catatan' => 'Siti sangat aktif berkomunikasi dan berinteraksi dengan teman-temannya. Kemampuan bahasa sangat menonjol.'],
+            3 => ['id' => 3, 'nama' => 'Budi Santoso',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 3.8,
+                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>3,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>3],
+                  'catatan' => 'Budi berkembang baik. Perlu sedikit pendampingan di aspek bahasa dan seni.'],
+            4 => ['id' => 4, 'nama' => 'Dewi Lestari',   'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.0,
+                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
+                  'catatan' => 'Dewi berkembang sesuai harapan di semua aspek. Tetap pertahankan dan tingkatkan.'],
+            5 => ['id' => 5, 'nama' => 'Eko Prasetyo',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.3,
+                  'nilai' => ['fisik_motorik'=>5,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>5,'seni'=>4],
+                  'catatan' => 'Eko sangat aktif secara fisik dan memiliki nilai agama yang baik. Tetap semangat!'],
+        ];
+
+        $laporan = $semua[$id] ?? $semua[1];
+
+        return view('guru.laporan_detail', ['laporan' => $laporan]);
+    }
+
+    public function laporanBkEdit($id)
+    {
+        $daftarSiswa = [
+            ['id' => 1, 'nama' => 'Ahmad Fauzi',   'kelas' => 'TK A'],
+            ['id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A'],
+            ['id' => 3, 'nama' => 'Budi Santoso',   'kelas' => 'TK B'],
+            ['id' => 4, 'nama' => 'Dewi Lestari',   'kelas' => 'TK A'],
+            ['id' => 5, 'nama' => 'Eko Prasetyo',   'kelas' => 'TK B'],
+        ];
+
+        $semua = [
+            1 => ['id' => 1, 'siswa_id' => 1, 'nama' => 'Ahmad Fauzi',   'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '2024-11-22', 'tahun_ajaran' => 2024, 'semester' => 'Ganjil', 'rata_rata' => 4.2,
+                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>5,'bahasa'=>4,'sosial_emosional'=>3,'nilai_agama_moral'=>5,'seni'=>4],
+                  'catatan' => ['fisik_motorik'=>'','kognitif'=>'','bahasa'=>'','sosial_emosional'=>'','nilai_agama_moral'=>'','seni'=>''],
+                  'catatan_umum' => 'Ahmad menunjukkan perkembangan yang sangat baik.'],
+            2 => ['id' => 2, 'siswa_id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '2024-11-22', 'tahun_ajaran' => 2024, 'semester' => 'Ganjil', 'rata_rata' => 4.5,
+                  'nilai' => ['fisik_motorik'=>5,'kognitif'=>4,'bahasa'=>5,'sosial_emosional'=>4,'nilai_agama_moral'=>5,'seni'=>4],
+                  'catatan' => ['fisik_motorik'=>'','kognitif'=>'','bahasa'=>'','sosial_emosional'=>'','nilai_agama_moral'=>'','seni'=>''],
+                  'catatan_umum' => 'Siti sangat aktif berkomunikasi dan berinteraksi dengan teman-temannya.'],
+            3 => ['id' => 3, 'siswa_id' => 3, 'nama' => 'Budi Santoso',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '2024-11-22', 'tahun_ajaran' => 2024, 'semester' => 'Ganjil', 'rata_rata' => 3.8,
+                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>3,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>3],
+                  'catatan' => ['fisik_motorik'=>'','kognitif'=>'','bahasa'=>'','sosial_emosional'=>'','nilai_agama_moral'=>'','seni'=>''],
+                  'catatan_umum' => 'Budi berkembang baik. Perlu sedikit pendampingan di aspek bahasa dan seni.'],
+            4 => ['id' => 4, 'siswa_id' => 4, 'nama' => 'Dewi Lestari',   'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '2024-11-22', 'tahun_ajaran' => 2024, 'semester' => 'Ganjil', 'rata_rata' => 4.0,
+                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
+                  'catatan' => ['fisik_motorik'=>'','kognitif'=>'','bahasa'=>'','sosial_emosional'=>'','nilai_agama_moral'=>'','seni'=>''],
+                  'catatan_umum' => 'Dewi berkembang sesuai harapan di semua aspek.'],
+            5 => ['id' => 5, 'siswa_id' => 5, 'nama' => 'Eko Prasetyo',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '2024-11-22', 'tahun_ajaran' => 2024, 'semester' => 'Ganjil', 'rata_rata' => 4.3,
+                  'nilai' => ['fisik_motorik'=>5,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>5,'seni'=>4],
+                  'catatan' => ['fisik_motorik'=>'','kognitif'=>'','bahasa'=>'','sosial_emosional'=>'','nilai_agama_moral'=>'','seni'=>''],
+                  'catatan_umum' => 'Eko sangat aktif secara fisik dan memiliki nilai agama yang baik.'],
+        ];
+
+        $laporan = $semua[$id] ?? $semua[1];
+
+        return view('guru.laporan_edit', ['laporan' => $laporan, 'daftarSiswa' => $daftarSiswa]);
+    }
+
+    public function laporanBkUpdate(Request $request, $id)
+    {
+        // Nanti diganti dengan logika update database
+        return redirect()->route('guru.laporan_bk')->with('success', 'Laporan perkembangan berhasil diperbarui.');
     }
 
     public function grafik()

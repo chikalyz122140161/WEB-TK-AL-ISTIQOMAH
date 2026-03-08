@@ -170,6 +170,15 @@
         font-size: 11px;
         color: #6b7280;
     }
+    .form-group input[type="number"] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+    .form-group input[type="number"]::-webkit-outer-spin-button,
+    .form-group input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
     .form-group input:disabled,
     .form-group select:disabled {
         background: #f3f4f6;
@@ -501,34 +510,6 @@
                     <div class="form-group">
                         <label>Deskripsi</label>
                         <textarea name="seni_deskripsi" placeholder="Tuliskan deskripsi perkembangan seni anak...">{{ $rapot['nilai']['seni_deskripsi'] }}</textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Kehadiran --}}
-        <div class="form-card">
-            <div class="form-card__header">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" /></svg>
-                <h3 class="form-card__title">Rekap Kehadiran</h3>
-            </div>
-            <div class="form-card__body">
-                <div class="kehadiran-grid">
-                    <div class="kehadiran-item">
-                        <label>Hadir</label>
-                        <input type="number" name="hadir" value="{{ $rapot['kehadiran']['hadir'] }}" min="0" required>
-                    </div>
-                    <div class="kehadiran-item">
-                        <label>Izin</label>
-                        <input type="number" name="izin" value="{{ $rapot['kehadiran']['izin'] }}" min="0" required>
-                    </div>
-                    <div class="kehadiran-item">
-                        <label>Sakit</label>
-                        <input type="number" name="sakit" value="{{ $rapot['kehadiran']['sakit'] }}" min="0" required>
-                    </div>
-                    <div class="kehadiran-item">
-                        <label>Alpa</label>
-                        <input type="number" name="alpa" value="{{ $rapot['kehadiran']['alpa'] }}" min="0" required>
                     </div>
                 </div>
             </div>

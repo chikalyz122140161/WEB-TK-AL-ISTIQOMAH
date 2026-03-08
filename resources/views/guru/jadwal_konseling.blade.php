@@ -238,13 +238,14 @@
         <button type="button" class="btn-new" onclick="document.getElementById('modalBuat').classList.add('open')">
             BUAT JADWAL BARU
         </button>
-        <select class="filter-select" name="bulan" onchange="this.form.submit()">
-            @foreach (['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'] as $i => $bln)
-                <option value="{{ $i + 1 }}" {{ request('bulan', date('n')) == $i + 1 ? 'selected' : '' }}>
-                    {{ $bln }}
-                </option>
-            @endforeach
-        </select>
+        <input
+            class="filter-select"
+            type="month"
+            name="bulan_tahun"
+            value="{{ request('bulan_tahun', date('Y-m')) }}"
+            style="min-width:160px;padding:0 12px;"
+        >
+        <button type="submit" class="btn-new" style="background:#374151;">FILTER</button>
     </form>
 
     {{-- Table --}}
@@ -284,15 +285,18 @@
                     </td>
                     <td>
                         <div class="aksi-links">
-                            <a href="javascript:void(0)" class="aksi-lihat" onclick="alert('Melihat detail jadwal konseling {{ $row['siswa'] }}')">[LIHAT]</a>
+                            <a href="{{ route('guru.jadwal_konseling.show', $row['id']) }}" class="aksi-lihat">[LIHAT]</a>
                             @if ($row['status'] === 'disetujui')
-                                <a href="javascript:void(0)" class="aksi-edit" onclick="alert('Edit jadwal konseling {{ $row['siswa'] }}')">[EDIT]</a>
-                                <a href="javascript:void(0)" class="aksi-batalkan" onclick="if(confirm('Yakin ingin membatalkan jadwal konseling ini?')) alert('Jadwal dibatalkan')">[BATALKAN]</a>
+                                <a href="{{ route('guru.jadwal_konseling.edit', $row['id']) }}" class="aksi-edit">[EDIT]</a>
+                                <a href="javascript:void(0)" class="aksi-batalkan"
+                                    onclick="showConfirmModal('batalkan', {{ $row['id'] }}, '{{ addslashes($row['siswa']) }}', '{{ addslashes($row['tanggal']) }}', '{{ addslashes($row['waktu']) }}')">[BATALKAN]</a>
                             @elseif ($row['status'] === 'pending')
-                                <a href="javascript:void(0)" class="aksi-setuju" onclick="alert('Jadwal konseling {{ $row['siswa'] }} disetujui')">[SETUJU]</a>
-                                <a href="javascript:void(0)" class="aksi-tolak" onclick="if(confirm('Yakin ingin menolak jadwal ini?')) alert('Jadwal ditolak')">[TOLAK]</a>
+                                <a href="javascript:void(0)" class="aksi-setuju"
+                                    onclick="showConfirmModal('setuju', {{ $row['id'] }}, '{{ addslashes($row['siswa']) }}', '{{ addslashes($row['tanggal']) }}', '{{ addslashes($row['waktu']) }}')">[SETUJU]</a>
+                                <a href="javascript:void(0)" class="aksi-tolak"
+                                    onclick="showConfirmModal('tolak', {{ $row['id'] }}, '{{ addslashes($row['siswa']) }}', '{{ addslashes($row['tanggal']) }}', '{{ addslashes($row['waktu']) }}')">[TOLAK]</a>
                             @elseif ($row['status'] === 'selesai')
-                                <a href="javascript:void(0)" class="aksi-catatan" onclick="alert('Catatan konseling: Sesi berjalan dengan baik.')">[CATATAN]</a>
+                                <a href="{{ route('guru.jadwal_konseling.show', $row['id']) }}" class="aksi-catatan">[CATATAN]</a>
                             @endif
                         </div>
                     </td>
@@ -328,11 +332,21 @@
                 </div>
                 <div class="field-group">
                     <label class="field-label" for="m_orang_tua">Orang Tua</label>
-                    <input class="field-control" type="text" id="m_orang_tua" name="orang_tua" placeholder="Nama orang tua" required>
+                    <select class="field-control" id="m_orang_tua" name="orang_tua" required>
+                        <option value="" disabled selected>-- Pilih Orang Tua --</option>
+                        @foreach ($daftarOrangTua as $ot)
+                            <option value="{{ $ot['nama'] }}">{{ $ot['nama'] }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="field-group">
                     <label class="field-label" for="m_siswa">Siswa</label>
-                    <input class="field-control" type="text" id="m_siswa" name="siswa" placeholder="Nama siswa" required>
+                    <select class="field-control" id="m_siswa" name="siswa" required>
+                        <option value="" disabled selected>-- Pilih Siswa --</option>
+                        @foreach ($daftarSiswa as $s)
+                            <option value="{{ $s['nama'] }}">{{ $s['nama'] }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="field-group">
                     <label class="field-label" for="m_topik">Topik</label>
@@ -349,4 +363,91 @@
         </div>
     </div>
 
+    {{-- Modal Setujui --}}
+    <div class="modal-overlay" id="modalSetuju" onclick="if(event.target===this)this.classList.remove('open')">
+        <div class="modal">
+            <p class="modal__title" style="font-size:32px;margin:0 0 6px;text-align:center;">✅</p>
+            <p class="modal__title">Setujui Jadwal Konseling?</p>
+            <p style="font-size:13px;color:#6B7280;text-align:center;margin:0 0 20px;line-height:1.6;">
+                Jadwal konseling <strong id="setujuSiswa"></strong> pada <strong id="setujuTanggal"></strong>
+                pukul <strong id="setujuWaktu"></strong> akan disetujui.
+            </p>
+            <form method="POST" id="formSetuju" action="">
+                @csrf
+                <div class="modal-actions">
+                    <button type="submit" class="btn-modal-save" style="background:linear-gradient(135deg,#f97316,#ea580c);">Ya, Setujui</button>
+                    <button type="button" class="btn-modal-cancel" onclick="document.getElementById('modalSetuju').classList.remove('open')">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- Modal Tolak --}}
+    <div class="modal-overlay" id="modalTolak" onclick="if(event.target===this)this.classList.remove('open')">
+        <div class="modal">
+            <p class="modal__title" style="font-size:32px;margin:0 0 6px;text-align:center;">❌</p>
+            <p class="modal__title">Tolak Jadwal Konseling?</p>
+            <p style="font-size:13px;color:#6B7280;text-align:center;margin:0 0 20px;line-height:1.6;">
+                Jadwal konseling <strong id="tolakSiswa"></strong> pada <strong id="tolakTanggal"></strong>
+                akan ditolak. Tindakan ini tidak bisa dibatalkan.
+            </p>
+            <form method="POST" id="formTolak" action="">
+                @csrf
+                <div class="modal-actions">
+                    <button type="submit" class="btn-modal-save" style="background:#B91C1C;">Ya, Tolak</button>
+                    <button type="button" class="btn-modal-cancel" onclick="document.getElementById('modalTolak').classList.remove('open')">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- Modal Batalkan --}}
+    <div class="modal-overlay" id="modalBatalkan" onclick="if(event.target===this)this.classList.remove('open')">
+        <div class="modal">
+            <p class="modal__title" style="font-size:32px;margin:0 0 6px;text-align:center;">⚠️</p>
+            <p class="modal__title">Batalkan Jadwal Konseling?</p>
+            <p style="font-size:13px;color:#6B7280;text-align:center;margin:0 0 20px;line-height:1.6;">
+                Jadwal konseling <strong id="batalkanSiswa"></strong> pada <strong id="batalkanTanggal"></strong>
+                pukul <strong id="batalkanWaktu"></strong> akan dibatalkan.
+            </p>
+            <form method="POST" id="formBatalkan" action="">
+                @csrf
+                <div class="modal-actions">
+                    <button type="submit" class="btn-modal-save" style="background:#B91C1C;">Ya, Batalkan</button>
+                    <button type="button" class="btn-modal-cancel" onclick="document.getElementById('modalBatalkan').classList.remove('open')">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 @endsection
+
+@push('scripts')
+<script>
+function showConfirmModal(type, id, siswa, tanggal, waktu) {
+    var routes = {
+        setuju:   '/guru/jadwal-konseling/' + id + '/setuju',
+        tolak:    '/guru/jadwal-konseling/' + id + '/tolak',
+        batalkan: '/guru/jadwal-konseling/' + id + '/batalkan',
+    };
+    if (type === 'setuju') {
+        document.getElementById('setujuSiswa').textContent   = siswa;
+        document.getElementById('setujuTanggal').textContent = tanggal;
+        document.getElementById('setujuWaktu').textContent   = waktu;
+        document.getElementById('formSetuju').action         = routes.setuju;
+        document.getElementById('modalSetuju').classList.add('open');
+    } else if (type === 'tolak') {
+        document.getElementById('tolakSiswa').textContent    = siswa;
+        document.getElementById('tolakTanggal').textContent  = tanggal;
+        document.getElementById('formTolak').action          = routes.tolak;
+        document.getElementById('modalTolak').classList.add('open');
+    } else if (type === 'batalkan') {
+        document.getElementById('batalkanSiswa').textContent   = siswa;
+        document.getElementById('batalkanTanggal').textContent = tanggal;
+        document.getElementById('batalkanWaktu').textContent   = waktu;
+        document.getElementById('formBatalkan').action         = routes.batalkan;
+        document.getElementById('modalBatalkan').classList.add('open');
+    }
+}
+</script>
+@endpush

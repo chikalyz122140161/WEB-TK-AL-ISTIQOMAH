@@ -205,8 +205,8 @@
                     </td>
                     <td>
                         <div class="aksi-links">
-                            <a href="javascript:void(0)" class="aksi-lihat" onclick="alert('Melihat laporan perkembangan {{ $row['nama'] }} - Minggu {{ $row['minggu'] }}')">[LIHAT]</a>
-                            <a href="javascript:void(0)" class="aksi-edit" onclick="alert('Edit laporan perkembangan {{ $row['nama'] }}')">[EDIT]</a>
+                            <a href="{{ route('guru.laporan_bk.show', $row['id']) }}" class="aksi-lihat">[LIHAT]</a>
+                            <a href="{{ route('guru.laporan_bk.edit', $row['id']) }}" class="aksi-edit">[EDIT]</a>
                             <a href="javascript:void(0)" class="aksi-pdf" onclick="alert('Mengunduh PDF laporan {{ $row['nama'] }}')">[PDF]</a>
                         </div>
                     </td>

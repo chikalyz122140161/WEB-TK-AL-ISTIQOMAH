@@ -129,6 +129,15 @@
                 </option>
             @endforeach
         </select>
+        <select class="filter-select" id="selectTahunAjaran" name="tahun_ajaran">
+            <option value="2025/2026" selected>2025/2026</option>
+            <option value="2024/2025">2024/2025</option>
+            <option value="2023/2024">2023/2024</option>
+        </select>
+        <select class="filter-select" id="selectSemester" name="semester">
+            <option value="Ganjil">Ganjil</option>
+            <option value="Genap">Genap</option>
+        </select>
     </div>
 
     {{-- Chart card --}}
