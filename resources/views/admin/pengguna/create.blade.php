@@ -117,20 +117,20 @@
 
 .form-label {
     font-weight: 500;
-    color: #00473e;
+    color: #3E2723;
     font-size: 0.875rem;
 }
 
 .form-label.required::after {
     content: " *";
-    color: #dc2626;
+    color: #c0392b;
 }
 
 .form-input,
 .form-select,
 .form-textarea {
     padding: 0.75rem 1rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid #3E272330;
     border-radius: 8px;
     font-size: 0.875rem;
     transition: all 0.2s;
@@ -141,22 +141,22 @@
 .form-select:focus,
 .form-textarea:focus {
     outline: none;
-    border-color: #00473e;
+    border-color: #3E2723;
     box-shadow: 0 0 0 3px rgba(0, 71, 62, 0.1);
 }
 
 .form-input::placeholder {
-    color: #9ca3af;
+    color: #5D4037;
 }
 
 .form-hint {
-    color: #64748b;
+    color: #5D4037;
     font-size: 0.75rem;
     margin-top: 0.25rem;
 }
 
 .form-hint a {
-    color: #00473e;
+    color: #3E2723;
     font-weight: 500;
 }
 
@@ -166,13 +166,13 @@
     justify-content: flex-end;
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid #3E272320;
 }
 
 /* Alert */
 .alert--danger {
     background: #fee2e2;
-    color: #dc2626;
+    color: #c0392b;
     border: 1px solid #fecaca;
     padding: 1rem;
     border-radius: 8px;

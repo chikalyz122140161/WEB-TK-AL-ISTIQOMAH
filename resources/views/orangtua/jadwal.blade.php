@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@php $userRole = 'Orang Tua'; @endphp
 
 @section('title', 'Jadwal - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Jadwal')
@@ -28,7 +29,7 @@
         padding: 14px 24px;
         font-size: 14px;
         font-weight: 600;
-        color: #475d5b;
+        color: #5D4037;
         background: transparent;
         border: none;
         border-radius: 8px;
@@ -37,11 +38,11 @@
         text-decoration: none;
     }
     .tab-btn:hover {
-        background: #f2f7f5;
-        color: #00473e;
+        background: #FFFDE7;
+        color: #3E2723;
     }
     .tab-btn.active {
-        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
         color: #fff;
     }
     .tab-btn svg {
@@ -49,7 +50,7 @@
         height: 20px;
     }
     .tab-btn.active svg {
-        fill: #faae2b;
+        fill: #4CAF82;
     }
 
     /* Filter Bar */
@@ -68,29 +69,29 @@
     .filter-group label {
         font-size: 12px;
         font-weight: 500;
-        color: #475d5b;
+        color: #5D4037;
     }
     .filter-group select {
         padding: 10px 14px;
-        border: 1px solid #00473e30;
+        border: 1px solid #3E272330;
         border-radius: 6px;
         font-size: 14px;
-        color: #00473e;
+        color: #3E2723;
         background: #fff;
         min-width: 160px;
         cursor: pointer;
     }
     .filter-group select:focus {
         outline: none;
-        border-color: #faae2b;
-        box-shadow: 0 0 0 3px rgba(250, 174, 43, 0.1);
+        border-color: #4CAF82;
+        box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.1);
     }
     .btn-tampilkan {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
-        color: #00473e;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+        color: #3E2723;
         padding: 10px 20px;
         font-size: 14px;
         font-weight: 600;
@@ -101,12 +102,12 @@
     }
     .btn-tampilkan:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(250, 174, 43, 0.3);
+        box-shadow: 0 4px 12px rgba(76,175,130, 0.3);
     }
 
     /* Info Banner */
     .info-banner {
-        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
         border-radius: 12px;
         padding: 20px 24px;
         margin-bottom: 24px;
@@ -117,7 +118,7 @@
     .info-banner__icon {
         width: 48px;
         height: 48px;
-        background: rgba(250, 174, 43, 0.2);
+        background: rgba(76,175,130, 0.2);
         border-radius: 12px;
         display: flex;
         align-items: center;
@@ -127,7 +128,7 @@
     .info-banner__icon svg {
         width: 24px;
         height: 24px;
-        fill: #faae2b;
+        fill: #4CAF82;
     }
     .info-banner__content h3 {
         color: #fff;
@@ -149,9 +150,9 @@
         margin-bottom: 20px;
     }
     .schedule-card__header {
-        background: #f8fafc;
+        background: #FFFDE7;
         padding: 16px 20px;
-        border-bottom: 1px solid #e5e7eb;
+        border-bottom: 1px solid #3E272320;
         display: flex;
         align-items: center;
         gap: 12px;
@@ -159,11 +160,11 @@
     .schedule-card__day {
         font-size: 16px;
         font-weight: 700;
-        color: #00473e;
+        color: #3E2723;
     }
     .schedule-card__badge {
-        background: #faae2b;
-        color: #00473e;
+        background: #4CAF82;
+        color: #3E2723;
         padding: 4px 12px;
         border-radius: 20px;
         font-size: 12px;
@@ -183,19 +184,19 @@
         background: #fafbfc;
         font-size: 12px;
         font-weight: 600;
-        color: #475d5b;
+        color: #5D4037;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
     .schedule-table td {
         font-size: 14px;
-        color: #00473e;
+        color: #3E2723;
     }
     .schedule-table tr:last-child td {
         border-bottom: none;
     }
     .schedule-table tr:hover td {
-        background: #f8fafc;
+        background: #FFFDE7;
     }
     .time-badge {
         display: inline-flex;
@@ -206,12 +207,12 @@
         border-radius: 6px;
         font-size: 13px;
         font-weight: 500;
-        color: #00473e;
+        color: #3E2723;
     }
     .time-badge svg {
         width: 14px;
         height: 14px;
-        fill: #00473e;
+        fill: #3E2723;
     }
 
     /* Kegiatan Cards */
@@ -232,7 +233,7 @@
         box-shadow: 0 8px 25px rgba(0,0,0,0.1);
     }
     .kegiatan-card__header {
-        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
         padding: 16px 20px;
     }
     .kegiatan-card__title {
@@ -254,12 +255,12 @@
         align-items: flex-start;
         gap: 10px;
         font-size: 13px;
-        color: #475d5b;
+        color: #5D4037;
     }
     .kegiatan-info__item svg {
         width: 18px;
         height: 18px;
-        fill: #faae2b;
+        fill: #4CAF82;
         flex-shrink: 0;
         margin-top: 1px;
     }
@@ -269,7 +270,7 @@
     .kegiatan-badge {
         display: inline-flex;
         align-items: center;
-        background: rgba(250, 174, 43, 0.15);
+        background: rgba(76, 175, 130, 0.15);
         color: #d4920c;
         padding: 4px 10px;
         border-radius: 20px;
@@ -281,16 +282,16 @@
     .empty-state {
         text-align: center;
         padding: 60px 40px;
-        color: #475d5b;
+        color: #5D4037;
     }
     .empty-state svg {
         width: 64px;
         height: 64px;
-        fill: #d1d5db;
+        fill: #3E272330;
         margin-bottom: 16px;
     }
     .empty-state h3 {
-        color: #00473e;
+        color: #3E2723;
         margin: 0 0 8px 0;
     }
     .empty-state p {

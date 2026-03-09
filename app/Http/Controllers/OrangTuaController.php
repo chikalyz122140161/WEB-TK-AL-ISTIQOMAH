@@ -221,72 +221,87 @@ class OrangTuaController extends Controller
     
     public function rapotDetail($id)
     {
-        // Dummy data
-        $student = (object)[
-            'id' => 1,
-            'name' => 'Ahmad Fauzi',
-            'class' => 'TK A',
-            'nis' => '20240001',
-        ];
-        $teacher = (object)[
-            'name' => 'Bu Siti, S.Pd',
+        $rapot = [
+            'id'             => $id,
+            'tahun_ajaran'   => '2025/2026',
+            'semester'       => 'Ganjil',
+            'kelas'          => 'TK A',
+            'tanggal_terbit' => '20 Desember 2025',
+            'status'         => 'Terbit',
+            'siswa'          => [
+                'nama' => 'Ahmad Fauzi',
+                'nis'  => '20240001',
+            ],
+            'guru'           => 'Bu Siti, S.Pd',
+            'nilai'          => [
+                'agama_moral'              => 'BSH',
+                'agama_moral_deskripsi'    => 'Ahmad memahami nilai-nilai agama dengan baik. Ia selalu berdoa sebelum dan sesudah kegiatan serta menunjukkan sikap sopan santun kepada teman dan guru.',
+                'fisik_motorik'            => 'BSB',
+                'fisik_motorik_deskripsi'  => 'Perkembangan fisik dan motorik Ahmad sangat baik. Ia sangat aktif dalam kegiatan gerak tubuh, mampu berlari, melompat, dan menangkap bola dengan koordinasi yang baik.',
+                'kognitif'                 => 'BSH',
+                'kognitif_deskripsi'       => 'Ahmad mampu mengenali bentuk, warna, dan angka sederhana. Ia menunjukkan kemampuan berpikir logis yang sesuai dengan usianya.',
+                'bahasa'                   => 'MB',
+                'bahasa_deskripsi'         => 'Ahmad mulai berkembang dalam kemampuan berbahasa. Ia mampu berkomunikasi dengan teman-temannya, namun masih perlu latihan dalam mengungkapkan ide secara runtut.',
+                'sosial_emosional'         => 'BSH',
+                'sosial_emosional_deskripsi' => 'Ahmad menunjukkan kemampuan bersosialisasi yang baik. Ia senang bermain bersama teman, mampu berbagi, dan menunjukkan empati kepada temannya.',
+                'seni'                     => 'BSB',
+                'seni_deskripsi'           => 'Ahmad memiliki bakat seni yang menonjol. Ia sangat antusias dalam kegiatan menggambar dan mewarnai, serta menunjukkan kreativitas yang tinggi.',
+            ],
+            'kehadiran'      => [
+                'hadir' => 78,
+                'izin'  => 3,
+                'sakit' => 2,
+                'alpa'  => 1,
+            ],
+            'catatan_guru'   => 'Ahmad menunjukkan perkembangan yang sangat membanggakan selama semester ini. Ia rajin, semangat belajar tinggi, dan memiliki interaksi sosial yang baik dengan teman-temannya.',
+            'rekomendasi'    => 'Diharapkan orang tua terus mendukung kebiasaan membaca dan bercerita di rumah untuk meningkatkan kemampuan bahasa. Pertahankan kegiatan olah raga dan seni yang Ahmad sukai.',
         ];
 
-        $rapot = (object)[
-            'id' => $id,
-            'tahun_ajaran' => '2025/2026',
-            'semester' => 'Ganjil',
-            'kelas' => 'TK A',
-            'tanggal_terbit' => now(),
-            'nilai_agama' => 85,
-            'nilai_motorik' => 88,
-            'nilai_kognitif' => 90,
-            'nilai_bahasa' => 85,
-            'nilai_sosial' => 87,
-            'nilai_seni' => 92,
-            'catatan' => 'Ahmad menunjukkan perkembangan yang sangat baik. Terus pertahankan!',
-            'student' => $student,
-            'teacher' => $teacher,
-        ];
-
-        return view('orangtua.rapot_detail', compact('rapot', 'student', 'teacher'));
+        return view('orangtua.rapot_detail', compact('rapot'));
     }
     
     public function rapotDownload($id)
     {
-        // Dummy data
-        $student = (object)[
-            'id' => 1,
-            'name' => 'Ahmad Fauzi',
-            'class' => 'TK A',
-            'nis' => '20240001',
-        ];
-        $teacher = (object)[
-            'name' => 'Bu Siti, S.Pd',
+        $rapot = [
+            'id'             => $id,
+            'tahun_ajaran'   => '2025/2026',
+            'semester'       => 'Ganjil',
+            'kelas'          => 'TK A',
+            'tanggal_terbit' => '20 Desember 2025',
+            'siswa'          => [
+                'nama' => 'Ahmad Fauzi',
+                'nis'  => '20240001',
+            ],
+            'guru'           => 'Bu Siti, S.Pd',
+            'nilai'          => [
+                'agama_moral'              => 'BSH',
+                'agama_moral_deskripsi'    => 'Ahmad memahami nilai-nilai agama dengan baik. Ia selalu berdoa sebelum dan sesudah kegiatan serta menunjukkan sikap sopan santun.',
+                'fisik_motorik'            => 'BSB',
+                'fisik_motorik_deskripsi'  => 'Perkembangan fisik dan motorik Ahmad sangat baik. Ia sangat aktif dalam kegiatan gerak tubuh.',
+                'kognitif'                 => 'BSH',
+                'kognitif_deskripsi'       => 'Ahmad mampu mengenali bentuk, warna, dan angka sederhana.',
+                'bahasa'                   => 'MB',
+                'bahasa_deskripsi'         => 'Ahmad mulai berkembang dalam kemampuan berbahasa namun masih perlu latihan.',
+                'sosial_emosional'         => 'BSH',
+                'sosial_emosional_deskripsi' => 'Ahmad menunjukkan kemampuan bersosialisasi yang baik.',
+                'seni'                     => 'BSB',
+                'seni_deskripsi'           => 'Ahmad memiliki bakat seni yang menonjol dan sangat antusias dalam kegiatan menggambar.',
+            ],
+            'kehadiran'      => [
+                'hadir' => 78,
+                'izin'  => 3,
+                'sakit' => 2,
+                'alpa'  => 1,
+            ],
+            'catatan_guru'   => 'Ahmad menunjukkan perkembangan yang sangat membanggakan selama semester ini.',
+            'rekomendasi'    => 'Diharapkan orang tua terus mendukung kebiasaan membaca dan bercerita di rumah.',
         ];
 
-        $rapot = (object)[
-            'id' => $id,
-            'tahun_ajaran' => '2025/2026',
-            'semester' => 'Ganjil',
-            'kelas' => 'TK A',
-            'tanggal_terbit' => now(),
-            'nilai_agama' => 85,
-            'nilai_motorik' => 88,
-            'nilai_kognitif' => 90,
-            'nilai_bahasa' => 85,
-            'nilai_sosial' => 87,
-            'nilai_seni' => 92,
-            'catatan' => 'Ahmad menunjukkan perkembangan yang sangat baik. Terus pertahankan!',
-            'student' => $student,
-            'teacher' => $teacher,
-        ];
-
-        $pdf = Pdf::loadView('orangtua.rapot_pdf', compact('rapot', 'student', 'teacher'));
+        $pdf = Pdf::loadView('orangtua.rapot_pdf', compact('rapot'));
         $pdf->setPaper('a4', 'portrait');
-        
-        $filename = 'Rapot_' . $student->name . '_' . $rapot->semester . '_' . str_replace('/', '-', $rapot->tahun_ajaran) . '.pdf';
-        
+
+        $filename = 'Rapot_' . $rapot['siswa']['nama'] . '_' . $rapot['semester'] . '_' . str_replace('/', '-', $rapot['tahun_ajaran']) . '.pdf';
+
         return $pdf->download($filename);
     }
 

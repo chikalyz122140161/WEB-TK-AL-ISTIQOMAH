@@ -14,7 +14,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        color: #00473e;
+        color: #3E2723;
         font-size: 14px;
         font-weight: 500;
         text-decoration: none;
@@ -22,7 +22,7 @@
         transition: all 0.2s;
     }
     .back-link:hover {
-        color: #faae2b;
+        color: #4CAF82;
     }
     .back-link svg {
         width: 16px;
@@ -56,15 +56,15 @@
         fill: currentColor;
     }
     .btn-edit {
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
-        color: #00473e;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+        color: #3E2723;
     }
     .btn-edit:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(250, 174, 43, 0.3);
+        box-shadow: 0 4px 12px rgba(76,175,130, 0.3);
     }
     .btn-print {
-        background: #00473e;
+        background: #3E2723;
         color: #fff;
     }
     .btn-print:hover {
@@ -72,7 +72,7 @@
     }
     .btn-delete {
         background: #fee2e2;
-        color: #dc2626;
+        color: #c0392b;
     }
     .btn-delete:hover {
         background: #fecaca;
@@ -80,7 +80,7 @@
 
     /* Student Header Card */
     .student-header {
-        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
         border-radius: 16px;
         padding: 24px;
         margin-bottom: 24px;
@@ -91,14 +91,14 @@
     .student-avatar {
         width: 80px;
         height: 80px;
-        background: #faae2b;
+        background: #4CAF82;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 32px;
         font-weight: 700;
-        color: #00473e;
+        color: #3E2723;
         flex-shrink: 0;
     }
     .student-info {
@@ -125,7 +125,7 @@
     .student-meta__item svg {
         width: 14px;
         height: 14px;
-        fill: #faae2b;
+        fill: #4CAF82;
     }
     .student-status {
         padding: 6px 14px;
@@ -138,8 +138,8 @@
         color: #10b981;
     }
     .student-status.draft {
-        background: rgba(250,174,43,0.2);
-        color: #faae2b;
+        background: rgba(76,175,130,0.2);
+        color: #4CAF82;
     }
     @media (max-width: 600px) {
         .student-header {
@@ -160,7 +160,7 @@
         margin-bottom: 24px;
     }
     .section-card__header {
-        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
         padding: 16px 24px;
         display: flex;
         align-items: center;
@@ -169,7 +169,7 @@
     .section-card__header svg {
         width: 22px;
         height: 22px;
-        fill: #faae2b;
+        fill: #4CAF82;
     }
     .section-card__title {
         color: #fff;
@@ -188,10 +188,10 @@
         gap: 16px;
     }
     .nilai-item {
-        background: #f8fafc;
+        background: #FFFDE7;
         border-radius: 12px;
         padding: 20px;
-        border-left: 4px solid #faae2b;
+        border-left: 4px solid #4CAF82;
     }
     .nilai-item__header {
         display: flex;
@@ -202,7 +202,7 @@
     .nilai-item__title {
         font-size: 15px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
     }
     .nilai-badge {
         padding: 4px 12px;
@@ -212,10 +212,10 @@
     }
     .nilai-badge.bb {
         background: #fee2e2;
-        color: #dc2626;
+        color: #c0392b;
     }
     .nilai-badge.mb {
-        background: #fef3c7;
+        background: #FFF176;
         color: #d97706;
     }
     .nilai-badge.bsh {
@@ -223,12 +223,12 @@
         color: #059669;
     }
     .nilai-badge.bsb {
-        background: #dbeafe;
-        color: #2563eb;
+        background: #d1fae5;
+        color: #3D9B72;
     }
     .nilai-item__desc {
         font-size: 14px;
-        color: #475d5b;
+        color: #5D4037;
         line-height: 1.6;
     }
 
@@ -244,7 +244,7 @@
         }
     }
     .kehadiran-item {
-        background: #f8fafc;
+        background: #FFFDE7;
         border-radius: 12px;
         padding: 20px;
         text-align: center;
@@ -252,19 +252,19 @@
     .kehadiran-item__value {
         font-size: 32px;
         font-weight: 700;
-        color: #00473e;
+        color: #3E2723;
         margin-bottom: 4px;
     }
     .kehadiran-item__label {
         font-size: 12px;
-        color: #6b7280;
+        color: #5D4037;
         text-transform: uppercase;
         font-weight: 600;
     }
     .kehadiran-item.hadir { border-bottom: 3px solid #10b981; }
-    .kehadiran-item.izin { border-bottom: 3px solid #3b82f6; }
+    .kehadiran-item.izin { border-bottom: 3px solid #4CAF82; }
     .kehadiran-item.sakit { border-bottom: 3px solid #f59e0b; }
-    .kehadiran-item.alpa { border-bottom: 3px solid #ef4444; }
+    .kehadiran-item.alpa { border-bottom: 3px solid #d81b60; }
 
     /* Catatan Box */
     .catatan-box {
@@ -307,7 +307,7 @@
         border-radius: 8px;
         margin-bottom: 20px;
         font-size: 11px;
-        color: #475d5b;
+        color: #5D4037;
     }
     .legend-inline__item {
         display: flex;
@@ -319,10 +319,10 @@
         height: 10px;
         border-radius: 50%;
     }
-    .legend-dot.bb { background: #ef4444; }
+    .legend-dot.bb { background: #F06292; }
     .legend-dot.mb { background: #f59e0b; }
     .legend-dot.bsh { background: #10b981; }
-    .legend-dot.bsb { background: #3b82f6; }
+    .legend-dot.bsb { background: #4CAF82; }
 </style>
 @endpush
 
@@ -509,16 +509,16 @@
 <div id="deleteModalShow" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:12px;padding:32px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
         <div style="width:56px;height:56px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#dc2626" style="width:28px;height:28px;"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#d81b60" style="width:28px;height:28px;"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
         </div>
-        <h3 style="font-size:18px;font-weight:700;color:#00473e;margin:0 0 8px;">Hapus Rapot?</h3>
-        <p style="font-size:14px;color:#475d5b;margin:0 0 24px;">Apakah Anda yakin ingin menghapus rapot milik <strong>{{ $rapot['siswa']['nama'] }}</strong>? Tindakan ini tidak dapat dibatalkan.</p>
+        <h3 style="font-size:18px;font-weight:700;color:#3E2723;margin:0 0 8px;">Hapus Rapot?</h3>
+        <p style="font-size:14px;color:#5D4037;margin:0 0 24px;">Apakah Anda yakin ingin menghapus rapot milik <strong>{{ $rapot['siswa']['nama'] }}</strong>? Tindakan ini tidak dapat dibatalkan.</p>
         <div style="display:flex;gap:12px;justify-content:center;">
-            <button type="button" onclick="document.getElementById('deleteModalShow').style.display='none'" style="padding:10px 24px;border-radius:8px;border:none;background:#f3f4f6;color:#475d5b;font-size:14px;font-weight:600;cursor:pointer;">Batal</button>
+            <button type="button" onclick="document.getElementById('deleteModalShow').style.display='none'" style="padding:10px 24px;border-radius:8px;border:none;background:#FFFDE7;color:#5D4037;font-size:14px;font-weight:600;cursor:pointer;">Batal</button>
             <form action="{{ route('guru.rapot.destroy', $rapot['id']) }}" method="POST" style="display:inline;">
                 @csrf
                 @method('DELETE')
-                <button type="submit" style="padding:10px 24px;border-radius:8px;border:none;background:#dc2626;color:#fff;font-size:14px;font-weight:600;cursor:pointer;">Ya, Hapus</button>
+                <button type="submit" style="padding:10px 24px;border-radius:8px;border:none;background:#d81b60;color:#fff;font-size:14px;font-weight:600;cursor:pointer;">Ya, Hapus</button>
             </form>
         </div>
     </div>

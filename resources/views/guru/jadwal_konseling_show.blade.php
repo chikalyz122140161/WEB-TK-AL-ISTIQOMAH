@@ -11,23 +11,23 @@
         gap: 6px;
         font-size: 14px;
         font-weight: 500;
-        color: #475d5b;
+        color: #5D4037;
         margin-bottom: 20px;
         transition: color 0.2s;
         text-decoration: none;
     }
-    .back-link:hover { color: #00473e; }
+    .back-link:hover { color: #3E2723; }
     .back-link svg { width: 16px; height: 16px; fill: currentColor; }
 
     .detail-card {
         background: #fff;
-        border: 1px solid #E5E7EB;
+        border: 1px solid #3E272320;
         border-radius: 12px;
         overflow: hidden;
         max-width: 700px;
     }
     .detail-card__header {
-        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
         color: #fff;
         padding: 24px 28px;
     }
@@ -58,18 +58,18 @@
         gap: 8px 16px;
         font-size: 14px;
         padding: 12px 0;
-        border-bottom: 1px solid #F3F4F6;
+        border-bottom: 1px solid #FFFDE7;
         align-items: start;
     }
     .info-row:last-child { border-bottom: none; }
     .info-row__label {
         font-size: 12px;
         font-weight: 700;
-        color: #6B7280;
+        color: #5D4037;
         text-transform: uppercase;
         letter-spacing: .4px;
     }
-    .info-row__value { color: #111827; font-weight: 500; }
+    .info-row__value { color: #3E2723; font-weight: 500; }
 
     .badge {
         display: inline-block;
@@ -81,8 +81,8 @@
         text-transform: uppercase;
     }
     .badge--disetujui { background: #ffedd5; color: #c2410c; }
-    .badge--pending   { background: #F3F4F6; color: #6B7280; border: 1px solid #D1D5DB; }
-    .badge--selesai   { background: #1F2937; color: #F9FAFB; }
+    .badge--pending   { background: #FFFDE7; color: #5D4037; border: 1px solid #3E272330; }
+    .badge--selesai   { background: #3E2723; color: #FFFDE7; }
     .badge--tolak     { background: #FEE2E2; color: #B91C1C; }
 
     .detail-actions {
@@ -95,10 +95,10 @@
         height: 38px;
         padding: 0 20px;
         background: #FFFBEB;
-        color: #B45309;
+        color: #5D4037;
         font-size: 13px;
         font-weight: 700;
-        border: 1px solid #FDE68A;
+        border: 1px solid #FFF176;
         border-radius: 8px;
         cursor: pointer;
         text-decoration: none;
@@ -107,7 +107,7 @@
         gap: 6px;
         transition: background .15s;
     }
-    .btn-edit:hover { background: #FEF3C7; }
+    .btn-edit:hover { background: #FFF176; }
     .btn-setuju {
         height: 38px;
         padding: 0 20px;
@@ -158,13 +158,13 @@
     .modal__title {
         font-size: 16px;
         font-weight: 700;
-        color: #111827;
+        color: #3E2723;
         margin: 0 0 8px;
         text-align: center;
     }
     .modal__desc {
         font-size: 13px;
-        color: #6B7280;
+        color: #5D4037;
         text-align: center;
         margin-bottom: 20px;
         line-height: 1.6;
@@ -188,14 +188,14 @@
         height: 38px;
         padding: 0 20px;
         background: #fff;
-        color: #374151;
+        color: #3E2723;
         font-size: 13px;
         font-weight: 600;
-        border: 1px solid #D1D5DB;
+        border: 1px solid #3E272330;
         border-radius: 8px;
         cursor: pointer;
     }
-    .btn-modal-cancel:hover { background: #F3F4F6; }
+    .btn-modal-cancel:hover { background: #FFFDE7; }
 </style>
 @endpush
 

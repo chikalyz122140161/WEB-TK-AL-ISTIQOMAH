@@ -271,7 +271,7 @@
 .form-section {
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid #3E272320;
 }
 
 .form-section:last-of-type {
@@ -279,29 +279,29 @@
 }
 
 .form-section__title {
-    color: #00473e;
+    color: #3E2723;
     font-size: 1rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
 }
 
 .form-section__desc {
-    color: #64748b;
+    color: #5D4037;
     font-size: 0.85rem;
     margin-bottom: 1rem;
 }
 
 .form-subsection__title {
-    color: #374151;
+    color: #3E2723;
     font-size: 0.9rem;
     font-weight: 600;
     margin: 1.25rem 0 0.75rem 0;
     padding-bottom: 0.5rem;
-    border-bottom: 1px dashed #d1d5db;
+    border-bottom: 1px dashed #3E272330;
 }
 
 .form-hint {
-    color: #64748b;
+    color: #5D4037;
     font-size: 0.75rem;
     margin-top: 0.25rem;
 }
@@ -327,20 +327,20 @@
 
 .form-label {
     font-weight: 500;
-    color: #00473e;
+    color: #3E2723;
     font-size: 0.875rem;
 }
 
 .form-label.required::after {
     content: " *";
-    color: #dc2626;
+    color: #c0392b;
 }
 
 .form-input,
 .form-select,
 .form-textarea {
     padding: 0.75rem 1rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid #3E272330;
     border-radius: 8px;
     font-size: 0.875rem;
     transition: all 0.2s;
@@ -356,13 +356,13 @@
 .form-select:focus,
 .form-textarea:focus {
     outline: none;
-    border-color: #00473e;
+    border-color: #3E2723;
     box-shadow: 0 0 0 3px rgba(0, 71, 62, 0.1);
 }
 
 .form-input::placeholder,
 .form-textarea::placeholder {
-    color: #9ca3af;
+    color: #5D4037;
 }
 
 .form-actions {
@@ -371,13 +371,13 @@
     justify-content: flex-end;
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid #3E272320;
 }
 
 /* Alert */
 .alert--danger {
     background: #fee2e2;
-    color: #dc2626;
+    color: #c0392b;
     border: 1px solid #fecaca;
     padding: 1rem;
     border-radius: 8px;

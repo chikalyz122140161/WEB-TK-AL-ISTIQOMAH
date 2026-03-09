@@ -166,12 +166,12 @@
 .filter-group label {
     font-size: 0.8rem;
     font-weight: 500;
-    color: #475d5b;
+    color: #5D4037;
 }
 
 .form-input, .form-select {
     padding: 0.5rem 0.75rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid #3E272330;
     border-radius: 8px;
     font-size: 0.875rem;
     background: white;
@@ -179,7 +179,7 @@
 
 .form-input:focus, .form-select:focus {
     outline: none;
-    border-color: #00473e;
+    border-color: #3E2723;
     box-shadow: 0 0 0 3px rgba(0, 71, 62, 0.1);
 }
 
@@ -197,20 +197,20 @@
 .data-table td {
     padding: 1rem;
     text-align: left;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid #3E272320;
 }
 
 .data-table th {
-    background: #f8fafc;
+    background: #FFFDE7;
     font-weight: 600;
-    color: #00473e;
+    color: #3E2723;
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
 .data-table tbody tr:hover {
-    background: #f8fafc;
+    background: #FFFDE7;
 }
 
 /* Student Cell */
@@ -223,7 +223,7 @@
 .student-cell__avatar {
     width: 36px;
     height: 36px;
-    background: linear-gradient(135deg, #00473e, #0d9488);
+    background: linear-gradient(135deg, #3E2723, #4CAF82);
     color: white;
     border-radius: 50%;
     display: flex;
@@ -245,12 +245,12 @@
 
 .parent-cell__name {
     font-weight: 500;
-    color: #00473e;
+    color: #3E2723;
 }
 
 .parent-cell__email {
     font-size: 0.75rem;
-    color: #64748b;
+    color: #5D4037;
 }
 
 /* Badges */
@@ -265,13 +265,13 @@
 
 .badge--outline {
     background: transparent;
-    border: 1px solid #d1d5db;
-    color: #475d5b;
+    border: 1px solid #3E272330;
+    color: #5D4037;
 }
 
 .badge--kelas {
     background: rgba(0, 71, 62, 0.1);
-    color: #00473e;
+    color: #3E2723;
 }
 
 .badge--success {
@@ -281,7 +281,7 @@
 
 .badge--secondary {
     background: #f1f5f9;
-    color: #64748b;
+    color: #5D4037;
 }
 
 .badge--warning {
@@ -310,17 +310,17 @@
 
 .btn--secondary {
     background: #f1f5f9;
-    color: #475d5b;
+    color: #5D4037;
 }
 
 .btn--secondary:hover {
     background: #e2e8f0;
-    color: #00473e;
+    color: #3E2723;
 }
 
 .btn--danger {
     background: #fee2e2;
-    color: #dc2626;
+    color: #c0392b;
 }
 
 .btn--danger:hover {
@@ -396,18 +396,18 @@
 .modal-icon svg {
     width: 32px;
     height: 32px;
-    color: #dc2626;
+    color: #c0392b;
 }
 
 .modal-title {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #00473e;
+    color: #3E2723;
     margin-bottom: 0.5rem;
 }
 
 .modal-message {
-    color: #64748b;
+    color: #5D4037;
     margin-bottom: 1.5rem;
 }
 
@@ -437,7 +437,7 @@
             <form id="deleteForm" method="POST" style="display: inline;">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn btn--primary" style="background: #dc2626;">Hapus</button>
+                <button type="submit" class="btn btn--primary" style="background: #d81b60;">Hapus</button>
             </form>
         </div>
     </div>

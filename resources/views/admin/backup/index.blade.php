@@ -151,16 +151,16 @@
 <div id="deleteBackupModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:12px;padding:32px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
         <div style="width:56px;height:56px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#dc2626" style="width:28px;height:28px;"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#d81b60" style="width:28px;height:28px;"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
         </div>
-        <h3 style="font-size:18px;font-weight:700;color:#00473e;margin:0 0 8px;">Hapus Backup?</h3>
-        <p style="font-size:14px;color:#475d5b;margin:0 0 24px;">Apakah Anda yakin ingin menghapus file backup <strong id="deleteBackupName"></strong>? Tindakan ini tidak dapat dibatalkan.</p>
+        <h3 style="font-size:18px;font-weight:700;color:#3E2723;margin:0 0 8px;">Hapus Backup?</h3>
+        <p style="font-size:14px;color:#5D4037;margin:0 0 24px;">Apakah Anda yakin ingin menghapus file backup <strong id="deleteBackupName"></strong>? Tindakan ini tidak dapat dibatalkan.</p>
         <div style="display:flex;gap:12px;justify-content:center;">
-            <button type="button" onclick="closeDeleteBackupModal()" style="padding:10px 24px;border-radius:8px;border:none;background:#f3f4f6;color:#475d5b;font-size:14px;font-weight:600;cursor:pointer;">Batal</button>
+            <button type="button" onclick="closeDeleteBackupModal()" style="padding:10px 24px;border-radius:8px;border:none;background:#FFFDE7;color:#5D4037;font-size:14px;font-weight:600;cursor:pointer;">Batal</button>
             <form id="deleteBackupForm" method="POST" style="display:inline;">
                 @csrf
                 @method('DELETE')
-                <button type="submit" style="padding:10px 24px;border-radius:8px;border:none;background:#dc2626;color:#fff;font-size:14px;font-weight:600;cursor:pointer;">Ya, Hapus</button>
+                <button type="submit" style="padding:10px 24px;border-radius:8px;border:none;background:#d81b60;color:#fff;font-size:14px;font-weight:600;cursor:pointer;">Ya, Hapus</button>
             </form>
         </div>
     </div>
@@ -197,7 +197,7 @@ document.getElementById('deleteBackupModal').addEventListener('click', function(
 
 /* Text Styles */
 .text-muted {
-    color: #6b7280;
+    color: #5D4037;
 }
 
 /* Alerts */
@@ -215,13 +215,13 @@ document.getElementById('deleteBackupModal').addEventListener('click', function(
 
 .alert--danger {
     background: #fee2e2;
-    color: #dc2626;
+    color: #c0392b;
     border: 1px solid #fecaca;
     margin-bottom: 1rem;
 }
 
 .alert--warning {
-    background: #fef3c7;
+    background: #FFF176;
     color: #92400e;
     border: 1px solid #fcd34d;
 }
@@ -235,19 +235,19 @@ document.getElementById('deleteBackupModal').addEventListener('click', function(
 
 .form-label {
     font-weight: 500;
-    color: #00473e;
+    color: #3E2723;
     font-size: 0.875rem;
 }
 
 .form-label.required::after {
     content: " *";
-    color: #dc2626;
+    color: #c0392b;
 }
 
 .form-input,
 .form-select {
     padding: 0.75rem 1rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid #3E272330;
     border-radius: 8px;
     font-size: 0.875rem;
     transition: all 0.2s;
@@ -257,13 +257,13 @@ document.getElementById('deleteBackupModal').addEventListener('click', function(
 .form-input:focus,
 .form-select:focus {
     outline: none;
-    border-color: #00473e;
+    border-color: #3E2723;
     box-shadow: 0 0 0 3px rgba(0, 71, 62, 0.1);
 }
 
 .form-help {
     font-size: 0.75rem;
-    color: #6b7280;
+    color: #5D4037;
 }
 
 /* Button Large */
@@ -289,7 +289,7 @@ document.getElementById('deleteBackupModal').addEventListener('click', function(
 }
 
 .file-icon {
-    color: #00473e;
+    color: #3E2723;
 }
 
 /* Table Styles */
@@ -306,27 +306,27 @@ document.getElementById('deleteBackupModal').addEventListener('click', function(
 .data-table td {
     padding: 1rem;
     text-align: left;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid #3E272320;
 }
 
 .data-table th {
-    background: #f8fafc;
+    background: #FFFDE7;
     font-weight: 600;
-    color: #00473e;
+    color: #3E2723;
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
 .data-table tbody tr:hover {
-    background: #f8fafc;
+    background: #FFFDE7;
 }
 
 /* Badge */
 .badge--outline {
     background: transparent;
-    border: 1px solid #d1d5db;
-    color: #475d5b;
+    border: 1px solid #3E272330;
+    color: #5D4037;
     padding: 0.25rem 0.75rem;
     border-radius: 9999px;
     font-size: 0.75rem;
@@ -353,17 +353,17 @@ document.getElementById('deleteBackupModal').addEventListener('click', function(
 
 .btn--secondary {
     background: #f1f5f9;
-    color: #475d5b;
+    color: #5D4037;
 }
 
 .btn--secondary:hover {
     background: #e2e8f0;
-    color: #00473e;
+    color: #3E2723;
 }
 
 .btn--danger {
     background: #fee2e2;
-    color: #dc2626;
+    color: #c0392b;
 }
 
 .btn--danger:hover {

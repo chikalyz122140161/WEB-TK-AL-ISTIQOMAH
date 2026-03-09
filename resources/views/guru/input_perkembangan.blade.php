@@ -9,7 +9,7 @@
     /*  Form card */
     .form-card {
         background: #fff;
-        border: 1px solid #E5E7EB;
+        border: 1px solid #3E272320;
         border-radius: 12px;
         padding: 28px 32px;
         margin-bottom: 24px;
@@ -17,10 +17,10 @@
     .form-card__title {
         font-size: 16px;
         font-weight: 700;
-        color: #111827;
+        color: #3E2723;
         margin: 0 0 24px;
         padding-bottom: 14px;
-        border-bottom: 1px solid #F3F4F6;
+        border-bottom: 1px solid #FFFDE7;
         letter-spacing: .3px;
         text-transform: uppercase;
     }
@@ -36,7 +36,7 @@
     .field-label {
         font-size: 11px;
         font-weight: 700;
-        color: #6B7280;
+        color: #5D4037;
         letter-spacing: .5px;
         text-transform: uppercase;
     }
@@ -45,9 +45,9 @@
         height: 42px;
         padding: 0 12px;
         font-size: 14px;
-        color: #111827;
-        background: #F9FAFB;
-        border: 1px solid #E5E7EB;
+        color: #3E2723;
+        background: #FFFDE7;
+        border: 1px solid #3E272320;
         border-radius: 8px;
         outline: none;
         font-family: inherit;
@@ -71,7 +71,7 @@
     .penilaian-header {
         font-size: 13px;
         font-weight: 700;
-        color: #374151;
+        color: #3E2723;
         text-transform: uppercase;
         letter-spacing: .5px;
         margin: 0 0 20px;
@@ -84,7 +84,7 @@
     .dev-block {
         margin-bottom: 22px;
         padding-bottom: 22px;
-        border-bottom: 1px solid #F3F4F6;
+        border-bottom: 1px solid #FFFDE7;
     }
     .dev-block:last-child {
         margin-bottom: 0;
@@ -94,7 +94,7 @@
     .dev-block__title {
         font-size: 13px;
         font-weight: 700;
-        color: #111827;
+        color: #3E2723;
         text-transform: uppercase;
         letter-spacing: .3px;
         margin-bottom: 10px;
@@ -117,14 +117,14 @@
         align-items: center;
         gap: 5px;
         font-size: 13px;
-        color: #374151;
+        color: #3E2723;
         cursor: pointer;
         font-weight: 500;
     }
     .radio-row input[type="radio"] {
         width: 15px;
         height: 15px;
-        accent-color: #f97316;
+        accent-color: #3D9B72;
         cursor: pointer;
     }
 
@@ -141,7 +141,7 @@
         gap: 8px;
         height: 40px;
         padding: 0 24px;
-        background: #f97316;
+        background: #3D9B72;
         color: #fff;
         font-size: 14px;
         font-weight: 700;
@@ -151,22 +151,22 @@
         letter-spacing: .3px;
         transition: background .15s;
     }
-    .btn-save:hover { background: #ea580c; }
+    .btn-save:hover { background: #2E8B60; }
     .btn-cancel {
         display: inline-flex;
         align-items: center;
         height: 40px;
         padding: 0 24px;
         background: #fff;
-        color: #374151;
+        color: #3E2723;
         font-size: 14px;
         font-weight: 600;
-        border: 1px solid #D1D5DB;
+        border: 1px solid #3E272330;
         border-radius: 8px;
         cursor: pointer;
         transition: background .15s, border-color .15s;
     }
-    .btn-cancel:hover { background: #F3F4F6; border-color: #9CA3AF; }
+    .btn-cancel:hover { background: #FFFDE7; border-color: #5D4037; }
 </style>
 @endpush
 
@@ -179,7 +179,7 @@
 @section('content')
 
     {{-- Title --}}
-    <h2 style="margin:0 0 20px;font-size:20px;font-weight:700;color:#111827;text-transform:uppercase;letter-spacing:.5px;">
+    <h2 style="margin:0 0 20px;font-size:20px;font-weight:700;color:#3E2723;text-transform:uppercase;letter-spacing:.5px;">
         Input Perkembangan Anak
     </h2>
 
@@ -260,7 +260,7 @@
 
         {{--  Card 2: Penilaian Perkembangan  --}}
         <div class="form-card">
-            <p class="form-card__title">Penilaian Perkembangan (Skala 1-5)</p>
+            <p class="form-card__title">Penilaian Perkembangan (BB / MB / BSH / BSB)</p>
 
             @php
                 $aspek = [
@@ -279,12 +279,12 @@
                     <span>{{ $a['num'] }}.</span>{{ strtoupper($a['label']) }}
                 </div>
                 <div class="radio-row">
-                    @for ($i = 1; $i <= 5; $i++)
+                    @foreach (['1' => 'BB', '2' => 'MB', '3' => 'BSH', '4' => 'BSB'] as $val => $label)
                     <label>
-                        <input type="radio" name="nilai_{{ $a['key'] }}" value="{{ $i }}" required>
-                        {{ $i }}
+                        <input type="radio" name="nilai_{{ $a['key'] }}" value="{{ $val }}" required>
+                        {{ $label }}
                     </label>
-                    @endfor
+                    @endforeach
                 </div>
                 <div class="field-group" style="margin-bottom:0;">
                     <textarea

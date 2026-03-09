@@ -11,7 +11,7 @@
 <style>
     .form-section {
         background: #fff;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 8px;
         padding: 20px;
         margin-bottom: 20px;
@@ -19,10 +19,10 @@
     .form-section__title {
         font-size: 16px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
         margin-bottom: 16px;
         padding-bottom: 12px;
-        border-bottom: 2px solid #faae2b;
+        border-bottom: 2px solid #4CAF82;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -30,7 +30,7 @@
     .form-section__title svg {
         width: 20px;
         height: 20px;
-        fill: #faae2b;
+        fill: #4CAF82;
     }
     .form-grid {
         display: grid;
@@ -45,17 +45,17 @@
     .form-group label {
         font-size: 13px;
         font-weight: 500;
-        color: #475d5b;
+        color: #5D4037;
     }
     .form-group input,
     .form-group select,
     .form-group textarea {
         padding: 10px 12px;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 6px;
         font-size: 14px;
-        color: #475d5b;
-        background: #f2f7f5;
+        color: #5D4037;
+        background: #FFFDE7;
         transition: all 0.2s;
         font-family: inherit;
         width: 100%;
@@ -68,32 +68,32 @@
     .form-group select:focus,
     .form-group textarea:focus {
         outline: none;
-        border-color: #faae2b;
+        border-color: #4CAF82;
         background: #fff;
-        box-shadow: 0 0 0 3px rgba(250, 174, 43, 0.15);
+        box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.15);
     }
     .form-group input[readonly] {
-        background: #e5e7eb;
+        background: #3E272320;
         cursor: not-allowed;
     }
     .btn-orange {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
-        color: #00473e;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+        color: #3E2723;
         padding: 10px 20px;
         font-size: 14px;
         font-weight: 600;
         border: none;
         cursor: pointer;
         border-radius: 8px;
-        box-shadow: 0 4px 14px rgba(250, 174, 43, 0.3);
+        box-shadow: 0 4px 14px rgba(76,175,130, 0.3);
         transition: all 0.3s;
     }
     .btn-orange:hover {
         transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(250, 174, 43, 0.4);
+        box-shadow: 0 6px 20px rgba(76,175,130, 0.4);
     }
     .btn-orange svg {
         width: 16px;
@@ -104,8 +104,8 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: #00473e20;
-        color: #00473e;
+        background: #3E272320;
+        color: #3E2723;
         padding: 10px 20px;
         font-size: 14px;
         font-weight: 500;
@@ -116,7 +116,7 @@
         transition: all 0.2s;
     }
     .btn-secondary:hover {
-        background: #00473e30;
+        background: #3E272330;
     }
     .btn-secondary svg {
         width: 16px;
@@ -132,14 +132,14 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        color: #475d5b;
+        color: #5D4037;
         font-size: 14px;
         text-decoration: none;
         margin-bottom: 16px;
         transition: color 0.2s;
     }
     .back-link:hover {
-        color: #faae2b;
+        color: #4CAF82;
     }
     .back-link svg {
         width: 16px;
@@ -153,8 +153,8 @@
         align-items: center;
         gap: 16px;
         padding: 16px;
-        background: linear-gradient(135deg, #f2f7f5 0%, #e6f0ec 100%);
-        border: 1px solid #00473e20;
+        background: linear-gradient(135deg, #FFFDE7 0%, #e6f0ec 100%);
+        border: 1px solid #3E272320;
         border-radius: 10px;
         margin-bottom: 20px;
     }
@@ -162,8 +162,8 @@
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
-        color: #00473e;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+        color: #3E2723;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -174,11 +174,11 @@
     .student-info-card__name {
         font-size: 16px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
     }
     .student-info-card__detail {
         font-size: 13px;
-        color: #475d5b;
+        color: #5D4037;
         margin-top: 2px;
     }
 
@@ -193,7 +193,7 @@
         align-items: center;
         gap: 8px;
         padding: 12px 20px;
-        border: 2px solid #00473e20;
+        border: 2px solid #3E272320;
         border-radius: 10px;
         font-size: 14px;
         font-weight: 600;
@@ -204,11 +204,11 @@
         justify-content: center;
     }
     .status-selector__option:hover {
-        border-color: #faae2b;
+        border-color: #4CAF82;
     }
     .status-selector__option.active {
-        border-color: #faae2b;
-        background: #faae2b15;
+        border-color: #4CAF82;
+        background: #4CAF8215;
     }
     .status-selector__option input {
         display: none;
@@ -219,19 +219,19 @@
         color: #047857;
     }
     .status-selector__option--izin.active {
-        border-color: #b45309;
-        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-        color: #b45309;
+        border-color: #5D4037;
+        background: #FFF176;
+        color: #5D4037;
     }
     .status-selector__option--sakit.active {
-        border-color: #1d4ed8;
-        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-        color: #1d4ed8;
+        border-color: #2E8B60;
+        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        color: #2E8B60;
     }
     .status-selector__option--alpa.active {
-        border-color: #dc2626;
+        border-color: #c0392b;
         background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-        color: #dc2626;
+        color: #c0392b;
     }
 
     @media (max-width: 768px) {

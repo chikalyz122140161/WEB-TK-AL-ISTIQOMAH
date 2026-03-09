@@ -15,7 +15,7 @@
         body {
             font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #fef3e2 0%, #fce7f3 50%, #e0f2fe 100%);
+            background: linear-gradient(135deg, #FFFDE7 0%, #F9FBE7 50%, #E8F5E9 100%);
             display: flex;
             position: relative;
             overflow-x: hidden;
@@ -31,7 +31,7 @@
         .circle-1 {
             width: 300px;
             height: 300px;
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(251, 146, 60, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(76, 175, 130, 0.15) 0%, rgba(61, 155, 114, 0.1) 100%);
             border-radius: 50%;
             top: -100px;
             left: -100px;
@@ -99,7 +99,7 @@
         /* Left side - Illustration */
         .illustration-side {
             flex: 1;
-            background: linear-gradient(135deg, #ff9a56 0%, #ffad60 30%, #ffc971 60%, #ffecd2 100%);
+            background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 30%, #2E8B60 60%, #E8F5E9 100%);
             padding: 40px;
             display: flex;
             flex-direction: column;
@@ -203,13 +203,13 @@
         .logo-container {
             width: 72px;
             height: 72px;
-            background: linear-gradient(135deg, #ff9a56 0%, #f97316 100%);
+            background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
             border-radius: 18px;
             margin: 0 auto 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 16px rgba(249, 115, 22, 0.25);
+            box-shadow: 0 8px 16px rgba(76, 175, 130, 0.25);
         }
 
         .logo-container svg {
@@ -221,13 +221,13 @@
         .login-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #1e293b;
+            color: #3E2723;
             margin-bottom: 4px;
         }
 
         .login-subtitle {
             font-size: 0.9rem;
-            color: #64748b;
+            color: #5D4037;
         }
 
         /* Form Styles */
@@ -239,7 +239,7 @@
             display: block;
             font-size: 0.875rem;
             font-weight: 600;
-            color: #374151;
+            color: #3E2723;
             margin-bottom: 8px;
         }
 
@@ -254,43 +254,43 @@
             transform: translateY(-50%);
             width: 20px;
             height: 20px;
-            color: #9ca3af;
+            color: #5D4037;
             transition: color 0.2s;
         }
 
         .form-group input {
             width: 100%;
             padding: 14px 16px 14px 46px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid #3E272320;
             border-radius: 12px;
             font-size: 0.95rem;
             font-family: inherit;
-            color: #1e293b;
-            background: #f9fafb;
+            color: #3E2723;
+            background: #FFFDE7;
             transition: all 0.2s ease;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #f97316;
+            border-color: #3D9B72;
             background: #ffffff;
-            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
+            box-shadow: 0 0 0 4px rgba(76, 175, 130, 0.1);
         }
 
         .form-group input:focus + svg,
         .input-wrapper:focus-within svg {
-            color: #f97316;
+            color: #3D9B72;
         }
 
         .form-group input::placeholder {
-            color: #9ca3af;
+            color: #5D4037;
         }
 
         /* Login Button */
         .btn-login {
             width: 100%;
             padding: 16px 24px;
-            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
             color: white;
             border: none;
             border-radius: 12px;
@@ -299,13 +299,13 @@
             font-family: inherit;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
+            box-shadow: 0 4px 14px rgba(76, 175, 130, 0.35);
             margin-top: 8px;
         }
 
         .btn-login:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(249, 115, 22, 0.4);
+            box-shadow: 0 8px 20px rgba(76, 175, 130, 0.4);
         }
 
         .btn-login:active {
@@ -316,7 +316,7 @@
         .error-message {
             background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
             border: 1px solid #fecaca;
-            color: #dc2626;
+            color: #c0392b;
             padding: 14px 16px;
             border-radius: 12px;
             font-size: 0.875rem;
@@ -336,13 +336,13 @@
         .role-section {
             margin-top: 28px;
             padding-top: 24px;
-            border-top: 1px solid #e5e7eb;
+            border-top: 1px solid #3E272320;
         }
 
         .role-title {
             text-align: center;
             font-size: 0.8rem;
-            color: #9ca3af;
+            color: #5D4037;
             margin-bottom: 16px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -371,8 +371,8 @@
         }
 
         .role-badge.admin {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            color: #1d4ed8;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #2E8B60;
         }
 
         .role-badge.guru {
@@ -381,8 +381,8 @@
         }
 
         .role-badge.ortu {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            color: #b45309;
+            background: #FFF176;
+            color: #5D4037;
         }
 
         /* Registration Section */
@@ -393,7 +393,7 @@
 
         .registration-text {
             font-size: 0.875rem;
-            color: #64748b;
+            color: #5D4037;
             margin-bottom: 12px;
         }
 
@@ -402,7 +402,7 @@
             align-items: center;
             gap: 8px;
             padding: 12px 24px;
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            background: linear-gradient(135deg, #3D9B72 0%, #16a34a 100%);
             color: white;
             text-decoration: none;
             border-radius: 12px;
@@ -426,7 +426,7 @@
         .footer {
             text-align: center;
             padding: 16px;
-            color: #9ca3af;
+            color: #5D4037;
             font-size: 0.75rem;
             margin-top: 20px;
         }
@@ -434,7 +434,7 @@
         /* Responsive Design */
         @media (max-width: 768px) {
             body {
-                background: linear-gradient(180deg, #ff9a56 0%, #ffad60 15%, #fef3e2 30%, #fce7f3 60%, #e0f2fe 100%);
+                background: linear-gradient(180deg, #4CAF82 0%, #3D9B72 15%, #FFFDE7 30%, #F9FBE7 60%, #E8F5E9 100%);
             }
 
             .main-container {
@@ -580,7 +580,7 @@
             align-items: center;
             gap: 0.35rem;
             background: white;
-            border: 1px solid #d1d5db;
+            border: 1px solid #3E272330;
             border-radius: 6px;
             padding: 0.35rem 0.6rem;
             cursor: pointer;
@@ -589,7 +589,7 @@
         }
 
         .demo-item:hover {
-            border-color: #00473e;
+            border-color: #3E2723;
             background: #f0fdf4;
         }
 
@@ -601,34 +601,34 @@
         }
 
         .demo-role.admin {
-            background: #dbeafe;
-            color: #1e40af;
+            background: #d1fae5;
+            color: #2E8B60;
         }
 
         .demo-role.guru {
-            background: #fef3c7;
+            background: #FFF176;
             color: #92400e;
         }
 
         .demo-role.ortu {
-            background: #fce7f3;
+            background: #F9FBE7;
             color: #9d174d;
         }
 
         .demo-email {
-            color: #374151;
+            color: #3E2723;
         }
 
         .demo-password {
             font-size: 0.75rem;
-            color: #6b7280;
+            color: #5D4037;
             margin: 0;
         }
 
         .demo-password strong {
-            color: #00473e;
+            color: #3E2723;
             font-family: monospace;
-            background: #f3f4f6;
+            background: #FFFDE7;
             padding: 0.1rem 0.4rem;
             border-radius: 4px;
         }
@@ -678,11 +678,11 @@
                         
                         <!-- Roof -->
                         <path d="M30 95L100 50L170 95H30Z" fill="#fff5eb"/>
-                        <path d="M40 90L100 55L160 90" stroke="#f97316" stroke-width="3" fill="none"/>
+                        <path d="M40 90L100 55L160 90" stroke="#3D9B72" stroke-width="3" fill="none"/>
                         
                         <!-- Flag pole -->
-                        <rect x="97" y="30" width="6" height="30" fill="#f97316"/>
-                        <path d="M103 30L103 45L118 37.5L103 30Z" fill="#ef4444"/>
+                        <rect x="97" y="30" width="6" height="30" fill="#3D9B72"/>
+                        <path d="M103 30L103 45L118 37.5L103 30Z" fill="#F06292"/>
                         
                         <!-- Windows row 1 -->
                         <rect x="52" y="105" width="25" height="20" rx="2" fill="#fcd34d"/>
@@ -698,11 +698,11 @@
                         <line x1="122" y1="115" x2="147" y2="115" stroke="white" stroke-width="2"/>
                         
                         <!-- Door -->
-                        <rect x="85" y="140" width="30" height="35" rx="15 15 0 0" fill="#f97316"/>
+                        <rect x="85" y="140" width="30" height="35" rx="15 15 0 0" fill="#3D9B72"/>
                         <circle cx="108" cy="160" r="3" fill="#fcd34d"/>
                         
                         <!-- Trees -->
-                        <ellipse cx="25" cy="150" rx="18" ry="25" fill="#22c55e"/>
+                        <ellipse cx="25" cy="150" rx="18" ry="25" fill="#3D9B72"/>
                         <rect x="22" y="165" width="6" height="15" fill="#a16207"/>
                         <ellipse cx="175" cy="152" rx="16" ry="22" fill="#16a34a"/>
                         <rect x="172" y="167" width="6" height="13" fill="#a16207"/>
@@ -714,10 +714,10 @@
                         <circle cx="145" cy="177" r="3" fill="#f472b6"/>
                         
                         <!-- Children silhouettes -->
-                        <circle cx="70" cy="165" r="5" fill="#64748b"/>
-                        <ellipse cx="70" cy="177" rx="4" ry="6" fill="#64748b"/>
-                        <circle cx="130" cy="166" r="5" fill="#64748b"/>
-                        <ellipse cx="130" cy="178" rx="4" ry="6" fill="#64748b"/>
+                        <circle cx="70" cy="165" r="5" fill="#5D4037"/>
+                        <ellipse cx="70" cy="177" rx="4" ry="6" fill="#5D4037"/>
+                        <circle cx="130" cy="166" r="5" fill="#5D4037"/>
+                        <ellipse cx="130" cy="178" rx="4" ry="6" fill="#5D4037"/>
                     </svg>
 
                     <h2 class="illustration-title">Selamat Datang!</h2>

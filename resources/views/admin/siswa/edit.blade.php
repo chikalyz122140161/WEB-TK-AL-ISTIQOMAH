@@ -380,7 +380,7 @@
 .form-section {
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid #3E272320;
 }
 
 .form-section:last-of-type {
@@ -388,29 +388,29 @@
 }
 
 .form-section__title {
-    color: #00473e;
+    color: #3E2723;
     font-size: 1rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
 }
 
 .form-section__desc {
-    color: #64748b;
+    color: #5D4037;
     font-size: 0.85rem;
     margin-bottom: 1rem;
 }
 
 .form-subsection__title {
-    color: #374151;
+    color: #3E2723;
     font-size: 0.9rem;
     font-weight: 600;
     margin: 1.25rem 0 0.75rem 0;
     padding-bottom: 0.5rem;
-    border-bottom: 1px dashed #d1d5db;
+    border-bottom: 1px dashed #3E272330;
 }
 
 .form-hint {
-    color: #64748b;
+    color: #5D4037;
     font-size: 0.75rem;
     margin-top: 0.25rem;
 }
@@ -436,20 +436,20 @@
 
 .form-label {
     font-weight: 500;
-    color: #00473e;
+    color: #3E2723;
     font-size: 0.875rem;
 }
 
 .form-label.required::after {
     content: " *";
-    color: #dc2626;
+    color: #c0392b;
 }
 
 .form-input,
 .form-select,
 .form-textarea {
     padding: 0.75rem 1rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid #3E272330;
     border-radius: 8px;
     font-size: 0.875rem;
     transition: all 0.2s;
@@ -465,7 +465,7 @@
 .form-select:focus,
 .form-textarea:focus {
     outline: none;
-    border-color: #00473e;
+    border-color: #3E2723;
     box-shadow: 0 0 0 3px rgba(0, 71, 62, 0.1);
 }
 
@@ -475,13 +475,13 @@
     justify-content: flex-end;
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid #3E272320;
 }
 
 /* Alert */
 .alert--danger {
     background: #fee2e2;
-    color: #dc2626;
+    color: #c0392b;
     border: 1px solid #fecaca;
     padding: 1rem;
     border-radius: 8px;
@@ -498,7 +498,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #f8fafc;
+    background: #FFFDE7;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
     padding: 1rem;
@@ -513,7 +513,7 @@
 .linked-account-avatar {
     width: 48px;
     height: 48px;
-    background: linear-gradient(135deg, #00473e, #0d9488);
+    background: linear-gradient(135deg, #3E2723, #4CAF82);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -528,12 +528,12 @@
 
 .linked-account-name {
     font-weight: 600;
-    color: #00473e;
+    color: #3E2723;
 }
 
 .linked-account-email {
     font-size: 0.85rem;
-    color: #64748b;
+    color: #5D4037;
 }
 
 .badge--success {
@@ -556,7 +556,7 @@
 
 /* Status Select Styling */
 .status-select option[value="Pending"] {
-    background: #fef3c7;
+    background: #FFF176;
     color: #d97706;
 }
 
@@ -569,7 +569,7 @@
 .status-select option[value="Lulus"],
 .status-select option[value="Pindah"] {
     background: #f1f5f9;
-    color: #64748b;
+    color: #5D4037;
 }
 
 /* Documents List */
@@ -584,7 +584,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #f8fafc;
+    background: #FFFDE7;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
     padding: 0.875rem 1rem;
@@ -605,7 +605,7 @@
 .document-icon {
     width: 40px;
     height: 40px;
-    background: linear-gradient(135deg, #00473e, #0d9488);
+    background: linear-gradient(135deg, #3E2723, #4CAF82);
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -625,13 +625,13 @@
 
 .document-name {
     font-weight: 600;
-    color: #00473e;
+    color: #3E2723;
     font-size: 0.9rem;
 }
 
 .document-filename {
     font-size: 0.8rem;
-    color: #64748b;
+    color: #5D4037;
 }
 
 .document-actions {
@@ -652,33 +652,33 @@
 }
 
 .btn-doc--view {
-    background: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
+    background: rgba(76, 175, 130, 0.1);
+    color: #4CAF82;
 }
 
 .btn-doc--view:hover {
-    background: rgba(59, 130, 246, 0.2);
+    background: rgba(76, 175, 130, 0.2);
 }
 
 .btn-doc--delete {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
+    background: rgba(240, 98, 146, 0.1);
+    color: #c0392b;
 }
 
 .btn-doc--delete:hover {
-    background: rgba(239, 68, 68, 0.2);
+    background: rgba(240, 98, 146, 0.2);
 }
 
 /* Upload Section */
 .upload-section {
-    background: #f8fafc;
+    background: #FFFDE7;
     border: 2px dashed #cbd5e1;
     border-radius: 12px;
     padding: 1.25rem;
 }
 
 .upload-title {
-    color: #00473e;
+    color: #3E2723;
     font-size: 0.9rem;
     font-weight: 600;
     margin-bottom: 1rem;
@@ -686,7 +686,7 @@
 
 .form-input-file {
     padding: 0.5rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid #3E272330;
     border-radius: 8px;
     font-size: 0.875rem;
     background: white;
@@ -694,7 +694,7 @@
 }
 
 .form-input-file::-webkit-file-upload-button {
-    background: linear-gradient(135deg, #00473e, #0d9488);
+    background: linear-gradient(135deg, #3E2723, #4CAF82);
     color: white;
     border: none;
     padding: 0.5rem 1rem;

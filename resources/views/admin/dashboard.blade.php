@@ -135,19 +135,23 @@
 }
 
 .stat-card--teal {
-    border-color: #00473e;
+    background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+    border-color: transparent;
 }
 
 .stat-card--golden {
-    border-color: #faae2b;
+    background: #FFF176;
+    border-color: #e6db00;
 }
 
 .stat-card--cyan {
-    border-color: #0d9488;
+    background: linear-gradient(135deg, #F06292 0%, #d81b72 100%);
+    border-color: transparent;
 }
 
 .stat-card--green {
-    border-color: #22c55e;
+    background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
+    border-color: transparent;
 }
 
 .stat-card__icon {
@@ -161,37 +165,47 @@
 }
 
 .stat-card--teal .stat-card__icon {
-    background: rgba(0, 71, 62, 0.1);
-    color: #00473e;
+    background: rgba(255,255,255,0.2);
+    color: #ffffff;
 }
 
 .stat-card--golden .stat-card__icon {
-    background: rgba(250, 174, 43, 0.15);
-    color: #d4920c;
+    background: rgba(62,39,35,0.1);
+    color: #3E2723;
 }
 
 .stat-card--cyan .stat-card__icon {
-    background: rgba(13, 148, 136, 0.1);
-    color: #0d9488;
+    background: rgba(255,255,255,0.2);
+    color: #ffffff;
 }
 
 .stat-card--green .stat-card__icon {
-    background: rgba(34, 197, 94, 0.1);
-    color: #22c55e;
+    background: rgba(255,255,255,0.2);
+    color: #ffffff;
 }
 
 .stat-card__value {
     font-size: 1.75rem;
     font-weight: 700;
-    color: #00473e;
+    color: #3E2723;
     line-height: 1;
 }
 
+.stat-card--teal .stat-card__value,
+.stat-card--cyan .stat-card__value,
+.stat-card--green .stat-card__value { color: #ffffff; }
+.stat-card--golden .stat-card__value { color: #2C1810; }
+
 .stat-card__label {
     font-size: 0.875rem;
-    color: #475d5b;
+    color: #5D4037;
     margin-top: 0.25rem;
 }
+
+.stat-card--teal .stat-card__label,
+.stat-card--cyan .stat-card__label,
+.stat-card--green .stat-card__label { color: rgba(255,255,255,0.88); }
+.stat-card--golden .stat-card__label { color: #5D4037; }
 
 /* Content Grid */
 .content-grid {
@@ -218,7 +232,7 @@
     align-items: flex-start;
     gap: 0.75rem;
     padding: 0.75rem 0;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid #3E272320;
 }
 
 .activity-list__item:last-child {
@@ -228,7 +242,7 @@
 .activity-list__dot {
     width: 10px;
     height: 10px;
-    background: #faae2b;
+    background: #4CAF82;
     border-radius: 50%;
     margin-top: 4px;
     flex-shrink: 0;
@@ -241,12 +255,12 @@
 .activity-list__title {
     display: block;
     font-weight: 500;
-    color: #00473e;
+    color: #3E2723;
 }
 
 .activity-list__time {
     font-size: 0.8rem;
-    color: #6b7280;
+    color: #5D4037;
 }
 
 /* Stats Info */
@@ -261,17 +275,17 @@
     justify-content: space-between;
     align-items: center;
     padding: 0.75rem;
-    background: #f8fafc;
+    background: #FFFDE7;
     border-radius: 8px;
 }
 
 .stats-info__label {
-    color: #475d5b;
+    color: #5D4037;
 }
 
 .stats-info__value {
     font-weight: 600;
-    color: #00473e;
+    color: #3E2723;
 }
 </style>
 @endsection

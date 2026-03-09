@@ -11,23 +11,23 @@
         gap: 6px;
         font-size: 14px;
         font-weight: 500;
-        color: #475d5b;
+        color: #5D4037;
         margin-bottom: 20px;
         transition: color 0.2s;
         text-decoration: none;
     }
-    .back-link:hover { color: #00473e; }
+    .back-link:hover { color: #3E2723; }
     .back-link svg { width: 16px; height: 16px; fill: currentColor; }
 
     .form-card {
         background: #fff;
-        border: 1px solid #E5E7EB;
+        border: 1px solid #3E272320;
         border-radius: 12px;
         overflow: hidden;
         max-width: 680px;
     }
     .form-card__header {
-        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
         color: #fff;
         padding: 22px 28px;
     }
@@ -44,7 +44,7 @@
         display: block;
         font-size: 12px;
         font-weight: 700;
-        color: #374151;
+        color: #3E2723;
         text-transform: uppercase;
         letter-spacing: .4px;
         margin-bottom: 6px;
@@ -54,11 +54,11 @@
     .form-group textarea {
         width: 100%;
         height: 40px;
-        border: 1px solid #D1D5DB;
+        border: 1px solid #3E272330;
         border-radius: 8px;
         padding: 0 12px;
         font-size: 14px;
-        color: #111827;
+        color: #3E2723;
         box-sizing: border-box;
         background: #fff;
         transition: border-color .15s;
@@ -67,7 +67,7 @@
     }
     .form-group input:focus,
     .form-group select:focus,
-    .form-group textarea:focus { border-color: #f97316; box-shadow: 0 0 0 3px rgba(249,115,22,0.1); }
+    .form-group textarea:focus { border-color: #3D9B72; box-shadow: 0 0 0 3px rgba(76,175,130,0.1); }
     .form-group textarea { height: 90px; padding: 10px 12px; resize: vertical; }
     .form-group select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236B7280'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z' clip-rule='evenodd'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; background-size: 16px; padding-right: 34px; }
 
@@ -79,7 +79,7 @@
     .btn-save {
         height: 40px;
         padding: 0 24px;
-        background: linear-gradient(135deg, #f97316, #ea580c);
+        background: linear-gradient(135deg, #3D9B72, #2E8B60);
         color: #fff;
         font-size: 14px;
         font-weight: 700;
@@ -93,17 +93,17 @@
         height: 40px;
         padding: 0 20px;
         background: #fff;
-        color: #374151;
+        color: #3E2723;
         font-size: 14px;
         font-weight: 600;
-        border: 1px solid #D1D5DB;
+        border: 1px solid #3E272330;
         border-radius: 8px;
         cursor: pointer;
         text-decoration: none;
         display: inline-flex;
         align-items: center;
     }
-    .btn-cancel:hover { background: #F3F4F6; }
+    .btn-cancel:hover { background: #FFFDE7; }
 </style>
 @endpush
 

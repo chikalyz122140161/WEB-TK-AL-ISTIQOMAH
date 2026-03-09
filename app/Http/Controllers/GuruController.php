@@ -156,11 +156,11 @@ class GuruController extends Controller
 
         // Dummy data laporan — nanti diganti query database
         $semua = [
-            ['id' => 1, 'siswa_id' => 1, 'nama' => 'Ahmad Fauzi',   'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.2],
-            ['id' => 2, 'siswa_id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.5],
-            ['id' => 3, 'siswa_id' => 3, 'nama' => 'Budi Santoso',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 3.8],
+            ['id' => 1, 'siswa_id' => 1, 'nama' => 'Ahmad Fauzi',   'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 3.8],
+            ['id' => 2, 'siswa_id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.0],
+            ['id' => 3, 'siswa_id' => 3, 'nama' => 'Budi Santoso',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 3.7],
             ['id' => 4, 'siswa_id' => 4, 'nama' => 'Dewi Lestari',   'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.0],
-            ['id' => 5, 'siswa_id' => 5, 'nama' => 'Eko Prasetyo',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.3],
+            ['id' => 5, 'siswa_id' => 5, 'nama' => 'Eko Prasetyo',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.0],
         ];
 
         // Filter
@@ -182,20 +182,20 @@ class GuruController extends Controller
     {
         // Dummy data — nanti diganti query database
         $semua = [
-            1 => ['id' => 1, 'nama' => 'Ahmad Fauzi',   'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.2,
-                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>5,'bahasa'=>4,'sosial_emosional'=>3,'nilai_agama_moral'=>5,'seni'=>4],
+            1 => ['id' => 1, 'nama' => 'Ahmad Fauzi',   'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 3.8,
+                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>3,'nilai_agama_moral'=>4,'seni'=>4],
                   'catatan' => 'Ahmad menunjukkan perkembangan yang sangat baik. Aktif dan antusias dalam kegiatan belajar.'],
-            2 => ['id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.5,
-                  'nilai' => ['fisik_motorik'=>5,'kognitif'=>4,'bahasa'=>5,'sosial_emosional'=>4,'nilai_agama_moral'=>5,'seni'=>4],
+            2 => ['id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.0,
+                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
                   'catatan' => 'Siti sangat aktif berkomunikasi dan berinteraksi dengan teman-temannya. Kemampuan bahasa sangat menonjol.'],
-            3 => ['id' => 3, 'nama' => 'Budi Santoso',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 3.8,
+            3 => ['id' => 3, 'nama' => 'Budi Santoso',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 3.7,
                   'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>3,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>3],
                   'catatan' => 'Budi berkembang baik. Perlu sedikit pendampingan di aspek bahasa dan seni.'],
             4 => ['id' => 4, 'nama' => 'Dewi Lestari',   'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.0,
                   'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
                   'catatan' => 'Dewi berkembang sesuai harapan di semua aspek. Tetap pertahankan dan tingkatkan.'],
-            5 => ['id' => 5, 'nama' => 'Eko Prasetyo',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.3,
-                  'nilai' => ['fisik_motorik'=>5,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>5,'seni'=>4],
+            5 => ['id' => 5, 'nama' => 'Eko Prasetyo',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.0,
+                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
                   'catatan' => 'Eko sangat aktif secara fisik dan memiliki nilai agama yang baik. Tetap semangat!'],
         ];
 
@@ -215,15 +215,15 @@ class GuruController extends Controller
         ];
 
         $semua = [
-            1 => ['id' => 1, 'siswa_id' => 1, 'nama' => 'Ahmad Fauzi',   'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '2024-11-22', 'tahun_ajaran' => 2024, 'semester' => 'Ganjil', 'rata_rata' => 4.2,
-                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>5,'bahasa'=>4,'sosial_emosional'=>3,'nilai_agama_moral'=>5,'seni'=>4],
+            1 => ['id' => 1, 'siswa_id' => 1, 'nama' => 'Ahmad Fauzi',   'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '2024-11-22', 'tahun_ajaran' => 2024, 'semester' => 'Ganjil', 'rata_rata' => 3.8,
+                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>3,'nilai_agama_moral'=>4,'seni'=>4],
                   'catatan' => ['fisik_motorik'=>'','kognitif'=>'','bahasa'=>'','sosial_emosional'=>'','nilai_agama_moral'=>'','seni'=>''],
                   'catatan_umum' => 'Ahmad menunjukkan perkembangan yang sangat baik.'],
-            2 => ['id' => 2, 'siswa_id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '2024-11-22', 'tahun_ajaran' => 2024, 'semester' => 'Ganjil', 'rata_rata' => 4.5,
-                  'nilai' => ['fisik_motorik'=>5,'kognitif'=>4,'bahasa'=>5,'sosial_emosional'=>4,'nilai_agama_moral'=>5,'seni'=>4],
+            2 => ['id' => 2, 'siswa_id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '2024-11-22', 'tahun_ajaran' => 2024, 'semester' => 'Ganjil', 'rata_rata' => 4.0,
+                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
                   'catatan' => ['fisik_motorik'=>'','kognitif'=>'','bahasa'=>'','sosial_emosional'=>'','nilai_agama_moral'=>'','seni'=>''],
                   'catatan_umum' => 'Siti sangat aktif berkomunikasi dan berinteraksi dengan teman-temannya.'],
-            3 => ['id' => 3, 'siswa_id' => 3, 'nama' => 'Budi Santoso',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '2024-11-22', 'tahun_ajaran' => 2024, 'semester' => 'Ganjil', 'rata_rata' => 3.8,
+            3 => ['id' => 3, 'siswa_id' => 3, 'nama' => 'Budi Santoso',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '2024-11-22', 'tahun_ajaran' => 2024, 'semester' => 'Ganjil', 'rata_rata' => 3.7,
                   'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>3,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>3],
                   'catatan' => ['fisik_motorik'=>'','kognitif'=>'','bahasa'=>'','sosial_emosional'=>'','nilai_agama_moral'=>'','seni'=>''],
                   'catatan_umum' => 'Budi berkembang baik. Perlu sedikit pendampingan di aspek bahasa dan seni.'],
@@ -231,8 +231,8 @@ class GuruController extends Controller
                   'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
                   'catatan' => ['fisik_motorik'=>'','kognitif'=>'','bahasa'=>'','sosial_emosional'=>'','nilai_agama_moral'=>'','seni'=>''],
                   'catatan_umum' => 'Dewi berkembang sesuai harapan di semua aspek.'],
-            5 => ['id' => 5, 'siswa_id' => 5, 'nama' => 'Eko Prasetyo',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '2024-11-22', 'tahun_ajaran' => 2024, 'semester' => 'Ganjil', 'rata_rata' => 4.3,
-                  'nilai' => ['fisik_motorik'=>5,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>5,'seni'=>4],
+            5 => ['id' => 5, 'siswa_id' => 5, 'nama' => 'Eko Prasetyo',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '2024-11-22', 'tahun_ajaran' => 2024, 'semester' => 'Ganjil', 'rata_rata' => 4.0,
+                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
                   'catatan' => ['fisik_motorik'=>'','kognitif'=>'','bahasa'=>'','sosial_emosional'=>'','nilai_agama_moral'=>'','seni'=>''],
                   'catatan_umum' => 'Eko sangat aktif secara fisik dan memiliki nilai agama yang baik.'],
         ];
@@ -258,27 +258,54 @@ class GuruController extends Controller
             ['id' => 5, 'nama' => 'Siti Aisyah'],
         ];
 
-        $daftarMinggu = range(1, 20);
-        $siswaAktif   = $daftarSiswa[2];   // default: Ahmad Fauzi
-        $mingguAktif  = 12;
+        // 6 bulan (1 semester)
+        $daftarMinggu = range(1, 6);
+        $siswaAktif   = $daftarSiswa[0]; // default: Ahmad Rizky
+        $mingguAktif  = 6;
 
-        // Dummy data perkembangan — nanti diganti query database
+        // Dummy data per siswa per bulan (6 bulan = 1 semester) — nanti diganti query database
+        // Format: nilaiPerSiswa[siswa_id][bulan] = [aspek => nilai]
+        // Skala: 1=BB, 2=MB, 3=BSH, 4=BSB
         $nilaiPerSiswa = [
-            1 => [
-                10 => ['fisik_motorik'=>3,'kognitif'=>4,'bahasa'=>3,'sosial_emosional'=>2,'nilai_agama_moral'=>4,'seni'=>3],
-                12 => ['fisik_motorik'=>4,'kognitif'=>5,'bahasa'=>4,'sosial_emosional'=>3,'nilai_agama_moral'=>5,'seni'=>4],
+            1 => [ // Ahmad Rizky — mulai MB, akhir BSH-BSB
+                1 => ['fisik_motorik'=>2,'kognitif'=>2,'bahasa'=>2,'sosial_emosional'=>2,'nilai_agama_moral'=>2,'seni'=>2],
+                2 => ['fisik_motorik'=>2,'kognitif'=>2,'bahasa'=>3,'sosial_emosional'=>2,'nilai_agama_moral'=>2,'seni'=>2],
+                3 => ['fisik_motorik'=>3,'kognitif'=>3,'bahasa'=>3,'sosial_emosional'=>2,'nilai_agama_moral'=>3,'seni'=>3],
+                4 => ['fisik_motorik'=>3,'kognitif'=>3,'bahasa'=>3,'sosial_emosional'=>3,'nilai_agama_moral'=>3,'seni'=>3],
+                5 => ['fisik_motorik'=>3,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>3,'nilai_agama_moral'=>4,'seni'=>3],
+                6 => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
             ],
-            2 => [
-                12 => ['fisik_motorik'=>5,'kognitif'=>4,'bahasa'=>5,'sosial_emosional'=>4,'nilai_agama_moral'=>5,'seni'=>5],
+            2 => [ // Anisa Putri — cepat berkembang
+                1 => ['fisik_motorik'=>2,'kognitif'=>2,'bahasa'=>3,'sosial_emosional'=>2,'nilai_agama_moral'=>2,'seni'=>3],
+                2 => ['fisik_motorik'=>3,'kognitif'=>2,'bahasa'=>3,'sosial_emosional'=>3,'nilai_agama_moral'=>3,'seni'=>3],
+                3 => ['fisik_motorik'=>3,'kognitif'=>3,'bahasa'=>4,'sosial_emosional'=>3,'nilai_agama_moral'=>3,'seni'=>4],
+                4 => ['fisik_motorik'=>4,'kognitif'=>3,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
+                5 => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
+                6 => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
             ],
-            3 => [
-                12 => ['fisik_motorik'=>4,'kognitif'=>5,'bahasa'=>4,'sosial_emosional'=>3,'nilai_agama_moral'=>5,'seni'=>4],
+            3 => [ // Muhammad Fauzi — kognitif menonjol
+                1 => ['fisik_motorik'=>2,'kognitif'=>3,'bahasa'=>2,'sosial_emosional'=>2,'nilai_agama_moral'=>3,'seni'=>2],
+                2 => ['fisik_motorik'=>2,'kognitif'=>3,'bahasa'=>2,'sosial_emosional'=>2,'nilai_agama_moral'=>3,'seni'=>2],
+                3 => ['fisik_motorik'=>3,'kognitif'=>4,'bahasa'=>3,'sosial_emosional'=>3,'nilai_agama_moral'=>4,'seni'=>3],
+                4 => ['fisik_motorik'=>3,'kognitif'=>4,'bahasa'=>3,'sosial_emosional'=>3,'nilai_agama_moral'=>4,'seni'=>3],
+                5 => ['fisik_motorik'=>3,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>3,'nilai_agama_moral'=>4,'seni'=>4],
+                6 => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
             ],
-            4 => [
-                12 => ['fisik_motorik'=>3,'kognitif'=>3,'bahasa'=>3,'sosial_emosional'=>4,'nilai_agama_moral'=>3,'seni'=>3],
+            4 => [ // Tika Rahayu — mulai BB, berkembang perlahan
+                1 => ['fisik_motorik'=>1,'kognitif'=>1,'bahasa'=>2,'sosial_emosional'=>2,'nilai_agama_moral'=>1,'seni'=>1],
+                2 => ['fisik_motorik'=>2,'kognitif'=>2,'bahasa'=>2,'sosial_emosional'=>2,'nilai_agama_moral'=>2,'seni'=>2],
+                3 => ['fisik_motorik'=>2,'kognitif'=>2,'bahasa'=>3,'sosial_emosional'=>3,'nilai_agama_moral'=>2,'seni'=>2],
+                4 => ['fisik_motorik'=>3,'kognitif'=>3,'bahasa'=>3,'sosial_emosional'=>3,'nilai_agama_moral'=>3,'seni'=>3],
+                5 => ['fisik_motorik'=>3,'kognitif'=>3,'bahasa'=>3,'sosial_emosional'=>4,'nilai_agama_moral'=>3,'seni'=>3],
+                6 => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
             ],
-            5 => [
-                12 => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>3,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>5],
+            5 => [ // Siti Aisyah — seni menonjol sejak awal
+                1 => ['fisik_motorik'=>2,'kognitif'=>2,'bahasa'=>2,'sosial_emosional'=>2,'nilai_agama_moral'=>2,'seni'=>3],
+                2 => ['fisik_motorik'=>2,'kognitif'=>2,'bahasa'=>2,'sosial_emosional'=>3,'nilai_agama_moral'=>3,'seni'=>4],
+                3 => ['fisik_motorik'=>3,'kognitif'=>3,'bahasa'=>3,'sosial_emosional'=>3,'nilai_agama_moral'=>3,'seni'=>4],
+                4 => ['fisik_motorik'=>3,'kognitif'=>3,'bahasa'=>3,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
+                5 => ['fisik_motorik'=>3,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
+                6 => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
             ],
         ];
 

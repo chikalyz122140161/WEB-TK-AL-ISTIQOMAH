@@ -12,7 +12,7 @@
     /* Teal/Golden Theme Colors */
     .form-section {
         background: #fff;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 8px;
         padding: 20px;
         margin-bottom: 20px;
@@ -20,10 +20,10 @@
     .form-section__title {
         font-size: 16px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
         margin-bottom: 16px;
         padding-bottom: 12px;
-        border-bottom: 2px solid #faae2b;
+        border-bottom: 2px solid #4CAF82;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -31,7 +31,7 @@
     .form-section__title svg {
         width: 20px;
         height: 20px;
-        fill: #faae2b;
+        fill: #4CAF82;
     }
     .form-grid {
         display: grid;
@@ -46,24 +46,24 @@
     .form-group label {
         font-size: 13px;
         font-weight: 500;
-        color: #475d5b;
+        color: #5D4037;
     }
     .form-group input,
     .form-group select {
         padding: 10px 12px;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 6px;
         font-size: 14px;
-        color: #475d5b;
-        background: #f2f7f5;
+        color: #5D4037;
+        background: #FFFDE7;
         transition: all 0.2s;
     }
     .form-group input:focus,
     .form-group select:focus {
         outline: none;
-        border-color: #faae2b;
+        border-color: #4CAF82;
         background: #fff;
-        box-shadow: 0 0 0 3px rgba(250, 174, 43, 0.15);
+        box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.15);
     }
     .form-group input[type="number"] {
         -moz-appearance: textfield;
@@ -78,20 +78,20 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
-        color: #00473e;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+        color: #3E2723;
         padding: 10px 20px;
         font-size: 14px;
         font-weight: 600;
         border: none;
         cursor: pointer;
         border-radius: 8px;
-        box-shadow: 0 4px 14px rgba(250, 174, 43, 0.3);
+        box-shadow: 0 4px 14px rgba(76,175,130, 0.3);
         transition: all 0.3s;
     }
     .btn-orange:hover {
         transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(250, 174, 43, 0.4);
+        box-shadow: 0 6px 20px rgba(76,175,130, 0.4);
     }
     .btn-orange svg {
         width: 16px;
@@ -102,8 +102,8 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: #00473e20;
-        color: #00473e;
+        background: #3E272320;
+        color: #3E2723;
         padding: 10px 20px;
         font-size: 14px;
         font-weight: 500;
@@ -113,7 +113,7 @@
         transition: all 0.2s;
     }
     .btn-secondary:hover {
-        background: #00473e30;
+        background: #3E272330;
     }
     .btn-row {
         display: flex;
@@ -130,22 +130,22 @@
     .data-table td {
         padding: 12px;
         text-align: left;
-        border-bottom: 1px solid #00473e20;
+        border-bottom: 1px solid #3E272320;
     }
     .data-table th {
-        background: linear-gradient(135deg, #faae2b20 0%, #faae2b30 100%);
+        background: linear-gradient(135deg, #4CAF8220 0%, #4CAF8230 100%);
         font-size: 12px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
     .data-table td {
         font-size: 14px;
-        color: #475d5b;
+        color: #5D4037;
     }
     .data-table tr:hover td {
-        background: #f2f7f5;
+        background: #FFFDE7;
     }
     .status-badge {
         display: inline-flex;
@@ -161,22 +161,22 @@
         color: #047857;
     }
     .status-badge--izin {
-        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-        color: #b45309;
+        background: #FFF176;
+        color: #5D4037;
     }
     .status-badge--sakit {
-        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-        color: #1d4ed8;
+        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        color: #2E8B60;
     }
     .status-badge--alpa {
         background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-        color: #dc2626;
+        color: #c0392b;
     }
     .btn-edit {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         color: white;
         padding: 6px 12px;
         font-size: 12px;
@@ -189,7 +189,7 @@
     }
     .btn-edit:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        box-shadow: 0 4px 12px rgba(76, 175, 130, 0.35);
     }
     .btn-edit svg {
         width: 14px;
@@ -235,13 +235,13 @@
         gap: 16px;
         align-items: center;
         padding: 12px 16px;
-        background: #f2f7f5;
+        background: #FFFDE7;
         border-radius: 8px;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
     }
     .student-attendance-row:hover {
-        background: #faae2b15;
-        border-color: #faae2b;
+        background: #4CAF8215;
+        border-color: #4CAF82;
     }
     .student-info {
         display: flex;
@@ -252,8 +252,8 @@
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
-        color: #00473e;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+        color: #3E2723;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -262,12 +262,12 @@
     }
     .student-name {
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
         font-size: 14px;
     }
     .student-class {
         font-size: 12px;
-        color: #475d5b;
+        color: #5D4037;
     }
     .status-options {
         display: flex;
@@ -275,7 +275,7 @@
     }
     .status-option {
         padding: 6px 12px;
-        border: 2px solid #00473e20;
+        border: 2px solid #3E272320;
         border-radius: 6px;
         font-size: 12px;
         font-weight: 500;
@@ -284,19 +284,19 @@
         background: white;
     }
     .status-option:hover {
-        border-color: #faae2b;
+        border-color: #4CAF82;
     }
     .status-option.active {
-        border-color: #faae2b;
-        background: #faae2b20;
-        color: #00473e;
+        border-color: #4CAF82;
+        background: #4CAF8220;
+        color: #3E2723;
     }
     .status-option input {
         display: none;
     }
     .note-input {
         padding: 8px 12px;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 6px;
         font-size: 13px;
         width: 100%;
@@ -304,7 +304,7 @@
     }
     .note-input:focus {
         outline: none;
-        border-color: #faae2b;
+        border-color: #4CAF82;
     }
     
     @media (max-width: 768px) {
@@ -411,7 +411,7 @@
                         <input type="text" name="keterangan[{{ $siswa['id'] }}]" class="note-input" placeholder="Keterangan (opsional)">
                     </div>
                 @empty
-                    <p style="color: #6B7280; padding: 20px; text-align: center;">Belum ada data siswa.</p>
+                    <p style="color: #5D4037; padding: 20px; text-align: center;">Belum ada data siswa.</p>
                 @endforelse
             </div>
             
@@ -495,7 +495,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" style="text-align: center; color: #6B7280; padding: 40px;">
+                            <td colspan="7" style="text-align: center; color: #5D4037; padding: 40px;">
                                 Belum ada data kehadiran.
                             </td>
                         </tr>

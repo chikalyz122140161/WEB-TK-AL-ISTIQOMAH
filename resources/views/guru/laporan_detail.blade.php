@@ -11,23 +11,23 @@
         gap: 6px;
         font-size: 14px;
         font-weight: 500;
-        color: #475d5b;
+        color: #5D4037;
         margin-bottom: 20px;
         transition: color 0.2s;
         text-decoration: none;
     }
-    .back-link:hover { color: #00473e; }
+    .back-link:hover { color: #3E2723; }
     .back-link svg { width: 16px; height: 16px; fill: currentColor; }
 
     .detail-card {
         background: #fff;
-        border: 1px solid #E5E7EB;
+        border: 1px solid #3E272320;
         border-radius: 12px;
         overflow: hidden;
         max-width: 820px;
     }
     .detail-card__header {
-        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
         color: #fff;
         padding: 24px 28px;
     }
@@ -60,7 +60,7 @@
     .section-label {
         font-size: 11px;
         font-weight: 700;
-        color: #6B7280;
+        color: #5D4037;
         text-transform: uppercase;
         letter-spacing: .6px;
         margin: 0 0 16px;
@@ -88,7 +88,7 @@
     .aspect-item__label {
         font-size: 11px;
         font-weight: 700;
-        color: #9A3412;
+        color: #ffffff;
         text-transform: uppercase;
         letter-spacing: .5px;
         margin-bottom: 8px;
@@ -96,14 +96,14 @@
     .aspect-item__score {
         font-size: 34px;
         font-weight: 800;
-        color: #ea580c;
+        color: #2E8B60;
         line-height: 1;
         margin-bottom: 10px;
     }
     .aspect-item__score span {
         font-size: 14px;
         font-weight: 500;
-        color: #9CA3AF;
+        color: #5D4037;
     }
     .aspect-item__bar {
         height: 8px;
@@ -114,18 +114,18 @@
     .aspect-item__bar-fill {
         height: 100%;
         border-radius: 4px;
-        background: linear-gradient(90deg, #f97316 0%, #faae2b 100%);
+        background: linear-gradient(90deg, #3D9B72 0%, #4CAF82 100%);
         transition: width .4s;
     }
     .aspect-item__desc {
         font-size: 11px;
-        color: #6B7280;
+        color: #5D4037;
         margin-top: 6px;
     }
 
     /* Rata-rata card */
     .rata-card {
-        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
         border-radius: 10px;
         padding: 18px 22px;
         margin-bottom: 28px;
@@ -153,22 +153,22 @@
 
     /* Notes section */
     .note-section {
-        background: #F9FAFB;
-        border: 1px solid #E5E7EB;
+        background: #FFFDE7;
+        border: 1px solid #3E272320;
         border-radius: 10px;
         padding: 20px;
     }
     .note-section__label {
         font-size: 11px;
         font-weight: 700;
-        color: #6B7280;
+        color: #5D4037;
         text-transform: uppercase;
         letter-spacing: .5px;
         margin-bottom: 10px;
     }
     .note-section__text {
         font-size: 14px;
-        color: #374151;
+        color: #3E2723;
         line-height: 1.8;
     }
 </style>
@@ -194,7 +194,7 @@
             ['key' => 'nilai_agama_moral', 'label' => 'Agama & Moral'],
             ['key' => 'seni',              'label' => 'Seni'],
         ];
-        $skalaDesc = ['', 'Belum Berkembang', 'Mulai Berkembang', 'Berkembang Sesuai Harapan', 'Berkembang Sangat Baik', 'Sangat Memuaskan'];
+        $skalaDesc = ['', 'Belum Berkembang', 'Mulai Berkembang', 'Berkembang Sesuai Harapan', 'Berkembang Sangat Baik'];
     @endphp
 
     <div class="detail-card">
@@ -218,7 +218,7 @@
             <div class="rata-card">
                 <div>
                     <div class="rata-card__label">Rata-rata Nilai Perkembangan</div>
-                    <div class="rata-card__sub">Skala 1 – 5</div>
+                    <div class="rata-card__sub">BB / MB / BSH / BSB</div>
                 </div>
                 <div>
                     <div class="rata-card__value">{{ number_format($laporan['rata_rata'], 1) }}</div>
@@ -232,9 +232,9 @@
                 @php $skor = $laporan['nilai'][$a['key']] ?? 0; @endphp
                 <div class="aspect-item">
                     <div class="aspect-item__label">{{ $a['label'] }}</div>
-                    <div class="aspect-item__score">{{ $skor }} <span>/ 5</span></div>
+                    <div class="aspect-item__score">{{ $skor }} <span>/ 4</span></div>
                     <div class="aspect-item__bar">
-                        <div class="aspect-item__bar-fill" style="width: {{ ($skor / 5) * 100 }}%"></div>
+                        <div class="aspect-item__bar-fill" style="width: {{ ($skor / 4) * 100 }}%"></div>
                     </div>
                     <div class="aspect-item__desc">{{ $skalaDesc[$skor] ?? '' }}</div>
                 </div>

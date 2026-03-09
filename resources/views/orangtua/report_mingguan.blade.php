@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@php $userRole = 'Orang Tua'; @endphp
 
 @section('title', 'Report Perkembangan Mingguan - SISTEM BK TK AL-ISTIQOMAH')
 @section('page_title', 'Report Perkembangan Mingguan')
@@ -28,28 +29,28 @@
     .week-selector__label {
         font-size: 14px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
     }
     .week-selector__dropdown {
         padding: 10px 16px;
-        border: 1px solid #00473e30;
+        border: 1px solid #3E272330;
         border-radius: 6px;
         font-size: 14px;
-        color: #00473e;
+        color: #3E2723;
         background: #fff;
         min-width: 200px;
         cursor: pointer;
     }
     .week-selector__dropdown:focus {
         outline: none;
-        border-color: #faae2b;
-        box-shadow: 0 0 0 3px rgba(250, 174, 43, 0.1);
+        border-color: #4CAF82;
+        box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.1);
     }
     .btn-download {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: #374151;
+        background: #3E2723;
         color: #fff;
         padding: 10px 20px;
         font-size: 14px;
@@ -60,7 +61,7 @@
         transition: all 0.3s;
     }
     .btn-download:hover {
-        background: #1F2937;
+        background: #3E2723;
     }
     .btn-download svg {
         width: 16px;
@@ -71,12 +72,12 @@
     /* Report Card */
     .report-card {
         background: #fff;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 8px;
         overflow: hidden;
     }
     .report-card__header {
-        background: linear-gradient(135deg, #374151 0%, #1F2937 100%);
+        background: linear-gradient(135deg, #3E2723 0%, #3E2723 100%);
         color: #fff;
         padding: 20px 24px;
     }
@@ -101,7 +102,7 @@
     .aspect-section {
         margin-bottom: 24px;
         padding-bottom: 24px;
-        border-bottom: 1px solid #00473e10;
+        border-bottom: 1px solid #3E272310;
     }
     .aspect-section:last-child {
         margin-bottom: 0;
@@ -111,7 +112,7 @@
     .aspect-section__title {
         font-size: 14px;
         font-weight: 700;
-        color: #00473e;
+        color: #3E2723;
         margin-bottom: 12px;
         text-transform: uppercase;
     }
@@ -131,40 +132,40 @@
         justify-content: center;
         font-size: 14px;
         font-weight: 600;
-        border: 2px solid #00473e30;
+        border: 2px solid #3E272330;
         border-radius: 4px;
-        color: #475d5b;
+        color: #5D4037;
         background: #fff;
     }
     .rating-box.active {
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
-        border-color: #faae2b;
-        color: #00473e;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+        border-color: #4CAF82;
+        color: #3E2723;
     }
 
     /* Notes Section */
     .aspect-notes {
         background: #f8f9fa;
-        border: 1px solid #00473e10;
+        border: 1px solid #3E272310;
         border-radius: 6px;
         padding: 12px 16px;
     }
     .aspect-notes__label {
         font-size: 12px;
         font-weight: 600;
-        color: #475d5b;
+        color: #5D4037;
         margin-bottom: 4px;
     }
     .aspect-notes__text {
         font-size: 14px;
-        color: #00473e;
+        color: #3E2723;
         line-height: 1.6;
     }
 
     /* General Notes */
     .general-notes {
-        background: #EFF6FF;
-        border: 1px solid #BFDBFE;
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
         border-radius: 8px;
         padding: 20px;
         margin-top: 24px;
@@ -172,7 +173,7 @@
     .general-notes__title {
         font-size: 14px;
         font-weight: 700;
-        color: #1E40AF;
+        color: #2E8B60;
         margin-bottom: 8px;
         text-transform: uppercase;
     }
@@ -196,16 +197,16 @@
         padding: 10px 16px;
         font-size: 14px;
         font-weight: 500;
-        border: 1px solid #00473e30;
+        border: 1px solid #3E272330;
         border-radius: 6px;
         background: #fff;
-        color: #00473e;
+        color: #3E2723;
         cursor: pointer;
         transition: all 0.3s;
     }
     .btn-nav:hover {
-        border-color: #faae2b;
-        background: #faae2b10;
+        border-color: #4CAF82;
+        background: #4CAF8210;
     }
     .btn-nav:disabled {
         opacity: 0.5;
@@ -252,11 +253,10 @@
             <div class="aspect-section">
                 <h3 class="aspect-section__title">1. FISIK-MOTORIK</h3>
                 <div class="rating-display">
-                    <div class="rating-box">1</div>
-                    <div class="rating-box">2</div>
-                    <div class="rating-box">3</div>
-                    <div class="rating-box active">4</div>
-                    <div class="rating-box">5</div>
+                    <div class="rating-box">BB</div>
+                    <div class="rating-box">MB</div>
+                    <div class="rating-box">BSH</div>
+                    <div class="rating-box active">BSB</div>
                 </div>
                 <div class="aspect-notes">
                     <div class="aspect-notes__label">Catatan Guru:</div>
@@ -270,11 +270,10 @@
             <div class="aspect-section">
                 <h3 class="aspect-section__title">2. KOGNITIF</h3>
                 <div class="rating-display">
-                    <div class="rating-box">1</div>
-                    <div class="rating-box">2</div>
-                    <div class="rating-box">3</div>
-                    <div class="rating-box">4</div>
-                    <div class="rating-box active">5</div>
+                    <div class="rating-box">BB</div>
+                    <div class="rating-box">MB</div>
+                    <div class="rating-box">BSH</div>
+                    <div class="rating-box active">BSB</div>
                 </div>
                 <div class="aspect-notes">
                     <div class="aspect-notes__label">Catatan Guru:</div>
@@ -288,11 +287,10 @@
             <div class="aspect-section">
                 <h3 class="aspect-section__title">3. BAHASA</h3>
                 <div class="rating-display">
-                    <div class="rating-box">1</div>
-                    <div class="rating-box">2</div>
-                    <div class="rating-box">3</div>
-                    <div class="rating-box">4</div>
-                    <div class="rating-box active">5</div>
+                    <div class="rating-box">BB</div>
+                    <div class="rating-box">MB</div>
+                    <div class="rating-box">BSH</div>
+                    <div class="rating-box active">BSB</div>
                 </div>
                 <div class="aspect-notes">
                     <div class="aspect-notes__label">Catatan Guru:</div>
@@ -306,11 +304,10 @@
             <div class="aspect-section">
                 <h3 class="aspect-section__title">4. SOSIAL-EMOSIONAL</h3>
                 <div class="rating-display">
-                    <div class="rating-box">1</div>
-                    <div class="rating-box">2</div>
-                    <div class="rating-box">3</div>
-                    <div class="rating-box active">4</div>
-                    <div class="rating-box">5</div>
+                    <div class="rating-box">BB</div>
+                    <div class="rating-box">MB</div>
+                    <div class="rating-box active">BSH</div>
+                    <div class="rating-box">BSB</div>
                 </div>
                 <div class="aspect-notes">
                     <div class="aspect-notes__label">Catatan Guru:</div>
@@ -324,11 +321,10 @@
             <div class="aspect-section">
                 <h3 class="aspect-section__title">5. NILAI AGAMA & MORAL</h3>
                 <div class="rating-display">
-                    <div class="rating-box">1</div>
-                    <div class="rating-box">2</div>
-                    <div class="rating-box">3</div>
-                    <div class="rating-box active">4</div>
-                    <div class="rating-box">5</div>
+                    <div class="rating-box">BB</div>
+                    <div class="rating-box">MB</div>
+                    <div class="rating-box">BSH</div>
+                    <div class="rating-box active">BSB</div>
                 </div>
                 <div class="aspect-notes">
                     <div class="aspect-notes__label">Catatan Guru:</div>
@@ -342,11 +338,10 @@
             <div class="aspect-section">
                 <h3 class="aspect-section__title">6. SENI</h3>
                 <div class="rating-display">
-                    <div class="rating-box">1</div>
-                    <div class="rating-box">2</div>
-                    <div class="rating-box">3</div>
-                    <div class="rating-box active">4</div>
-                    <div class="rating-box">5</div>
+                    <div class="rating-box">BB</div>
+                    <div class="rating-box">MB</div>
+                    <div class="rating-box">BSH</div>
+                    <div class="rating-box active">BSB</div>
                 </div>
                 <div class="aspect-notes">
                     <div class="aspect-notes__label">Catatan Guru:</div>
