@@ -45,6 +45,15 @@ Route::middleware('dummy.auth')->group(function () {
     Route::put('/admin/siswa/{id}', [AdminController::class, 'siswaUpdate'])->name('admin.siswa.update');
     Route::delete('/admin/siswa/{id}', [AdminController::class, 'siswaDestroy'])->name('admin.siswa.destroy');
     
+    // Admin - Kelola Pendaftaran
+    Route::get('/admin/pendaftaran', [AdminController::class, 'pendaftaranIndex'])->name('admin.pendaftaran.index');
+    Route::get('/admin/pendaftaran/{id}', [AdminController::class, 'pendaftaranShow'])->name('admin.pendaftaran.show');
+    Route::post('/admin/pendaftaran/{id}/terima', [AdminController::class, 'pendaftaranTerima'])->name('admin.pendaftaran.terima');
+    Route::post('/admin/pendaftaran/{id}/tolak', [AdminController::class, 'pendaftaranTolak'])->name('admin.pendaftaran.tolak');
+    
+    // Admin - Rekap Data DAPODIK
+    Route::get('/admin/dapodik', [AdminController::class, 'dapodikIndex'])->name('admin.dapodik.index');
+    
     // Admin - Backup Database
     Route::get('/admin/backup', [AdminController::class, 'backupIndex'])->name('admin.backup.index');
     Route::post('/admin/backup/create', [AdminController::class, 'backupCreate'])->name('admin.backup.create');

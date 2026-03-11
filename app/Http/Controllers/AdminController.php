@@ -216,4 +216,307 @@ class AdminController extends Controller
         
         return redirect()->route('admin.backup.index')->with('success', 'File backup berhasil dihapus!');
     }
+    
+    // ═══════════════════════════════════════════════════════
+    // KELOLA PENDAFTARAN
+    // ═══════════════════════════════════════════════════════
+    public function pendaftaranIndex()
+    {
+        // Dummy data - replace with actual database query
+        $pendaftaran = [
+            [
+                'id' => 1,
+                'tanggal_daftar' => '05 Mar 2026',
+                'nama_siswa' => 'Erlangga Pradipa Bimantara',
+                'nama_panggilan' => 'Angga',
+                'jenis_kelamin' => 'Laki-laki',
+                'tempat_lahir' => 'Bandar Lampung',
+                'tanggal_lahir' => '25 Sep 2021',
+                'agama' => 'Islam',
+                'anak_ke' => 2,
+                'jumlah_saudara' => 1,
+                'alamat_siswa' => 'Jl. Harum Bunga Perumahan Panca Bakti Bandar Lampung',
+                'nama_ayah' => 'Sudir',
+                'pekerjaan_ayah' => 'Buruh',
+                'nama_ibu' => 'Julia Sari',
+                'pekerjaan_ibu' => 'Pengurus Rumah Tangga',
+                'telepon' => '0822 8965 2973',
+                'email' => 'julia.sari@email.com',
+                'status' => 'Pending',
+                'dokumen' => [
+                    ['id' => 1, 'nama' => 'Akta Kelahiran', 'file' => 'akta_kelahiran_001.pdf'],
+                    ['id' => 2, 'nama' => 'Kartu Keluarga', 'file' => 'kk_001.pdf'],
+                    ['id' => 3, 'nama' => 'Pas Foto', 'file' => 'foto_001.jpg'],
+                ],
+            ],
+            [
+                'id' => 2,
+                'tanggal_daftar' => '06 Mar 2026',
+                'nama_siswa' => 'Putri Amelia',
+                'nama_panggilan' => 'Amel',
+                'jenis_kelamin' => 'Perempuan',
+                'tempat_lahir' => 'Bandar Lampung',
+                'tanggal_lahir' => '15 Jan 2021',
+                'agama' => 'Islam',
+                'anak_ke' => 1,
+                'jumlah_saudara' => 0,
+                'alamat_siswa' => 'Jl. Kenanga No. 45 Bandar Lampung',
+                'nama_ayah' => 'Rudi Hartono',
+                'pekerjaan_ayah' => 'Wiraswasta',
+                'nama_ibu' => 'Ratna Sari',
+                'pekerjaan_ibu' => 'Guru',
+                'telepon' => '0813 9876 5432',
+                'email' => 'ratna@gmail.com',
+                'status' => 'Pending',
+                'dokumen' => [
+                    ['id' => 1, 'nama' => 'Akta Kelahiran', 'file' => 'akta_kelahiran_002.pdf'],
+                    ['id' => 2, 'nama' => 'Kartu Keluarga', 'file' => 'kk_002.pdf'],
+                ],
+            ],
+            [
+                'id' => 3,
+                'tanggal_daftar' => '01 Feb 2026',
+                'nama_siswa' => 'Muhammad Rizky',
+                'nama_panggilan' => 'Rizky',
+                'jenis_kelamin' => 'Laki-laki',
+                'tempat_lahir' => 'Metro',
+                'tanggal_lahir' => '20 Agu 2021',
+                'agama' => 'Islam',
+                'anak_ke' => 1,
+                'jumlah_saudara' => 1,
+                'alamat_siswa' => 'Jl. Melati No. 10 Metro',
+                'nama_ayah' => 'Ahmad Fauzi',
+                'pekerjaan_ayah' => 'PNS',
+                'nama_ibu' => 'Siti Fatimah',
+                'pekerjaan_ibu' => 'Ibu Rumah Tangga',
+                'telepon' => '0812 3456 7890',
+                'email' => 'ahmad.fauzi@email.com',
+                'status' => 'Diterima',
+                'dokumen' => [],
+            ],
+            [
+                'id' => 4,
+                'tanggal_daftar' => '25 Jan 2026',
+                'nama_siswa' => 'Dina Rahmawati',
+                'nama_panggilan' => 'Dina',
+                'jenis_kelamin' => 'Perempuan',
+                'tempat_lahir' => 'Bandar Lampung',
+                'tanggal_lahir' => '05 Des 2020',
+                'agama' => 'Islam',
+                'anak_ke' => 2,
+                'jumlah_saudara' => 1,
+                'alamat_siswa' => 'Jl. Anggrek No. 5 Bandar Lampung',
+                'nama_ayah' => 'Budi Santoso',
+                'pekerjaan_ayah' => 'Pedagang',
+                'nama_ibu' => 'Dewi Lestari',
+                'pekerjaan_ibu' => 'Ibu Rumah Tangga',
+                'telepon' => '0856 1234 5678',
+                'email' => 'budi.s@email.com',
+                'status' => 'Ditolak',
+                'dokumen' => [],
+            ],
+        ];
+        
+        $totalPending = count(array_filter($pendaftaran, fn($p) => $p['status'] == 'Pending'));
+        $totalDiterima = count(array_filter($pendaftaran, fn($p) => $p['status'] == 'Diterima'));
+        $totalDitolak = count(array_filter($pendaftaran, fn($p) => $p['status'] == 'Ditolak'));
+        $totalSemua = count($pendaftaran);
+        
+        return view('admin.pendaftaran.index', compact('pendaftaran', 'totalPending', 'totalDiterima', 'totalDitolak', 'totalSemua'));
+    }
+    
+    public function pendaftaranShow($id)
+    {
+        // Dummy data - replace with actual database query
+        $pendaftaran = [
+            'id' => $id,
+            'tanggal_daftar' => '05 Mar 2026',
+            'nama_siswa' => 'Erlangga Pradipa Bimantara',
+            'nama_panggilan' => 'Angga',
+            'jenis_kelamin' => 'Laki-laki',
+            'tempat_lahir' => 'Bandar Lampung',
+            'tanggal_lahir' => '25 September 2021',
+            'agama' => 'Islam',
+            'anak_ke' => 2,
+            'jumlah_saudara' => 1,
+            'alamat_siswa' => 'Jl. Harum Bunga Perumahan Panca Bakti Bandar Lampung',
+            'nama_ayah' => 'Sudir',
+            'pekerjaan_ayah' => 'Buruh',
+            'nama_ibu' => 'Julia Sari',
+            'pekerjaan_ibu' => 'Pengurus Rumah Tangga',
+            'telepon' => '0822 8965 2973',
+            'email' => 'julia.sari@email.com',
+            'alamat_ortu' => 'Jl. Harum Bunga Perumahan Panca Bakti Bandar Lampung',
+            'status' => 'Pending',
+            'dokumen' => [
+                ['id' => 1, 'nama' => 'Akta Kelahiran', 'file' => 'akta_kelahiran_001.pdf'],
+                ['id' => 2, 'nama' => 'Kartu Keluarga', 'file' => 'kk_001.pdf'],
+                ['id' => 3, 'nama' => 'Pas Foto', 'file' => 'foto_001.jpg'],
+            ],
+        ];
+        
+        return view('admin.pendaftaran.show', compact('pendaftaran'));
+    }
+    
+    public function pendaftaranTerima($id)
+    {
+        // Logic to accept registration:
+        // 1. Update registration status to 'Diterima'
+        // 2. Create student record
+        // 3. Create/activate parent user account
+        // 4. Send notification email
+        
+        return redirect()->route('admin.pendaftaran.index')->with('success', 'Pendaftaran berhasil diterima! Akun orang tua telah diaktifkan.');
+    }
+    
+    public function pendaftaranTolak(Request $request, $id)
+    {
+        // Logic to reject registration:
+        // 1. Update registration status to 'Ditolak'
+        // 2. Store rejection reason
+        // 3. Send notification email with reason
+        
+        $alasan = $request->input('alasan_penolakan', 'Tidak memenuhi persyaratan');
+        
+        return redirect()->route('admin.pendaftaran.index')->with('success', 'Pendaftaran telah ditolak.');
+    }
+    
+    // ═══════════════════════════════════════════════════════
+    // REKAP DATA DAPODIK
+    // ═══════════════════════════════════════════════════════
+    public function dapodikIndex()
+    {
+        // Dummy data - replace with actual database query
+        // Data siswa aktif dengan format sesuai kebutuhan DAPODIK
+        $siswa = [
+            [
+                'id' => 1,
+                'nisn' => '3201234567',
+                'nik' => '1871012509210001',
+                'nama' => 'Ahmad Fauzi',
+                'jenis_kelamin' => 'Laki-laki',
+                'tempat_lahir' => 'Bandar Lampung',
+                'tanggal_lahir' => '15-03-2020',
+                'agama' => 'Islam',
+                'alamat' => 'Jl. Sudirman No. 10 Bandar Lampung',
+                'nama_ayah' => 'Budi Santoso',
+                'nama_ibu' => 'Siti Rahayu',
+                'kelas' => 'TK A',
+                'status' => 'Aktif'
+            ],
+            [
+                'id' => 2,
+                'nisn' => '3201234568',
+                'nik' => '1871011501210002',
+                'nama' => 'Siti Aisyah',
+                'jenis_kelamin' => 'Perempuan',
+                'tempat_lahir' => 'Bandar Lampung',
+                'tanggal_lahir' => '20-05-2020',
+                'agama' => 'Islam',
+                'alamat' => 'Jl. Diponegoro No. 25 Bandar Lampung',
+                'nama_ayah' => 'Ahmad Ibrahim',
+                'nama_ibu' => 'Fatimah',
+                'kelas' => 'TK A',
+                'status' => 'Aktif'
+            ],
+            [
+                'id' => 3,
+                'nisn' => '3201234569',
+                'nik' => '1871010208200003',
+                'nama' => 'Budi Santoso Jr',
+                'jenis_kelamin' => 'Laki-laki',
+                'tempat_lahir' => 'Metro',
+                'tanggal_lahir' => '02-08-2019',
+                'agama' => 'Islam',
+                'alamat' => 'Jl. Kartini No. 15 Metro',
+                'nama_ayah' => 'Hendra Wijaya',
+                'nama_ibu' => 'Dewi',
+                'kelas' => 'TK B',
+                'status' => 'Aktif'
+            ],
+            [
+                'id' => 4,
+                'nisn' => '3201234570',
+                'nik' => '1871011012190004',
+                'nama' => 'Dewi Rahayu',
+                'jenis_kelamin' => 'Perempuan',
+                'tempat_lahir' => 'Bandar Lampung',
+                'tanggal_lahir' => '10-12-2019',
+                'agama' => 'Islam',
+                'alamat' => 'Jl. Ahmad Yani No. 30 Bandar Lampung',
+                'nama_ayah' => 'Eko Prasetyo',
+                'nama_ibu' => 'Sri',
+                'kelas' => 'TK B',
+                'status' => 'Aktif'
+            ],
+            [
+                'id' => 5,
+                'nisn' => '3201234571',
+                'nik' => '1871012003200005',
+                'nama' => 'Rizki Pratama',
+                'jenis_kelamin' => 'Laki-laki',
+                'tempat_lahir' => 'Bandar Lampung',
+                'tanggal_lahir' => '20-03-2020',
+                'agama' => 'Islam',
+                'alamat' => 'Jl. Gatot Subroto No. 5 Bandar Lampung',
+                'nama_ayah' => 'Dedi Kurniawan',
+                'nama_ibu' => 'Rina',
+                'kelas' => 'TK A',
+                'status' => 'Aktif'
+            ],
+            [
+                'id' => 6,
+                'nisn' => '3201234572',
+                'nik' => '1871010505200006',
+                'nama' => 'Anisa Putri',
+                'jenis_kelamin' => 'Perempuan',
+                'tempat_lahir' => 'Pringsewu',
+                'tanggal_lahir' => '05-05-2020',
+                'agama' => 'Islam',
+                'alamat' => 'Jl. Teuku Umar No. 12 Pringsewu',
+                'nama_ayah' => 'Agus Setiawan',
+                'nama_ibu' => 'Lina',
+                'kelas' => 'TK A',
+                'status' => 'Aktif'
+            ],
+            [
+                'id' => 7,
+                'nisn' => '3201234573',
+                'nik' => '1871011507190007',
+                'nama' => 'Fajar Ramadhan',
+                'jenis_kelamin' => 'Laki-laki',
+                'tempat_lahir' => 'Bandar Lampung',
+                'tanggal_lahir' => '15-07-2019',
+                'agama' => 'Islam',
+                'alamat' => 'Jl. Imam Bonjol No. 8 Bandar Lampung',
+                'nama_ayah' => 'Wahyu Hidayat',
+                'nama_ibu' => 'Yuni',
+                'kelas' => 'TK B',
+                'status' => 'Aktif'
+            ],
+            [
+                'id' => 8,
+                'nisn' => '3201234574',
+                'nik' => '1871012208190008',
+                'nama' => 'Nabila Azzahra',
+                'jenis_kelamin' => 'Perempuan',
+                'tempat_lahir' => 'Bandar Lampung',
+                'tanggal_lahir' => '22-08-2019',
+                'agama' => 'Islam',
+                'alamat' => 'Jl. Cut Nyak Dien No. 20 Bandar Lampung',
+                'nama_ayah' => 'Andi Firmansyah',
+                'nama_ibu' => 'Mega',
+                'kelas' => 'TK B',
+                'status' => 'Aktif'
+            ],
+        ];
+        
+        $totalSiswa = count($siswa);
+        $totalLaki = count(array_filter($siswa, fn($s) => $s['jenis_kelamin'] == 'Laki-laki'));
+        $totalPerempuan = count(array_filter($siswa, fn($s) => $s['jenis_kelamin'] == 'Perempuan'));
+        $totalTKA = count(array_filter($siswa, fn($s) => $s['kelas'] == 'TK A'));
+        $totalTKB = count(array_filter($siswa, fn($s) => $s['kelas'] == 'TK B'));
+        
+        return view('admin.dapodik.index', compact('siswa', 'totalSiswa', 'totalLaki', 'totalPerempuan', 'totalTKA', 'totalTKB'));
+    }
 }
