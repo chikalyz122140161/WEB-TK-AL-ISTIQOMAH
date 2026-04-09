@@ -624,11 +624,15 @@ class DummySeeder extends Seeder
 
         $firstStudent = null;
         foreach ($studentsData as $i => $data) {
-            $student = Student::create(array_merge($data, ['parent_id' => $parent->id]));
+            // parent_id null — dihubungkan via form Tambah Pengguna di admin
+            $student = Student::create($data);
             if ($i === 0) {
                 $firstStudent = $student;
             }
         }
+
+        // Hubungkan siswa pertama ke akun ortu default untuk keperluan demo
+        $firstStudent->update(['parent_id' => $parent->id]);
 
         // Contoh data pendukung untuk siswa pertama
         Attendance::create([
