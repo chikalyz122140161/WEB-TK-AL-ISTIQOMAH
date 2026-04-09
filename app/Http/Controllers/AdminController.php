@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Student;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,27 +12,24 @@ class AdminController extends Controller
     // DASHBOARD
     public function dashboard()
     {
-        // Stats data
-        $totalSiswa = 45;
-        $totalGuru = 8;
-        $orangTerdaftar = 45;
-        $totalKelas = 2;
-        
-        // Aktivitas terbaru
+        $totalSiswa      = Student::count();
+        $totalGuru       = User::where('role', 'guru')->count();
+        $orangTerdaftar  = User::where('role', 'orangtua')->count();
+        $totalKelas      = Student::distinct('kelas')->whereNotNull('kelas')->count('kelas');
+
         $aktivitas = [
             ['title' => 'Data Siswa Baru Ditambahkan', 'time' => '2 jam yang lalu'],
             ['title' => 'Pengguna Baru Terdaftar', 'time' => '5 jam yang lalu'],
             ['title' => 'Backup Database Berhasil', 'time' => 'Kemarin'],
         ];
-        
-        // Statistik sistem
+
         $statistik = [
-            ['label' => 'TK A', 'value' => '22 Siswa'],
-            ['label' => 'TK B', 'value' => '23 Siswa'],
-            ['label' => 'Kelompok Bermain', 'value' => '0 Siswa'],
-            ['label' => 'Laporan Minggu Ini', 'value' => '48 Laporan'],
+            ['label' => 'TK A',  'value' => Student::where('kelas', 'A')->count() . ' Siswa'],
+            ['label' => 'TK B1', 'value' => Student::where('kelas', 'B1')->count() . ' Siswa'],
+            ['label' => 'TK B2', 'value' => Student::where('kelas', 'B2')->count() . ' Siswa'],
+            ['label' => 'Total Siswa', 'value' => $totalSiswa . ' Siswa'],
         ];
-        
+
         return view('admin.dashboard', compact('totalSiswa', 'totalGuru', 'orangTerdaftar', 'totalKelas', 'aktivitas', 'statistik'));
     }
     
@@ -54,13 +52,39 @@ class AdminController extends Controller
     
     public function penggunaCreate()
     {
-        return view('admin.pengguna.create');
+        $siswaOrphan = Student::whereNull('parent_id')
+            ->orderBy('kelas')->orderBy('name')
+            ->get(['id', 'name', 'kelas', 'nomor_induk', 'nama_ibu', 'nama_ayah']);
+        return view('admin.pengguna.create', compact('siswaOrphan'));
     }
-    
+
     public function penggunaStore(Request $request)
     {
-        // Dummy - redirect with success
-        return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil ditambahkan!');
+        $request->validate([
+            'nama'                  => 'required|string|max:255',
+            'email'                 => 'required|email|unique:users,email',
+            'role'                  => 'required|in:admin,guru,orangtua',
+            'password'              => 'required|min:6|confirmed',
+            'siswa_id'              => 'nullable|exists:students,id',
+        ], [
+            'email.unique'          => 'Email sudah digunakan.',
+            'password.confirmed'    => 'Konfirmasi password tidak cocok.',
+            'password.min'          => 'Password minimal 6 karakter.',
+        ]);
+
+        $user = User::create([
+            'name'     => $request->nama,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+            'role'     => $request->role,
+        ]);
+
+        if ($request->role === 'orangtua' && $request->filled('siswa_id')) {
+            Student::where('id', $request->siswa_id)->update(['parent_id' => $user->id]);
+        }
+
+        return redirect()->route('admin.pengguna.index')
+            ->with('success', 'Pengguna berhasil ditambahkan!');
     }
     
     public function penggunaEdit($id)
@@ -94,16 +118,20 @@ class AdminController extends Controller
     // KELOLA SISWA
     public function siswaIndex(Request $request)
     {
-        // Dummy data - with orangtua relation (sesuai form pendaftaran fisik)
-        $siswa = [
-            ['id' => 1, 'nis' => '2024001', 'nama' => 'Ahmad Fauzi', 'kelas' => 'TK A', 'jk' => 'L', 'status' => 'Aktif', 'nama_ortu' => 'Budi Santoso / Siti Rahayu', 'email_ortu' => 'budi@email.com'],
-            ['id' => 2, 'nis' => '2024002', 'nama' => 'Siti Aisyah', 'kelas' => 'TK A', 'jk' => 'P', 'status' => 'Aktif', 'nama_ortu' => 'Ahmad Ibrahim / Fatimah', 'email_ortu' => 'ahmad@email.com'],
-            ['id' => 3, 'nis' => '2024003', 'nama' => 'Budi Santoso Jr', 'kelas' => 'TK B', 'jk' => 'L', 'status' => 'Aktif', 'nama_ortu' => 'Hendra Wijaya / Dewi', 'email_ortu' => 'hendra@email.com'],
-            ['id' => 4, 'nis' => '2024004', 'nama' => 'Dewi Rahayu', 'kelas' => 'TK B', 'jk' => 'P', 'status' => 'Aktif', 'nama_ortu' => 'Eko Prasetyo / Sri', 'email_ortu' => 'eko@email.com'],
-            ['id' => 5, 'nis' => '2026001', 'nama' => 'Erlangga Pradipa Bimantara', 'kelas' => 'TK A', 'jk' => 'L', 'status' => 'Pending', 'nama_ortu' => 'Sudir / Julia Sari', 'email_ortu' => 'julia.sari@email.com'],
-            ['id' => 6, 'nis' => '2026002', 'nama' => 'Putri Amelia', 'kelas' => 'TK A', 'jk' => 'P', 'status' => 'Pending', 'nama_ortu' => 'Ratna Sari / Indah', 'email_ortu' => 'ratna@gmail.com'],
-        ];
-        
+        $siswa = Student::with('parent')->orderBy('kelas')->orderBy('name')->get()->map(function ($s) {
+            $namaOrtu = collect([$s->nama_ayah, $s->nama_ibu])->filter()->implode(' / ');
+            return [
+                'id'         => $s->id,
+                'nis'        => $s->nomor_induk ?? '-',
+                'nama'       => $s->name,
+                'kelas'      => $s->kelas ? 'TK ' . $s->kelas : '-',
+                'jk'         => $s->gender,
+                'status'     => 'Aktif',
+                'nama_ortu'  => $namaOrtu ?: '-',
+                'email_ortu' => $s->parent?->email ?? '-',
+            ];
+        })->toArray();
+
         return view('admin.siswa.index', compact('siswa'));
     }
     
@@ -386,137 +414,30 @@ class AdminController extends Controller
     // ═══════════════════════════════════════════════════════
     public function dapodikIndex()
     {
-        // Dummy data - replace with actual database query
-        // Data siswa aktif dengan format sesuai kebutuhan DAPODIK
-        $siswa = [
-            [
-                'id' => 1,
-                'nisn' => '3201234567',
-                'nik' => '1871012509210001',
-                'nama' => 'Ahmad Fauzi',
-                'jenis_kelamin' => 'Laki-laki',
-                'tempat_lahir' => 'Bandar Lampung',
-                'tanggal_lahir' => '15-03-2020',
-                'agama' => 'Islam',
-                'alamat' => 'Jl. Sudirman No. 10 Bandar Lampung',
-                'nama_ayah' => 'Budi Santoso',
-                'nama_ibu' => 'Siti Rahayu',
-                'kelas' => 'TK A',
-                'status' => 'Aktif'
-            ],
-            [
-                'id' => 2,
-                'nisn' => '3201234568',
-                'nik' => '1871011501210002',
-                'nama' => 'Siti Aisyah',
-                'jenis_kelamin' => 'Perempuan',
-                'tempat_lahir' => 'Bandar Lampung',
-                'tanggal_lahir' => '20-05-2020',
-                'agama' => 'Islam',
-                'alamat' => 'Jl. Diponegoro No. 25 Bandar Lampung',
-                'nama_ayah' => 'Ahmad Ibrahim',
-                'nama_ibu' => 'Fatimah',
-                'kelas' => 'TK A',
-                'status' => 'Aktif'
-            ],
-            [
-                'id' => 3,
-                'nisn' => '3201234569',
-                'nik' => '1871010208200003',
-                'nama' => 'Budi Santoso Jr',
-                'jenis_kelamin' => 'Laki-laki',
-                'tempat_lahir' => 'Metro',
-                'tanggal_lahir' => '02-08-2019',
-                'agama' => 'Islam',
-                'alamat' => 'Jl. Kartini No. 15 Metro',
-                'nama_ayah' => 'Hendra Wijaya',
-                'nama_ibu' => 'Dewi',
-                'kelas' => 'TK B',
-                'status' => 'Aktif'
-            ],
-            [
-                'id' => 4,
-                'nisn' => '3201234570',
-                'nik' => '1871011012190004',
-                'nama' => 'Dewi Rahayu',
-                'jenis_kelamin' => 'Perempuan',
-                'tempat_lahir' => 'Bandar Lampung',
-                'tanggal_lahir' => '10-12-2019',
-                'agama' => 'Islam',
-                'alamat' => 'Jl. Ahmad Yani No. 30 Bandar Lampung',
-                'nama_ayah' => 'Eko Prasetyo',
-                'nama_ibu' => 'Sri',
-                'kelas' => 'TK B',
-                'status' => 'Aktif'
-            ],
-            [
-                'id' => 5,
-                'nisn' => '3201234571',
-                'nik' => '1871012003200005',
-                'nama' => 'Rizki Pratama',
-                'jenis_kelamin' => 'Laki-laki',
-                'tempat_lahir' => 'Bandar Lampung',
-                'tanggal_lahir' => '20-03-2020',
-                'agama' => 'Islam',
-                'alamat' => 'Jl. Gatot Subroto No. 5 Bandar Lampung',
-                'nama_ayah' => 'Dedi Kurniawan',
-                'nama_ibu' => 'Rina',
-                'kelas' => 'TK A',
-                'status' => 'Aktif'
-            ],
-            [
-                'id' => 6,
-                'nisn' => '3201234572',
-                'nik' => '1871010505200006',
-                'nama' => 'Anisa Putri',
-                'jenis_kelamin' => 'Perempuan',
-                'tempat_lahir' => 'Pringsewu',
-                'tanggal_lahir' => '05-05-2020',
-                'agama' => 'Islam',
-                'alamat' => 'Jl. Teuku Umar No. 12 Pringsewu',
-                'nama_ayah' => 'Agus Setiawan',
-                'nama_ibu' => 'Lina',
-                'kelas' => 'TK A',
-                'status' => 'Aktif'
-            ],
-            [
-                'id' => 7,
-                'nisn' => '3201234573',
-                'nik' => '1871011507190007',
-                'nama' => 'Fajar Ramadhan',
-                'jenis_kelamin' => 'Laki-laki',
-                'tempat_lahir' => 'Bandar Lampung',
-                'tanggal_lahir' => '15-07-2019',
-                'agama' => 'Islam',
-                'alamat' => 'Jl. Imam Bonjol No. 8 Bandar Lampung',
-                'nama_ayah' => 'Wahyu Hidayat',
-                'nama_ibu' => 'Yuni',
-                'kelas' => 'TK B',
-                'status' => 'Aktif'
-            ],
-            [
-                'id' => 8,
-                'nisn' => '3201234574',
-                'nik' => '1871012208190008',
-                'nama' => 'Nabila Azzahra',
-                'jenis_kelamin' => 'Perempuan',
-                'tempat_lahir' => 'Bandar Lampung',
-                'tanggal_lahir' => '22-08-2019',
-                'agama' => 'Islam',
-                'alamat' => 'Jl. Cut Nyak Dien No. 20 Bandar Lampung',
-                'nama_ayah' => 'Andi Firmansyah',
-                'nama_ibu' => 'Mega',
-                'kelas' => 'TK B',
-                'status' => 'Aktif'
-            ],
-        ];
-        
-        $totalSiswa = count($siswa);
-        $totalLaki = count(array_filter($siswa, fn($s) => $s['jenis_kelamin'] == 'Laki-laki'));
-        $totalPerempuan = count(array_filter($siswa, fn($s) => $s['jenis_kelamin'] == 'Perempuan'));
-        $totalTKA = count(array_filter($siswa, fn($s) => $s['kelas'] == 'TK A'));
-        $totalTKB = count(array_filter($siswa, fn($s) => $s['kelas'] == 'TK B'));
-        
+        $siswa = Student::orderBy('kelas')->orderBy('name')->get()->map(function ($s) {
+            return [
+                'id'            => $s->id,
+                'nisn'          => $s->nisn ?? '-',
+                'nik'           => $s->nik ?? '-',
+                'nama'          => $s->name,
+                'jenis_kelamin' => $s->gender == 'L' ? 'Laki-laki' : 'Perempuan',
+                'tempat_lahir'  => $s->tempat_lahir ?? '-',
+                'tanggal_lahir' => $s->birth_date ? \Carbon\Carbon::parse($s->birth_date)->format('d-m-Y') : '-',
+                'agama'         => 'Islam',
+                'alamat'        => $s->address ?? '-',
+                'nama_ayah'     => $s->nama_ayah ?? '-',
+                'nama_ibu'      => $s->nama_ibu ?? '-',
+                'kelas'         => $s->kelas ? 'TK ' . $s->kelas : '-',
+                'status'        => 'Aktif',
+            ];
+        })->toArray();
+
+        $totalSiswa     = count($siswa);
+        $totalLaki      = collect($siswa)->where('jenis_kelamin', 'Laki-laki')->count();
+        $totalPerempuan = collect($siswa)->where('jenis_kelamin', 'Perempuan')->count();
+        $totalTKA       = collect($siswa)->where('kelas', 'TK A')->count();
+        $totalTKB       = collect($siswa)->filter(fn($s) => in_array($s['kelas'], ['TK B1', 'TK B2']))->count();
+
         return view('admin.dapodik.index', compact('siswa', 'totalSiswa', 'totalLaki', 'totalPerempuan', 'totalTKA', 'totalTKB'));
     }
 }

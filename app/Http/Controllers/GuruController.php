@@ -2,29 +2,35 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Student;
 
 class GuruController extends Controller
 {
+    private function getDaftarSiswa(): array
+    {
+        return Student::orderBy('kelas')->orderBy('name')
+            ->get()
+            ->map(fn($s) => [
+                'id'    => $s->id,
+                'nama'  => $s->name,
+                'kelas' => 'TK ' . $s->kelas,
+            ])
+            ->toArray();
+    }
+
     public function jadwalKonseling(Request $request)
     {
         $bulanTahun = $request->get('bulan_tahun', date('Y-m'));
         [$tahunFilter, $bulan] = array_map('intval', explode('-', $bulanTahun));
 
-        $daftarSiswa = [
-            ['id' => 1, 'nama' => 'Ahmad Fauzi',    'orang_tua_id' => 1],
-            ['id' => 2, 'nama' => 'Siti Nurhaliza', 'orang_tua_id' => 2],
-            ['id' => 3, 'nama' => 'Eko Prasetyo',   'orang_tua_id' => 3],
-            ['id' => 4, 'nama' => 'Rina Susanti',   'orang_tua_id' => 4],
-            ['id' => 5, 'nama' => 'Doni Saputra',   'orang_tua_id' => 5],
-        ];
+        $daftarSiswa = Student::with('parent')->orderBy('name')->get()->map(fn($s) => [
+            'id'          => $s->id,
+            'nama'        => $s->name,
+            'orang_tua_id'=> $s->parent_id,
+        ])->toArray();
 
-        $daftarOrangTua = [
-            ['id' => 1, 'nama' => 'Ibu Siti'],
-            ['id' => 2, 'nama' => 'Bapak Budi'],
-            ['id' => 3, 'nama' => 'Ibu Dewi'],
-            ['id' => 4, 'nama' => 'Ibu Ani'],
-            ['id' => 5, 'nama' => 'Bapak Hadi'],
-        ];
+        $daftarOrangTua = \App\Models\User::where('role', 'orangtua')->orderBy('name')->get()
+            ->map(fn($u) => ['id' => $u->id, 'nama' => $u->name])->toArray();
 
         $jadwal = collect($this->getDummyJadwalKonseling())->where('bulan', $bulan)->values()->all();
 
@@ -60,21 +66,10 @@ class GuruController extends Controller
 
     public function jadwalKonselingEdit($id)
     {
-        $jadwal = $this->getDummyJadwalKonseling()[$id] ?? abort(404);
-        $daftarSiswa = [
-            ['id' => 1, 'nama' => 'Ahmad Fauzi'],
-            ['id' => 2, 'nama' => 'Siti Nurhaliza'],
-            ['id' => 3, 'nama' => 'Eko Prasetyo'],
-            ['id' => 4, 'nama' => 'Rina Susanti'],
-            ['id' => 5, 'nama' => 'Doni Saputra'],
-        ];
-        $daftarOrangTua = [
-            ['id' => 1, 'nama' => 'Ibu Siti'],
-            ['id' => 2, 'nama' => 'Bapak Budi'],
-            ['id' => 3, 'nama' => 'Ibu Dewi'],
-            ['id' => 4, 'nama' => 'Ibu Ani'],
-            ['id' => 5, 'nama' => 'Bapak Hadi'],
-        ];
+        $jadwal         = $this->getDummyJadwalKonseling()[$id] ?? abort(404);
+        $daftarSiswa    = $this->getDaftarSiswa();
+        $daftarOrangTua = \App\Models\User::where('role', 'orangtua')->orderBy('name')->get()
+            ->map(fn($u) => ['id' => $u->id, 'nama' => $u->name])->toArray();
         return view('guru.jadwal_konseling_edit', compact('jadwal', 'daftarSiswa', 'daftarOrangTua'));
     }
 
@@ -146,13 +141,7 @@ class GuruController extends Controller
 
     public function laporan(Request $request)
     {
-        $daftarSiswa = [
-            ['id' => 1, 'nama' => 'Ahmad Fauzi',   'kelas' => 'TK A'],
-            ['id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A'],
-            ['id' => 3, 'nama' => 'Budi Santoso',   'kelas' => 'TK B'],
-            ['id' => 4, 'nama' => 'Dewi Lestari',   'kelas' => 'TK A'],
-            ['id' => 5, 'nama' => 'Eko Prasetyo',   'kelas' => 'TK B'],
-        ];
+        $daftarSiswa = $this->getDaftarSiswa();
 
         // Dummy data laporan — nanti diganti query database
         $semua = [
@@ -206,13 +195,7 @@ class GuruController extends Controller
 
     public function laporanBkEdit($id)
     {
-        $daftarSiswa = [
-            ['id' => 1, 'nama' => 'Ahmad Fauzi',   'kelas' => 'TK A'],
-            ['id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A'],
-            ['id' => 3, 'nama' => 'Budi Santoso',   'kelas' => 'TK B'],
-            ['id' => 4, 'nama' => 'Dewi Lestari',   'kelas' => 'TK A'],
-            ['id' => 5, 'nama' => 'Eko Prasetyo',   'kelas' => 'TK B'],
-        ];
+        $daftarSiswa = $this->getDaftarSiswa();
 
         $semua = [
             1 => ['id' => 1, 'siswa_id' => 1, 'nama' => 'Ahmad Fauzi',   'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '2024-11-22', 'tahun_ajaran' => 2024, 'semester' => 'Ganjil', 'rata_rata' => 3.8,
@@ -250,13 +233,7 @@ class GuruController extends Controller
 
     public function grafik()
     {
-        $daftarSiswa = [
-            ['id' => 1, 'nama' => 'Ahmad Rizky'],
-            ['id' => 2, 'nama' => 'Anisa Putri'],
-            ['id' => 3, 'nama' => 'Muhammad Fauzi'],
-            ['id' => 4, 'nama' => 'Tika Rahayu'],
-            ['id' => 5, 'nama' => 'Siti Aisyah'],
-        ];
+        $daftarSiswa = $this->getDaftarSiswa();
 
         // 6 bulan (1 semester)
         $daftarMinggu = range(1, 6);
@@ -316,14 +293,7 @@ class GuruController extends Controller
 
     public function inputPerkembangan()
     {
-        // Nanti diganti query ke model Siswa
-        $daftarSiswa = [
-            ['id' => 1, 'nama' => 'Ahmad Rizky'],
-            ['id' => 2, 'nama' => 'Anisa Putri'],
-            ['id' => 3, 'nama' => 'Muhammad Fauzi'],
-            ['id' => 4, 'nama' => 'Tika Rahayu'],
-            ['id' => 5, 'nama' => 'Siti Aisyah'],
-        ];
+        $daftarSiswa = $this->getDaftarSiswa();
 
         return view('guru.input_perkembangan', compact('daftarSiswa'));
     }
@@ -337,13 +307,12 @@ class GuruController extends Controller
 
     public function dashboard()
     {
-        // Data dummy — nanti diganti query database
         $data = [
-            'userName'         => 'Ibu Siti',
-            'totalSiswa'       => 20,
+            'userName'         => 'Guru',
+            'totalSiswa'       => Student::count(),
             'konselingBulanIni' => 15,
             'pengajuanJadwal'  => 3,
-            'semester'         => 'Ganjil 2024/2025',
+            'semester'         => 'Ganjil 2025/2026',
             'updates'          => [
                 ['title' => 'Konseling Selesai - Muhammad',    'time' => '2 jam yang lalu'],
                 ['title' => 'Input Perkembangan - Anisa',      'time' => '1 hari yang lalu'],
@@ -368,14 +337,7 @@ class GuruController extends Controller
      */
     public function kehadiranIndex(Request $request)
     {
-        // Dummy data siswa
-        $siswaList = [
-            ['id' => 1, 'nama' => 'Ahmad Fauzi', 'kelas' => 'TK A'],
-            ['id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A'],
-            ['id' => 3, 'nama' => 'Budi Santoso', 'kelas' => 'TK B'],
-            ['id' => 4, 'nama' => 'Dewi Lestari', 'kelas' => 'TK A'],
-            ['id' => 5, 'nama' => 'Eko Prasetyo', 'kelas' => 'TK B'],
-        ];
+        $siswaList = $this->getDaftarSiswa();
 
         // Dummy data kehadiran
         $kehadiranList = [
@@ -651,14 +613,7 @@ class GuruController extends Controller
      */
     public function rapotEdit($id)
     {
-        // Dummy data siswa
-        $siswaList = [
-            ['id' => 1, 'nama' => 'Ahmad Fauzi', 'kelas' => 'TK A'],
-            ['id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A'],
-            ['id' => 3, 'nama' => 'Budi Santoso', 'kelas' => 'TK B'],
-            ['id' => 4, 'nama' => 'Dewi Lestari', 'kelas' => 'TK A'],
-            ['id' => 5, 'nama' => 'Eko Prasetyo', 'kelas' => 'TK B'],
-        ];
+        $siswaList = $this->getDaftarSiswa();
 
         // Dummy data rapot untuk edit dengan struktur nested
         $rapot = [
