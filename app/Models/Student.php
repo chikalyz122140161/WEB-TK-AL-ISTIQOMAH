@@ -9,7 +9,9 @@ class Student extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'parent_id', 'birth_date', 'gender', 'address',
+        'name', 'nisn', 'nomor_induk', 'tempat_lahir', 'parent_id',
+        'birth_date', 'nik', 'kelas', 'gender', 'address',
+        'nama_ayah', 'pekerjaan_ayah', 'nama_ibu', 'pekerjaan_ibu', 'telepon',
     ];
 
     public function parent()
