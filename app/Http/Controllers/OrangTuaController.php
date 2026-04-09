@@ -3,9 +3,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Student;
 
 class OrangTuaController extends Controller
 {
+    private function getStudentData(): array
+    {
+        $s = Student::first();
+        return $s ? [
+            'id'    => $s->id,
+            'nama'  => $s->name,
+            'class' => 'TK ' . $s->kelas,
+        ] : ['id' => 1, 'nama' => '-', 'class' => '-'];
+    }
+
     public function dashboard()
     {
         return view('orangtua.dashboard');
@@ -13,15 +24,9 @@ class OrangTuaController extends Controller
 
     public function presensi(Request $request)
     {
-        $bulan = $request->input('bulan', now()->month);
-        $tahun = $request->input('tahun', now()->year);
-
-        // Dummy student data
-        $student = [
-            'id' => 1,
-            'nama' => 'Ahmad Fauzi',
-            'class' => 'TK A',
-        ];
+        $bulan   = $request->input('bulan', now()->month);
+        $tahun   = $request->input('tahun', now()->year);
+        $student = $this->getStudentData();
 
         // Dummy presensi data
         $presensiData = ['hadir' => 18, 'izin' => 2, 'sakit' => 1, 'alpa' => 0];
@@ -38,12 +43,7 @@ class OrangTuaController extends Controller
 
     public function laporan(Request $request)
     {
-        // Dummy student data
-        $student = [
-            'id' => 1,
-            'nama' => 'Ahmad Fauzi',
-            'class' => 'TK A',
-        ];
+        $student = $this->getStudentData();
 
         // Dummy laporan list
         $laporanList = [
@@ -57,8 +57,7 @@ class OrangTuaController extends Controller
 
     public function laporanDetail($id)
     {
-        // Dummy data
-        $student = ['id' => 1, 'nama' => 'Ahmad Fauzi', 'class' => 'TK A'];
+        $student = $this->getStudentData();
         $teacher = ['nama' => 'Bu Siti, S.Pd'];
         
         $report = [
@@ -86,8 +85,7 @@ class OrangTuaController extends Controller
     
     public function jadwalPembelajaran(Request $request)
     {
-        // Dummy data
-        $student = ['id' => 1, 'nama' => 'Ahmad Fauzi', 'class' => 'TK A'];
+        $student = $this->getStudentData();
         $kelas = 'TK A';
         
         // Jadwal pembelajaran harian (dummy data - bisa diganti dengan data dari database)
@@ -143,8 +141,7 @@ class OrangTuaController extends Controller
         $bulan = $request->input('bulan', now()->month);
         $tahun = $request->input('tahun', now()->year);
 
-        // Dummy data
-        $student = ['id' => 1, 'nama' => 'Ahmad Fauzi', 'class' => 'TK A'];
+        $student = $this->getStudentData();
 
         $jadwalKegiatan = [
             [
@@ -189,8 +186,7 @@ class OrangTuaController extends Controller
     
     public function rapot(Request $request)
     {
-        // Dummy data
-        $student = ['id' => 1, 'nama' => 'Ahmad Fauzi', 'class' => 'TK A'];
+        $student = $this->getStudentData();
 
         $rapotList = [
             [

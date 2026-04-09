@@ -267,6 +267,39 @@
     .kegiatan-info__item span {
         flex: 1;
     }
+    .kegiatan-card__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .jadwal-item {
+        padding: 10px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .jadwal-item--border {
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .jadwal-item__waktu {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        color: #4CAF82;
+        font-weight: 600;
+        fill: #4CAF82;
+    }
+    .jadwal-item__kegiatan {
+        font-size: 14px;
+        font-weight: 600;
+        color: #3E2723;
+    }
+    .jadwal-item__ket {
+        font-size: 12px;
+        color: #795548;
+    }
+
     .kegiatan-badge {
         display: inline-flex;
         align-items: center;
@@ -317,51 +350,43 @@
 
     @if(($activeTab ?? 'pembelajaran') == 'pembelajaran')
         {{-- JADWAL PEMBELAJARAN --}}
-        
+
         {{-- Info Banner --}}
         <div class="info-banner">
             <div class="info-banner__icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 4.8 11.06a.75.75 0 0 1-.231-1.337A60.65 60.65 0 0 1 11.7 2.805Z"/></svg>
             </div>
             <div class="info-banner__content">
-                <h3>Jadwal Pembelajaran {{ $student->name ?? 'Anak Anda' }}</h3>
-                <p>Kelas: {{ $kelas ?? 'TK A' }} | Tahun Ajaran 2025/2026</p>
+                <h3>Jadwal Pembelajaran {{ $student['nama'] ?? 'Anak Anda' }}</h3>
+                <p>Kelas: {{ $kelas ?? ($student['class'] ?? '-') }} | Tahun Ajaran 2025/2026</p>
             </div>
         </div>
 
-        {{-- Schedule per Hari --}}
+        {{-- Satu card per hari --}}
+        <div class="kegiatan-grid">
         @forelse($jadwalPembelajaran ?? [] as $hari => $jadwal)
-            <div class="schedule-card">
-                <div class="schedule-card__header">
-                    <span class="schedule-card__day">{{ $hari }}</span>
-                    <span class="schedule-card__badge">{{ count($jadwal) }} Kegiatan</span>
+            <div class="kegiatan-card">
+                <div class="kegiatan-card__header">
+                    <h3 class="kegiatan-card__title">{{ $hari }}</h3>
+                    <span style="color:rgba(255,255,255,0.7); font-size:12px;">{{ count($jadwal) }} kegiatan</span>
                 </div>
-                <table class="schedule-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 180px;">Waktu</th>
-                            <th>Kegiatan</th>
-                            <th style="width: 200px;">Keterangan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($jadwal as $item)
-                        <tr>
-                            <td>
-                                <span class="time-badge">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-13a.75.75 0 0 0-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 0 0 0-1.5h-3.25V5Z" clip-rule="evenodd"/></svg>
-                                    {{ $item['waktu'] }}
-                                </span>
-                            </td>
-                            <td><strong>{{ $item['kegiatan'] }}</strong></td>
-                            <td>{{ $item['keterangan'] }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="kegiatan-card__body">
+                    @foreach($jadwal as $item)
+                        <div class="jadwal-item {{ !$loop->last ? 'jadwal-item--border' : '' }}">
+                            <div class="jadwal-item__waktu">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
+                                {{ $item['waktu'] }}
+                            </div>
+                            <div class="jadwal-item__kegiatan">{{ $item['kegiatan'] }}</div>
+                            @if($item['keterangan'] && $item['keterangan'] !== '-')
+                                <div class="jadwal-item__ket">{{ $item['keterangan'] }}</div>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
             </div>
         @empty
-            <div class="schedule-card">
+            <div class="schedule-card" style="grid-column: 1 / -1;">
                 <div class="empty-state">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/></svg>
                     <h3>Belum Ada Jadwal</h3>
@@ -369,6 +394,7 @@
                 </div>
             </div>
         @endforelse
+        </div>{{-- end kegiatan-grid --}}
 
     @else
         {{-- JADWAL KEGIATAN --}}
