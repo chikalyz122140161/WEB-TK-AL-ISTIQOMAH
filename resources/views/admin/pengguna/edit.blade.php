@@ -63,9 +63,22 @@
                 </div>
                 
                 <div class="form-group">
+                    <label for="status" class="form-label required">Status Akun</label>
+                    <select id="status" name="status" class="form-select status-select" required>
+                        <option value="Pending" {{ old('status', $pengguna['status'] ?? 'Aktif') == 'Pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="Aktif" {{ old('status', $pengguna['status'] ?? 'Aktif') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                        <option value="Nonaktif" {{ old('status', $pengguna['status'] ?? 'Aktif') == 'Nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                    </select>
+                    <small class="form-hint">Status "Pending" untuk akun dari pendaftaran online yang belum diaktivasi</small>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
                     <label for="nomor_telepon" class="form-label">Nomor Telepon</label>
                     <input type="tel" id="nomor_telepon" name="nomor_telepon" class="form-input" value="{{ old('nomor_telepon', $pengguna['nomor_telepon'] ?? '') }}">
                 </div>
+                <div class="form-group"></div>
             </div>
             
             <div class="form-divider">
@@ -122,19 +135,19 @@
 
 .form-label {
     font-weight: 500;
-    color: #00473e;
+    color: #3E2723;
     font-size: 0.875rem;
 }
 
 .form-label.required::after {
     content: " *";
-    color: #dc2626;
+    color: #c0392b;
 }
 
 .form-input,
 .form-select {
     padding: 0.75rem 1rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid #3E272330;
     border-radius: 8px;
     font-size: 0.875rem;
     transition: all 0.2s;
@@ -144,12 +157,12 @@
 .form-input:focus,
 .form-select:focus {
     outline: none;
-    border-color: #00473e;
+    border-color: #3E2723;
     box-shadow: 0 0 0 3px rgba(0, 71, 62, 0.1);
 }
 
 .form-input::placeholder {
-    color: #9ca3af;
+    color: #5D4037;
 }
 
 .form-divider {
@@ -164,11 +177,11 @@
     content: '';
     flex: 1;
     height: 1px;
-    background: #e5e7eb;
+    background: #3E272320;
 }
 
 .form-divider span {
-    color: #6b7280;
+    color: #5D4037;
     font-size: 0.875rem;
     font-weight: 500;
 }
@@ -179,13 +192,13 @@
     justify-content: flex-end;
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid #3E272320;
 }
 
 /* Alert */
 .alert--danger {
     background: #fee2e2;
-    color: #dc2626;
+    color: #c0392b;
     border: 1px solid #fecaca;
     padding: 1rem;
     border-radius: 8px;
@@ -198,5 +211,27 @@
 }
 
 .mb-0 { margin-bottom: 0; }
+
+/* Status Select Styling */
+.status-select option[value="Pending"] {
+    background: #FFF176;
+    color: #d97706;
+}
+
+.status-select option[value="Aktif"] {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.status-select option[value="Nonaktif"] {
+    background: #f1f5f9;
+    color: #5D4037;
+}
+
+.form-hint {
+    color: #5D4037;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
 </style>
 @endsection

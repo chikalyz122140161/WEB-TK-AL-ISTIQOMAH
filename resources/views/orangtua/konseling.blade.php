@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@php $userRole = 'Orang Tua'; @endphp
 
 @section('title', 'Pengajuan Konseling - SISTEM BK TK AL-ISTIQOMAH')
 @section('page_title', 'Pengajuan Konseling')
@@ -24,12 +25,12 @@
         gap: 12px;
         margin-bottom: 16px;
         padding-bottom: 12px;
-        border-bottom: 2px solid #faae2b;
+        border-bottom: 2px solid #4CAF82;
     }
     .section-header__icon {
         width: 40px;
         height: 40px;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         border-radius: 10px;
         display: flex;
         align-items: center;
@@ -38,24 +39,24 @@
     .section-header__icon svg {
         width: 22px;
         height: 22px;
-        fill: #00473e;
+        fill: #3E2723;
     }
     .section-header__text h2 {
         font-size: 18px;
         font-weight: 700;
-        color: #00473e;
+        color: #3E2723;
         margin: 0;
     }
     .section-header__text p {
         font-size: 13px;
-        color: #475d5b;
+        color: #5D4037;
         margin: 2px 0 0;
     }
 
     /* Form Card */
     .form-card {
         background: #fff;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 8px;
         padding: 24px;
         margin-bottom: 24px;
@@ -63,10 +64,10 @@
     .form-card__title {
         font-size: 16px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
         margin-bottom: 20px;
         padding-bottom: 12px;
-        border-bottom: 1px solid #00473e10;
+        border-bottom: 1px solid #3E272310;
     }
 
     .form-grid {
@@ -88,19 +89,19 @@
     .form-group label {
         font-size: 13px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
     }
     .form-group label span {
-        color: #EF4444;
+        color: #F06292;
     }
     .form-group input,
     .form-group select,
     .form-group textarea {
         padding: 12px 14px;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 8px;
         font-size: 14px;
-        color: #00473e;
+        color: #3E2723;
         background: #f8f9fa;
         transition: all 0.2s;
         font-family: inherit;
@@ -109,9 +110,9 @@
     .form-group select:focus,
     .form-group textarea:focus {
         outline: none;
-        border-color: #faae2b;
+        border-color: #4CAF82;
         background: #fff;
-        box-shadow: 0 0 0 3px rgba(250, 174, 43, 0.1);
+        box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.1);
     }
     .form-group textarea {
         resize: vertical;
@@ -119,51 +120,20 @@
     }
     .form-hint {
         font-size: 12px;
-        color: #6B7280;
+        color: #5D4037;
         margin-top: 4px;
     }
 
-    /* Time Slots */
-    .time-slots {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
+    /* Time inputs */
+    .time-inputs {
+        display: flex;
+        align-items: center;
         gap: 12px;
     }
-    @media (max-width: 768px) {
-        .time-slots { grid-template-columns: repeat(2, 1fr); }
-    }
-    .time-slot {
-        padding: 12px;
-        border: 2px solid #00473e20;
-        border-radius: 8px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    .time-slot:hover {
-        border-color: #faae2b;
-    }
-    .time-slot.selected {
-        border-color: #faae2b;
-        background: linear-gradient(135deg, #faae2b20 0%, #f5a62320 100%);
-    }
-    .time-slot.disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        background: #f3f4f6;
-    }
-    .time-slot__time {
-        font-size: 14px;
-        font-weight: 600;
-        color: #00473e;
-        margin-bottom: 2px;
-    }
-    .time-slot__status {
-        font-size: 11px;
-        color: #10B981;
-    }
-    .time-slot.disabled .time-slot__status {
-        color: #EF4444;
+    .time-inputs span {
+        font-size: 13px;
+        color: #5D4037;
+        white-space: nowrap;
     }
 
     /* Submit Button */
@@ -173,14 +143,14 @@
         gap: 12px;
         margin-top: 24px;
         padding-top: 20px;
-        border-top: 1px solid #00473e10;
+        border-top: 1px solid #3E272310;
     }
     .btn-submit {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
-        color: #00473e;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+        color: #3E2723;
         padding: 12px 24px;
         font-size: 14px;
         font-weight: 600;
@@ -191,7 +161,7 @@
     }
     .btn-submit:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(250, 174, 43, 0.4);
+        box-shadow: 0 4px 12px rgba(76,175,130, 0.4);
     }
     .btn-submit svg {
         width: 18px;
@@ -202,30 +172,30 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: #f3f4f6;
-        color: #374151;
+        background: #FFFDE7;
+        color: #3E2723;
         padding: 12px 24px;
         font-size: 14px;
         font-weight: 500;
-        border: 1px solid #D1D5DB;
+        border: 1px solid #3E272330;
         cursor: pointer;
         border-radius: 8px;
         transition: all 0.3s;
     }
     .btn-reset:hover {
-        background: #e5e7eb;
+        background: #3E272320;
     }
 
     /* Riwayat Konseling */
     .history-card {
         background: #fff;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 8px;
         overflow: hidden;
     }
     .history-card__header {
         padding: 16px 20px;
-        border-bottom: 1px solid #00473e10;
+        border-bottom: 1px solid #3E272310;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -233,7 +203,7 @@
     .history-card__title {
         font-size: 16px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
     }
     .history-table {
         width: 100%;
@@ -243,19 +213,19 @@
     .history-table td {
         padding: 14px 20px;
         text-align: left;
-        border-bottom: 1px solid #00473e08;
+        border-bottom: 1px solid #3E272308;
     }
     .history-table th {
         background: #f8f9fa;
         font-size: 12px;
         font-weight: 600;
-        color: #475d5b;
+        color: #5D4037;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
     .history-table td {
         font-size: 14px;
-        color: #00473e;
+        color: #3E2723;
     }
     .history-table tr:last-child td {
         border-bottom: none;
@@ -275,15 +245,15 @@
     }
     .status-badge--pending {
         background: #FFFBEB;
-        color: #B45309;
+        color: #5D4037;
     }
     .status-badge--approved {
         background: #ECFDF5;
         color: #047857;
     }
     .status-badge--completed {
-        background: #EFF6FF;
-        color: #1D4ED8;
+        background: #ecfdf5;
+        color: #2E8B60;
     }
     .status-badge--cancelled {
         background: #FEF2F2;
@@ -292,8 +262,8 @@
 
     /* Info Alert */
     .info-alert {
-        background: #EFF6FF;
-        border: 1px solid #BFDBFE;
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
         border-radius: 8px;
         padding: 16px 20px;
         margin-bottom: 24px;
@@ -304,13 +274,13 @@
     .info-alert svg {
         width: 20px;
         height: 20px;
-        fill: #1D4ED8;
+        fill: #2E8B60;
         flex-shrink: 0;
         margin-top: 2px;
     }
     .info-alert__text {
         font-size: 14px;
-        color: #1E40AF;
+        color: #2E8B60;
         line-height: 1.6;
     }
 </style>
@@ -363,35 +333,13 @@
                     <option value="2">Bu Siti - Guru Kelas TK A</option>
                 </select>
             </div>
-            <div class="form-group form-group--full">
-                <label>Pilih Waktu <span>*</span></label>
-                <div class="time-slots">
-                    <div class="time-slot" onclick="selectTime(this, '08:00')">
-                        <div class="time-slot__time">08:00 - 09:00</div>
-                        <div class="time-slot__status">Tersedia</div>
-                    </div>
-                    <div class="time-slot" onclick="selectTime(this, '09:00')">
-                        <div class="time-slot__time">09:00 - 10:00</div>
-                        <div class="time-slot__status">Tersedia</div>
-                    </div>
-                    <div class="time-slot disabled">
-                        <div class="time-slot__time">10:00 - 11:00</div>
-                        <div class="time-slot__status">Tidak Tersedia</div>
-                    </div>
-                    <div class="time-slot" onclick="selectTime(this, '11:00')">
-                        <div class="time-slot__time">11:00 - 12:00</div>
-                        <div class="time-slot__status">Tersedia</div>
-                    </div>
-                    <div class="time-slot disabled">
-                        <div class="time-slot__time">13:00 - 14:00</div>
-                        <div class="time-slot__status">Tidak Tersedia</div>
-                    </div>
-                    <div class="time-slot" onclick="selectTime(this, '14:00')">
-                        <div class="time-slot__time">14:00 - 15:00</div>
-                        <div class="time-slot__status">Tersedia</div>
-                    </div>
-                </div>
-                <input type="hidden" name="waktu" id="selectedTime" required>
+            <div class="form-group">
+                <label>Jam Mulai <span>*</span></label>
+                <input type="time" name="waktu_mulai" required>
+            </div>
+            <div class="form-group">
+                <label>Jam Selesai <span>*</span></label>
+                <input type="time" name="waktu_selesai" required>
             </div>
             <div class="form-group form-group--full">
                 <label>Topik/Permasalahan yang Ingin Dibahas <span>*</span></label>
@@ -451,21 +399,6 @@
     </div>
 </div>
 
-@push('scripts')
-<script>
-    function selectTime(element, time) {
-        if (element.classList.contains('disabled')) return;
-        
-        // Remove selected class from all
-        document.querySelectorAll('.time-slot').forEach(slot => {
-            slot.classList.remove('selected');
-        });
-        
-        // Add selected to clicked
-        element.classList.add('selected');
-        document.getElementById('selectedTime').value = time;
-    }
-</script>
-@endpush
+
 
 @endsection

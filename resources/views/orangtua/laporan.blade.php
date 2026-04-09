@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@php $userRole = 'Orang Tua'; @endphp
 
 @section('title', 'Lihat Laporan Anak - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Lihat Laporan Anak')
@@ -24,29 +25,29 @@
     .filter-group label {
         font-size: 12px;
         font-weight: 500;
-        color: #475d5b;
+        color: #5D4037;
     }
     .filter-group select {
         padding: 10px 14px;
-        border: 1px solid #00473e30;
+        border: 1px solid #3E272330;
         border-radius: 6px;
         font-size: 14px;
-        color: #00473e;
+        color: #3E2723;
         background: #fff;
         min-width: 160px;
         cursor: pointer;
     }
     .filter-group select:focus {
         outline: none;
-        border-color: #faae2b;
-        box-shadow: 0 0 0 3px rgba(250, 174, 43, 0.1);
+        border-color: #4CAF82;
+        box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.1);
     }
     .btn-tampilkan {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
-        color: #00473e;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+        color: #3E2723;
         padding: 10px 20px;
         font-size: 14px;
         font-weight: 600;
@@ -57,22 +58,22 @@
     }
     .btn-tampilkan:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(250, 174, 43, 0.3);
+        box-shadow: 0 4px 12px rgba(76,175,130, 0.3);
     }
 
     /* Laporan List */
     .laporan-section {
         background: #fff;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 8px;
         overflow: hidden;
     }
     .laporan-section__header {
         padding: 16px 20px;
-        border-bottom: 1px solid #00473e10;
+        border-bottom: 1px solid #3E272310;
         font-size: 14px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
     }
     .data-table {
         width: 100%;
@@ -82,29 +83,29 @@
     .data-table td {
         padding: 12px 16px;
         text-align: left;
-        border-bottom: 1px solid #00473e10;
+        border-bottom: 1px solid #3E272310;
     }
     .data-table th {
-        background: linear-gradient(135deg, #faae2b20 0%, #faae2b30 100%);
+        background: linear-gradient(135deg, #4CAF8220 0%, #4CAF8230 100%);
         font-size: 12px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
     .data-table td {
         font-size: 14px;
-        color: #475d5b;
+        color: #5D4037;
     }
     .data-table tr:hover td {
-        background: #f2f7f5;
+        background: #FFFDE7;
     }
     .btn-detail {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
-        color: #00473e;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+        color: #3E2723;
         padding: 6px 14px;
         font-size: 12px;
         font-weight: 600;
@@ -116,7 +117,7 @@
     }
     .btn-detail:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(250, 174, 43, 0.3);
+        box-shadow: 0 4px 12px rgba(76,175,130, 0.3);
     }
     .btn-detail svg {
         width: 14px;
@@ -131,7 +132,7 @@
     .score-bar__track {
         flex: 1;
         height: 8px;
-        background: #f2f7f5;
+        background: #FFFDE7;
         border-radius: 4px;
         overflow: hidden;
         max-width: 80px;
@@ -139,31 +140,31 @@
     .score-bar__fill {
         height: 100%;
         border-radius: 4px;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
     }
     .score-bar__value {
         font-size: 13px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
         min-width: 24px;
     }
     .empty-state {
         text-align: center;
         padding: 40px;
-        color: #475d5b;
+        color: #5D4037;
         font-size: 14px;
     }
 
     /* Detail Modal / Card */
     .detail-card {
         background: #fff;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 8px;
         padding: 24px;
         margin-top: 24px;
     }
     .detail-card__header {
-        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
         color: #fff;
         padding: 20px 24px;
         border-radius: 8px 8px 0 0;
@@ -188,49 +189,49 @@
         .aspect-grid { grid-template-columns: 1fr; }
     }
     .aspect-item {
-        background: #f2f7f5;
+        background: #FFFDE7;
         border-radius: 8px;
         padding: 16px;
     }
     .aspect-item__label {
         font-size: 12px;
         font-weight: 600;
-        color: #475d5b;
+        color: #5D4037;
         text-transform: uppercase;
         margin-bottom: 8px;
     }
     .aspect-item__score {
         font-size: 28px;
         font-weight: 700;
-        color: #00473e;
+        color: #3E2723;
     }
     .aspect-item__bar {
         margin-top: 8px;
         height: 6px;
-        background: #00473e20;
+        background: #3E272320;
         border-radius: 3px;
         overflow: hidden;
     }
     .aspect-item__bar-fill {
         height: 100%;
         border-radius: 3px;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
     }
     .note-section {
-        background: #f2f7f5;
+        background: #FFFDE7;
         border-radius: 8px;
         padding: 16px;
     }
     .note-section__label {
         font-size: 12px;
         font-weight: 600;
-        color: #475d5b;
+        color: #5D4037;
         text-transform: uppercase;
         margin-bottom: 8px;
     }
     .note-section__text {
         font-size: 14px;
-        color: #00473e;
+        color: #3E2723;
         line-height: 1.6;
     }
 </style>

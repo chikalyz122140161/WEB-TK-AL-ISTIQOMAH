@@ -12,7 +12,7 @@
     /* Orange Theme Colors */
     .form-section {
         background: #fff;
-        border: 1px solid #E5E7EB;
+        border: 1px solid #3E272320;
         border-radius: 8px;
         padding: 20px;
         margin-bottom: 20px;
@@ -20,10 +20,10 @@
     .form-section__title {
         font-size: 16px;
         font-weight: 600;
-        color: #111827;
+        color: #3E2723;
         margin-bottom: 16px;
         padding-bottom: 12px;
-        border-bottom: 2px solid #f97316;
+        border-bottom: 2px solid #3D9B72;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -31,7 +31,7 @@
     .form-section__title svg {
         width: 20px;
         height: 20px;
-        fill: #f97316;
+        fill: #3D9B72;
     }
     .form-grid {
         display: grid;
@@ -46,17 +46,17 @@
     .form-group label {
         font-size: 13px;
         font-weight: 500;
-        color: #374151;
+        color: #3E2723;
     }
     .form-group input,
     .form-group select,
     .form-group textarea {
         padding: 10px 12px;
-        border: 1px solid #E5E7EB;
+        border: 1px solid #3E272320;
         border-radius: 6px;
         font-size: 14px;
-        color: #374151;
-        background: #F9FAFB;
+        color: #3E2723;
+        background: #FFFDE7;
         transition: all 0.2s;
         font-family: inherit;
     }
@@ -64,15 +64,15 @@
     .form-group select:focus,
     .form-group textarea:focus {
         outline: none;
-        border-color: #f97316;
+        border-color: #3D9B72;
         background: #fff;
-        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+        box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.1);
     }
     .btn-orange {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
         color: white;
         padding: 10px 20px;
         font-size: 14px;
@@ -80,12 +80,12 @@
         border: none;
         cursor: pointer;
         border-radius: 8px;
-        box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);
+        box-shadow: 0 4px 14px rgba(76, 175, 130, 0.3);
         transition: all 0.3s;
     }
     .btn-orange:hover {
         transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+        box-shadow: 0 6px 20px rgba(76, 175, 130, 0.4);
     }
     .btn-orange svg {
         width: 16px;
@@ -96,8 +96,8 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: #E5E7EB;
-        color: #374151;
+        background: #3E272320;
+        color: #3E2723;
         padding: 10px 20px;
         font-size: 14px;
         font-weight: 500;
@@ -107,13 +107,13 @@
         transition: all 0.2s;
     }
     .btn-secondary:hover {
-        background: #D1D5DB;
+        background: #3E272330;
     }
     .btn-danger {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        background: linear-gradient(135deg, #F06292 0%, #d81b60 100%);
         color: white;
         padding: 8px 14px;
         font-size: 13px;
@@ -125,7 +125,7 @@
     }
     .btn-danger:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        box-shadow: 0 4px 12px rgba(240, 98, 146, 0.3);
     }
     .btn-danger svg {
         width: 14px;
@@ -136,7 +136,7 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         color: white;
         padding: 8px 14px;
         font-size: 13px;
@@ -149,7 +149,7 @@
     }
     .btn-edit:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        box-shadow: 0 4px 12px rgba(76, 175, 130, 0.35);
     }
     .btn-edit svg {
         width: 14px;
@@ -171,22 +171,22 @@
     .data-table td {
         padding: 12px;
         text-align: left;
-        border-bottom: 1px solid #E5E7EB;
+        border-bottom: 1px solid #3E272320;
     }
     .data-table th {
-        background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         font-size: 12px;
         font-weight: 600;
-        color: #9a3412;
+        color: #ffffff;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
     .data-table td {
         font-size: 14px;
-        color: #374151;
+        color: #3E2723;
     }
     .data-table tr:hover td {
-        background: #FAFAFA;
+        background: #FFFDE7;
     }
     
     /* Schedule Type Badge */
@@ -200,16 +200,16 @@
         font-weight: 600;
     }
     .type-badge--kegiatan {
-        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-        color: #b45309;
+        background: #FFF176;
+        color: #5D4037;
     }
     .type-badge--pembelajaran {
-        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-        color: #1d4ed8;
+        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        color: #2E8B60;
     }
     .type-badge--lainnya {
-        background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
-        color: #6b7280;
+        background: linear-gradient(135deg, #3E272320 0%, #3E272330 100%);
+        color: #5D4037;
     }
     
     /* Filter Row */
@@ -246,22 +246,22 @@
     }
     .schedule-type-tab {
         padding: 10px 20px;
-        border: 2px solid #E5E7EB;
+        border: 2px solid #3E272320;
         border-radius: 8px;
         font-size: 14px;
         font-weight: 500;
         cursor: pointer;
         transition: all 0.2s;
         background: white;
-        color: #6B7280;
+        color: #5D4037;
     }
     .schedule-type-tab:hover {
-        border-color: #f97316;
-        color: #f97316;
+        border-color: #3D9B72;
+        color: #3D9B72;
     }
     .schedule-type-tab.active {
-        border-color: #f97316;
-        background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+        border-color: #3D9B72;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         color: #c2410c;
     }
     .schedule-type-tab input {
@@ -314,17 +314,17 @@
     .modal-icon svg {
         width: 28px;
         height: 28px;
-        fill: #ef4444;
+        fill: #d81b60;
     }
     .modal-title {
         font-size: 18px;
         font-weight: 700;
-        color: #111827;
+        color: #3E2723;
         margin-bottom: 8px;
     }
     .modal-desc {
         font-size: 14px;
-        color: #6B7280;
+        color: #5D4037;
         margin-bottom: 24px;
         line-height: 1.5;
     }
@@ -338,8 +338,8 @@
         align-items: center;
         gap: 6px;
         padding: 10px 24px;
-        background: #E5E7EB;
-        color: #374151;
+        background: #3E272320;
+        color: #3E2723;
         font-size: 14px;
         font-weight: 600;
         border: none;
@@ -348,14 +348,14 @@
         transition: all 0.2s;
     }
     .modal-btn-cancel:hover {
-        background: #D1D5DB;
+        background: #3E272330;
     }
     .modal-btn-delete {
         display: inline-flex;
         align-items: center;
         gap: 6px;
         padding: 10px 24px;
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        background: linear-gradient(135deg, #F06292 0%, #d81b60 100%);
         color: white;
         font-size: 14px;
         font-weight: 600;
@@ -363,11 +363,11 @@
         border-radius: 8px;
         cursor: pointer;
         transition: all 0.2s;
-        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        box-shadow: 0 4px 12px rgba(240, 98, 146, 0.3);
     }
     .modal-btn-delete:hover {
         transform: translateY(-1px);
-        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+        box-shadow: 0 6px 16px rgba(240, 98, 146, 0.4);
     }
     @keyframes fadeIn {
         from { opacity: 0; }
@@ -383,7 +383,7 @@
         display: flex;
         gap: 0;
         margin-bottom: 20px;
-        border-bottom: 2px solid #E5E7EB;
+        border-bottom: 2px solid #3E272320;
     }
     .list-tab {
         padding: 12px 24px;
@@ -392,17 +392,17 @@
         cursor: pointer;
         transition: all 0.2s;
         background: transparent;
-        color: #6B7280;
+        color: #5D4037;
         border: none;
         border-bottom: 2px solid transparent;
         margin-bottom: -2px;
     }
     .list-tab:hover {
-        color: #f97316;
+        color: #3D9B72;
     }
     .list-tab.active {
-        color: #f97316;
-        border-bottom-color: #f97316;
+        color: #3D9B72;
+        border-bottom-color: #3D9B72;
     }
     
     /* Tab Content */
@@ -421,14 +421,14 @@
     }
     .schedule-card {
         background: white;
-        border: 1px solid #E5E7EB;
+        border: 1px solid #3E272320;
         border-radius: 12px;
         padding: 16px;
         transition: all 0.2s;
     }
     .schedule-card:hover {
         border-color: #fdba74;
-        box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
+        box-shadow: 0 4px 12px rgba(76, 175, 130, 0.1);
     }
     .schedule-card__header {
         display: flex;
@@ -439,27 +439,27 @@
     .schedule-card__title {
         font-size: 15px;
         font-weight: 600;
-        color: #111827;
+        color: #3E2723;
     }
     .schedule-card__row {
         display: flex;
         align-items: center;
         gap: 8px;
         font-size: 13px;
-        color: #6B7280;
+        color: #5D4037;
         margin-bottom: 8px;
     }
     .schedule-card__row svg {
         width: 16px;
         height: 16px;
-        fill: #9CA3AF;
+        fill: #5D4037;
     }
     .schedule-card__actions {
         display: flex;
         gap: 8px;
         margin-top: 12px;
         padding-top: 12px;
-        border-top: 1px solid #E5E7EB;
+        border-top: 1px solid #3E272320;
     }
     
     @media (max-width: 768px) {
@@ -644,7 +644,7 @@
                         </div>
                     </div>
                 @empty
-                    <p style="color: #6B7280; padding: 40px; text-align: center; grid-column: 1 / -1;">
+                    <p style="color: #5D4037; padding: 40px; text-align: center; grid-column: 1 / -1;">
                         Belum ada jadwal kegiatan.
                     </p>
                 @endforelse
@@ -702,7 +702,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" style="text-align: center; color: #6B7280; padding: 40px;">
+                                <td colspan="6" style="text-align: center; color: #5D4037; padding: 40px;">
                                     Belum ada jadwal pembelajaran.
                                 </td>
                             </tr>

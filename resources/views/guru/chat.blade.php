@@ -10,7 +10,7 @@
         display: flex;
         gap: 0;
         background: #fff;
-        border: 1px solid #E5E7EB;
+        border: 1px solid #3E272320;
         border-radius: 10px;
         overflow: hidden;
         height: calc(100vh - 56px - 48px - 20px); /* viewport minus header, title, margin */
@@ -21,7 +21,7 @@
     .chat-list {
         width: 260px;
         flex-shrink: 0;
-        border-right: 1px solid #E5E7EB;
+        border-right: 1px solid #3E272320;
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -33,7 +33,7 @@
         color: #c2410c;
         text-transform: uppercase;
         letter-spacing: .5px;
-        border-bottom: 1px solid #E5E7EB;
+        border-bottom: 1px solid #3E272320;
         background: #fff7ed;
         flex-shrink: 0;
     }
@@ -45,29 +45,29 @@
         display: flex;
         flex-direction: column;
         padding: 12px 16px;
-        border-bottom: 1px solid #F3F4F6;
+        border-bottom: 1px solid #FFFDE7;
         cursor: pointer;
         transition: background .12s;
         text-decoration: none;
     }
     .chat-contact:hover  { background: #fff7ed; }
-    .chat-contact.active { background: #f97316; }
+    .chat-contact.active { background: #3D9B72; }
     .chat-contact__name {
         font-size: 13px;
         font-weight: 700;
-        color: #111827;
+        color: #3E2723;
         margin-bottom: 2px;
     }
     .chat-contact.active .chat-contact__name { color: #fff; }
     .chat-contact__sub {
         font-size: 11px;
-        color: #6B7280;
+        color: #5D4037;
         margin-bottom: 2px;
     }
     .chat-contact.active .chat-contact__sub { color: rgba(255,255,255,0.7); }
     .chat-contact__preview {
         font-size: 12px;
-        color: #9CA3AF;
+        color: #5D4037;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -83,7 +83,7 @@
     }
     .chat-window__header {
         padding: 13px 20px;
-        border-bottom: 1px solid #E5E7EB;
+        border-bottom: 1px solid #3E272320;
         font-size: 14px;
         font-weight: 700;
         color: #c2410c;
@@ -114,15 +114,15 @@
         border-radius: 12px;
         font-size: 13px;
         line-height: 1.55;
-        color: #111827;
+        color: #3E2723;
         position: relative;
     }
     .bubble--in  {
-        background: #F3F4F6;
+        background: #FFFDE7;
         border-bottom-left-radius: 3px;
     }
     .bubble--out {
-        background: #f97316;
+        background: #3D9B72;
         color: #fff;
         border-bottom-right-radius: 3px;
     }
@@ -141,7 +141,7 @@
         align-items: center;
         gap: 10px;
         padding: 12px 16px;
-        border-top: 1px solid #E5E7EB;
+        border-top: 1px solid #3E272320;
         background: #fff;
         flex-shrink: 0;
     }
@@ -150,9 +150,9 @@
         height: 40px;
         padding: 0 14px;
         font-size: 13px;
-        color: #111827;
-        background: #F9FAFB;
-        border: 1px solid #D1D5DB;
+        color: #3E2723;
+        background: #FFFDE7;
+        border: 1px solid #3E272330;
         border-radius: 8px;
         outline: none;
         font-family: inherit;
@@ -163,11 +163,11 @@
         background: #fff;
         box-shadow: 0 0 0 3px rgba(251,146,60,.15);
     }
-    .chat-input__field::placeholder { color: #9CA3AF; }
+    .chat-input__field::placeholder { color: #5D4037; }
     .chat-input__send {
         height: 40px;
         padding: 0 20px;
-        background: #f97316;
+        background: #3D9B72;
         color: #fff;
         font-size: 13px;
         font-weight: 700;
@@ -178,7 +178,7 @@
         white-space: nowrap;
         transition: background .15s;
     }
-    .chat-input__send:hover { background: #ea580c; }
+    .chat-input__send:hover { background: #2E8B60; }
 </style>
 @endpush
 
@@ -190,7 +190,7 @@
 {{-- CONTENT --}}
 @section('content')
 
-    <h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#111827;text-transform:uppercase;letter-spacing:.5px;">
+    <h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#3E2723;text-transform:uppercase;letter-spacing:.5px;">
         Chat dengan Orang Tua
     </h2>
 

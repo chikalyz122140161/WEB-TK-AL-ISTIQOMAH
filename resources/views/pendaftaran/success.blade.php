@@ -15,7 +15,7 @@
         body {
             font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #d1fae5 0%, #e0f2fe 50%, #fef3e2 100%);
+            background: linear-gradient(135deg, #d1fae5 0%, #E8F5E9 50%, #FFFDE7 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -59,14 +59,14 @@
         }
 
         .confetti:nth-child(1) { left: 10%; animation-delay: 0s; background: #f472b6; }
-        .confetti:nth-child(2) { left: 20%; animation-delay: 0.5s; background: #22c55e; }
-        .confetti:nth-child(3) { left: 30%; animation-delay: 1s; background: #3b82f6; }
+        .confetti:nth-child(2) { left: 20%; animation-delay: 0.5s; background: #3D9B72; }
+        .confetti:nth-child(3) { left: 30%; animation-delay: 1s; background: #4CAF82; }
         .confetti:nth-child(4) { left: 40%; animation-delay: 1.5s; background: #fbbf24; }
-        .confetti:nth-child(5) { left: 50%; animation-delay: 0.3s; background: #f97316; }
+        .confetti:nth-child(5) { left: 50%; animation-delay: 0.3s; background: #3D9B72; }
         .confetti:nth-child(6) { left: 60%; animation-delay: 0.8s; background: #a78bfa; }
         .confetti:nth-child(7) { left: 70%; animation-delay: 1.3s; background: #f472b6; }
-        .confetti:nth-child(8) { left: 80%; animation-delay: 0.6s; background: #22c55e; }
-        .confetti:nth-child(9) { left: 90%; animation-delay: 1.1s; background: #3b82f6; }
+        .confetti:nth-child(8) { left: 80%; animation-delay: 0.6s; background: #3D9B72; }
+        .confetti:nth-child(9) { left: 90%; animation-delay: 1.1s; background: #4CAF82; }
 
         @keyframes fall {
             0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
@@ -89,7 +89,7 @@
         .success-icon {
             width: 100px;
             height: 100px;
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            background: linear-gradient(135deg, #3D9B72 0%, #16a34a 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -113,20 +113,20 @@
         .success-card h1 {
             font-size: 1.75rem;
             font-weight: 800;
-            color: #1e293b;
+            color: #3E2723;
             margin-bottom: 12px;
         }
 
         .success-card > p {
-            color: #64748b;
+            color: #5D4037;
             font-size: 1rem;
             line-height: 1.6;
             margin-bottom: 28px;
         }
 
         .registration-code-box {
-            background: linear-gradient(135deg, #fef3e2 0%, #fef9c3 100%);
-            border: 3px dashed #f97316;
+            background: linear-gradient(135deg, #FFFDE7 0%, #fef9c3 100%);
+            border: 3px dashed #3D9B72;
             border-radius: 16px;
             padding: 24px;
             margin-bottom: 24px;
@@ -135,7 +135,7 @@
         .registration-code-box span {
             display: block;
             font-size: 0.8rem;
-            color: #64748b;
+            color: #5D4037;
             margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -144,12 +144,12 @@
         .registration-code-box strong {
             font-size: 2rem;
             font-weight: 800;
-            color: #f97316;
+            color: #3D9B72;
             letter-spacing: 3px;
         }
 
         .info-box {
-            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            background: linear-gradient(135deg, #E8F5E9 0%, #bae6fd 100%);
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 28px;
@@ -185,7 +185,7 @@
             justify-content: center;
             gap: 8px;
             padding: 16px 28px;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
             color: white;
             border: none;
             border-radius: 12px;
@@ -195,12 +195,12 @@
             text-decoration: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+            box-shadow: 0 4px 14px rgba(76, 175, 130, 0.35);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 8px 20px rgba(76, 175, 130, 0.4);
         }
 
         .btn-primary svg {
@@ -215,7 +215,7 @@
             gap: 8px;
             padding: 14px 28px;
             background: #f1f5f9;
-            color: #475569;
+            color: #5D4037;
             border: none;
             border-radius: 12px;
             font-size: 0.95rem;
@@ -237,7 +237,7 @@
 
         .footer {
             margin-top: 24px;
-            color: #9ca3af;
+            color: #5D4037;
             font-size: 0.75rem;
         }
 

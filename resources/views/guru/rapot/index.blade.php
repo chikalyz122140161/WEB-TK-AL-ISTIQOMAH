@@ -21,15 +21,15 @@
     .page-header__title {
         font-size: 18px;
         font-weight: 700;
-        color: #00473e;
+        color: #3E2723;
         margin: 0;
     }
     .btn-tambah {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
-        color: #00473e;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+        color: #3E2723;
         padding: 10px 20px;
         font-size: 14px;
         font-weight: 600;
@@ -41,7 +41,7 @@
     }
     .btn-tambah:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(250, 174, 43, 0.3);
+        box-shadow: 0 4px 12px rgba(76,175,130, 0.3);
     }
     .btn-tambah svg {
         width: 18px;
@@ -60,7 +60,7 @@
     .filter-bar__title {
         font-size: 14px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
         margin-bottom: 16px;
     }
     .filter-row {
@@ -78,27 +78,27 @@
     .filter-group label {
         font-size: 12px;
         font-weight: 500;
-        color: #475d5b;
+        color: #5D4037;
     }
     .filter-group select {
         padding: 10px 14px;
-        border: 1px solid #00473e30;
+        border: 1px solid #3E272330;
         border-radius: 6px;
         font-size: 14px;
-        color: #00473e;
+        color: #3E2723;
         background: #fff;
         cursor: pointer;
     }
     .filter-group select:focus {
         outline: none;
-        border-color: #faae2b;
-        box-shadow: 0 0 0 3px rgba(250, 174, 43, 0.1);
+        border-color: #4CAF82;
+        box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.1);
     }
     .btn-filter {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
         color: #fff;
         padding: 10px 16px;
         font-size: 13px;
@@ -136,7 +136,7 @@
         border-bottom: 1px solid #f0f0f0;
     }
     .data-table th {
-        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
         color: #fff;
         font-size: 12px;
         font-weight: 600;
@@ -145,10 +145,10 @@
     }
     .data-table td {
         font-size: 14px;
-        color: #475d5b;
+        color: #5D4037;
     }
     .data-table tr:hover td {
-        background: #f8fafc;
+        background: #FFFDE7;
     }
     .data-table tr:last-child td {
         border-bottom: none;
@@ -195,27 +195,27 @@
         fill: currentColor;
     }
     .btn-action.view {
-        background: rgba(59, 130, 246, 0.15);
-        color: #3b82f6;
+        background: rgba(76, 175, 130, 0.15);
+        color: #4CAF82;
     }
     .btn-action.view:hover {
-        background: #3b82f6;
+        background: #4CAF82;
         color: #fff;
     }
     .btn-action.edit {
-        background: rgba(250, 174, 43, 0.15);
+        background: rgba(76, 175, 130, 0.15);
         color: #d4920c;
     }
     .btn-action.edit:hover {
-        background: #faae2b;
-        color: #00473e;
+        background: #4CAF82;
+        color: #3E2723;
     }
     .btn-action.delete {
-        background: rgba(239, 68, 68, 0.15);
-        color: #ef4444;
+        background: rgba(240, 98, 146, 0.15);
+        color: #c0392b;
     }
     .btn-action.delete:hover {
-        background: #ef4444;
+        background: #F06292;
         color: #fff;
     }
 
@@ -236,16 +236,16 @@
     .empty-state {
         text-align: center;
         padding: 60px 40px;
-        color: #475d5b;
+        color: #5D4037;
     }
     .empty-state svg {
         width: 64px;
         height: 64px;
-        fill: #d1d5db;
+        fill: #3E272330;
         margin-bottom: 16px;
     }
     .empty-state h3 {
-        color: #00473e;
+        color: #3E2723;
         margin: 0 0 8px 0;
     }
     .empty-state p {
@@ -364,13 +364,9 @@
                                     <a href="{{ route('guru.rapot.edit', $rapot['id']) }}" class="btn-action edit" title="Edit">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
                                     </a>
-                                    <form action="{{ route('guru.rapot.destroy', $rapot['id']) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus rapot ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn-action delete" title="Hapus">
+                                    <button type="button" class="btn-action delete" title="Hapus" onclick="showDeleteModal('{{ $rapot['id'] }}', '{{ addslashes($rapot['siswa']) }}')">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
-                                        </button>
-                                    </form>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -385,5 +381,41 @@
             </div>
         @endif
     </div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:12px;padding:32px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+        <div style="width:56px;height:56px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#d81b60" style="width:28px;height:28px;"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
+        </div>
+        <h3 style="font-size:18px;font-weight:700;color:#3E2723;margin:0 0 8px;">Hapus Rapot?</h3>
+        <p style="font-size:14px;color:#5D4037;margin:0 0 24px;">Apakah Anda yakin ingin menghapus rapot milik <strong id="deleteRapotName"></strong>? Tindakan ini tidak dapat dibatalkan.</p>
+        <div style="display:flex;gap:12px;justify-content:center;">
+            <button type="button" onclick="closeDeleteModal()" style="padding:10px 24px;border-radius:8px;border:none;background:#FFFDE7;color:#5D4037;font-size:14px;font-weight:600;cursor:pointer;">Batal</button>
+            <form id="deleteRapotForm" method="POST" style="display:inline;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" style="padding:10px 24px;border-radius:8px;border:none;background:#d81b60;color:#fff;font-size:14px;font-weight:600;cursor:pointer;">Ya, Hapus</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+function showDeleteModal(id, name) {
+    document.getElementById('deleteRapotName').textContent = name;
+    document.getElementById('deleteRapotForm').action = "{{ url('guru/rapot') }}/" + id;
+    var modal = document.getElementById('deleteModal');
+    modal.style.display = 'flex';
+}
+function closeDeleteModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+}
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) closeDeleteModal();
+});
+</script>
+@endpush
 
 @endsection

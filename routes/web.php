@@ -19,27 +19,11 @@ Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->nam
 // PENDAFTARAN (Public - tanpa login)
 Route::get('/pendaftaran', [PendaftaranController::class, 'create'])->name('pendaftaran.create');
 Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
-Route::get('/pendaftaran/success/{kode}', [PendaftaranController::class, 'success'])->name('pendaftaran.success');
+Route::get('/pendaftaran/success', [PendaftaranController::class, 'success'])->name('pendaftaran.success');
 Route::get('/pendaftaran/cek-status', [PendaftaranController::class, 'cekStatus'])->name('pendaftaran.cek-status');
 
-// LOGIN autentikasi dengan role
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    // route khusus admin
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
-});
-
-Route::middleware(['auth', 'role:guru'])->group(function () {
-    // route khusus guru
-    Route::get('/guru/dashboard', [GuruController::class, 'dashboard']);
-});
-
-Route::middleware(['auth', 'role:orangtua'])->group(function () {
-    // route khusus orang tua
-    Route::get('/orangtua/dashboard', [OrangTuaController::class, 'dashboard']);
-});
-
-// DASHBOARD (butuh login) 
-Route::middleware('auth')->group(function () {
+// DASHBOARD (butuh login dengan dummy auth) 
+Route::middleware('dummy.auth')->group(function () {
     // ═══════════════════════════════════════════════════════
     // ADMIN ROUTES
     // ═══════════════════════════════════════════════════════
@@ -60,6 +44,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/siswa/{id}/edit', [AdminController::class, 'siswaEdit'])->name('admin.siswa.edit');
     Route::put('/admin/siswa/{id}', [AdminController::class, 'siswaUpdate'])->name('admin.siswa.update');
     Route::delete('/admin/siswa/{id}', [AdminController::class, 'siswaDestroy'])->name('admin.siswa.destroy');
+    
+    // Admin - Kelola Pendaftaran
+    Route::get('/admin/pendaftaran', [AdminController::class, 'pendaftaranIndex'])->name('admin.pendaftaran.index');
+    Route::get('/admin/pendaftaran/{id}', [AdminController::class, 'pendaftaranShow'])->name('admin.pendaftaran.show');
+    Route::post('/admin/pendaftaran/{id}/terima', [AdminController::class, 'pendaftaranTerima'])->name('admin.pendaftaran.terima');
+    Route::post('/admin/pendaftaran/{id}/tolak', [AdminController::class, 'pendaftaranTolak'])->name('admin.pendaftaran.tolak');
+    
+    // Admin - Rekap Data DAPODIK
+    Route::get('/admin/dapodik', [AdminController::class, 'dapodikIndex'])->name('admin.dapodik.index');
     
     // Admin - Backup Database
     Route::get('/admin/backup', [AdminController::class, 'backupIndex'])->name('admin.backup.index');
@@ -94,10 +87,19 @@ Route::middleware('auth')->group(function () {
     Route::post('/guru/input-perkembangan', [GuruController::class, 'storeInputPerkembangan'])->name('guru.store_input_perkembangan');
     Route::get('/guru/grafik', [GuruController::class, 'grafik'])->name('guru.grafik');
     Route::get('/guru/laporan-bk', [GuruController::class, 'laporan'])->name('guru.laporan_bk');
+    Route::get('/guru/laporan-bk/{id}', [GuruController::class, 'laporanBkShow'])->name('guru.laporan_bk.show');
+    Route::get('/guru/laporan-bk/{id}/edit', [GuruController::class, 'laporanBkEdit'])->name('guru.laporan_bk.edit');
+    Route::put('/guru/laporan-bk/{id}', [GuruController::class, 'laporanBkUpdate'])->name('guru.laporan_bk.update');
     Route::get('/guru/chat', [GuruController::class, 'chat'])->name('guru.chat');
     Route::post('/guru/chat', [GuruController::class, 'kirimChat'])->name('guru.kirim_chat');
     Route::get('/guru/jadwal-konseling', [GuruController::class, 'jadwalKonseling'])->name('guru.jadwal_konseling');
     Route::post('/guru/jadwal-konseling', [GuruController::class, 'storeJadwalKonseling'])->name('guru.store_jadwal_konseling');
+    Route::get('/guru/jadwal-konseling/{id}', [GuruController::class, 'jadwalKonselingShow'])->name('guru.jadwal_konseling.show');
+    Route::get('/guru/jadwal-konseling/{id}/edit', [GuruController::class, 'jadwalKonselingEdit'])->name('guru.jadwal_konseling.edit');
+    Route::put('/guru/jadwal-konseling/{id}', [GuruController::class, 'jadwalKonselingUpdate'])->name('guru.jadwal_konseling.update');
+    Route::post('/guru/jadwal-konseling/{id}/setuju', [GuruController::class, 'jadwalKonselingSetuju'])->name('guru.jadwal_konseling.setuju');
+    Route::post('/guru/jadwal-konseling/{id}/tolak', [GuruController::class, 'jadwalKonselingTolak'])->name('guru.jadwal_konseling.tolak');
+    Route::post('/guru/jadwal-konseling/{id}/batalkan', [GuruController::class, 'jadwalKonselingBatalkan'])->name('guru.jadwal_konseling.batalkan');
 
     // Guru - Rapot Semester
     Route::get('/guru/rapot', [GuruController::class, 'rapotIndex'])->name('guru.rapot.index');

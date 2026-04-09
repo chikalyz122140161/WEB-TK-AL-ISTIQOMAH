@@ -14,7 +14,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        color: #00473e;
+        color: #3E2723;
         font-size: 14px;
         font-weight: 500;
         text-decoration: none;
@@ -22,7 +22,7 @@
         transition: all 0.2s;
     }
     .back-link:hover {
-        color: #faae2b;
+        color: #4CAF82;
     }
     .back-link svg {
         width: 16px;
@@ -32,7 +32,7 @@
 
     /* Info Banner */
     .info-banner {
-        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
         border-radius: 12px;
         padding: 16px 20px;
         display: flex;
@@ -43,14 +43,14 @@
     .info-banner__avatar {
         width: 56px;
         height: 56px;
-        background: #faae2b;
+        background: #4CAF82;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 22px;
         font-weight: 700;
-        color: #00473e;
+        color: #3E2723;
         flex-shrink: 0;
     }
     .info-banner__content {
@@ -70,8 +70,8 @@
         gap: 16px;
     }
     .info-banner__status {
-        background: rgba(250,174,43,0.2);
-        color: #faae2b;
+        background: rgba(76,175,130,0.2);
+        color: #4CAF82;
         padding: 4px 12px;
         border-radius: 20px;
         font-size: 12px;
@@ -91,7 +91,7 @@
         margin-bottom: 24px;
     }
     .form-card__header {
-        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
         padding: 16px 24px;
         display: flex;
         align-items: center;
@@ -100,7 +100,7 @@
     .form-card__header svg {
         width: 22px;
         height: 22px;
-        fill: #faae2b;
+        fill: #4CAF82;
     }
     .form-card__title {
         color: #fff;
@@ -139,19 +139,19 @@
     .form-group label {
         font-size: 13px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
     }
     .form-group label .required {
-        color: #ef4444;
+        color: #c0392b;
     }
     .form-group input,
     .form-group select,
     .form-group textarea {
         padding: 12px 14px;
-        border: 1px solid #00473e30;
+        border: 1px solid #3E272330;
         border-radius: 8px;
         font-size: 14px;
-        color: #00473e;
+        color: #3E2723;
         background: #fff;
         transition: all 0.2s;
     }
@@ -159,8 +159,8 @@
     .form-group select:focus,
     .form-group textarea:focus {
         outline: none;
-        border-color: #faae2b;
-        box-shadow: 0 0 0 3px rgba(250, 174, 43, 0.1);
+        border-color: #4CAF82;
+        box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.1);
     }
     .form-group textarea {
         min-height: 100px;
@@ -168,17 +168,26 @@
     }
     .form-group .hint {
         font-size: 11px;
-        color: #6b7280;
+        color: #5D4037;
+    }
+    .form-group input[type="number"] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+    .form-group input[type="number"]::-webkit-outer-spin-button,
+    .form-group input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
     }
     .form-group input:disabled,
     .form-group select:disabled {
-        background: #f3f4f6;
+        background: #FFFDE7;
         cursor: not-allowed;
     }
 
     /* Nilai Section */
     .nilai-section {
-        background: #f8fafc;
+        background: #FFFDE7;
         border-radius: 10px;
         padding: 20px;
         margin-bottom: 16px;
@@ -192,7 +201,7 @@
     .nilai-section__title {
         font-size: 14px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
     }
     .nilai-select {
         min-width: 120px;
@@ -221,7 +230,7 @@
         display: block;
         font-size: 12px;
         font-weight: 600;
-        color: #475d5b;
+        color: #5D4037;
         margin-bottom: 8px;
         text-transform: uppercase;
     }
@@ -243,7 +252,7 @@
     .legend-title {
         font-size: 12px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
         margin-bottom: 8px;
     }
     .legend-items {
@@ -251,7 +260,7 @@
         flex-wrap: wrap;
         gap: 16px;
         font-size: 11px;
-        color: #475d5b;
+        color: #5D4037;
     }
     .legend-item {
         display: flex;
@@ -263,10 +272,10 @@
         height: 10px;
         border-radius: 50%;
     }
-    .legend-dot.bb { background: #ef4444; }
+    .legend-dot.bb { background: #F06292; }
     .legend-dot.mb { background: #f59e0b; }
     .legend-dot.bsh { background: #10b981; }
-    .legend-dot.bsb { background: #3b82f6; }
+    .legend-dot.bsb { background: #4CAF82; }
 
     /* Action Buttons */
     .form-actions {
@@ -281,8 +290,8 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: #f3f4f6;
-        color: #475d5b;
+        background: #FFFDE7;
+        color: #5D4037;
         padding: 12px 24px;
         font-size: 14px;
         font-weight: 600;
@@ -293,14 +302,14 @@
         transition: all 0.3s;
     }
     .btn-cancel:hover {
-        background: #e5e7eb;
+        background: #3E272320;
     }
     .btn-submit {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
-        color: #00473e;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+        color: #3E2723;
         padding: 12px 24px;
         font-size: 14px;
         font-weight: 600;
@@ -311,7 +320,7 @@
     }
     .btn-submit:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(250, 174, 43, 0.3);
+        box-shadow: 0 4px 12px rgba(76,175,130, 0.3);
     }
     .btn-submit svg {
         width: 18px;
@@ -359,13 +368,6 @@
                         <label>Siswa</label>
                         <input type="text" value="{{ $rapot['siswa']['nama'] }}" disabled>
                         <input type="hidden" name="siswa_id" value="{{ $rapot['siswa']['id'] }}">
-                    </div>
-                    <div class="form-group">
-                        <label>Kelas <span class="required">*</span></label>
-                        <select name="kelas" required>
-                            <option value="TK A" {{ $rapot['kelas'] == 'TK A' ? 'selected' : '' }}>TK A</option>
-                            <option value="TK B" {{ $rapot['kelas'] == 'TK B' ? 'selected' : '' }}>TK B</option>
-                        </select>
                     </div>
                     <div class="form-group">
                         <label>Tahun Ajaran <span class="required">*</span></label>
@@ -508,34 +510,6 @@
                     <div class="form-group">
                         <label>Deskripsi</label>
                         <textarea name="seni_deskripsi" placeholder="Tuliskan deskripsi perkembangan seni anak...">{{ $rapot['nilai']['seni_deskripsi'] }}</textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Kehadiran --}}
-        <div class="form-card">
-            <div class="form-card__header">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" /></svg>
-                <h3 class="form-card__title">Rekap Kehadiran</h3>
-            </div>
-            <div class="form-card__body">
-                <div class="kehadiran-grid">
-                    <div class="kehadiran-item">
-                        <label>Hadir</label>
-                        <input type="number" name="hadir" value="{{ $rapot['kehadiran']['hadir'] }}" min="0" required>
-                    </div>
-                    <div class="kehadiran-item">
-                        <label>Izin</label>
-                        <input type="number" name="izin" value="{{ $rapot['kehadiran']['izin'] }}" min="0" required>
-                    </div>
-                    <div class="kehadiran-item">
-                        <label>Sakit</label>
-                        <input type="number" name="sakit" value="{{ $rapot['kehadiran']['sakit'] }}" min="0" required>
-                    </div>
-                    <div class="kehadiran-item">
-                        <label>Alpa</label>
-                        <input type="number" name="alpa" value="{{ $rapot['kehadiran']['alpa'] }}" min="0" required>
                     </div>
                 </div>
             </div>
