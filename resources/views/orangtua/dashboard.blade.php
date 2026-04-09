@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@php $userRole = 'Orang Tua'; @endphp
 
 @section('title', 'Dashboard Orang Tua - SISTEM BK TK AL-ISTIQOMAH')
 @section('page_title', 'Dashboard Orang Tua')
@@ -19,12 +20,12 @@
         gap: 12px;
         margin-bottom: 16px;
         padding-bottom: 12px;
-        border-bottom: 2px solid #faae2b;
+        border-bottom: 2px solid #4CAF82;
     }
     .section-header__icon {
         width: 40px;
         height: 40px;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         border-radius: 10px;
         display: flex;
         align-items: center;
@@ -33,17 +34,17 @@
     .section-header__icon svg {
         width: 22px;
         height: 22px;
-        fill: #00473e;
+        fill: #ffffff;
     }
     .section-header__text h2 {
         font-size: 18px;
         font-weight: 700;
-        color: #00473e;
+        color: #3E2723;
         margin: 0;
     }
     .section-header__text p {
         font-size: 13px;
-        color: #475d5b;
+        color: #5D4037;
         margin: 2px 0 0;
     }
     .section-wrapper {
@@ -52,7 +53,7 @@
 
     /* Info Card for Child Profile */
     .child-profile-card {
-        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
         border-radius: 12px;
         padding: 24px;
         margin-bottom: 24px;
@@ -66,14 +67,14 @@
     .child-profile-card__avatar {
         width: 72px;
         height: 72px;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
+        background: rgba(255,255,255,0.25);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 28px;
         font-weight: 700;
-        color: #00473e;
+        color: #ffffff;
     }
     .child-profile-card__info h3 {
         font-size: 20px;
@@ -98,7 +99,7 @@
     .child-profile-card__stat-value {
         font-size: 24px;
         font-weight: 700;
-        color: #faae2b;
+        color: #4CAF82;
     }
     .child-profile-card__stat-label {
         font-size: 12px;
@@ -121,7 +122,7 @@
     }
     .quick-action-card {
         background: #fff;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 8px;
         padding: 20px;
         text-align: center;
@@ -131,12 +132,12 @@
     .quick-action-card:hover {
         transform: translateY(-2px);
         box-shadow: 0 8px 24px rgba(0,71,62,0.1);
-        border-color: #faae2b;
+        border-color: #4CAF82;
     }
     .quick-action-card__icon {
         width: 48px;
         height: 48px;
-        background: linear-gradient(135deg, #faae2b20 0%, #f5a62320 100%);
+        background: linear-gradient(135deg, #4CAF8220 0%, #3D9B7220 100%);
         border-radius: 12px;
         display: flex;
         align-items: center;
@@ -146,29 +147,29 @@
     .quick-action-card__icon svg {
         width: 24px;
         height: 24px;
-        fill: #faae2b;
+        fill: #4CAF82;
     }
     .quick-action-card__title {
         font-size: 14px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
         margin-bottom: 4px;
     }
     .quick-action-card__desc {
         font-size: 12px;
-        color: #475d5b;
+        color: #5D4037;
     }
 
     /* Recent Activity */
     .activity-list {
         background: #fff;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 8px;
         overflow: hidden;
     }
     .activity-item {
         padding: 16px 20px;
-        border-bottom: 1px solid #00473e10;
+        border-bottom: 1px solid #3E272310;
         display: flex;
         align-items: flex-start;
         gap: 12px;
@@ -186,10 +187,10 @@
         flex-shrink: 0;
     }
     .activity-item__icon--report {
-        background: #EFF6FF;
+        background: #ecfdf5;
     }
     .activity-item__icon--report svg {
-        fill: #1D4ED8;
+        fill: #2E8B60;
     }
     .activity-item__icon--attendance {
         background: #ECFDF5;
@@ -213,16 +214,16 @@
     .activity-item__title {
         font-size: 14px;
         font-weight: 500;
-        color: #00473e;
+        color: #3E2723;
         margin-bottom: 2px;
     }
     .activity-item__desc {
         font-size: 13px;
-        color: #475d5b;
+        color: #5D4037;
     }
     .activity-item__time {
         font-size: 12px;
-        color: #475d5b;
+        color: #5D4037;
         white-space: nowrap;
     }
 </style>
@@ -249,7 +250,7 @@
                 <div class="child-profile-card__stat-label">Report Tersedia</div>
             </div>
             <div class="child-profile-card__stat">
-                <div class="child-profile-card__stat-value">{{ $avgScore ?? '4.2' }}</div>
+                <div class="child-profile-card__stat-value">{{ $avgScore ?? '3.8' }}</div>
                 <div class="child-profile-card__stat-label">Rata-rata Nilai</div>
             </div>
             <div class="child-profile-card__stat">

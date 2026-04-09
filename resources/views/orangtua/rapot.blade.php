@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@php $userRole = 'Orang Tua'; @endphp
 
 @section('title', 'Rapot Semester - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Rapot Semester')
@@ -11,7 +12,7 @@
 <style>
     /* Info Banner */
     .info-banner {
-        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
         border-radius: 12px;
         padding: 20px 24px;
         margin-bottom: 24px;
@@ -22,7 +23,7 @@
     .info-banner__icon {
         width: 56px;
         height: 56px;
-        background: rgba(250, 174, 43, 0.2);
+        background: rgba(76,175,130, 0.2);
         border-radius: 12px;
         display: flex;
         align-items: center;
@@ -32,7 +33,7 @@
     .info-banner__icon svg {
         width: 28px;
         height: 28px;
-        fill: #faae2b;
+        fill: #4CAF82;
     }
     .info-banner__content h3 {
         color: #fff;
@@ -71,7 +72,7 @@
         box-shadow: 0 8px 25px rgba(0,0,0,0.1);
     }
     .rapot-card__header {
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         padding: 20px;
         display: flex;
         align-items: center;
@@ -80,14 +81,14 @@
     .rapot-card__semester {
         font-size: 14px;
         font-weight: 700;
-        color: #00473e;
+        color: #3E2723;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
     .rapot-card__year {
         font-size: 12px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
         background: rgba(0,71,62,0.1);
         padding: 4px 10px;
         border-radius: 20px;
@@ -106,21 +107,21 @@
         align-items: center;
         gap: 10px;
         font-size: 14px;
-        color: #475d5b;
+        color: #5D4037;
     }
     .rapot-info__item svg {
         width: 18px;
         height: 18px;
-        fill: #faae2b;
+        fill: #4CAF82;
         flex-shrink: 0;
     }
     .rapot-info__label {
-        color: #6b7280;
+        color: #5D4037;
         min-width: 100px;
     }
     .rapot-info__value {
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
     }
     .rapot-card__actions {
         display: flex;
@@ -134,7 +135,7 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
         color: #fff;
         padding: 12px 16px;
         font-size: 13px;
@@ -159,8 +160,8 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
-        color: #00473e;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+        color: #3E2723;
         padding: 12px 16px;
         font-size: 13px;
         font-weight: 600;
@@ -172,7 +173,7 @@
     }
     .btn-download:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(250, 174, 43, 0.3);
+        box-shadow: 0 4px 12px rgba(76,175,130, 0.3);
     }
     .btn-download svg {
         width: 16px;
@@ -186,16 +187,16 @@
         border-radius: 12px;
         text-align: center;
         padding: 60px 40px;
-        color: #475d5b;
+        color: #5D4037;
     }
     .empty-state svg {
         width: 80px;
         height: 80px;
-        fill: #d1d5db;
+        fill: #3E272330;
         margin-bottom: 20px;
     }
     .empty-state h3 {
-        color: #00473e;
+        color: #3E2723;
         font-size: 18px;
         margin: 0 0 8px 0;
     }

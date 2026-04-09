@@ -15,7 +15,7 @@
         body {
             font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #e0f2fe 0%, #fce7f3 50%, #fef3e2 100%);
+            background: linear-gradient(135deg, #E8F5E9 0%, #F9FBE7 50%, #FFFDE7 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -69,13 +69,13 @@
         .header-icon {
             width: 72px;
             height: 72px;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
             border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 8px 20px rgba(76, 175, 130, 0.3);
         }
 
         .header-icon svg {
@@ -87,12 +87,12 @@
         .card-header h1 {
             font-size: 1.5rem;
             font-weight: 800;
-            color: #1e293b;
+            color: #3E2723;
             margin-bottom: 8px;
         }
 
         .card-header p {
-            color: #64748b;
+            color: #5D4037;
             font-size: 0.95rem;
         }
 
@@ -105,7 +105,7 @@
             display: block;
             font-size: 0.875rem;
             font-weight: 600;
-            color: #374151;
+            color: #3E2723;
             margin-bottom: 8px;
         }
 
@@ -120,19 +120,19 @@
             transform: translateY(-50%);
             width: 20px;
             height: 20px;
-            color: #9ca3af;
+            color: #5D4037;
             transition: color 0.2s;
         }
 
         .form-group input {
             width: 100%;
             padding: 16px 16px 16px 46px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid #3E272320;
             border-radius: 12px;
             font-size: 1rem;
             font-family: inherit;
-            color: #1e293b;
-            background: #f9fafb;
+            color: #3E2723;
+            background: #FFFDE7;
             transition: all 0.2s ease;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -141,17 +141,17 @@
 
         .form-group input:focus {
             outline: none;
-            border-color: #3b82f6;
+            border-color: #4CAF82;
             background: #ffffff;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 0 4px rgba(76, 175, 130, 0.1);
         }
 
         .input-wrapper:focus-within svg {
-            color: #3b82f6;
+            color: #4CAF82;
         }
 
         .form-group input::placeholder {
-            color: #9ca3af;
+            color: #5D4037;
             text-transform: none;
             letter-spacing: normal;
             font-weight: 400;
@@ -160,7 +160,7 @@
         .btn-submit {
             width: 100%;
             padding: 16px 24px;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
             color: white;
             border: none;
             border-radius: 12px;
@@ -169,7 +169,7 @@
             font-family: inherit;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+            box-shadow: 0 4px 14px rgba(76, 175, 130, 0.35);
             margin-bottom: 12px;
             display: flex;
             align-items: center;
@@ -179,7 +179,7 @@
 
         .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 8px 20px rgba(76, 175, 130, 0.4);
         }
 
         .btn-submit svg {
@@ -195,7 +195,7 @@
             width: 100%;
             padding: 14px 24px;
             background: #f1f5f9;
-            color: #475569;
+            color: #5D4037;
             border: none;
             border-radius: 12px;
             font-size: 0.95rem;
@@ -219,7 +219,7 @@
         .error-message {
             background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
             border: 1px solid #fecaca;
-            color: #dc2626;
+            color: #c0392b;
             padding: 14px 16px;
             border-radius: 12px;
             font-size: 0.9rem;
@@ -252,7 +252,7 @@
         .result-header h2 {
             font-size: 1.1rem;
             font-weight: 700;
-            color: #1e293b;
+            color: #3E2723;
         }
 
         .status-badge {
@@ -265,13 +265,13 @@
         }
 
         .status-pending {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            background: #FFF176;
             color: #92400e;
         }
 
         .status-review {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            color: #1e40af;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #2E8B60;
         }
 
         .status-approved {
@@ -303,18 +303,18 @@
         }
 
         .info-table td:first-child {
-            color: #64748b;
+            color: #5D4037;
             width: 40%;
             font-weight: 500;
         }
 
         .info-table td:last-child {
-            color: #1e293b;
+            color: #3E2723;
             font-weight: 600;
         }
 
         .admin-notes {
-            background: linear-gradient(135deg, #fef3e2 0%, #fef9c3 100%);
+            background: linear-gradient(135deg, #FFFDE7 0%, #fef9c3 100%);
             border-radius: 12px;
             padding: 16px;
             margin-top: 20px;
@@ -338,7 +338,7 @@
         .footer {
             text-align: center;
             padding: 20px 0 0;
-            color: #9ca3af;
+            color: #5D4037;
             font-size: 0.75rem;
             margin-top: 24px;
         }

@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@php $userRole = 'Orang Tua'; @endphp
 
 @section('title', 'Detail Laporan - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Detail Laporan Perkembangan')
@@ -15,22 +16,22 @@
         gap: 6px;
         font-size: 14px;
         font-weight: 500;
-        color: #475d5b;
+        color: #5D4037;
         margin-bottom: 20px;
         transition: color 0.2s;
     }
-    .back-link:hover { color: #00473e; }
+    .back-link:hover { color: #3E2723; }
     .back-link svg { width: 16px; height: 16px; fill: currentColor; }
 
     .detail-card {
         background: #fff;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 8px;
         overflow: hidden;
         max-width: 800px;
     }
     .detail-card__header {
-        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
         color: #fff;
         padding: 24px;
     }
@@ -59,14 +60,14 @@
         .aspect-grid { grid-template-columns: 1fr; }
     }
     .aspect-item {
-        background: #f2f7f5;
+        background: #FFFDE7;
         border-radius: 8px;
         padding: 20px;
     }
     .aspect-item__label {
         font-size: 12px;
         font-weight: 600;
-        color: #475d5b;
+        color: #5D4037;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         margin-bottom: 8px;
@@ -74,38 +75,38 @@
     .aspect-item__score {
         font-size: 32px;
         font-weight: 700;
-        color: #00473e;
+        color: #3E2723;
         line-height: 1;
     }
     .aspect-item__bar {
         margin-top: 12px;
         height: 8px;
-        background: #00473e20;
+        background: #3E272320;
         border-radius: 4px;
         overflow: hidden;
     }
     .aspect-item__bar-fill {
         height: 100%;
         border-radius: 4px;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
     }
 
     .note-section {
-        background: #f2f7f5;
+        background: #FFFDE7;
         border-radius: 8px;
         padding: 20px;
     }
     .note-section__label {
         font-size: 12px;
         font-weight: 600;
-        color: #475d5b;
+        color: #5D4037;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         margin-bottom: 8px;
     }
     .note-section__text {
         font-size: 14px;
-        color: #00473e;
+        color: #3E2723;
         line-height: 1.7;
     }
 </style>

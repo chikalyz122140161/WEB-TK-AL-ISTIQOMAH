@@ -11,7 +11,7 @@
 <style>
     .form-section {
         background: #fff;
-        border: 1px solid #E5E7EB;
+        border: 1px solid #3E272320;
         border-radius: 8px;
         padding: 20px;
         margin-bottom: 20px;
@@ -19,10 +19,10 @@
     .form-section__title {
         font-size: 16px;
         font-weight: 600;
-        color: #111827;
+        color: #3E2723;
         margin-bottom: 16px;
         padding-bottom: 12px;
-        border-bottom: 2px solid #f97316;
+        border-bottom: 2px solid #3D9B72;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -30,7 +30,7 @@
     .form-section__title svg {
         width: 20px;
         height: 20px;
-        fill: #f97316;
+        fill: #3D9B72;
     }
     .form-grid {
         display: grid;
@@ -45,17 +45,17 @@
     .form-group label {
         font-size: 13px;
         font-weight: 500;
-        color: #374151;
+        color: #3E2723;
     }
     .form-group input,
     .form-group select,
     .form-group textarea {
         padding: 10px 12px;
-        border: 1px solid #E5E7EB;
+        border: 1px solid #3E272320;
         border-radius: 6px;
         font-size: 14px;
-        color: #374151;
-        background: #F9FAFB;
+        color: #3E2723;
+        background: #FFFDE7;
         transition: all 0.2s;
         font-family: inherit;
     }
@@ -63,15 +63,15 @@
     .form-group select:focus,
     .form-group textarea:focus {
         outline: none;
-        border-color: #f97316;
+        border-color: #3D9B72;
         background: #fff;
-        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+        box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.1);
     }
     .btn-orange {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
         color: white;
         padding: 10px 20px;
         font-size: 14px;
@@ -79,12 +79,12 @@
         border: none;
         cursor: pointer;
         border-radius: 8px;
-        box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);
+        box-shadow: 0 4px 14px rgba(76, 175, 130, 0.3);
         transition: all 0.3s;
     }
     .btn-orange:hover {
         transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+        box-shadow: 0 6px 20px rgba(76, 175, 130, 0.4);
     }
     .btn-orange svg {
         width: 16px;
@@ -95,8 +95,8 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: #E5E7EB;
-        color: #374151;
+        background: #3E272320;
+        color: #3E2723;
         padding: 10px 20px;
         font-size: 14px;
         font-weight: 500;
@@ -107,7 +107,7 @@
         transition: all 0.2s;
     }
     .btn-secondary:hover {
-        background: #D1D5DB;
+        background: #3E272330;
     }
     .btn-secondary svg {
         width: 16px;
@@ -126,22 +126,22 @@
     }
     .schedule-type-tab {
         padding: 10px 20px;
-        border: 2px solid #E5E7EB;
+        border: 2px solid #3E272320;
         border-radius: 8px;
         font-size: 14px;
         font-weight: 500;
         cursor: pointer;
         transition: all 0.2s;
         background: white;
-        color: #6B7280;
+        color: #5D4037;
     }
     .schedule-type-tab:hover {
-        border-color: #f97316;
-        color: #f97316;
+        border-color: #3D9B72;
+        color: #3D9B72;
     }
     .schedule-type-tab.active {
-        border-color: #f97316;
-        background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+        border-color: #3D9B72;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         color: #c2410c;
     }
     .schedule-type-tab input {
@@ -151,14 +151,14 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        color: #6B7280;
+        color: #5D4037;
         font-size: 14px;
         text-decoration: none;
         margin-bottom: 16px;
         transition: color 0.2s;
     }
     .back-link:hover {
-        color: #f97316;
+        color: #3D9B72;
     }
     .back-link svg {
         width: 16px;

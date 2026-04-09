@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@php $userRole = 'Orang Tua'; @endphp
 
 @section('title', 'Lihat Presensi Anak - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Lihat Presensi Anak')
@@ -24,29 +25,29 @@
     .filter-group label {
         font-size: 12px;
         font-weight: 500;
-        color: #475d5b;
+        color: #5D4037;
     }
     .filter-group select {
         padding: 10px 14px;
-        border: 1px solid #00473e30;
+        border: 1px solid #3E272330;
         border-radius: 6px;
         font-size: 14px;
-        color: #00473e;
+        color: #3E2723;
         background: #fff;
         min-width: 160px;
         cursor: pointer;
     }
     .filter-group select:focus {
         outline: none;
-        border-color: #faae2b;
-        box-shadow: 0 0 0 3px rgba(250, 174, 43, 0.1);
+        border-color: #4CAF82;
+        box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.1);
     }
     .btn-tampilkan {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
-        color: #00473e;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+        color: #3E2723;
         padding: 10px 20px;
         font-size: 14px;
         font-weight: 600;
@@ -57,7 +58,7 @@
     }
     .btn-tampilkan:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(250, 174, 43, 0.3);
+        box-shadow: 0 4px 12px rgba(76,175,130, 0.3);
     }
 
     /* Stat Cards */
@@ -75,7 +76,7 @@
     }
     .presensi-stat {
         background: #fff;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 8px;
         padding: 20px;
         text-align: center;
@@ -83,33 +84,33 @@
     .presensi-stat__value {
         font-size: 32px;
         font-weight: 700;
-        color: #00473e;
+        color: #3E2723;
         line-height: 1;
     }
     .presensi-stat__value--green { color: #047857; }
-    .presensi-stat__value--amber { color: #b45309; }
-    .presensi-stat__value--blue { color: #1d4ed8; }
-    .presensi-stat__value--red { color: #dc2626; }
-    .presensi-stat__value--teal { color: #00473e; }
+    .presensi-stat__value--amber { color: #5D4037; }
+    .presensi-stat__value--blue { color: #2E8B60; }
+    .presensi-stat__value--red { color: #c0392b; }
+    .presensi-stat__value--teal { color: #3E2723; }
     .presensi-stat__label {
         font-size: 13px;
-        color: #475d5b;
+        color: #5D4037;
         margin-top: 6px;
     }
 
     /* Detail Section */
     .detail-section {
         background: #fff;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 8px;
         overflow: hidden;
     }
     .detail-section__header {
         padding: 16px 20px;
-        border-bottom: 1px solid #00473e10;
+        border-bottom: 1px solid #3E272310;
         font-size: 14px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
     }
     .data-table {
         width: 100%;
@@ -119,22 +120,22 @@
     .data-table td {
         padding: 12px 16px;
         text-align: left;
-        border-bottom: 1px solid #00473e10;
+        border-bottom: 1px solid #3E272310;
     }
     .data-table th {
-        background: linear-gradient(135deg, #faae2b20 0%, #faae2b30 100%);
+        background: linear-gradient(135deg, #4CAF8220 0%, #4CAF8230 100%);
         font-size: 12px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
     .data-table td {
         font-size: 14px;
-        color: #475d5b;
+        color: #5D4037;
     }
     .data-table tr:hover td {
-        background: #f2f7f5;
+        background: #FFFDE7;
     }
     .status-badge {
         display: inline-flex;
@@ -149,21 +150,21 @@
         color: #047857;
     }
     .status-badge--izin {
-        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-        color: #b45309;
+        background: #FFF176;
+        color: #5D4037;
     }
     .status-badge--sakit {
-        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-        color: #1d4ed8;
+        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        color: #2E8B60;
     }
     .status-badge--alpa {
         background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-        color: #dc2626;
+        color: #c0392b;
     }
     .empty-state {
         text-align: center;
         padding: 40px;
-        color: #475d5b;
+        color: #5D4037;
         font-size: 14px;
     }
 </style>

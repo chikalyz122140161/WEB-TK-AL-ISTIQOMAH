@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Rapot Semester - {{ $student->name ?? 'Siswa' }}</title>
+    <title>Rapot Semester - {{ $rapot['siswa']['nama'] }}</title>
     <style>
         * {
             margin: 0;
@@ -21,18 +21,18 @@
         /* Header */
         .header {
             text-align: center;
-            border-bottom: 3px double #00473e;
+            border-bottom: 3px double #3E2723;
             padding-bottom: 15px;
             margin-bottom: 20px;
         }
         .header h1 {
             font-size: 16px;
-            color: #00473e;
+            color: #3E2723;
             margin-bottom: 5px;
         }
         .header h2 {
             font-size: 20px;
-            color: #00473e;
+            color: #3E2723;
             margin-bottom: 5px;
         }
         .header p {
@@ -58,7 +58,7 @@
         .info-table td:first-child {
             width: 120px;
             font-weight: bold;
-            color: #00473e;
+            color: #3E2723;
         }
         .info-table td:nth-child(2) {
             width: 10px;
@@ -69,7 +69,7 @@
             margin-bottom: 20px;
         }
         .section-title {
-            background: #00473e;
+            background: #3E2723;
             color: #fff;
             padding: 8px 12px;
             font-size: 12px;
@@ -90,9 +90,9 @@
             text-align: left;
         }
         .nilai-table th {
-            background: #f5f5f5;
+            background: #FFFDE7;
             font-weight: bold;
-            color: #00473e;
+            color: #3E2723;
             font-size: 10px;
         }
         .nilai-table td {
@@ -124,9 +124,9 @@
             text-align: center;
         }
         .kehadiran-table th {
-            background: #f5f5f5;
+            background: #FFFDE7;
             font-weight: bold;
-            color: #00473e;
+            color: #3E2723;
         }
         .kehadiran-table td {
             font-size: 14px;
@@ -144,7 +144,7 @@
         .legend-title {
             font-weight: bold;
             font-size: 10px;
-            color: #00473e;
+            color: #3E2723;
             margin-bottom: 8px;
         }
         .legend-items {
@@ -165,7 +165,7 @@
         }
         .catatan-label {
             font-weight: bold;
-            color: #00473e;
+            color: #3E2723;
             font-size: 10px;
             margin-bottom: 5px;
         }
@@ -213,7 +213,7 @@
     <div class="header">
         <h1>TK AL-ISTIQOMAH</h1>
         <h2>LAPORAN PERKEMBANGAN ANAK DIDIK</h2>
-        <p>Semester {{ $rapot->semester }} - Tahun Ajaran {{ $rapot->tahun_ajaran }}</p>
+        <p>Semester {{ $rapot['semester'] }} - Tahun Ajaran {{ $rapot['tahun_ajaran'] }}</p>
     </div>
     
     {{-- Info Siswa --}}
@@ -222,22 +222,22 @@
             <tr>
                 <td>Nama Siswa</td>
                 <td>:</td>
-                <td>{{ $student->name ?? '-' }}</td>
+                <td>{{ $rapot['siswa']['nama'] }}</td>
             </tr>
             <tr>
                 <td>Kelas</td>
                 <td>:</td>
-                <td>{{ $rapot->kelas }}</td>
+                <td>{{ $rapot['kelas'] }}</td>
             </tr>
             <tr>
                 <td>Semester</td>
                 <td>:</td>
-                <td>{{ $rapot->semester }}</td>
+                <td>{{ $rapot['semester'] }}</td>
             </tr>
             <tr>
                 <td>Tahun Ajaran</td>
                 <td>:</td>
-                <td>{{ $rapot->tahun_ajaran }}</td>
+                <td>{{ $rapot['tahun_ajaran'] }}</td>
             </tr>
         </table>
     </div>
@@ -256,33 +256,33 @@
             <tbody>
                 <tr>
                     <td class="aspek">Nilai Agama & Moral</td>
-                    <td class="capaian capaian-{{ strtolower($rapot->agama_moral) }}">{{ $rapot->agama_moral }}</td>
-                    <td>{{ $rapot->agama_moral_deskripsi ?: '-' }}</td>
+                    <td class="capaian capaian-{{ strtolower($rapot['nilai']['agama_moral']) }}">{{ $rapot['nilai']['agama_moral'] }}</td>
+                    <td>{{ $rapot['nilai']['agama_moral_deskripsi'] ?: '-' }}</td>
                 </tr>
                 <tr>
                     <td class="aspek">Fisik Motorik</td>
-                    <td class="capaian capaian-{{ strtolower($rapot->fisik_motorik) }}">{{ $rapot->fisik_motorik }}</td>
-                    <td>{{ $rapot->fisik_motorik_deskripsi ?: '-' }}</td>
+                    <td class="capaian capaian-{{ strtolower($rapot['nilai']['fisik_motorik']) }}">{{ $rapot['nilai']['fisik_motorik'] }}</td>
+                    <td>{{ $rapot['nilai']['fisik_motorik_deskripsi'] ?: '-' }}</td>
                 </tr>
                 <tr>
                     <td class="aspek">Kognitif</td>
-                    <td class="capaian capaian-{{ strtolower($rapot->kognitif) }}">{{ $rapot->kognitif }}</td>
-                    <td>{{ $rapot->kognitif_deskripsi ?: '-' }}</td>
+                    <td class="capaian capaian-{{ strtolower($rapot['nilai']['kognitif']) }}">{{ $rapot['nilai']['kognitif'] }}</td>
+                    <td>{{ $rapot['nilai']['kognitif_deskripsi'] ?: '-' }}</td>
                 </tr>
                 <tr>
                     <td class="aspek">Bahasa</td>
-                    <td class="capaian capaian-{{ strtolower($rapot->bahasa) }}">{{ $rapot->bahasa }}</td>
-                    <td>{{ $rapot->bahasa_deskripsi ?: '-' }}</td>
+                    <td class="capaian capaian-{{ strtolower($rapot['nilai']['bahasa']) }}">{{ $rapot['nilai']['bahasa'] }}</td>
+                    <td>{{ $rapot['nilai']['bahasa_deskripsi'] ?: '-' }}</td>
                 </tr>
                 <tr>
                     <td class="aspek">Sosial Emosional</td>
-                    <td class="capaian capaian-{{ strtolower($rapot->sosial_emosional) }}">{{ $rapot->sosial_emosional }}</td>
-                    <td>{{ $rapot->sosial_emosional_deskripsi ?: '-' }}</td>
+                    <td class="capaian capaian-{{ strtolower($rapot['nilai']['sosial_emosional']) }}">{{ $rapot['nilai']['sosial_emosional'] }}</td>
+                    <td>{{ $rapot['nilai']['sosial_emosional_deskripsi'] ?: '-' }}</td>
                 </tr>
                 <tr>
                     <td class="aspek">Seni</td>
-                    <td class="capaian capaian-{{ strtolower($rapot->seni) }}">{{ $rapot->seni }}</td>
-                    <td>{{ $rapot->seni_deskripsi ?: '-' }}</td>
+                    <td class="capaian capaian-{{ strtolower($rapot['nilai']['seni']) }}">{{ $rapot['nilai']['seni'] }}</td>
+                    <td>{{ $rapot['nilai']['seni_deskripsi'] ?: '-' }}</td>
                 </tr>
             </tbody>
         </table>
@@ -315,11 +315,11 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>{{ $rapot->hadir }} hari</td>
-                    <td>{{ $rapot->izin }} hari</td>
-                    <td>{{ $rapot->sakit }} hari</td>
-                    <td>{{ $rapot->alpa }} hari</td>
-                    <td>{{ $rapot->hadir + $rapot->izin + $rapot->sakit + $rapot->alpa }} hari</td>
+                    <td>{{ $rapot['kehadiran']['hadir'] }} hari</td>
+                    <td>{{ $rapot['kehadiran']['izin'] }} hari</td>
+                    <td>{{ $rapot['kehadiran']['sakit'] }} hari</td>
+                    <td>{{ $rapot['kehadiran']['alpa'] }} hari</td>
+                    <td>{{ $rapot['kehadiran']['hadir'] + $rapot['kehadiran']['izin'] + $rapot['kehadiran']['sakit'] + $rapot['kehadiran']['alpa'] }} hari</td>
                 </tr>
             </tbody>
         </table>
@@ -330,11 +330,11 @@
         <div class="section-title">CATATAN & REKOMENDASI</div>
         <div class="catatan-box">
             <div class="catatan-label">Catatan Guru:</div>
-            <div class="catatan-text">{{ $rapot->catatan_guru ?: 'Tidak ada catatan.' }}</div>
+            <div class="catatan-text">{{ $rapot['catatan_guru'] ?: 'Tidak ada catatan.' }}</div>
         </div>
         <div class="catatan-box">
             <div class="catatan-label">Rekomendasi:</div>
-            <div class="catatan-text">{{ $rapot->rekomendasi ?: 'Tidak ada rekomendasi.' }}</div>
+            <div class="catatan-text">{{ $rapot['rekomendasi'] ?: 'Tidak ada rekomendasi.' }}</div>
         </div>
     </div>
     
@@ -350,7 +350,7 @@
             <div class="signature-box">
                 <p>Guru Kelas</p>
                 <div class="signature-line">
-                    {{ $teacher->name ?? 'Guru' }}
+                    {{ $rapot['guru'] }}
                 </div>
             </div>
             <div class="signature-box">
@@ -361,7 +361,7 @@
             </div>
         </div>
         <div style="text-align: center; margin-top: 20px; font-size: 10px;">
-            <p>Diterbitkan pada: {{ $rapot->tanggal_terbit ? $rapot->tanggal_terbit->format('d F Y') : now()->format('d F Y') }}</p>
+            <p>Diterbitkan pada: {{ $rapot['tanggal_terbit'] }}</p>
         </div>
     </div>
 </body>

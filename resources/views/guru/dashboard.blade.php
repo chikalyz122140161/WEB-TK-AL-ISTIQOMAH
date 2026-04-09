@@ -19,12 +19,12 @@
         gap: 12px;
         margin-bottom: 16px;
         padding-bottom: 12px;
-        border-bottom: 2px solid #faae2b;
+        border-bottom: 2px solid #4CAF82;
     }
     .section-header__icon {
         width: 40px;
         height: 40px;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         border-radius: 10px;
         display: flex;
         align-items: center;
@@ -33,17 +33,17 @@
     .section-header__icon svg {
         width: 22px;
         height: 22px;
-        fill: #00473e;
+        fill: #ffffff;
     }
     .section-header__text h2 {
         font-size: 18px;
         font-weight: 700;
-        color: #00473e;
+        color: #3E2723;
         margin: 0;
     }
     .section-header__text p {
         font-size: 13px;
-        color: #475d5b;
+        color: #5D4037;
         margin: 2px 0 0;
     }
     .section-wrapper {
@@ -79,7 +79,7 @@
         </div>
 
         <div class="stat-row-3">
-            <div class="stat-card">
+            <div class="stat-card stat-card--primary">
                 <div class="stat-card__header">
                     <span class="stat-card__label">Hadir Hari Ini</span>
                     <svg class="stat-card__icon stat-card__icon--green" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.49 4.49 0 0 1-3.498-1.306 4.491 4.491 0 0 1-1.307-3.498A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 0 1 1.307-3.497 4.49 4.49 0 0 1 3.497-1.307Zm7.007 6.387a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
@@ -87,7 +87,7 @@
                 <div class="stat-card__value">{{ $hadirHariIni ?? 18 }}</div>
                 <div class="stat-card__sub">dari {{ $totalSiswa ?? 22 }} siswa</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card stat-card--secondary">
                 <div class="stat-card__header">
                     <span class="stat-card__label">Laporan Bulan Ini</span>
                     <svg class="stat-card__icon stat-card__icon--amber" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625ZM7.5 15a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 7.5 15Zm.75 2.25a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H8.25Z" clip-rule="evenodd"/><path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z"/></svg>
@@ -95,7 +95,7 @@
                 <div class="stat-card__value">{{ $laporanBulanIni ?? 10 }}</div>
                 <div class="stat-card__sub">Laporan dibuat</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card stat-card--accent">
                 <div class="stat-card__header">
                     <span class="stat-card__label">Jadwal Kegiatan</span>
                     <svg class="stat-card__icon stat-card__icon--rose" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/></svg>
@@ -113,11 +113,11 @@
                     <span class="update-list__count">{{ count($updateAdmin ?? [1,2,3]) }} baru</span>
                 </div>
                 @forelse ($updateAdmin ?? [
-                    ['title' => 'Laporan Ahmad Fauzi Dibuat', 'subtitle' => 'Laporan kehadiran', 'time' => '1 jam lalu', 'badge' => 'Laporan', 'badge_type' => 'done', 'initial' => 'L'],
-                    ['title' => 'Kehadiran Hari Ini Dicatat', 'subtitle' => '22 siswa tercatat', 'time' => '3 jam lalu', 'badge' => 'Kehadiran', 'badge_type' => 'new', 'initial' => 'K'],
-                    ['title' => 'Jadwal Upacara Ditambahkan', 'subtitle' => 'Senin, 10 Maret 2026', 'time' => 'Kemarin', 'badge' => 'Jadwal', 'badge_type' => 'info', 'initial' => 'J'],
+                    ['title' => 'Laporan Ahmad Fauzi Dibuat', 'subtitle' => 'Laporan kehadiran', 'time' => '1 jam lalu', 'badge' => 'Laporan', 'badge_type' => 'done', 'initial' => 'L', 'link' => 'guru.laporan.index'],
+                    ['title' => 'Kehadiran Hari Ini Dicatat', 'subtitle' => '22 siswa tercatat', 'time' => '3 jam lalu', 'badge' => 'Kehadiran', 'badge_type' => 'new', 'initial' => 'K', 'link' => 'guru.kehadiran.index'],
+                    ['title' => 'Jadwal Upacara Ditambahkan', 'subtitle' => 'Senin, 10 Maret 2026', 'time' => 'Kemarin', 'badge' => 'Jadwal', 'badge_type' => 'info', 'initial' => 'J', 'link' => 'guru.jadwal.index'],
                 ] as $update)
-                    <div class="update-item">
+                    <a href="{{ route($update['link']) }}" class="update-item" style="text-decoration:none;display:flex;">
                         <div class="update-item__avatar">{{ $update['initial'] ?? 'U' }}</div>
                         <div class="update-item__body">
                             <div class="update-item__title">{{ $update['title'] }}</div>
@@ -128,9 +128,9 @@
                             <span class="update-item__badge update-item__badge--{{ $update['badge_type'] ?? 'info' }}">{{ $update['badge'] ?? '' }}</span>
                         </div>
                         <svg class="update-item__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
-                    </div>
+                    </a>
                 @empty
-                    <div style="padding:16px;font-size:13px;color:#475d5b;">Belum ada update.</div>
+                    <div style="padding:16px;font-size:13px;color:#5D4037;">Belum ada update.</div>
                 @endforelse
             </div>
 
@@ -164,7 +164,7 @@
                         </a>
                     </div>
                 @empty
-                    <p style="font-size:13px;color:#475d5b;">Belum ada jadwal mendatang.</p>
+                    <p style="font-size:13px;color:#5D4037;">Belum ada jadwal mendatang.</p>
                 @endforelse
                 </div>
             </div>
@@ -186,7 +186,7 @@
         </div>
 
         <div class="stat-row-3">
-            <div class="stat-card">
+            <div class="stat-card stat-card--primary">
                 <div class="stat-card__header">
                     <span class="stat-card__label">Total Siswa</span>
                     <svg class="stat-card__icon stat-card__icon--green" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2 7.5 4.019 7.5 6.5ZM20 21h1.5a.5.5 0 0 0 .5-.5C22 17.57 18.43 14 14.5 14h-5C5.57 14 2 17.57 2 20.5a.5.5 0 0 0 .5.5H20Z"/></svg>
@@ -194,7 +194,7 @@
                 <div class="stat-card__value">{{ $totalSiswa ?? 22 }}</div>
                 <div class="stat-card__sub">Siswa aktif terdaftar</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card stat-card--secondary">
                 <div class="stat-card__header">
                     <span class="stat-card__label">Konseling Bulan Ini</span>
                     <svg class="stat-card__icon stat-card__icon--amber" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.49 4.49 0 0 1-3.498-1.306 4.491 4.491 0 0 1-1.307-3.498A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 0 1 1.307-3.497 4.49 4.49 0 0 1 3.497-1.307Zm7.007 6.387a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
@@ -202,7 +202,7 @@
                 <div class="stat-card__value">{{ $konselingBulanIni ?? 15 }}</div>
                 <div class="stat-card__sub">Sesi selesai & terjadwal</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card stat-card--accent">
                 <div class="stat-card__header">
                     <span class="stat-card__label">Pesan Belum Dibaca</span>
                     <svg class="stat-card__icon stat-card__icon--rose" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4.913 2.658c2.075-.27 4.19-.408 6.337-.408 2.147 0 4.262.139 6.337.408 1.922.25 3.291 1.861 3.405 3.727a4.403 4.403 0 0 0-1.032-.211 50.89 50.89 0 0 0-8.42 0c-2.358.196-4.04 2.19-4.04 4.434v4.286a4.47 4.47 0 0 0 2.433 3.984L7.28 21.53A.75.75 0 0 1 6 21v-4.03a48.527 48.527 0 0 1-1.087-.128C2.905 16.58 1.5 14.833 1.5 12.862V6.638c0-1.97 1.405-3.718 3.413-3.979Z"/><path d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 0 0 1.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0 0 15.75 7.5Z"/></svg>
@@ -220,11 +220,11 @@
                     <span class="update-list__count">{{ count($updateBK ?? [1,2,3]) }} baru</span>
                 </div>
                 @forelse ($updateBK ?? [
-                    ['title' => 'Konseling Selesai - Muhammad', 'subtitle' => 'Sesi konseling individual', 'time' => '2 jam lalu', 'badge' => 'Selesai', 'badge_type' => 'done', 'initial' => 'M'],
-                    ['title' => 'Input Perkembangan - Anisa', 'subtitle' => 'Data perkembangan baru', 'time' => '1 hari lalu', 'badge' => 'Baru', 'badge_type' => 'new', 'initial' => 'A'],
-                    ['title' => 'Pesan dari Orang Tua Tika', 'subtitle' => 'Konsultasi jadwal', 'time' => '2 hari lalu', 'badge' => 'Pesan', 'badge_type' => 'info', 'initial' => 'T'],
+                    ['title' => 'Konseling Selesai - Muhammad', 'subtitle' => 'Sesi konseling individual', 'time' => '2 jam lalu', 'badge' => 'Selesai', 'badge_type' => 'done', 'initial' => 'M', 'link' => 'guru.jadwal_konseling'],
+                    ['title' => 'Input Perkembangan - Anisa', 'subtitle' => 'Data perkembangan baru', 'time' => '1 hari lalu', 'badge' => 'Baru', 'badge_type' => 'new', 'initial' => 'A', 'link' => 'guru.input_perkembangan'],
+                    ['title' => 'Pesan dari Orang Tua Tika', 'subtitle' => 'Konsultasi jadwal', 'time' => '2 hari lalu', 'badge' => 'Pesan', 'badge_type' => 'info', 'initial' => 'T', 'link' => 'guru.chat'],
                 ] as $update)
-                    <div class="update-item">
+                    <a href="{{ route($update['link']) }}" class="update-item" style="text-decoration:none;display:flex;">
                         <div class="update-item__avatar">{{ $update['initial'] ?? 'U' }}</div>
                         <div class="update-item__body">
                             <div class="update-item__title">{{ $update['title'] }}</div>
@@ -235,9 +235,9 @@
                             <span class="update-item__badge update-item__badge--{{ $update['badge_type'] ?? 'info' }}">{{ $update['badge'] ?? '' }}</span>
                         </div>
                         <svg class="update-item__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
-                    </div>
+                    </a>
                 @empty
-                    <div style="padding:16px;font-size:13px;color:#475d5b;">Belum ada update.</div>
+                    <div style="padding:16px;font-size:13px;color:#5D4037;">Belum ada update.</div>
                 @endforelse
             </div>
 
@@ -270,7 +270,7 @@
                         </a>
                     </div>
                 @empty
-                    <p style="font-size:13px;color:#475d5b;">Belum ada jadwal mendatang.</p>
+                    <p style="font-size:13px;color:#5D4037;">Belum ada jadwal mendatang.</p>
                 @endforelse
                 </div>
             </div>

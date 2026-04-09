@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@php $userRole = 'Orang Tua'; @endphp
 
 @section('title', 'Chat dengan Guru - SISTEM BK TK AL-ISTIQOMAH')
 @section('page_title', 'Chat dengan Guru')
@@ -30,7 +31,7 @@
     /* Contact List */
     .contact-list {
         background: #fff;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 8px;
         overflow: hidden;
         display: flex;
@@ -38,10 +39,10 @@
     }
     .contact-list__header {
         padding: 16px;
-        border-bottom: 1px solid #00473e10;
+        border-bottom: 1px solid #3E272310;
         font-size: 14px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
     }
     .contact-list__body {
         flex: 1;
@@ -53,21 +54,21 @@
         gap: 12px;
         padding: 14px 16px;
         cursor: pointer;
-        border-bottom: 1px solid #00473e08;
+        border-bottom: 1px solid #3E272308;
         transition: all 0.2s;
     }
     .contact-item:hover {
         background: #f8f9fa;
     }
     .contact-item.active {
-        background: linear-gradient(135deg, #faae2b20 0%, #f5a62320 100%);
-        border-left: 3px solid #faae2b;
+        background: linear-gradient(135deg, #4CAF8220 0%, #3D9B7220 100%);
+        border-left: 3px solid #4CAF82;
     }
     .contact-item__avatar {
         width: 44px;
         height: 44px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
         color: #fff;
         display: flex;
         align-items: center;
@@ -83,19 +84,19 @@
     .contact-item__name {
         font-size: 14px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
         margin-bottom: 2px;
     }
     .contact-item__role {
         font-size: 12px;
-        color: #475d5b;
+        color: #5D4037;
     }
     .contact-item__badge {
         width: 20px;
         height: 20px;
         border-radius: 50%;
-        background: #faae2b;
-        color: #00473e;
+        background: #4CAF82;
+        color: #3E2723;
         font-size: 11px;
         font-weight: 700;
         display: flex;
@@ -107,7 +108,7 @@
     /* Chat Area */
     .chat-area {
         background: #fff;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 8px;
         display: flex;
         flex-direction: column;
@@ -115,7 +116,7 @@
     }
     .chat-area__header {
         padding: 16px 20px;
-        border-bottom: 1px solid #00473e10;
+        border-bottom: 1px solid #3E272310;
         display: flex;
         align-items: center;
         gap: 12px;
@@ -124,7 +125,7 @@
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #00473e 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
         color: #fff;
         display: flex;
         align-items: center;
@@ -138,7 +139,7 @@
     .chat-area__header-name {
         font-size: 15px;
         font-weight: 600;
-        color: #00473e;
+        color: #3E2723;
     }
     .chat-area__header-status {
         font-size: 12px;
@@ -159,10 +160,10 @@
     .message-date span {
         display: inline-block;
         padding: 4px 12px;
-        background: #e5e7eb;
+        background: #3E272320;
         border-radius: 12px;
         font-size: 11px;
-        color: #6B7280;
+        color: #5D4037;
     }
     .message {
         display: flex;
@@ -180,29 +181,29 @@
     }
     .message--received .message__bubble {
         background: #fff;
-        color: #00473e;
-        border: 1px solid #00473e10;
+        color: #3E2723;
+        border: 1px solid #3E272310;
         border-bottom-left-radius: 4px;
     }
     .message--sent .message__bubble {
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
-        color: #00473e;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+        color: #3E2723;
         border-bottom-right-radius: 4px;
     }
     .message__time {
         font-size: 11px;
-        color: #9CA3AF;
+        color: #5D4037;
         margin-top: 4px;
     }
     .message--sent .message__time {
         text-align: right;
-        color: #00473e99;
+        color: #3E272399;
     }
 
     /* Chat Input */
     .chat-input {
         padding: 16px 20px;
-        border-top: 1px solid #00473e10;
+        border-top: 1px solid #3E272310;
         display: flex;
         gap: 12px;
         align-items: center;
@@ -210,27 +211,27 @@
     .chat-input__field {
         flex: 1;
         padding: 12px 16px;
-        border: 1px solid #00473e20;
+        border: 1px solid #3E272320;
         border-radius: 24px;
         font-size: 14px;
-        color: #00473e;
+        color: #3E2723;
         background: #f8f9fa;
         resize: none;
         font-family: inherit;
     }
     .chat-input__field:focus {
         outline: none;
-        border-color: #faae2b;
+        border-color: #4CAF82;
         background: #fff;
     }
     .chat-input__field::placeholder {
-        color: #9CA3AF;
+        color: #5D4037;
     }
     .btn-send {
         width: 44px;
         height: 44px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #faae2b 0%, #f5a623 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         border: none;
         cursor: pointer;
         display: flex;
@@ -241,12 +242,12 @@
     }
     .btn-send:hover {
         transform: scale(1.05);
-        box-shadow: 0 4px 12px rgba(250, 174, 43, 0.4);
+        box-shadow: 0 4px 12px rgba(76,175,130, 0.4);
     }
     .btn-send svg {
         width: 20px;
         height: 20px;
-        fill: #00473e;
+        fill: #3E2723;
     }
 
     /* Empty State */
@@ -256,13 +257,13 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        color: #9CA3AF;
+        color: #5D4037;
         padding: 40px;
     }
     .chat-empty svg {
         width: 80px;
         height: 80px;
-        fill: #D1D5DB;
+        fill: #3E272330;
         margin-bottom: 16px;
     }
     .chat-empty__text {
