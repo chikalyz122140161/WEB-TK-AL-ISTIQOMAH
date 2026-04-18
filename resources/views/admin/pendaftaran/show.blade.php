@@ -20,7 +20,7 @@
         @if($pendaftaran['status'] == 'Pending')
         <button type="button" class="btn btn--success" onclick="showAcceptModal()">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd"/></svg>
-            Terima
+            Terima & Pilih Kelas
         </button>
         <button type="button" class="btn btn--danger" onclick="showRejectModal()">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
@@ -247,6 +247,15 @@
 
 .btn--danger:hover {
     background: #b91c1c;
+}
+
+.btn--wawancara {
+    background: #ea580c;
+    color: white;
+}
+
+.btn--wawancara:hover {
+    background: #c2410c;
 }
 
 /* Status Banner */
@@ -603,6 +612,65 @@
     text-align: left;
 }
 
+/* Kelas Grid */
+.kelas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.kelas-option { cursor: pointer; }
+
+.kelas-option input[type="radio"] { display: none; }
+
+.kelas-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.kelas-card--a {
+    background: rgba(76, 175, 130, 0.08);
+    border-color: rgba(76, 175, 130, 0.2);
+}
+
+.kelas-card--b {
+    background: rgba(99, 102, 241, 0.08);
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+.kelas-option input[type="radio"]:checked + .kelas-card--a {
+    border-color: #4CAF82;
+    background: rgba(76, 175, 130, 0.15);
+    box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.2);
+}
+
+.kelas-option input[type="radio"]:checked + .kelas-card--b {
+    border-color: #6366f1;
+    background: rgba(99, 102, 241, 0.15);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.kelas-label {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #3E2723;
+    line-height: 1;
+}
+
+.kelas-desc {
+    font-size: 0.75rem;
+    color: #5D4037;
+    margin-top: 0.25rem;
+}
+
 @media (max-width: 768px) {
     .detail-grid {
         grid-template-columns: 1fr;
@@ -623,15 +691,45 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
             </svg>
         </div>
-        <h3 class="modal-title">Terima Pendaftaran?</h3>
-        <p class="modal-message">Apakah Anda yakin ingin menerima pendaftaran <strong>{{ $pendaftaran['nama_siswa'] }}</strong>? Data siswa dan akun orang tua akan diaktifkan.</p>
-        <div class="modal-actions">
-            <button type="button" class="btn btn--secondary" onclick="closeAcceptModal()">Batal</button>
-            <form action="{{ route('admin.pendaftaran.terima', $pendaftaran['id']) }}" method="POST" style="display: inline;">
-                @csrf
-                <button type="submit" class="btn btn--primary">Ya, Terima</button>
-            </form>
-        </div>
+        <h3 class="modal-title">Terima & Pilih Kelas</h3>
+        <p class="modal-message">Pilih kelas untuk <strong>{{ $pendaftaran['nama_siswa'] }}</strong></p>
+        <form action="{{ route('admin.pendaftaran.terima', $pendaftaran['id']) }}" method="POST">
+            @csrf
+            <div class="kelas-grid">
+                <label class="kelas-option">
+                    <input type="radio" name="kelas" value="A1" required>
+                    <span class="kelas-card kelas-card--a">
+                        <span class="kelas-label">A1</span>
+                        <span class="kelas-desc">TK A - Kelas 1</span>
+                    </span>
+                </label>
+                <label class="kelas-option">
+                    <input type="radio" name="kelas" value="A2" required>
+                    <span class="kelas-card kelas-card--a">
+                        <span class="kelas-label">A2</span>
+                        <span class="kelas-desc">TK A - Kelas 2</span>
+                    </span>
+                </label>
+                <label class="kelas-option">
+                    <input type="radio" name="kelas" value="B1" required>
+                    <span class="kelas-card kelas-card--b">
+                        <span class="kelas-label">B1</span>
+                        <span class="kelas-desc">TK B - Kelas 1</span>
+                    </span>
+                </label>
+                <label class="kelas-option">
+                    <input type="radio" name="kelas" value="B2" required>
+                    <span class="kelas-card kelas-card--b">
+                        <span class="kelas-label">B2</span>
+                        <span class="kelas-desc">TK B - Kelas 2</span>
+                    </span>
+                </label>
+            </div>
+            <div class="modal-actions" style="margin-top: 1.5rem;">
+                <button type="button" class="btn btn--secondary" onclick="closeAcceptModal()">Batal</button>
+                <button type="submit" class="btn btn--primary">Terima & Simpan</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -663,6 +761,7 @@ function showAcceptModal() {
 
 function closeAcceptModal() {
     document.getElementById('acceptModal').classList.remove('active');
+    document.querySelectorAll('#acceptModal input[type="radio"]').forEach(r => r.checked = false);
 }
 
 function showRejectModal() {

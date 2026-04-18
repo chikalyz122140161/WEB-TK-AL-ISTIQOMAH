@@ -386,15 +386,18 @@ class AdminController extends Controller
         return view('admin.pendaftaran.show', compact('pendaftaran'));
     }
     
-    public function pendaftaranTerima($id)
+    public function pendaftaranTerima(Request $request, $id)
     {
         // Logic to accept registration:
         // 1. Update registration status to 'Diterima'
-        // 2. Create student record
-        // 3. Create/activate parent user account
-        // 4. Send notification email
-        
-        return redirect()->route('admin.pendaftaran.index')->with('success', 'Pendaftaran berhasil diterima! Akun orang tua telah diaktifkan.');
+        // 2. Assign kelas from request: $request->input('kelas') → A1/A2/B1/B2
+        // 3. Create student record
+        // 4. Create/activate parent user account
+        // 5. Send notification email
+
+        $kelas = $request->input('kelas');
+
+        return redirect()->route('admin.pendaftaran.index')->with('success', "Pendaftaran berhasil diterima! Siswa ditempatkan di Kelas {$kelas}.");
     }
     
     public function pendaftaranTolak(Request $request, $id)
