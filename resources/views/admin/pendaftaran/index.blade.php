@@ -66,6 +66,7 @@
         <span class="tabs-nav__badge warning">{{ $totalPending }}</span>
         Menunggu Verifikasi
     </button>
+
     <button class="tabs-nav__item" data-tab="diterima">
         <span class="tabs-nav__badge success">{{ $totalDiterima }}</span>
         Diterima
@@ -96,7 +97,8 @@
                 <select id="kelas" class="form-select">
                     <option value="">Semua Kelas</option>
                     <option value="TK A">TK A</option>
-                    <option value="TK B">TK B</option>
+                    <option value="TK B1">TK B1</option>
+                    <option value="TK B2">TK B2</option>
                 </select>
             </div>
         </div>
@@ -153,6 +155,7 @@
                             @php
                                 $statusClass = match($p['status']) {
                                     'Pending' => 'warning',
+                                    'Wawancara' => 'orange',
                                     'Diterima' => 'success',
                                     'Ditolak' => 'danger',
                                     default => 'secondary'
@@ -166,7 +169,7 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd"/></svg>
                                 </a>
                                 @if($p['status'] == 'Pending')
-                                <button type="button" class="btn btn--icon btn--success" title="Terima" onclick="showAcceptModal('{{ $p['id'] }}', '{{ $p['nama_siswa'] }}')">
+                                <button type="button" class="btn btn--icon btn--success" title="Terima & Pilih Kelas" onclick="showAcceptModal('{{ $p['id'] }}', '{{ $p['nama_siswa'] }}')">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd"/></svg>
                                 </button>
                                 <button type="button" class="btn btn--icon btn--danger" title="Tolak" onclick="showRejectModal('{{ $p['id'] }}', '{{ $p['nama_siswa'] }}')">
@@ -315,6 +318,11 @@
 .tabs-nav__badge.warning {
     background: rgba(245, 158, 11, 0.2);
     color: #d97706;
+}
+
+.tabs-nav__badge.orange {
+    background: rgba(234, 88, 12, 0.15);
+    color: #ea580c;
 }
 
 .tabs-nav__badge.success {
@@ -495,6 +503,11 @@
     color: #dc2626;
 }
 
+.badge--orange {
+    background: rgba(234, 88, 12, 0.12);
+    color: #ea580c;
+}
+
 .badge--secondary {
     background: #f1f5f9;
     color: #5D4037;
@@ -544,6 +557,15 @@
 
 .btn--danger:hover {
     background: #fecaca;
+}
+
+.btn--orange {
+    background: rgba(234, 88, 12, 0.12);
+    color: #ea580c;
+}
+
+.btn--orange:hover {
+    background: rgba(234, 88, 12, 0.22);
 }
 
 /* Utilities */
@@ -687,6 +709,69 @@
     margin-top: 1rem;
     text-align: left;
 }
+
+/* Kelas Grid */
+.kelas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.kelas-option {
+    cursor: pointer;
+}
+
+.kelas-option input[type="radio"] {
+    display: none;
+}
+
+.kelas-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.kelas-card--a {
+    background: rgba(76, 175, 130, 0.08);
+    border-color: rgba(76, 175, 130, 0.2);
+}
+
+.kelas-card--b {
+    background: rgba(99, 102, 241, 0.08);
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+.kelas-option input[type="radio"]:checked + .kelas-card--a {
+    border-color: #4CAF82;
+    background: rgba(76, 175, 130, 0.15);
+    box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.2);
+}
+
+.kelas-option input[type="radio"]:checked + .kelas-card--b {
+    border-color: #6366f1;
+    background: rgba(99, 102, 241, 0.15);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.kelas-label {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #3E2723;
+    line-height: 1;
+}
+
+.kelas-desc {
+    font-size: 0.75rem;
+    color: #5D4037;
+    margin-top: 0.25rem;
+}
 </style>
 
 <!-- Accept Confirmation Modal -->
@@ -697,15 +782,45 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
             </svg>
         </div>
-        <h3 class="modal-title">Terima Pendaftaran?</h3>
-        <p class="modal-message">Apakah Anda yakin ingin menerima pendaftaran <strong id="acceptSiswaName"></strong>? Data siswa dan akun orang tua akan diaktifkan.</p>
-        <div class="modal-actions">
-            <button type="button" class="btn btn--secondary" onclick="closeAcceptModal()">Batal</button>
-            <form id="acceptForm" method="POST" style="display: inline;">
-                @csrf
-                <button type="submit" class="btn btn--primary">Ya, Terima</button>
-            </form>
-        </div>
+        <h3 class="modal-title">Terima & Pilih Kelas</h3>
+        <p class="modal-message">Pilih kelas untuk <strong id="acceptSiswaName"></strong></p>
+        <form id="acceptForm" method="POST">
+            @csrf
+            <div class="kelas-grid">
+                <label class="kelas-option">
+                    <input type="radio" name="kelas" value="A1" required>
+                    <span class="kelas-card kelas-card--a">
+                        <span class="kelas-label">A1</span>
+                        <span class="kelas-desc">TK A - Kelas 1</span>
+                    </span>
+                </label>
+                <label class="kelas-option">
+                    <input type="radio" name="kelas" value="A2" required>
+                    <span class="kelas-card kelas-card--a">
+                        <span class="kelas-label">A2</span>
+                        <span class="kelas-desc">TK A - Kelas 2</span>
+                    </span>
+                </label>
+                <label class="kelas-option">
+                    <input type="radio" name="kelas" value="B1" required>
+                    <span class="kelas-card kelas-card--b">
+                        <span class="kelas-label">B1</span>
+                        <span class="kelas-desc">TK B - Kelas 1</span>
+                    </span>
+                </label>
+                <label class="kelas-option">
+                    <input type="radio" name="kelas" value="B2" required>
+                    <span class="kelas-card kelas-card--b">
+                        <span class="kelas-label">B2</span>
+                        <span class="kelas-desc">TK B - Kelas 2</span>
+                    </span>
+                </label>
+            </div>
+            <div class="modal-actions" style="margin-top: 1.5rem;">
+                <button type="button" class="btn btn--secondary" onclick="closeAcceptModal()">Batal</button>
+                <button type="submit" class="btn btn--primary">Terima & Simpan</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -736,7 +851,7 @@ document.querySelectorAll('.tabs-nav__item').forEach(tab => {
     tab.addEventListener('click', function() {
         document.querySelectorAll('.tabs-nav__item').forEach(t => t.classList.remove('active'));
         this.classList.add('active');
-        
+
         const status = this.dataset.tab;
         document.querySelectorAll('.data-table tbody tr').forEach(row => {
             if (status === 'semua') {
@@ -757,6 +872,7 @@ function showAcceptModal(id, name) {
 
 function closeAcceptModal() {
     document.getElementById('acceptModal').classList.remove('active');
+    document.querySelectorAll('#acceptForm input[type="radio"]').forEach(r => r.checked = false);
 }
 
 // Reject Modal

@@ -498,6 +498,14 @@
                     </div>
                 </div>
 
+                <div class="form-row single">
+                    <div class="form-group">
+                        <label>NIK Anak <span class="required">*</span></label>
+                        <input type="text" name="nik" value="{{ old('nik') }}" placeholder="Masukkan 16 digit NIK sesuai Kartu Keluarga" maxlength="16" required>
+                        <span class="form-hint">NIK terdiri dari 16 digit angka, tercantum di Kartu Keluarga</span>
+                    </div>
+                </div>
+
                 <div class="form-row">
                     <div class="form-group">
                         <label>Jenis Kelamin <span class="required">*</span></label>
@@ -572,12 +580,6 @@
                     </div>
                 </div>
 
-                <div class="form-row single">
-                    <div class="form-group">
-                        <label>No. Telp / HP <span class="required">*</span></label>
-                        <input type="text" name="no_telp" value="{{ old('no_telp') }}" placeholder="Contoh: 0822 8965 2973" required>
-                    </div>
-                </div>
             </div>
 
             <!-- Data Orang Tua -->
@@ -598,18 +600,39 @@
                         <input type="text" name="nama_ayah" value="{{ old('nama_ayah') }}" placeholder="Masukkan nama lengkap ayah" required>
                     </div>
                     <div class="form-group">
-                        <label>Pekerjaan / Pendidikan</label>
-                        <input type="text" name="pekerjaan_ayah" value="{{ old('pekerjaan_ayah') }}" placeholder="Contoh: Buruh">
+                        <label>Pekerjaan Ayah</label>
+                        <input type="text" name="pekerjaan_ayah" value="{{ old('pekerjaan_ayah') }}" placeholder="Contoh: Buruh, Wiraswasta">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
+                        <label>Pendidikan Ayah</label>
+                        <select name="pendidikan_ayah">
+                            <option value="">Pilih pendidikan terakhir</option>
+                            <option value="SD" {{ old('pendidikan_ayah') == 'SD' ? 'selected' : '' }}>SD</option>
+                            <option value="SMP" {{ old('pendidikan_ayah') == 'SMP' ? 'selected' : '' }}>SMP</option>
+                            <option value="SMA/SMK" {{ old('pendidikan_ayah') == 'SMA/SMK' ? 'selected' : '' }}>SMA/SMK</option>
+                            <option value="D1" {{ old('pendidikan_ayah') == 'D1' ? 'selected' : '' }}>D1</option>
+                            <option value="D2" {{ old('pendidikan_ayah') == 'D2' ? 'selected' : '' }}>D2</option>
+                            <option value="D3" {{ old('pendidikan_ayah') == 'D3' ? 'selected' : '' }}>D3</option>
+                            <option value="S1" {{ old('pendidikan_ayah') == 'S1' ? 'selected' : '' }}>S1</option>
+                            <option value="S2" {{ old('pendidikan_ayah') == 'S2' ? 'selected' : '' }}>S2</option>
+                            <option value="S3" {{ old('pendidikan_ayah') == 'S3' ? 'selected' : '' }}>S3</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Tempat Lahir Ayah</label>
                         <input type="text" name="tempat_lahir_ayah" value="{{ old('tempat_lahir_ayah') }}" placeholder="Contoh: Pemalang">
                     </div>
+                </div>
+                <div class="form-row">
                     <div class="form-group">
                         <label>Tanggal Lahir Ayah</label>
                         <input type="date" name="tanggal_lahir_ayah" value="{{ old('tanggal_lahir_ayah') }}">
+                    </div>
+                    <div class="form-group">
+                        <label>No. Telp / HP Ayah</label>
+                        <input type="text" name="no_telp_ayah" value="{{ old('no_telp_ayah') }}" placeholder="Contoh: 0822 8965 2973">
                     </div>
                 </div>
 
@@ -620,18 +643,39 @@
                         <input type="text" name="nama_ibu" value="{{ old('nama_ibu') }}" placeholder="Masukkan nama lengkap ibu" required>
                     </div>
                     <div class="form-group">
-                        <label>Pekerjaan / Pendidikan</label>
-                        <input type="text" name="pekerjaan_ibu" value="{{ old('pekerjaan_ibu') }}" placeholder="Contoh: Pengurus Rumah Tangga">
+                        <label>Pekerjaan Ibu</label>
+                        <input type="text" name="pekerjaan_ibu" value="{{ old('pekerjaan_ibu') }}" placeholder="Contoh: Ibu Rumah Tangga, Guru">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
+                        <label>Pendidikan Ibu</label>
+                        <select name="pendidikan_ibu">
+                            <option value="">Pilih pendidikan terakhir</option>
+                            <option value="SD" {{ old('pendidikan_ibu') == 'SD' ? 'selected' : '' }}>SD</option>
+                            <option value="SMP" {{ old('pendidikan_ibu') == 'SMP' ? 'selected' : '' }}>SMP</option>
+                            <option value="SMA/SMK" {{ old('pendidikan_ibu') == 'SMA/SMK' ? 'selected' : '' }}>SMA/SMK</option>
+                            <option value="D1" {{ old('pendidikan_ibu') == 'D1' ? 'selected' : '' }}>D1</option>
+                            <option value="D2" {{ old('pendidikan_ibu') == 'D2' ? 'selected' : '' }}>D2</option>
+                            <option value="D3" {{ old('pendidikan_ibu') == 'D3' ? 'selected' : '' }}>D3</option>
+                            <option value="S1" {{ old('pendidikan_ibu') == 'S1' ? 'selected' : '' }}>S1</option>
+                            <option value="S2" {{ old('pendidikan_ibu') == 'S2' ? 'selected' : '' }}>S2</option>
+                            <option value="S3" {{ old('pendidikan_ibu') == 'S3' ? 'selected' : '' }}>S3</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Tempat Lahir Ibu</label>
                         <input type="text" name="tempat_lahir_ibu" value="{{ old('tempat_lahir_ibu') }}" placeholder="Contoh: Teratkulon">
                     </div>
+                </div>
+                <div class="form-row">
                     <div class="form-group">
                         <label>Tanggal Lahir Ibu</label>
                         <input type="date" name="tanggal_lahir_ibu" value="{{ old('tanggal_lahir_ibu') }}">
+                    </div>
+                    <div class="form-group">
+                        <label>No. Telp / HP Ibu</label>
+                        <input type="text" name="no_telp_ibu" value="{{ old('no_telp_ibu') }}" placeholder="Contoh: 0822 8965 2973">
                     </div>
                 </div>
 
@@ -643,18 +687,39 @@
                         <input type="text" name="nama_wali" value="{{ old('nama_wali') }}" placeholder="Nama lengkap wali">
                     </div>
                     <div class="form-group">
-                        <label>Pekerjaan / Pendidikan</label>
-                        <input type="text" name="pekerjaan_wali" value="{{ old('pekerjaan_wali') }}" placeholder="Pekerjaan wali">
+                        <label>Pekerjaan Wali</label>
+                        <input type="text" name="pekerjaan_wali" value="{{ old('pekerjaan_wali') }}" placeholder="Contoh: Wiraswasta, PNS">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
+                        <label>Pendidikan Wali</label>
+                        <select name="pendidikan_wali">
+                            <option value="">Pilih pendidikan terakhir</option>
+                            <option value="SD" {{ old('pendidikan_wali') == 'SD' ? 'selected' : '' }}>SD</option>
+                            <option value="SMP" {{ old('pendidikan_wali') == 'SMP' ? 'selected' : '' }}>SMP</option>
+                            <option value="SMA/SMK" {{ old('pendidikan_wali') == 'SMA/SMK' ? 'selected' : '' }}>SMA/SMK</option>
+                            <option value="D1" {{ old('pendidikan_wali') == 'D1' ? 'selected' : '' }}>D1</option>
+                            <option value="D2" {{ old('pendidikan_wali') == 'D2' ? 'selected' : '' }}>D2</option>
+                            <option value="D3" {{ old('pendidikan_wali') == 'D3' ? 'selected' : '' }}>D3</option>
+                            <option value="S1" {{ old('pendidikan_wali') == 'S1' ? 'selected' : '' }}>S1</option>
+                            <option value="S2" {{ old('pendidikan_wali') == 'S2' ? 'selected' : '' }}>S2</option>
+                            <option value="S3" {{ old('pendidikan_wali') == 'S3' ? 'selected' : '' }}>S3</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Tempat Lahir Wali</label>
                         <input type="text" name="tempat_lahir_wali" value="{{ old('tempat_lahir_wali') }}" placeholder="Tempat lahir wali">
                     </div>
+                </div>
+                <div class="form-row">
                     <div class="form-group">
                         <label>Tanggal Lahir Wali</label>
                         <input type="date" name="tanggal_lahir_wali" value="{{ old('tanggal_lahir_wali') }}">
+                    </div>
+                    <div class="form-group">
+                        <label>No. Telp / HP Wali</label>
+                        <input type="text" name="no_telp_wali" value="{{ old('no_telp_wali') }}" placeholder="Contoh: 0822 8965 2973">
                     </div>
                 </div>
             </div>

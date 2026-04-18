@@ -9,6 +9,7 @@ class Registration extends Model
     use HasFactory;
 
     protected $fillable = [
+        'nik',
         'nama_lengkap',
         'tempat_lahir',
         'tanggal_lahir',
@@ -17,7 +18,9 @@ class Registration extends Model
         'nama_ayah',
         'nama_ibu',
         'pekerjaan_ayah',
+        'pendidikan_ayah',
         'pekerjaan_ibu',
+        'pendidikan_ibu',
         'telepon',
         'email',
         'alamat_ortu',
