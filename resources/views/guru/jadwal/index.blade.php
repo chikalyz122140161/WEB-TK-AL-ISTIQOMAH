@@ -166,27 +166,39 @@
     .data-table {
         width: 100%;
         border-collapse: collapse;
-    }
-    .data-table th,
-    .data-table td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid #3E272320;
+        border-radius: 10px;
+        overflow: hidden;
     }
     .data-table th {
+        padding: 14px 18px;
+        text-align: left;
         background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
-        font-size: 12px;
-        font-weight: 600;
+        font-size: 11px;
+        font-weight: 700;
         color: #ffffff;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.6px;
+        white-space: nowrap;
     }
     .data-table td {
+        padding: 14px 18px;
         font-size: 14px;
         color: #3E2723;
+        border-bottom: 1px solid #f3f4f6;
+        vertical-align: middle;
     }
-    .data-table tr:hover td {
+    .data-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    .data-table tbody tr:nth-child(even) td {
+        background: #fafafa;
+    }
+    .data-table tbody tr:hover td {
         background: #FFFDE7;
+    }
+    .data-table th:last-child,
+    .data-table td:last-child {
+        text-align: center;
     }
     
     /* Schedule Type Badge */
@@ -212,16 +224,122 @@
         color: #5D4037;
     }
     
+    /* Pembelajaran Cards */
+    .pembelajaran-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 18px;
+        margin-top: 4px;
+    }
+    .pembelajaran-card {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .pembelajaran-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    .pembelajaran-card__header {
+        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .pembelajaran-card__hari {
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+    }
+    .pembelajaran-card__count {
+        color: rgba(255,255,255,0.65);
+        font-size: 12px;
+    }
+    .pembelajaran-card__body {
+        padding: 12px 16px;
+    }
+    .pembelajaran-item {
+        padding: 10px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .pembelajaran-item--border {
+        border-bottom: 1px dashed #e5e7eb;
+    }
+    .pembelajaran-item__top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+    }
+    .pembelajaran-item__waktu {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        font-weight: 500;
+        color: #5D4037;
+        background: rgba(0,71,62,0.08);
+        padding: 4px 8px;
+        border-radius: 6px;
+    }
+    .pembelajaran-item__mapel {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1f2937;
+    }
+    .pembelajaran-item__actions {
+        display: flex;
+        gap: 6px;
+        margin-top: 2px;
+    }
+    .btn-edit--sm,
+    .btn-danger--sm {
+        font-size: 12px;
+        padding: 4px 10px;
+    }
+
     /* Filter Row */
     .filter-row {
         display: flex;
-        gap: 12px;
-        margin-bottom: 16px;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
         flex-wrap: wrap;
-        align-items: flex-end;
     }
     .filter-row .form-group {
-        min-width: 150px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+    }
+    .filter-row .form-group label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #5D4037;
+        white-space: nowrap;
+        margin: 0;
+    }
+    .filter-row .form-group select {
+        height: 38px;
+        padding: 0 10px;
+        font-size: 13px;
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        background: #fff;
+        color: #3E2723;
+        min-width: 140px;
+    }
+    .filter-row .btn-secondary {
+        height: 38px;
+        padding: 0 18px;
+        font-size: 13px;
+        border-radius: 8px;
+        white-space: nowrap;
     }
     
     /* Alert */
@@ -489,74 +607,13 @@
         </div>
     @endif
 
-    <!-- Form Tambah Jadwal -->
-    <div class="form-section">
-        <div class="form-section__title">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"/>
+    <div style="margin-bottom:16px;">
+        <a href="{{ route('guru.jadwal.create') }}" class="btn-orange">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/>
             </svg>
-            Form Tambah Jadwal
-        </div>
-        
-        <form action="{{ route('guru.jadwal.store') }}" method="POST">
-            @csrf
-            
-            <div class="schedule-type-tabs">
-                <label class="schedule-type-tab active">
-                    <input type="radio" name="jenis_jadwal" value="kegiatan" checked>
-                    Jadwal Kegiatan
-                </label>
-                <label class="schedule-type-tab">
-                    <input type="radio" name="jenis_jadwal" value="pembelajaran">
-                    Jadwal Pembelajaran
-                </label>
-            </div>
-            
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>Nama Kegiatan / Mata Pelajaran</label>
-                    <input type="text" name="nama" placeholder="Contoh: Upacara Bendera, Sentra Balok" required>
-                </div>
-                <div class="form-group">
-                    <label>Tanggal</label>
-                    <input type="date" name="tanggal" value="{{ date('Y-m-d') }}" required>
-                </div>
-                <div class="form-group">
-                    <label>Waktu Mulai</label>
-                    <input type="time" name="waktu_mulai" value="08:00" required>
-                </div>
-                <div class="form-group">
-                    <label>Waktu Selesai</label>
-                    <input type="time" name="waktu_selesai" value="09:00" required>
-                </div>
-                <div class="form-group">
-                    <label>Kelas</label>
-                    <select name="kelas">
-                        <option value="">Semua Kelas</option>
-                        <option value="TK A">TK A</option>
-                        <option value="TK B">TK B</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Lokasi</label>
-                    <input type="text" name="lokasi" placeholder="Contoh: Lapangan, Ruang Kelas A">
-                </div>
-            </div>
-            
-            <div class="form-group" style="margin-top: 16px;">
-                <label>Deskripsi (Opsional)</label>
-                <textarea name="deskripsi" rows="3" placeholder="Tambahkan deskripsi kegiatan..."></textarea>
-            </div>
-            
-            <div class="btn-row">
-                <button type="submit" class="btn-orange">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/>
-                    </svg>
-                    Tambah Jadwal
-                </button>
-            </div>
-        </form>
+            Tambah Jadwal
+        </a>
     </div>
 
     <!-- List Jadwal -->
@@ -575,19 +632,12 @@
         </div>
         
         <form action="" method="GET" class="filter-row">
-            <div class="form-group">
-                <label>Tanggal</label>
-                <input type="date" name="tanggal" value="{{ request('tanggal') }}">
-            </div>
-            <div class="form-group">
-                <label>Kelas</label>
-                <select name="kelas">
-                    <option value="">Semua Kelas</option>
-                    <option value="TK A" {{ request('kelas') == 'TK A' ? 'selected' : '' }}>TK A</option>
-                    <option value="TK B" {{ request('kelas') == 'TK B' ? 'selected' : '' }}>TK B</option>
-                </select>
-            </div>
-            <button type="submit" class="btn-secondary">Filter</button>
+            <select name="kelas" style="height:38px;padding:0 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;color:#3E2723;background:#fff;min-width:160px;">
+                <option value="">Semua Kelas</option>
+                <option value="TK A" {{ request('kelas') == 'TK A' ? 'selected' : '' }}>TK A</option>
+                <option value="TK B" {{ request('kelas') == 'TK B' ? 'selected' : '' }}>TK B</option>
+            </select>
+            <button type="submit" class="btn-secondary" style="height:38px;padding:0 18px;font-size:13px;border-radius:8px;">Filter</button>
         </form>
         
         <!-- Tab Content: Jadwal Kegiatan -->
@@ -653,63 +703,76 @@
         
         <!-- Tab Content: Jadwal Pembelajaran -->
         <div id="tab-pembelajaran" class="tab-content">
-            <div style="overflow-x: auto;">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Hari</th>
-                            <th>Waktu</th>
-                            <th>Mata Pelajaran</th>
-                            <th>Kelas</th>
-                            <th>Guru</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($jadwalPembelajaran ?? [
-                            ['id' => 1, 'hari' => 'Senin', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Balok', 'kelas' => 'TK A', 'guru' => 'Bu Siti'],
-                            ['id' => 2, 'hari' => 'Senin', 'waktu' => '09:00 - 10:00', 'mapel' => 'Sentra Seni', 'kelas' => 'TK A', 'guru' => 'Bu Ani'],
-                            ['id' => 3, 'hari' => 'Senin', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Alam', 'kelas' => 'TK B', 'guru' => 'Bu Dewi'],
-                            ['id' => 4, 'hari' => 'Selasa', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Peran', 'kelas' => 'TK A', 'guru' => 'Bu Siti'],
-                            ['id' => 5, 'hari' => 'Selasa', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Balok', 'kelas' => 'TK B', 'guru' => 'Bu Ani'],
-                            ['id' => 6, 'hari' => 'Rabu', 'waktu' => '08:00 - 09:00', 'mapel' => 'Agama Islam', 'kelas' => 'TK A', 'guru' => 'Ustadzah Maya'],
-                            ['id' => 7, 'hari' => 'Rabu', 'waktu' => '08:00 - 09:00', 'mapel' => 'Agama Islam', 'kelas' => 'TK B', 'guru' => 'Ustadzah Maya'],
-                        ] as $jadwal)
-                            <tr>
-                                <td><strong>{{ $jadwal['hari'] }}</strong></td>
-                                <td>{{ $jadwal['waktu'] }}</td>
-                                <td>{{ $jadwal['mapel'] }}</td>
-                                <td>
-                                    <span class="type-badge type-badge--pembelajaran">{{ $jadwal['kelas'] }}</span>
-                                </td>
-                                <td>{{ $jadwal['guru'] }}</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="{{ route('guru.jadwal.edit', $jadwal['id']) }}" class="btn-edit">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/>
-                                            </svg>
-                                            Edit
-                                        </a>
-                                        <button type="button" class="btn-danger" onclick="openDeleteModal({{ $jadwal['id'] }}, '{{ $jadwal['mapel'] }}')">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/>
-                                            </svg>
-                                            Hapus
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" style="text-align: center; color: #5D4037; padding: 40px;">
-                                    Belum ada jadwal pembelajaran.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+            @php
+                $rawPembelajaran = $jadwalPembelajaran ?? [
+                    // Senin
+                    ['id' =>  1, 'hari' => 'Senin',  'waktu' => '07:30 - 08:00', 'mapel' => 'Pembukaan & Doa',   'kelas' => 'Semua'],
+                    ['id' =>  2, 'hari' => 'Senin',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Balok',      'kelas' => 'TK A'],
+                    ['id' =>  3, 'hari' => 'Senin',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Alam',       'kelas' => 'TK B'],
+                    ['id' =>  4, 'hari' => 'Senin',  'waktu' => '09:00 - 10:00', 'mapel' => 'Motorik Halus',     'kelas' => 'Semua'],
+                    // Selasa
+                    ['id' =>  5, 'hari' => 'Selasa', 'waktu' => '07:30 - 08:00', 'mapel' => 'Senam Pagi',        'kelas' => 'Semua'],
+                    ['id' =>  6, 'hari' => 'Selasa', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Seni',       'kelas' => 'TK A'],
+                    ['id' =>  7, 'hari' => 'Selasa', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Peran',      'kelas' => 'TK B'],
+                    ['id' =>  8, 'hari' => 'Selasa', 'waktu' => '09:00 - 10:00', 'mapel' => 'Menggambar Bebas',  'kelas' => 'Semua'],
+                    // Rabu
+                    ['id' =>  9, 'hari' => 'Rabu',   'waktu' => '07:30 - 08:00', 'mapel' => 'Pembukaan & Doa',   'kelas' => 'Semua'],
+                    ['id' => 10, 'hari' => 'Rabu',   'waktu' => '08:00 - 09:00', 'mapel' => 'Agama Islam',       'kelas' => 'TK A'],
+                    ['id' => 11, 'hari' => 'Rabu',   'waktu' => '08:00 - 09:00', 'mapel' => 'Agama Islam',       'kelas' => 'TK B'],
+                    ['id' => 12, 'hari' => 'Rabu',   'waktu' => '09:00 - 10:00', 'mapel' => 'Berhitung',         'kelas' => 'Semua'],
+                    // Kamis
+                    ['id' => 13, 'hari' => 'Kamis',  'waktu' => '07:30 - 08:00', 'mapel' => 'Senam Pagi',        'kelas' => 'Semua'],
+                    ['id' => 14, 'hari' => 'Kamis',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Balok',      'kelas' => 'TK B'],
+                    ['id' => 15, 'hari' => 'Kamis',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Bahan Alam', 'kelas' => 'TK A'],
+                    ['id' => 16, 'hari' => 'Kamis',  'waktu' => '09:00 - 10:00', 'mapel' => 'Menyanyi & Musik',  'kelas' => 'Semua'],
+                    // Jumat
+                    ['id' => 17, 'hari' => 'Jumat',  'waktu' => '07:30 - 08:00', 'mapel' => 'Senam & Olahraga',  'kelas' => 'Semua'],
+                    ['id' => 18, 'hari' => 'Jumat',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Peran',      'kelas' => 'TK A'],
+                    ['id' => 19, 'hari' => 'Jumat',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Seni',       'kelas' => 'TK B'],
+                    ['id' => 20, 'hari' => 'Jumat',  'waktu' => '09:00 - 10:00', 'mapel' => 'Cerita & Literasi', 'kelas' => 'Semua'],
+                ];
+                $grouped = collect($rawPembelajaran)->groupBy('hari');
+                $hariOrder = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
+                $grouped = $grouped->sortKeysUsing(fn($a,$b) => array_search($a,$hariOrder) <=> array_search($b,$hariOrder));
+            @endphp
+
+            @if($grouped->isEmpty())
+                <p style="color:#5D4037;padding:40px;text-align:center;">Belum ada jadwal pembelajaran.</p>
+            @else
+            <div class="pembelajaran-grid">
+                @foreach($grouped as $hari => $items)
+                <div class="pembelajaran-card">
+                    <div class="pembelajaran-card__header">
+                        <span class="pembelajaran-card__hari">{{ $hari }}</span>
+                        <span class="pembelajaran-card__count">{{ count($items) }} sesi</span>
+                    </div>
+                    <div class="pembelajaran-card__body">
+                        @foreach($items as $jadwal)
+                        <div class="pembelajaran-item {{ !$loop->last ? 'pembelajaran-item--border' : '' }}">
+                            <div class="pembelajaran-item__top">
+                                <span class="pembelajaran-item__waktu">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
+                                    {{ $jadwal['waktu'] }}
+                                </span>
+                            </div>
+                            <div class="pembelajaran-item__mapel">{{ $jadwal['mapel'] }}</div>
+                            <div class="pembelajaran-item__actions">
+                                <a href="{{ route('guru.jadwal.edit', $jadwal['id']) }}" class="btn-edit btn-edit--sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="13" height="13"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
+                                    Edit
+                                </a>
+                                <button type="button" class="btn-danger btn-danger--sm" onclick="openDeleteModal({{ $jadwal['id'] }}, '{{ $jadwal['mapel'] }}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="13" height="13"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
+                                    Hapus
+                                </button>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endforeach
             </div>
+            @endif
         </div>
     </div>
 

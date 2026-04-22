@@ -442,16 +442,47 @@ class GuruController extends Controller
 
         // Dummy data jadwal pembelajaran
         $jadwalPembelajaran = [
-            ['id' => 1, 'hari' => 'Senin', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Balok', 'kelas' => 'TK A', 'guru' => 'Bu Siti'],
-            ['id' => 2, 'hari' => 'Senin', 'waktu' => '09:00 - 10:00', 'mapel' => 'Sentra Seni', 'kelas' => 'TK A', 'guru' => 'Bu Ani'],
-            ['id' => 3, 'hari' => 'Senin', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Alam', 'kelas' => 'TK B', 'guru' => 'Bu Dewi'],
-            ['id' => 4, 'hari' => 'Selasa', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Peran', 'kelas' => 'TK A', 'guru' => 'Bu Siti'],
-            ['id' => 5, 'hari' => 'Selasa', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Balok', 'kelas' => 'TK B', 'guru' => 'Bu Ani'],
-            ['id' => 6, 'hari' => 'Rabu', 'waktu' => '08:00 - 09:00', 'mapel' => 'Agama Islam', 'kelas' => 'TK A', 'guru' => 'Ustadzah Maya'],
-            ['id' => 7, 'hari' => 'Rabu', 'waktu' => '08:00 - 09:00', 'mapel' => 'Agama Islam', 'kelas' => 'TK B', 'guru' => 'Ustadzah Maya'],
+            // Senin
+            ['id' =>  1, 'hari' => 'Senin',  'waktu' => '07:30 - 08:00', 'mapel' => 'Pembukaan & Doa',   'kelas' => 'Semua'],
+            ['id' =>  2, 'hari' => 'Senin',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Balok',      'kelas' => 'TK A'],
+            ['id' =>  3, 'hari' => 'Senin',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Alam',       'kelas' => 'TK B'],
+            ['id' =>  4, 'hari' => 'Senin',  'waktu' => '09:00 - 10:00', 'mapel' => 'Motorik Halus',     'kelas' => 'Semua'],
+            // Selasa
+            ['id' =>  5, 'hari' => 'Selasa', 'waktu' => '07:30 - 08:00', 'mapel' => 'Senam Pagi',        'kelas' => 'Semua'],
+            ['id' =>  6, 'hari' => 'Selasa', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Seni',       'kelas' => 'TK A'],
+            ['id' =>  7, 'hari' => 'Selasa', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Peran',      'kelas' => 'TK B'],
+            ['id' =>  8, 'hari' => 'Selasa', 'waktu' => '09:00 - 10:00', 'mapel' => 'Menggambar Bebas',  'kelas' => 'Semua'],
+            // Rabu
+            ['id' =>  9, 'hari' => 'Rabu',   'waktu' => '07:30 - 08:00', 'mapel' => 'Pembukaan & Doa',   'kelas' => 'Semua'],
+            ['id' => 10, 'hari' => 'Rabu',   'waktu' => '08:00 - 09:00', 'mapel' => 'Agama Islam',       'kelas' => 'TK A'],
+            ['id' => 11, 'hari' => 'Rabu',   'waktu' => '08:00 - 09:00', 'mapel' => 'Agama Islam',       'kelas' => 'TK B'],
+            ['id' => 12, 'hari' => 'Rabu',   'waktu' => '09:00 - 10:00', 'mapel' => 'Berhitung',         'kelas' => 'Semua'],
+            // Kamis
+            ['id' => 13, 'hari' => 'Kamis',  'waktu' => '07:30 - 08:00', 'mapel' => 'Senam Pagi',        'kelas' => 'Semua'],
+            ['id' => 14, 'hari' => 'Kamis',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Balok',      'kelas' => 'TK B'],
+            ['id' => 15, 'hari' => 'Kamis',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Bahan Alam', 'kelas' => 'TK A'],
+            ['id' => 16, 'hari' => 'Kamis',  'waktu' => '09:00 - 10:00', 'mapel' => 'Menyanyi & Musik',  'kelas' => 'Semua'],
+            // Jumat
+            ['id' => 17, 'hari' => 'Jumat',  'waktu' => '07:30 - 08:00', 'mapel' => 'Senam & Olahraga',  'kelas' => 'Semua'],
+            ['id' => 18, 'hari' => 'Jumat',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Peran',      'kelas' => 'TK A'],
+            ['id' => 19, 'hari' => 'Jumat',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Seni',       'kelas' => 'TK B'],
+            ['id' => 20, 'hari' => 'Jumat',  'waktu' => '09:00 - 10:00', 'mapel' => 'Cerita & Literasi', 'kelas' => 'Semua'],
         ];
 
         return view('guru.jadwal.index', compact('jadwalKegiatan', 'jadwalPembelajaran'));
+    }
+
+    /**
+     * Jadwal - Create
+     */
+    public function jadwalCreate()
+    {
+        $kelasList = [
+            ['id' => 1, 'nama' => 'A1'],
+            ['id' => 2, 'nama' => 'B1'],
+            ['id' => 3, 'nama' => 'B2'],
+        ];
+        return view('guru.jadwal.create', compact('kelasList'));
     }
 
     /**
@@ -482,7 +513,13 @@ class GuruController extends Controller
 
         $jadwal = $allJadwal[$id];
 
-        return view('guru.jadwal.edit', compact('jadwal'));
+        $kelasList = [
+            ['id' => 1, 'nama' => 'A1'],
+            ['id' => 2, 'nama' => 'B1'],
+            ['id' => 3, 'nama' => 'B2'],
+        ];
+
+        return view('guru.jadwal.edit', compact('jadwal', 'kelasList'));
     }
 
     /**

@@ -93,6 +93,7 @@ Route::middleware('dummy.auth')->group(function () {
 
     // Guru - Administrasi: Jadwal
     Route::get('/guru/jadwal', [GuruController::class, 'jadwalIndex'])->name('guru.jadwal.index');
+    Route::get('/guru/jadwal/create', [GuruController::class, 'jadwalCreate'])->name('guru.jadwal.create');
     Route::post('/guru/jadwal', [GuruController::class, 'jadwalStore'])->name('guru.jadwal.store');
     Route::get('/guru/jadwal/{id}/edit', [GuruController::class, 'jadwalEdit'])->name('guru.jadwal.edit');
     Route::put('/guru/jadwal/{id}', [GuruController::class, 'jadwalUpdate'])->name('guru.jadwal.update');
