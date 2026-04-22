@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Jadwal Konseling - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Jadwal Konseling')
@@ -48,7 +48,7 @@
         min-width: 140px;
         transition: border-color .15s;
     }
-    .filter-select:focus { border-color: #fb923c; box-shadow: 0 0 0 3px rgba(251,146,60,.15); }
+    .filter-select:focus { border-color: #F06292; box-shadow: 0 0 0 3px rgba(251,146,60,.15); }
 
     /* ── Table card ───────────────────────────────────── */
     .table-card {
@@ -97,10 +97,10 @@
         text-transform: uppercase;
         white-space: nowrap;
     }
-    .badge--disetujui { background: #ffedd5; color: #c2410c; }
+    .badge--disetujui { background: #ffedd5; color: #3E2723; }
     .badge--pending   { background: #FFFDE7; color: #5D4037; border: 1px solid #3E272330; }
     .badge--selesai   { background: #3E2723; color: #FFFDE7; }
-    .badge--tolak     { background: #FEE2E2; color: #B91C1C; }
+    .badge--tolak     { background: #F0629220; color: #d81b72; }
 
     /* ── Aksi links ───────────────────────────────────── */
     .aksi-links {
@@ -119,15 +119,15 @@
         transition: background .12s;
     }
     .aksi-lihat     { background: #ecfdf5; color: #2E8B60; }
-    .aksi-lihat:hover     { background: #d1fae5; }
+    .aksi-lihat:hover     { background: #4CAF8230; }
     .aksi-edit      { background: #FFFBEB; color: #5D4037; }
     .aksi-edit:hover      { background: #FFF176; }
-    .aksi-batalkan  { background: #FEF2F2; color: #B91C1C; }
-    .aksi-batalkan:hover  { background: #FEE2E2; }
-    .aksi-setuju    { background: #ffedd5; color: #c2410c; }
+    .aksi-batalkan  { background: #F0629220; color: #d81b72; }
+    .aksi-batalkan:hover  { background: #F0629220; }
+    .aksi-setuju    { background: #ffedd5; color: #3E2723; }
     .aksi-setuju:hover    { background: #fed7aa; }
-    .aksi-tolak     { background: #FEF2F2; color: #B91C1C; }
-    .aksi-tolak:hover     { background: #FEE2E2; }
+    .aksi-tolak     { background: #F0629220; color: #d81b72; }
+    .aksi-tolak:hover     { background: #F0629220; }
     .aksi-catatan   { background: #FFFDE7; color: #3E2723; }
     .aksi-catatan:hover   { background: #3E272320; }
 
@@ -394,7 +394,7 @@
             <form method="POST" id="formTolak" action="">
                 @csrf
                 <div class="modal-actions">
-                    <button type="submit" class="btn-modal-save" style="background:#B91C1C;">Ya, Tolak</button>
+                    <button type="submit" class="btn-modal-save" style="background:#d81b72;">Ya, Tolak</button>
                     <button type="button" class="btn-modal-cancel" onclick="document.getElementById('modalTolak').classList.remove('open')">Batal</button>
                 </div>
             </form>
@@ -413,7 +413,7 @@
             <form method="POST" id="formBatalkan" action="">
                 @csrf
                 <div class="modal-actions">
-                    <button type="submit" class="btn-modal-save" style="background:#B91C1C;">Ya, Batalkan</button>
+                    <button type="submit" class="btn-modal-save" style="background:#d81b72;">Ya, Batalkan</button>
                     <button type="button" class="btn-modal-cancel" onclick="document.getElementById('modalBatalkan').classList.remove('open')">Batal</button>
                 </div>
             </form>

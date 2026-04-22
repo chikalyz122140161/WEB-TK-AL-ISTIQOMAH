@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @php $userRole = 'Orang Tua'; @endphp
 
 @section('title', 'Chat dengan Guru - SISTEM BK TK AL-ISTIQOMAH')
@@ -143,7 +143,7 @@
     }
     .chat-area__header-status {
         font-size: 12px;
-        color: #10B981;
+        color: #4CAF82;
     }
 
     /* Messages */

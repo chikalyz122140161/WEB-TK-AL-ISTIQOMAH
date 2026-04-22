@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @php $userRole = 'Orang Tua'; @endphp
 
 @section('title', 'Lihat Presensi Anak - SISTEM TK AL-ISTIQOMAH')
@@ -87,10 +87,10 @@
         color: #3E2723;
         line-height: 1;
     }
-    .presensi-stat__value--green { color: #047857; }
+    .presensi-stat__value--green { color: #2E8B60; }
     .presensi-stat__value--amber { color: #5D4037; }
     .presensi-stat__value--blue { color: #2E8B60; }
-    .presensi-stat__value--red { color: #c0392b; }
+    .presensi-stat__value--red { color: #d81b72; }
     .presensi-stat__value--teal { color: #3E2723; }
     .presensi-stat__label {
         font-size: 13px;
@@ -146,20 +146,20 @@
         font-weight: 600;
     }
     .status-badge--hadir {
-        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-        color: #047857;
+        background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
+        color: #2E8B60;
     }
     .status-badge--izin {
         background: #FFF176;
         color: #5D4037;
     }
     .status-badge--sakit {
-        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
         color: #2E8B60;
     }
     .status-badge--alpa {
-        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-        color: #c0392b;
+        background: linear-gradient(135deg, #F0629220 0%, #F0629230 100%);
+        color: #d81b72;
     }
     .empty-state {
         text-align: center;

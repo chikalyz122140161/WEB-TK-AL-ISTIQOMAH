@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -15,7 +15,7 @@
         body {
             font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #FFFDE7 0%, #F9FBE7 50%, #E8F5E9 100%);
+            background: linear-gradient(135deg, #FFFDE7 0%, #FFFDE7 50%, #FFFDE7 100%);
             position: relative;
             overflow-x: hidden;
         }
@@ -39,7 +39,7 @@
         .circle-2 {
             width: 200px;
             height: 200px;
-            background: linear-gradient(135deg, rgba(244, 114, 182, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
+            background: linear-gradient(135deg, rgba(240, 98, 146, 0.12) 0%, rgba(240, 98, 146, 0.08) 100%);
             border-radius: 50%;
             top: 60%;
             right: -80px;
@@ -48,7 +48,7 @@
         .circle-3 {
             width: 250px;
             height: 250px;
-            background: linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(14, 165, 233, 0.08) 100%);
+            background: linear-gradient(135deg, rgba(76, 175, 130, 0.12) 0%, rgba(76, 175, 130, 0.08) 100%);
             border-radius: 50%;
             bottom: 10%;
             left: 5%;
@@ -56,7 +56,7 @@
 
         /* Header */
         .page-header {
-            background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 30%, #2E8B60 60%, #E8F5E9 100%);
+            background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 30%, #2E8B60 60%, #FFFDE7 100%);
             padding: 32px 20px;
             text-align: center;
             position: relative;
@@ -175,7 +175,7 @@
         }
 
         .section-icon.green {
-            background: linear-gradient(135deg, #3D9B72 0%, #16a34a 100%);
+            background: linear-gradient(135deg, #3D9B72 0%, #4CAF82 100%);
         }
 
         .section-icon.blue {
@@ -183,7 +183,7 @@
         }
 
         .section-icon.purple {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            background: linear-gradient(135deg, #F06292 0%, #7c3aed 100%);
         }
 
         .section-desc {
@@ -240,7 +240,7 @@
         }
 
         .form-group label .required {
-            color: #c0392b;
+            color: #d81b72;
         }
 
         .form-group input,
@@ -337,9 +337,9 @@
 
         /* Error Message */
         .error-message {
-            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-            border: 1px solid #fecaca;
-            color: #c0392b;
+            background: linear-gradient(135deg, #F0629220 0%, #F0629220 100%);
+            border: 1px solid #F0629230;
+            color: #d81b72;
             padding: 16px;
             border-radius: 12px;
             font-size: 0.9rem;

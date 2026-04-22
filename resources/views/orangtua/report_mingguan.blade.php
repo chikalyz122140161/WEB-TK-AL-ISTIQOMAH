@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @php $userRole = 'Orang Tua'; @endphp
 
 @section('title', 'Report Perkembangan Mingguan - SISTEM BK TK AL-ISTIQOMAH')
@@ -165,7 +165,7 @@
     /* General Notes */
     .general-notes {
         background: #ecfdf5;
-        border: 1px solid #a7f3d0;
+        border: 1px solid #4CAF8230;
         border-radius: 8px;
         padding: 20px;
         margin-top: 24px;

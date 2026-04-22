@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Kelola Rapot Semester - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Kelola Rapot Semester')
@@ -164,12 +164,12 @@
         text-transform: uppercase;
     }
     .status-badge.terbit {
-        background: rgba(16, 185, 129, 0.15);
+        background: rgba(76, 175, 130, 0.15);
         color: #059669;
     }
     .status-badge.draft {
-        background: rgba(245, 158, 11, 0.15);
-        color: #d97706;
+        background: rgba(76, 175, 130, 0.15);
+        color: #3E2723;
     }
 
     /* Action Buttons */
@@ -212,7 +212,7 @@
     }
     .btn-action.delete {
         background: rgba(240, 98, 146, 0.15);
-        color: #c0392b;
+        color: #d81b72;
     }
     .btn-action.delete:hover {
         background: #F06292;
@@ -227,9 +227,9 @@
         font-size: 14px;
     }
     .alert-success {
-        background: rgba(16, 185, 129, 0.15);
+        background: rgba(76, 175, 130, 0.15);
         color: #059669;
-        border: 1px solid rgba(16, 185, 129, 0.3);
+        border: 1px solid rgba(76, 175, 130, 0.3);
     }
 
     /* Empty state */
@@ -385,7 +385,7 @@
 <!-- Delete Confirmation Modal -->
 <div id="deleteModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:12px;padding:32px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
-        <div style="width:56px;height:56px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+        <div style="width:56px;height:56px;background:#F0629220;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#d81b60" style="width:28px;height:28px;"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
         </div>
         <h3 style="font-size:18px;font-weight:700;color:#3E2723;margin:0 0 8px;">Hapus Rapot?</h3>

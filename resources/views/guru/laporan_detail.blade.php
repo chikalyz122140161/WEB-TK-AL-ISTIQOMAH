@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Detail Laporan Perkembangan - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Detail Laporan Perkembangan')
@@ -65,7 +65,7 @@
         letter-spacing: .6px;
         margin: 0 0 16px;
         padding-bottom: 10px;
-        border-bottom: 2px solid #fb923c;
+        border-bottom: 2px solid #F06292;
         display: inline-block;
     }
 

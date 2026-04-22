@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Detail Pendaftaran')
 
@@ -232,30 +232,30 @@
 }
 
 .btn--success {
-    background: #16a34a;
+    background: #4CAF82;
     color: white;
 }
 
 .btn--success:hover {
-    background: #15803d;
+    background: #3D9B72;
 }
 
 .btn--danger {
-    background: #dc2626;
+    background: #d81b72;
     color: white;
 }
 
 .btn--danger:hover {
-    background: #b91c1c;
+    background: #d81b72;
 }
 
 .btn--wawancara {
-    background: #ea580c;
+    background: #F06292;
     color: white;
 }
 
 .btn--wawancara:hover {
-    background: #c2410c;
+    background: #3E2723;
 }
 
 /* Status Banner */
@@ -269,18 +269,18 @@
 }
 
 .status-banner--pending {
-    background: rgba(245, 158, 11, 0.1);
-    border: 1px solid rgba(245, 158, 11, 0.3);
+    background: rgba(76, 175, 130, 0.15);
+    border: 1px solid rgba(76, 175, 130, 0.3);
 }
 
 .status-banner--diterima {
-    background: rgba(34, 197, 94, 0.1);
-    border: 1px solid rgba(34, 197, 94, 0.3);
+    background: rgba(76, 175, 130, 0.15);
+    border: 1px solid rgba(76, 175, 130, 0.3);
 }
 
 .status-banner--ditolak {
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.3);
+    background: rgba(240, 98, 146, 0.15);
+    border: 1px solid rgba(240, 98, 146, 0.2);
 }
 
 .status-banner__icon {
@@ -298,18 +298,18 @@
 }
 
 .status-banner--pending .status-banner__icon {
-    background: rgba(245, 158, 11, 0.2);
-    color: #d97706;
+    background: rgba(76, 175, 130, 0.2);
+    color: #3E2723;
 }
 
 .status-banner--diterima .status-banner__icon {
-    background: rgba(34, 197, 94, 0.2);
-    color: #16a34a;
+    background: rgba(76, 175, 130, 0.2);
+    color: #4CAF82;
 }
 
 .status-banner--ditolak .status-banner__icon {
-    background: rgba(239, 68, 68, 0.2);
-    color: #dc2626;
+    background: rgba(240, 98, 146, 0.2);
+    color: #d81b72;
 }
 
 .status-banner__content {
@@ -557,17 +557,17 @@
 .modal-icon--success svg {
     width: 32px;
     height: 32px;
-    color: #16a34a;
+    color: #4CAF82;
 }
 
 .modal-icon--danger {
-    background: #fee2e2;
+    background: #F0629220;
 }
 
 .modal-icon--danger svg {
     width: 32px;
     height: 32px;
-    color: #c0392b;
+    color: #d81b72;
 }
 
 .modal-title {
@@ -748,7 +748,7 @@
             <textarea name="alasan_penolakan" class="form-textarea" rows="3" placeholder="Alasan penolakan (opsional)..."></textarea>
             <div class="modal-actions" style="margin-top: 1rem;">
                 <button type="button" class="btn btn--secondary" onclick="closeRejectModal()">Batal</button>
-                <button type="submit" class="btn btn--primary" style="background: #dc2626;">Ya, Tolak</button>
+                <button type="submit" class="btn btn--primary" style="background: #d81b72;">Ya, Tolak</button>
             </div>
         </form>
     </div>

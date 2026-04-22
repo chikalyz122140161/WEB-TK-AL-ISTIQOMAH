@@ -21,42 +21,38 @@
 @endif
 
 <!-- Stats Cards -->
-<div class="stats-grid">
-    <div class="stat-card stat-card--warning">
-        <div class="stat-card__icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
-        </div>
-        <div class="stat-card__content">
-            <span class="stat-card__value">{{ $totalPending }}</span>
+<div class="stat-row">
+    <div class="stat-card stat-card--secondary">
+        <div class="stat-card__header">
             <span class="stat-card__label">Menunggu Verifikasi</span>
+            <svg class="stat-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
         </div>
+        <div class="stat-card__value">{{ $totalPending }}</div>
+        <div class="stat-card__sub">Menunggu diproses</div>
     </div>
-    <div class="stat-card stat-card--success">
-        <div class="stat-card__icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
-        </div>
-        <div class="stat-card__content">
-            <span class="stat-card__value">{{ $totalDiterima }}</span>
+    <div class="stat-card stat-card--primary">
+        <div class="stat-card__header">
             <span class="stat-card__label">Diterima</span>
+            <svg class="stat-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
         </div>
+        <div class="stat-card__value">{{ $totalDiterima }}</div>
+        <div class="stat-card__sub">Siswa diterima</div>
     </div>
-    <div class="stat-card stat-card--danger">
-        <div class="stat-card__icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z" clip-rule="evenodd"/></svg>
-        </div>
-        <div class="stat-card__content">
-            <span class="stat-card__value">{{ $totalDitolak }}</span>
+    <div class="stat-card stat-card--accent">
+        <div class="stat-card__header">
             <span class="stat-card__label">Ditolak</span>
+            <svg class="stat-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z" clip-rule="evenodd"/></svg>
         </div>
+        <div class="stat-card__value">{{ $totalDitolak }}</div>
+        <div class="stat-card__sub">Tidak diterima</div>
     </div>
-    <div class="stat-card stat-card--info">
-        <div class="stat-card__icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625Z"/><path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z"/></svg>
-        </div>
-        <div class="stat-card__content">
-            <span class="stat-card__value">{{ $totalSemua }}</span>
+    <div class="stat-card stat-card--neutral">
+        <div class="stat-card__header">
             <span class="stat-card__label">Total Pendaftaran</span>
+            <svg class="stat-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625Z"/><path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z"/></svg>
         </div>
+        <div class="stat-card__value">{{ $totalSemua }}</div>
+        <div class="stat-card__sub">Semua pendaftar</div>
     </div>
 </div>
 
@@ -190,246 +186,36 @@
     </div>
 </div>
 
+@push('styles')
 <style>
-/* Page Header */
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.page-header__left { flex: 1; }
-
-/* Stats Grid */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.stat-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    border: 1px solid rgba(0,0,0,0.05);
-}
-
-.stat-card__icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.stat-card__icon svg {
-    width: 24px;
-    height: 24px;
-}
-
-.stat-card--warning .stat-card__icon {
-    background: rgba(245, 158, 11, 0.15);
-    color: #d97706;
-}
-
-.stat-card--success .stat-card__icon {
-    background: rgba(34, 197, 94, 0.15);
-    color: #16a34a;
-}
-
-.stat-card--danger .stat-card__icon {
-    background: rgba(239, 68, 68, 0.15);
-    color: #dc2626;
-}
-
-.stat-card--info .stat-card__icon {
-    background: rgba(76, 175, 130, 0.15);
-    color: #4CAF82;
-}
-
-.stat-card__content {
-    display: flex;
-    flex-direction: column;
-}
-
-.stat-card__value {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #3E2723;
-    line-height: 1;
-}
-
-.stat-card__label {
-    font-size: 0.8rem;
-    color: #5D4037;
-    margin-top: 0.25rem;
-}
-
-/* Tabs Navigation */
-.tabs-nav {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-}
-
-.tabs-nav__item {
-    padding: 0.625rem 1rem;
-    background: white;
-    border: 1px solid rgba(0,0,0,0.1);
-    border-radius: 8px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #5D4037;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.2s;
-}
-
-.tabs-nav__item:hover {
-    background: #f8fafc;
-    border-color: #4CAF82;
-}
-
-.tabs-nav__item.active {
-    background: #4CAF82;
-    color: white;
-    border-color: #4CAF82;
-}
-
-.tabs-nav__badge {
-    padding: 0.125rem 0.5rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.tabs-nav__badge.warning {
-    background: rgba(245, 158, 11, 0.2);
-    color: #d97706;
-}
-
-.tabs-nav__badge.orange {
-    background: rgba(234, 88, 12, 0.15);
-    color: #ea580c;
-}
-
-.tabs-nav__badge.success {
-    background: rgba(34, 197, 94, 0.2);
-    color: #16a34a;
-}
-
-.tabs-nav__badge.danger {
-    background: rgba(239, 68, 68, 0.2);
-    color: #dc2626;
-}
-
-.tabs-nav__item.active .tabs-nav__badge {
-    background: rgba(255,255,255,0.25);
-    color: white;
-}
-
-/* Filter Row */
-.filter-row {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.filter-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    min-width: 150px;
-}
-
-.filter-group label {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: #5D4037;
-}
-
-.form-input, .form-select {
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #3E272330;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    background: white;
-}
-
-.form-input:focus, .form-select:focus {
-    outline: none;
-    border-color: #4CAF82;
-    box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.1);
-}
-
-/* Table Styles */
-.table-responsive { overflow-x: auto; }
-
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.data-table th,
-.data-table td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid #3E272320;
-}
-
-.data-table th {
-    background: #FFFDE7;
-    font-weight: 600;
-    color: #3E2723;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.data-table tbody tr:hover {
-    background: #FFFDE7;
-}
-
-/* Cells */
+/* Page-specific styles only */
 .date-cell {
-    font-size: 0.85rem;
-    color: #5D4037;
+    font-size: 13px;
+    color: var(--text-mid);
 }
 
 .student-cell {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 10px;
 }
 
 .student-cell__avatar {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, #3E2723, #4CAF82);
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, var(--text), var(--green));
     color: white;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 14px;
     flex-shrink: 0;
 }
 
 .student-cell__avatar--female {
-    background: linear-gradient(135deg, #ec4899, #f472b6);
+    background: linear-gradient(135deg, var(--pink), var(--pink-dark));
 }
 
 .student-cell__info {
@@ -439,12 +225,12 @@
 
 .student-cell__name {
     font-weight: 600;
-    color: #3E2723;
+    color: var(--text);
 }
 
 .student-cell__detail {
-    font-size: 0.75rem;
-    color: #5D4037;
+    font-size: 12px;
+    color: var(--text-mid);
 }
 
 .parent-cell {
@@ -454,12 +240,12 @@
 
 .parent-cell__name {
     font-weight: 500;
-    color: #3E2723;
+    color: var(--text);
 }
 
 .parent-cell__job {
-    font-size: 0.75rem;
-    color: #5D4037;
+    font-size: 12px;
+    color: var(--text-mid);
 }
 
 .contact-cell {
@@ -469,253 +255,21 @@
 
 .contact-cell__email {
     font-weight: 500;
-    color: #3E2723;
-    font-size: 0.85rem;
+    color: var(--text);
+    font-size: 13px;
 }
 
 .contact-cell__phone {
-    font-size: 0.75rem;
-    color: #5D4037;
+    font-size: 12px;
+    color: var(--text-mid);
 }
 
-/* Badges */
-.badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 500;
-}
-
-.badge--warning {
-    background: rgba(245, 158, 11, 0.15);
-    color: #d97706;
-}
-
-.badge--success {
-    background: rgba(34, 197, 94, 0.15);
-    color: #16a34a;
-}
-
-.badge--danger {
-    background: rgba(239, 68, 68, 0.15);
-    color: #dc2626;
-}
-
-.badge--orange {
-    background: rgba(234, 88, 12, 0.12);
-    color: #ea580c;
-}
-
-.badge--secondary {
-    background: #f1f5f9;
-    color: #5D4037;
-}
-
-/* Action Buttons */
-.action-buttons {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.btn--icon {
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.btn--info {
-    background: rgba(76, 175, 130, 0.15);
-    color: #4CAF82;
-}
-
-.btn--info:hover {
-    background: rgba(76, 175, 130, 0.25);
-}
-
-.btn--success {
-    background: rgba(34, 197, 94, 0.15);
-    color: #16a34a;
-}
-
-.btn--success:hover {
-    background: rgba(34, 197, 94, 0.25);
-}
-
-.btn--danger {
-    background: #fee2e2;
-    color: #c0392b;
-}
-
-.btn--danger:hover {
-    background: #fecaca;
-}
-
-.btn--orange {
-    background: rgba(234, 88, 12, 0.12);
-    color: #ea580c;
-}
-
-.btn--orange:hover {
-    background: rgba(234, 88, 12, 0.22);
-}
-
-/* Utilities */
-.mb-4 { margin-bottom: 1rem; }
-.p-0 { padding: 0 !important; }
-.py-4 { padding-top: 1rem; padding-bottom: 1rem; }
-.text-center { text-align: center; }
-
-/* Alerts */
-.alert {
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-}
-
-.alert--success {
-    background: #dcfce7;
-    color: #166534;
-    border: 1px solid #86efac;
-}
-
-/* Modal */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s;
-}
-
-.modal-overlay.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-.modal-box {
-    background: white;
-    border-radius: 16px;
-    padding: 2rem;
-    max-width: 450px;
-    width: 90%;
-    text-align: center;
-    transform: scale(0.9);
-    transition: transform 0.3s;
-}
-
-.modal-overlay.active .modal-box {
-    transform: scale(1);
-}
-
-.modal-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1rem;
-}
-
-.modal-icon--success {
-    background: #dcfce7;
-}
-
-.modal-icon--success svg {
-    width: 32px;
-    height: 32px;
-    color: #16a34a;
-}
-
-.modal-icon--danger {
-    background: #fee2e2;
-}
-
-.modal-icon--danger svg {
-    width: 32px;
-    height: 32px;
-    color: #c0392b;
-}
-
-.modal-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #3E2723;
-    margin-bottom: 0.5rem;
-}
-
-.modal-message {
-    color: #5D4037;
-    margin-bottom: 1.5rem;
-}
-
-.modal-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-}
-
-.modal-actions .btn {
-    min-width: 100px;
-    padding: 0.625rem 1.25rem;
-    border-radius: 8px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-}
-
-.btn--secondary {
-    background: #f1f5f9;
-    color: #5D4037;
-}
-
-.btn--secondary:hover {
-    background: #e2e8f0;
-}
-
-.btn--primary {
-    background: #4CAF82;
-    color: white;
-}
-
-.btn--primary:hover {
-    background: #3D9B72;
-}
-
-.form-textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #3E272330;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    resize: vertical;
-    margin-top: 1rem;
-    text-align: left;
-}
-
-/* Kelas Grid */
+/* Kelas Grid (modal) */
 .kelas-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-    margin-top: 1rem;
+    gap: 10px;
+    margin-top: 16px;
 }
 
 .kelas-option {
@@ -731,48 +285,49 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 1rem;
-    border-radius: 10px;
+    padding: 16px;
+    border-radius: var(--r-md);
     border: 2px solid transparent;
-    transition: all 0.2s;
+    transition: var(--t);
     cursor: pointer;
 }
 
 .kelas-card--a {
-    background: rgba(76, 175, 130, 0.08);
-    border-color: rgba(76, 175, 130, 0.2);
+    background: var(--green-12);
+    border-color: var(--green-20);
 }
 
 .kelas-card--b {
-    background: rgba(99, 102, 241, 0.08);
-    border-color: rgba(99, 102, 241, 0.2);
+    background: rgba(99,102,241,0.08);
+    border-color: rgba(99,102,241,0.20);
 }
 
 .kelas-option input[type="radio"]:checked + .kelas-card--a {
-    border-color: #4CAF82;
-    background: rgba(76, 175, 130, 0.15);
-    box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.2);
+    border-color: var(--green);
+    background: var(--green-20);
+    box-shadow: 0 0 0 3px var(--green-12);
 }
 
 .kelas-option input[type="radio"]:checked + .kelas-card--b {
     border-color: #6366f1;
-    background: rgba(99, 102, 241, 0.15);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    background: rgba(99,102,241,0.15);
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
 }
 
 .kelas-label {
-    font-size: 1.5rem;
+    font-size: 24px;
     font-weight: 800;
-    color: #3E2723;
+    color: var(--text);
     line-height: 1;
 }
 
 .kelas-desc {
-    font-size: 0.75rem;
-    color: #5D4037;
-    margin-top: 0.25rem;
+    font-size: 12px;
+    color: var(--text-mid);
+    margin-top: 4px;
 }
 </style>
+@endpush
 
 <!-- Accept Confirmation Modal -->
 <div id="acceptModal" class="modal-overlay">
@@ -783,7 +338,7 @@
             </svg>
         </div>
         <h3 class="modal-title">Terima & Pilih Kelas</h3>
-        <p class="modal-message">Pilih kelas untuk <strong id="acceptSiswaName"></strong></p>
+        <p class="modal-desc">Pilih kelas untuk <strong id="acceptSiswaName"></strong></p>
         <form id="acceptForm" method="POST">
             @csrf
             <div class="kelas-grid">
@@ -816,8 +371,8 @@
                     </span>
                 </label>
             </div>
-            <div class="modal-actions" style="margin-top: 1.5rem;">
-                <button type="button" class="btn btn--secondary" onclick="closeAcceptModal()">Batal</button>
+            <div class="modal-actions" style="margin-top: 24px;">
+                <button type="button" class="btn btn--ghost" onclick="closeAcceptModal()">Batal</button>
                 <button type="submit" class="btn btn--primary">Terima & Simpan</button>
             </div>
         </form>
@@ -833,13 +388,13 @@
             </svg>
         </div>
         <h3 class="modal-title">Tolak Pendaftaran?</h3>
-        <p class="modal-message">Apakah Anda yakin ingin menolak pendaftaran <strong id="rejectSiswaName"></strong>?</p>
+        <p class="modal-desc">Apakah Anda yakin ingin menolak pendaftaran <strong id="rejectSiswaName"></strong>?</p>
         <form id="rejectForm" method="POST">
             @csrf
-            <textarea name="alasan_penolakan" class="form-textarea" rows="3" placeholder="Alasan penolakan (opsional)..."></textarea>
-            <div class="modal-actions" style="margin-top: 1rem;">
-                <button type="button" class="btn btn--secondary" onclick="closeRejectModal()">Batal</button>
-                <button type="submit" class="btn btn--primary" style="background: #dc2626;">Ya, Tolak</button>
+            <textarea name="alasan_penolakan" class="form-textarea" rows="3" placeholder="Alasan penolakan (opsional)..." style="margin-top:12px;"></textarea>
+            <div class="modal-actions" style="margin-top: 16px;">
+                <button type="button" class="btn btn--ghost" onclick="closeRejectModal()">Batal</button>
+                <button type="submit" class="btn btn--danger">Ya, Tolak</button>
             </div>
         </form>
     </div>

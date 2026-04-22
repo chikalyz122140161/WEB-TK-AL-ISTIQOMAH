@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Laporan Perkembangan - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Laporan Perkembangan Siswa')
@@ -33,7 +33,7 @@
         min-width: 150px;
         transition: border-color .15s;
     }
-    .filter-select:focus { border-color: #fb923c; box-shadow: 0 0 0 3px rgba(251,146,60,.15); }
+    .filter-select:focus { border-color: #F06292; box-shadow: 0 0 0 3px rgba(251,146,60,.15); }
     .btn-filter {
         height: 36px;
         padding: 0 20px;
@@ -92,7 +92,7 @@
         align-items: center;
         gap: 6px;
         font-weight: 700;
-        color: #c2410c;
+        color: #3E2723;
     }
     .rata-rata__bar {
         width: 48px;
@@ -103,7 +103,7 @@
     }
     .rata-rata__fill {
         height: 100%;
-        background: #fb923c;
+        background: #F06292;
         border-radius: 3px;
     }
 
@@ -124,11 +124,11 @@
         transition: background .12s, color .12s;
     }
     .aksi-lihat  { background: #ecfdf5; color: #2E8B60; }
-    .aksi-lihat:hover  { background: #d1fae5; }
+    .aksi-lihat:hover  { background: #4CAF8230; }
     .aksi-edit   { background: #FFFBEB; color: #5D4037; }
     .aksi-edit:hover   { background: #FFF176; }
-    .aksi-pdf    { background: #FEF2F2; color: #B91C1C; }
-    .aksi-pdf:hover    { background: #FEE2E2; }
+    .aksi-pdf    { background: #F0629220; color: #d81b72; }
+    .aksi-pdf:hover    { background: #F0629220; }
 
     /* Empty state  */
     .empty-state {

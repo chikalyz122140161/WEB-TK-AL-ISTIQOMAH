@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -15,7 +15,7 @@
         body {
             font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #FFFDE7 0%, #F9FBE7 50%, #E8F5E9 100%);
+            background: #FFFDE7;
             display: flex;
             position: relative;
             overflow-x: hidden;
@@ -40,7 +40,7 @@
         .circle-2 {
             width: 200px;
             height: 200px;
-            background: linear-gradient(135deg, rgba(244, 114, 182, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
+            background: linear-gradient(135deg, rgba(240, 98, 146, 0.12) 0%, rgba(240, 98, 146, 0.08) 100%);
             border-radius: 50%;
             top: 60%;
             left: 10%;
@@ -49,7 +49,7 @@
         .circle-3 {
             width: 250px;
             height: 250px;
-            background: linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(14, 165, 233, 0.08) 100%);
+            background: linear-gradient(135deg, rgba(76, 175, 130, 0.12) 0%, rgba(76, 175, 130, 0.08) 100%);
             border-radius: 50%;
             bottom: -80px;
             right: -80px;
@@ -58,7 +58,7 @@
         .circle-4 {
             width: 150px;
             height: 150px;
-            background: linear-gradient(135deg, rgba(74, 222, 128, 0.12) 0%, rgba(34, 197, 94, 0.08) 100%);
+            background: linear-gradient(135deg, rgba(76, 175, 130, 0.12) 0%, rgba(76, 175, 130, 0.08) 100%);
             border-radius: 50%;
             top: 20%;
             right: 15%;
@@ -99,7 +99,7 @@
         /* Left side - Illustration */
         .illustration-side {
             flex: 1;
-            background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 30%, #2E8B60 60%, #E8F5E9 100%);
+            background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 30%, #2E8B60 60%, #FFFDE7 100%);
             padding: 40px;
             display: flex;
             flex-direction: column;
@@ -314,9 +314,9 @@
 
         /* Error Message */
         .error-message {
-            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-            border: 1px solid #fecaca;
-            color: #c0392b;
+            background: linear-gradient(135deg, #F0629220 0%, #F0629220 100%);
+            border: 1px solid #F0629230;
+            color: #d81b72;
             padding: 14px 16px;
             border-radius: 12px;
             font-size: 0.875rem;
@@ -371,13 +371,13 @@
         }
 
         .role-badge.admin {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
             color: #2E8B60;
         }
 
         .role-badge.guru {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-            color: #047857;
+            background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
+            color: #2E8B60;
         }
 
         .role-badge.ortu {
@@ -402,19 +402,19 @@
             align-items: center;
             gap: 8px;
             padding: 12px 24px;
-            background: linear-gradient(135deg, #3D9B72 0%, #16a34a 100%);
+            background: linear-gradient(135deg, #3D9B72 0%, #4CAF82 100%);
             color: white;
             text-decoration: none;
             border-radius: 12px;
             font-size: 0.9rem;
             font-weight: 700;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 14px rgba(34, 197, 94, 0.3);
+            box-shadow: 0 4px 14px rgba(76, 175, 130, 0.3);
         }
 
         .btn-register:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.35);
+            box-shadow: 0 8px 20px rgba(76, 175, 130, 0.35);
         }
 
         .btn-register svg {
@@ -434,7 +434,7 @@
         /* Responsive Design */
         @media (max-width: 768px) {
             body {
-                background: linear-gradient(180deg, #4CAF82 0%, #3D9B72 15%, #FFFDE7 30%, #F9FBE7 60%, #E8F5E9 100%);
+                background: linear-gradient(180deg, #4CAF82 0%, #3D9B72 15%, #FFFDE7 30%, #FFFDE7 60%, #FFFDE7 100%);
             }
 
             .main-container {
@@ -554,8 +554,8 @@
 
         /* Demo Credentials Styles */
         .demo-credentials {
-            background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 100%);
-            border: 1px solid #bbf7d0;
+            background: linear-gradient(135deg, #4CAF8220 0%, #4CAF8220 100%);
+            border: 1px solid #4CAF8230;
             border-radius: 12px;
             padding: 1rem;
             margin-bottom: 1rem;
@@ -564,7 +564,7 @@
         .demo-title {
             font-size: 0.75rem;
             font-weight: 600;
-            color: #166534;
+            color: #3E2723;
             margin-bottom: 0.5rem;
         }
 
@@ -590,7 +590,7 @@
 
         .demo-item:hover {
             border-color: #3E2723;
-            background: #f0fdf4;
+            background: #4CAF8220;
         }
 
         .demo-role {
@@ -601,18 +601,18 @@
         }
 
         .demo-role.admin {
-            background: #d1fae5;
+            background: #4CAF8230;
             color: #2E8B60;
         }
 
         .demo-role.guru {
             background: #FFF176;
-            color: #92400e;
+            color: #3E2723;
         }
 
         .demo-role.ortu {
-            background: #F9FBE7;
-            color: #9d174d;
+            background: #FFFDE7;
+            color: #d81b72;
         }
 
         .demo-email {
@@ -685,9 +685,9 @@
                         <path d="M103 30L103 45L118 37.5L103 30Z" fill="#F06292"/>
                         
                         <!-- Windows row 1 -->
-                        <rect x="52" y="105" width="25" height="20" rx="2" fill="#fcd34d"/>
-                        <rect x="87" y="105" width="25" height="20" rx="2" fill="#fcd34d"/>
-                        <rect x="122" y="105" width="25" height="20" rx="2" fill="#fcd34d"/>
+                        <rect x="52" y="105" width="25" height="20" rx="2" fill="#FFF176"/>
+                        <rect x="87" y="105" width="25" height="20" rx="2" fill="#FFF176"/>
+                        <rect x="122" y="105" width="25" height="20" rx="2" fill="#FFF176"/>
                         
                         <!-- Window details -->
                         <line x1="64.5" y1="105" x2="64.5" y2="125" stroke="white" stroke-width="2"/>
@@ -699,19 +699,19 @@
                         
                         <!-- Door -->
                         <rect x="85" y="140" width="30" height="35" rx="15 15 0 0" fill="#3D9B72"/>
-                        <circle cx="108" cy="160" r="3" fill="#fcd34d"/>
+                        <circle cx="108" cy="160" r="3" fill="#FFF176"/>
                         
                         <!-- Trees -->
                         <ellipse cx="25" cy="150" rx="18" ry="25" fill="#3D9B72"/>
-                        <rect x="22" y="165" width="6" height="15" fill="#a16207"/>
-                        <ellipse cx="175" cy="152" rx="16" ry="22" fill="#16a34a"/>
-                        <rect x="172" y="167" width="6" height="13" fill="#a16207"/>
+                        <rect x="22" y="165" width="6" height="15" fill="#5D4037"/>
+                        <ellipse cx="175" cy="152" rx="16" ry="22" fill="#4CAF82"/>
+                        <rect x="172" y="167" width="6" height="13" fill="#5D4037"/>
                         
                         <!-- Small flowers -->
-                        <circle cx="55" cy="178" r="4" fill="#f472b6"/>
-                        <circle cx="65" cy="180" r="3" fill="#fbbf24"/>
+                        <circle cx="55" cy="178" r="4" fill="#F06292"/>
+                        <circle cx="65" cy="180" r="3" fill="#FFF176"/>
                         <circle cx="135" cy="179" r="4" fill="#a78bfa"/>
-                        <circle cx="145" cy="177" r="3" fill="#f472b6"/>
+                        <circle cx="145" cy="177" r="3" fill="#F06292"/>
                         
                         <!-- Children silhouettes -->
                         <circle cx="70" cy="165" r="5" fill="#5D4037"/>

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Edit Laporan Perkembangan - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Edit Laporan Perkembangan')
@@ -33,7 +33,7 @@
         color: #3E2723;
         margin: 0 0 24px;
         padding-bottom: 12px;
-        border-bottom: 2px solid #fb923c;
+        border-bottom: 2px solid #F06292;
         letter-spacing: .3px;
         text-transform: uppercase;
         display: inline-block;
@@ -69,7 +69,7 @@
         transition: border-color .15s;
     }
     .field-control:focus {
-        border-color: #fb923c;
+        border-color: #F06292;
         background: #fff;
         box-shadow: 0 0 0 3px rgba(251,146,60,.15);
     }

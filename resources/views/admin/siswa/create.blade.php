@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Tambah Siswa')
 
@@ -333,7 +333,7 @@
 
 .form-label.required::after {
     content: " *";
-    color: #c0392b;
+    color: #d81b72;
 }
 
 .form-input,
@@ -376,9 +376,9 @@
 
 /* Alert */
 .alert--danger {
-    background: #fee2e2;
-    color: #c0392b;
-    border: 1px solid #fecaca;
+    background: #F0629220;
+    color: #d81b72;
+    border: 1px solid #F0629230;
     padding: 1rem;
     border-radius: 8px;
     margin-bottom: 1rem;

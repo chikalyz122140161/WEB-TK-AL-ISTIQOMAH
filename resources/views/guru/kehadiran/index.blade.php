@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Kehadiran - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Catat Kehadiran')
@@ -157,20 +157,20 @@
         font-weight: 600;
     }
     .status-badge--hadir {
-        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-        color: #047857;
+        background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
+        color: #2E8B60;
     }
     .status-badge--izin {
         background: #FFF176;
         color: #5D4037;
     }
     .status-badge--sakit {
-        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
         color: #2E8B60;
     }
     .status-badge--alpa {
-        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-        color: #c0392b;
+        background: linear-gradient(135deg, #F0629220 0%, #F0629230 100%);
+        color: #d81b72;
     }
     .btn-edit {
         display: inline-flex;
@@ -211,9 +211,9 @@
     
     /* Alert */
     .alert-success {
-        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
         border: 1px solid #34d399;
-        color: #047857;
+        color: #2E8B60;
         padding: 12px 16px;
         border-radius: 8px;
         margin-bottom: 16px;

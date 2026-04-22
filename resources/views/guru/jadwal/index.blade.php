@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Jadwal - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Jadwal')
@@ -204,7 +204,7 @@
         color: #5D4037;
     }
     .type-badge--pembelajaran {
-        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
         color: #2E8B60;
     }
     .type-badge--lainnya {
@@ -226,9 +226,9 @@
     
     /* Alert */
     .alert-success {
-        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
         border: 1px solid #34d399;
-        color: #047857;
+        color: #2E8B60;
         padding: 12px 16px;
         border-radius: 8px;
         margin-bottom: 16px;
@@ -262,7 +262,7 @@
     .schedule-type-tab.active {
         border-color: #3D9B72;
         background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
-        color: #c2410c;
+        color: #3E2723;
     }
     .schedule-type-tab input {
         display: none;
@@ -305,7 +305,7 @@
         width: 56px;
         height: 56px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        background: linear-gradient(135deg, #F0629220 0%, #F0629220 100%);
         display: flex;
         align-items: center;
         justify-content: center;

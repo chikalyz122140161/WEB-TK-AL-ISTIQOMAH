@@ -53,7 +53,7 @@
 
     /* Info Card for Child Profile */
     .child-profile-card {
-        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         border-radius: 12px;
         padding: 24px;
         margin-bottom: 24px;
@@ -99,7 +99,7 @@
     .child-profile-card__stat-value {
         font-size: 24px;
         font-weight: 700;
-        color: #4CAF82;
+        color: #ffffff;
     }
     .child-profile-card__stat-label {
         font-size: 12px;
@@ -187,22 +187,22 @@
         flex-shrink: 0;
     }
     .activity-item__icon--report {
-        background: #ecfdf5;
+        background: #4CAF8220;
     }
     .activity-item__icon--report svg {
         fill: #2E8B60;
     }
     .activity-item__icon--attendance {
-        background: #ECFDF5;
+        background: #4CAF8220;
     }
     .activity-item__icon--attendance svg {
-        fill: #047857;
+        fill: #4CAF82;
     }
     .activity-item__icon--chat {
-        background: #FFF7ED;
+        background: #FFF176;
     }
     .activity-item__icon--chat svg {
-        fill: #C2410C;
+        fill: #3E2723;
     }
     .activity-item__icon svg {
         width: 18px;

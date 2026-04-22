@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Input Perkembangan - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Input Perkembangan Anak')
@@ -55,7 +55,7 @@
         transition: border-color .15s;
     }
     .field-control:focus {
-        border-color: #fb923c;
+        border-color: #F06292;
         background: #fff;
         box-shadow: 0 0 0 3px rgba(251,146,60,.15);
     }
@@ -76,7 +76,7 @@
         letter-spacing: .5px;
         margin: 0 0 20px;
         padding: 0 0 10px;
-        border-bottom: 2px solid #fb923c;
+        border-bottom: 2px solid #F06292;
         display: inline-block;
     }
 

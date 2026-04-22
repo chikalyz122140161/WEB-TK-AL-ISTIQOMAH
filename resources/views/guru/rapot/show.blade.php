@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Detail Rapot Semester - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Detail Rapot Semester')
@@ -71,11 +71,11 @@
         background: #006b5a;
     }
     .btn-delete {
-        background: #fee2e2;
-        color: #c0392b;
+        background: #F0629220;
+        color: #d81b72;
     }
     .btn-delete:hover {
-        background: #fecaca;
+        background: #F0629230;
     }
 
     /* Student Header Card */
@@ -135,7 +135,7 @@
     }
     .student-status.terbit {
         background: rgba(16,185,129,0.2);
-        color: #10b981;
+        color: #4CAF82;
     }
     .student-status.draft {
         background: rgba(76,175,130,0.2);
@@ -211,19 +211,19 @@
         font-weight: 600;
     }
     .nilai-badge.bb {
-        background: #fee2e2;
-        color: #c0392b;
+        background: #F0629220;
+        color: #d81b72;
     }
     .nilai-badge.mb {
         background: #FFF176;
-        color: #d97706;
+        color: #3E2723;
     }
     .nilai-badge.bsh {
-        background: #d1fae5;
+        background: #4CAF8230;
         color: #059669;
     }
     .nilai-badge.bsb {
-        background: #d1fae5;
+        background: #4CAF8230;
         color: #3D9B72;
     }
     .nilai-item__desc {
@@ -261,15 +261,15 @@
         text-transform: uppercase;
         font-weight: 600;
     }
-    .kehadiran-item.hadir { border-bottom: 3px solid #10b981; }
+    .kehadiran-item.hadir { border-bottom: 3px solid #4CAF82; }
     .kehadiran-item.izin { border-bottom: 3px solid #4CAF82; }
-    .kehadiran-item.sakit { border-bottom: 3px solid #f59e0b; }
+    .kehadiran-item.sakit { border-bottom: 3px solid #FFF176; }
     .kehadiran-item.alpa { border-bottom: 3px solid #d81b60; }
 
     /* Catatan Box */
     .catatan-box {
         background: #fffbeb;
-        border: 1px solid #fcd34d;
+        border: 1px solid #FFF176;
         border-radius: 10px;
         padding: 16px 20px;
         margin-bottom: 16px;
@@ -277,7 +277,7 @@
     .catatan-box__label {
         font-size: 12px;
         font-weight: 600;
-        color: #92400e;
+        color: #3E2723;
         text-transform: uppercase;
         margin-bottom: 8px;
     }
@@ -294,7 +294,7 @@
         color: #065f46;
     }
     .catatan-box.rekomendasi .catatan-box__text {
-        color: #047857;
+        color: #2E8B60;
     }
 
     /* Legend */
@@ -303,7 +303,7 @@
         flex-wrap: wrap;
         gap: 16px;
         padding: 12px 16px;
-        background: #f0fdf4;
+        background: #4CAF8220;
         border-radius: 8px;
         margin-bottom: 20px;
         font-size: 11px;
@@ -320,8 +320,8 @@
         border-radius: 50%;
     }
     .legend-dot.bb { background: #F06292; }
-    .legend-dot.mb { background: #f59e0b; }
-    .legend-dot.bsh { background: #10b981; }
+    .legend-dot.mb { background: #FFF176; }
+    .legend-dot.bsh { background: #4CAF82; }
     .legend-dot.bsb { background: #4CAF82; }
 </style>
 @endpush
@@ -508,7 +508,7 @@
 <!-- Delete Confirmation Modal -->
 <div id="deleteModalShow" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:12px;padding:32px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
-        <div style="width:56px;height:56px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+        <div style="width:56px;height:56px;background:#F0629220;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#d81b60" style="width:28px;height:28px;"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
         </div>
         <h3 style="font-size:18px;font-weight:700;color:#3E2723;margin:0 0 8px;">Hapus Rapot?</h3>

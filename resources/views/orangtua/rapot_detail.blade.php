@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @php $userRole = 'Orang Tua'; @endphp
 
 @section('title', 'Detail Rapot - SISTEM TK AL-ISTIQOMAH')
@@ -176,8 +176,8 @@
         color: #fff;
     }
     .nilai-badge.bb { background: #F06292; }
-    .nilai-badge.mb { background: #f59e0b; }
-    .nilai-badge.bsh { background: #10b981; }
+    .nilai-badge.mb { background: #FFF176; }
+    .nilai-badge.bsh { background: #4CAF82; }
     .nilai-badge.bsb { background: #4CAF82; }
     .nilai-item__desc {
         font-size: 13px;
@@ -219,9 +219,9 @@
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
-    .kehadiran-item.hadir { border-top: 3px solid #10b981; }
+    .kehadiran-item.hadir { border-top: 3px solid #4CAF82; }
     .kehadiran-item.izin { border-top: 3px solid #4CAF82; }
-    .kehadiran-item.sakit { border-top: 3px solid #f59e0b; }
+    .kehadiran-item.sakit { border-top: 3px solid #FFF176; }
     .kehadiran-item.alpa { border-top: 3px solid #d81b60; }
     
     /* Catatan */
@@ -284,8 +284,8 @@
         flex-shrink: 0;
     }
     .legend-dot.bb { background: #F06292; }
-    .legend-dot.mb { background: #f59e0b; }
-    .legend-dot.bsh { background: #10b981; }
+    .legend-dot.mb { background: #FFF176; }
+    .legend-dot.bsh { background: #4CAF82; }
     .legend-dot.bsb { background: #4CAF82; }
     
     /* Teacher Info */

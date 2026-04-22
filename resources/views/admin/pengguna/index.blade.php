@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Kelola Pengguna')
 
@@ -244,18 +244,18 @@
 }
 
 .badge--success {
-    background: rgba(34, 197, 94, 0.1);
-    color: #16a34a;
+    background: rgba(76, 175, 130, 0.15);
+    color: #4CAF82;
 }
 
 .badge--danger {
     background: rgba(240, 98, 146, 0.1);
-    color: #c0392b;
+    color: #d81b72;
 }
 
 .badge--warning {
-    background: rgba(245, 158, 11, 0.15);
-    color: #d97706;
+    background: rgba(76, 175, 130, 0.15);
+    color: #3E2723;
 }
 
 /* Action Buttons */
@@ -288,12 +288,12 @@
 }
 
 .btn--danger {
-    background: #fee2e2;
-    color: #c0392b;
+    background: #F0629220;
+    color: #d81b72;
 }
 
 .btn--danger:hover {
-    background: #fecaca;
+    background: #F0629230;
 }
 
 /* Alerts */
@@ -305,7 +305,7 @@
 
 .alert--success {
     background: #dcfce7;
-    color: #166534;
+    color: #3E2723;
     border: 1px solid #86efac;
 }
 
@@ -354,7 +354,7 @@
 .modal-icon {
     width: 64px;
     height: 64px;
-    background: #fee2e2;
+    background: #F0629220;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -365,7 +365,7 @@
 .modal-icon svg {
     width: 32px;
     height: 32px;
-    color: #c0392b;
+    color: #d81b72;
 }
 
 .modal-title {

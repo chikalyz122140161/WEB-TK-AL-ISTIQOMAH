@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Edit Rapot Semester - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Edit Rapot Semester')
@@ -79,7 +79,7 @@
     }
     .info-banner__status.terbit {
         background: rgba(16,185,129,0.2);
-        color: #10b981;
+        color: #4CAF82;
     }
 
     /* Form Card */
@@ -142,7 +142,7 @@
         color: #3E2723;
     }
     .form-group label .required {
-        color: #c0392b;
+        color: #d81b72;
     }
     .form-group input,
     .form-group select,
@@ -243,8 +243,8 @@
 
     /* Legend */
     .legend-box {
-        background: #f0fdf4;
-        border: 1px solid #bbf7d0;
+        background: #4CAF8220;
+        border: 1px solid #4CAF8230;
         border-radius: 8px;
         padding: 12px 16px;
         margin-bottom: 20px;
@@ -273,8 +273,8 @@
         border-radius: 50%;
     }
     .legend-dot.bb { background: #F06292; }
-    .legend-dot.mb { background: #f59e0b; }
-    .legend-dot.bsh { background: #10b981; }
+    .legend-dot.mb { background: #FFF176; }
+    .legend-dot.bsh { background: #4CAF82; }
     .legend-dot.bsb { background: #4CAF82; }
 
     /* Action Buttons */

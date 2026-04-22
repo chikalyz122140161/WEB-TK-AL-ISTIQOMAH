@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Laporan Administrasi - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Laporan Administrasi')
@@ -113,7 +113,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: linear-gradient(135deg, #3D9B72 0%, #16a34a 100%);
+        background: linear-gradient(135deg, #3D9B72 0%, #4CAF82 100%);
         color: white;
         padding: 8px 14px;
         font-size: 13px;
@@ -126,7 +126,7 @@
     }
     .btn-green:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        box-shadow: 0 4px 12px rgba(76, 175, 130, 0.3);
     }
     .btn-green svg {
         width: 14px;
@@ -199,8 +199,8 @@
         font-weight: 600;
     }
     .status-badge--generated {
-        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-        color: #047857;
+        background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
+        color: #2E8B60;
     }
     .status-badge--pending {
         background: #FFF176;
@@ -225,9 +225,9 @@
     
     /* Alert */
     .alert-success {
-        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
         border: 1px solid #34d399;
-        color: #047857;
+        color: #2E8B60;
         padding: 12px 16px;
         border-radius: 8px;
         margin-bottom: 16px;
@@ -261,7 +261,7 @@
     .report-type-tab.active {
         border-color: #3D9B72;
         background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
-        color: #c2410c;
+        color: #3E2723;
     }
     .report-type-tab input {
         display: none;

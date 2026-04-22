@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @php $userRole = 'Orang Tua'; @endphp
 
 @section('title', 'Pengajuan Konseling - SISTEM BK TK AL-ISTIQOMAH')
@@ -249,21 +249,21 @@
     }
     .status-badge--approved {
         background: #ECFDF5;
-        color: #047857;
+        color: #2E8B60;
     }
     .status-badge--completed {
         background: #ecfdf5;
         color: #2E8B60;
     }
     .status-badge--cancelled {
-        background: #FEF2F2;
-        color: #B91C1C;
+        background: #F0629220;
+        color: #d81b72;
     }
 
     /* Info Alert */
     .info-alert {
         background: #ecfdf5;
-        border: 1px solid #a7f3d0;
+        border: 1px solid #4CAF8230;
         border-radius: 8px;
         padding: 16px 20px;
         margin-bottom: 24px;
