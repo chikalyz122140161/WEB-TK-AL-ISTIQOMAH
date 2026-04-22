@@ -338,38 +338,27 @@
             </svg>
         </div>
         <h3 class="modal-title">Terima & Pilih Kelas</h3>
-        <p class="modal-desc">Pilih kelas untuk <strong id="acceptSiswaName"></strong></p>
+        <p class="modal-desc">Penempatan kelas untuk <strong id="acceptSiswaName"></strong></p>
         <form id="acceptForm" method="POST">
             @csrf
-            <div class="kelas-grid">
-                <label class="kelas-option">
-                    <input type="radio" name="kelas" value="A1" required>
-                    <span class="kelas-card kelas-card--a">
-                        <span class="kelas-label">A1</span>
-                        <span class="kelas-desc">TK A - Kelas 1</span>
-                    </span>
-                </label>
-                <label class="kelas-option">
-                    <input type="radio" name="kelas" value="A2" required>
-                    <span class="kelas-card kelas-card--a">
-                        <span class="kelas-label">A2</span>
-                        <span class="kelas-desc">TK A - Kelas 2</span>
-                    </span>
-                </label>
-                <label class="kelas-option">
-                    <input type="radio" name="kelas" value="B1" required>
-                    <span class="kelas-card kelas-card--b">
-                        <span class="kelas-label">B1</span>
-                        <span class="kelas-desc">TK B - Kelas 1</span>
-                    </span>
-                </label>
-                <label class="kelas-option">
-                    <input type="radio" name="kelas" value="B2" required>
-                    <span class="kelas-card kelas-card--b">
-                        <span class="kelas-label">B2</span>
-                        <span class="kelas-desc">TK B - Kelas 2</span>
-                    </span>
-                </label>
+            <div class="form-group" style="margin-top:1.25rem;text-align:left;">
+                <label class="form-label required" style="display:block;margin-bottom:.4rem;">Kelas</label>
+                <select name="kelas" class="form-select" required>
+                    <option value="">-- Pilih Kelas --</option>
+                    <option value="A1">A1</option>
+                    <option value="B1">B1</option>
+                    <option value="B2">B2</option>
+                </select>
+            </div>
+            <div class="form-group" style="margin-top:1rem;text-align:left;">
+                <label class="form-label required" style="display:block;margin-bottom:.4rem;">Tahun Ajaran</label>
+                <select name="tahun_ajaran" class="form-select" required>
+                    <option value="">-- Pilih Tahun Ajaran --</option>
+                    @php $currentYear = date('Y'); @endphp
+                    @for($y = $currentYear - 1; $y <= $currentYear + 1; $y++)
+                        <option value="{{ $y }}/{{ $y + 1 }}">{{ $y }}/{{ $y + 1 }}</option>
+                    @endfor
+                </select>
             </div>
             <div class="modal-actions" style="margin-top: 24px;">
                 <button type="button" class="btn btn--ghost" onclick="closeAcceptModal()">Batal</button>
@@ -427,7 +416,7 @@ function showAcceptModal(id, name) {
 
 function closeAcceptModal() {
     document.getElementById('acceptModal').classList.remove('active');
-    document.querySelectorAll('#acceptForm input[type="radio"]').forEach(r => r.checked = false);
+    document.querySelectorAll('#acceptForm select').forEach(s => s.value = '');
 }
 
 // Reject Modal

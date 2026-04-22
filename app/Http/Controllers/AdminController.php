@@ -357,29 +357,60 @@ class AdminController extends Controller
     {
         // Dummy data - replace with actual database query
         $pendaftaran = [
-            'id' => $id,
-            'tanggal_daftar' => '05 Mar 2026',
-            'nama_siswa' => 'Erlangga Pradipa Bimantara',
-            'nama_panggilan' => 'Angga',
-            'jenis_kelamin' => 'Laki-laki',
-            'tempat_lahir' => 'Bandar Lampung',
-            'tanggal_lahir' => '25 September 2021',
-            'agama' => 'Islam',
-            'anak_ke' => 2,
-            'jumlah_saudara' => 1,
-            'alamat_siswa' => 'Jl. Harum Bunga Perumahan Panca Bakti Bandar Lampung',
-            'nama_ayah' => 'Sudir',
-            'pekerjaan_ayah' => 'Buruh',
-            'nama_ibu' => 'Julia Sari',
-            'pekerjaan_ibu' => 'Pengurus Rumah Tangga',
-            'telepon' => '0822 8965 2973',
-            'email' => 'julia.sari@email.com',
-            'alamat_ortu' => 'Jl. Harum Bunga Perumahan Panca Bakti Bandar Lampung',
-            'status' => 'Pending',
+            'id'                  => $id,
+            'tanggal_daftar'      => '05 Mar 2026',
+            'status'              => 'Pending',
+
+            // Identitas Anak
+            'nama_siswa'          => 'Erlangga Pradipa Bimantara',
+            'nama_panggilan'      => 'Angga',
+            'nik'                 => '1871020509210001',
+            'jenis_kelamin'       => 'Laki-laki',
+            'agama'               => 'Islam',
+            'tempat_lahir'        => 'Bandar Lampung',
+            'tanggal_lahir'       => '25 September 2021',
+            'anak_ke'             => 2,
+            'jumlah_saudara'      => 1,
+            'suku_bangsa'         => 'Jawa',
+            'riwayat_penyakit'    => '-',
+            'berat_badan'         => '13 kg',
+            'tinggi_badan'        => '95 cm',
+            'alamat_siswa'        => 'Jl. Harum Bunga Perumahan Panca Bakti Bandar Lampung',
+
+            // Data Ayah
+            'nama_ayah'           => 'Sudir',
+            'pekerjaan_ayah'      => 'Buruh',
+            'pendidikan_ayah'     => 'SMA/SMK',
+            'tempat_lahir_ayah'   => 'Pemalang',
+            'tanggal_lahir_ayah'  => '12 Maret 1985',
+            'no_telp_ayah'        => '0822 8965 2973',
+
+            // Data Ibu
+            'nama_ibu'            => 'Julia Sari',
+            'pekerjaan_ibu'       => 'Pengurus Rumah Tangga',
+            'pendidikan_ibu'      => 'SMA/SMK',
+            'tempat_lahir_ibu'    => 'Bandar Lampung',
+            'tanggal_lahir_ibu'   => '20 Juli 1988',
+            'no_telp_ibu'         => '0813 5678 9012',
+
+            // Data Wali
+            'nama_wali'           => '-',
+            'pekerjaan_wali'      => '-',
+            'pendidikan_wali'     => '-',
+            'tempat_lahir_wali'   => '-',
+            'tanggal_lahir_wali'  => '-',
+            'no_telp_wali'        => '-',
+
+            // Kontak
+            'telepon'             => '0822 8965 2973',
+            'email'               => 'julia.sari@email.com',
+            'alamat_ortu'         => 'Jl. Harum Bunga Perumahan Panca Bakti Bandar Lampung',
+
+            // Dokumen
             'dokumen' => [
                 ['id' => 1, 'nama' => 'Akta Kelahiran', 'file' => 'akta_kelahiran_001.pdf'],
-                ['id' => 2, 'nama' => 'Kartu Keluarga', 'file' => 'kk_001.pdf'],
-                ['id' => 3, 'nama' => 'Pas Foto', 'file' => 'foto_001.jpg'],
+                ['id' => 2, 'nama' => 'Kartu Keluarga',  'file' => 'kk_001.pdf'],
+                ['id' => 3, 'nama' => 'Pas Foto',         'file' => 'foto_001.jpg'],
             ],
         ];
         
@@ -388,16 +419,12 @@ class AdminController extends Controller
     
     public function pendaftaranTerima(Request $request, $id)
     {
-        // Logic to accept registration:
-        // 1. Update registration status to 'Diterima'
-        // 2. Assign kelas from request: $request->input('kelas') → A1/A2/B1/B2
-        // 3. Create student record
-        // 4. Create/activate parent user account
-        // 5. Send notification email
+        $kelas       = $request->input('kelas', '-');
+        $tahunAjaran = $request->input('tahun_ajaran', '-');
+        $semester    = $request->input('semester', '-');
 
-        $kelas = $request->input('kelas');
-
-        return redirect()->route('admin.pendaftaran.index')->with('success', "Pendaftaran berhasil diterima! Siswa ditempatkan di Kelas {$kelas}.");
+        return redirect()->route('admin.pendaftaran.index')
+            ->with('success', "Pendaftaran berhasil diterima! Siswa ditempatkan di Kelas {$kelas}, TA {$tahunAjaran} Semester " . ucfirst($semester) . ".");
     }
     
     public function pendaftaranTolak(Request $request, $id)
@@ -412,6 +439,129 @@ class AdminController extends Controller
         return redirect()->route('admin.pendaftaran.index')->with('success', 'Pendaftaran telah ditolak.');
     }
     
+    // ═══════════════════════════════════════════════════════
+    // KELOLA TAHUN AJARAN
+    // ═══════════════════════════════════════════════════════
+    private function dummyTahunAjaran()
+    {
+        return [
+            ['id' => 1, 'tahun_ajaran' => '2024/2025', 'semester' => 'ganjil'],
+            ['id' => 2, 'tahun_ajaran' => '2024/2025', 'semester' => 'genap'],
+            ['id' => 3, 'tahun_ajaran' => '2025/2026', 'semester' => 'ganjil'],
+        ];
+    }
+
+    public function tahunAjaranIndex()
+    {
+        $data = collect($this->dummyTahunAjaran());
+        return view('admin.tahun_ajaran.index', compact('data'));
+    }
+
+    public function tahunAjaranCreate()
+    {
+        return view('admin.tahun_ajaran.create');
+    }
+
+    public function tahunAjaranStore(Request $request)
+    {
+        $request->validate([
+            'tahun_ajaran' => 'required|string',
+            'semester'     => 'required|in:ganjil,genap',
+        ]);
+
+        return redirect()->route('admin.tahun_ajaran.index')
+            ->with('success', "Tahun Ajaran {$request->tahun_ajaran} Semester " . ucfirst($request->semester) . " berhasil ditambahkan.");
+    }
+
+    public function tahunAjaranEdit($id)
+    {
+        $row  = collect($this->dummyTahunAjaran())->firstWhere('id', (int) $id);
+        $item = (object) ($row ?? abort(404));
+        return view('admin.tahun_ajaran.edit', compact('item'));
+    }
+
+    public function tahunAjaranUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'tahun_ajaran' => 'required|string',
+            'semester'     => 'required|in:ganjil,genap',
+        ]);
+
+        return redirect()->route('admin.tahun_ajaran.index')
+            ->with('success', "Tahun Ajaran {$request->tahun_ajaran} Semester " . ucfirst($request->semester) . " berhasil diperbarui.");
+    }
+
+    public function tahunAjaranDestroy($id)
+    {
+        $row  = collect($this->dummyTahunAjaran())->firstWhere('id', (int) $id);
+        $label = $row ? "{$row['tahun_ajaran']} " . ucfirst($row['semester']) : 'Tidak diketahui';
+
+        return redirect()->route('admin.tahun_ajaran.index')
+            ->with('success', "Tahun Ajaran {$label} berhasil dihapus.");
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // KELOLA KELAS
+    // ═══════════════════════════════════════════════════════
+    private function dummyKelas()
+    {
+        return [
+            ['id' => 1, 'nama' => 'A1', 'jumlah_maksimum' => 20],
+            ['id' => 2, 'nama' => 'B1', 'jumlah_maksimum' => 20],
+            ['id' => 3, 'nama' => 'B2', 'jumlah_maksimum' => 18],
+        ];
+    }
+
+    public function kelasIndex()
+    {
+        $kelas = collect($this->dummyKelas());
+        return view('admin.kelas.index', compact('kelas'));
+    }
+
+    public function kelasCreate()
+    {
+        $available = ['A1', 'B1', 'B2'];
+        return view('admin.kelas.create', compact('available'));
+    }
+
+    public function kelasStore(Request $request)
+    {
+        $request->validate([
+            'nama'            => 'required|in:A1,B1,B2',
+            'jumlah_maksimum' => 'required|integer|min:1|max:50',
+        ]);
+
+        return redirect()->route('admin.kelas.index')
+            ->with('success', "Kelas {$request->nama} berhasil ditambahkan.");
+    }
+
+    public function kelasEdit($id)
+    {
+        $data  = collect($this->dummyKelas())->firstWhere('id', (int) $id);
+        $kelas = (object) ($data ?? abort(404));
+        return view('admin.kelas.edit', compact('kelas'));
+    }
+
+    public function kelasUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'nama'            => 'required|in:A1,B1,B2',
+            'jumlah_maksimum' => 'required|integer|min:1|max:50',
+        ]);
+
+        return redirect()->route('admin.kelas.index')
+            ->with('success', "Kelas {$request->nama} berhasil diperbarui.");
+    }
+
+    public function kelasDestroy($id)
+    {
+        $data = collect($this->dummyKelas())->firstWhere('id', (int) $id);
+        $nama = $data ? $data['nama'] : 'Tidak diketahui';
+
+        return redirect()->route('admin.kelas.index')
+            ->with('success', "Kelas {$nama} berhasil dihapus.");
+    }
+
     // ═══════════════════════════════════════════════════════
     // REKAP DATA DAPODIK
     // ═══════════════════════════════════════════════════════

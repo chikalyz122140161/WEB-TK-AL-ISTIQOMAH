@@ -71,23 +71,59 @@
                 </div>
             </div>
             <div class="detail-row">
-                <div class="detail-item">
-                    <label>Tempat, Tanggal Lahir</label>
-                    <span>{{ $pendaftaran['tempat_lahir'] }}, {{ $pendaftaran['tanggal_lahir'] }}</span>
-                </div>
-                <div class="detail-item">
-                    <label>Jenis Kelamin</label>
-                    <span>{{ $pendaftaran['jenis_kelamin'] }}</span>
+                <div class="detail-item full-width">
+                    <label>NIK Anak</label>
+                    <span>{{ $pendaftaran['nik'] ?? '-' }}</span>
                 </div>
             </div>
             <div class="detail-row">
                 <div class="detail-item">
-                    <label>Agama</label>
-                    <span>{{ $pendaftaran['agama'] ?? 'Islam' }}</span>
+                    <label>Jenis Kelamin</label>
+                    <span>{{ $pendaftaran['jenis_kelamin'] }}</span>
                 </div>
                 <div class="detail-item">
-                    <label>Anak ke / Jumlah Saudara</label>
-                    <span>{{ $pendaftaran['anak_ke'] ?? '-' }} / {{ $pendaftaran['jumlah_saudara'] ?? '-' }}</span>
+                    <label>Agama</label>
+                    <span>{{ $pendaftaran['agama'] ?? '-' }}</span>
+                </div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-item">
+                    <label>Tempat Lahir</label>
+                    <span>{{ $pendaftaran['tempat_lahir'] }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Tanggal Lahir</label>
+                    <span>{{ $pendaftaran['tanggal_lahir'] }}</span>
+                </div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-item">
+                    <label>Anak ke</label>
+                    <span>{{ $pendaftaran['anak_ke'] ?? '-' }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Jumlah Saudara</label>
+                    <span>{{ $pendaftaran['jumlah_saudara'] ?? '-' }}</span>
+                </div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-item">
+                    <label>Suku Bangsa</label>
+                    <span>{{ $pendaftaran['suku_bangsa'] ?? '-' }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Riwayat Penyakit</label>
+                    <span>{{ $pendaftaran['riwayat_penyakit'] ?? '-' }}</span>
+                </div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-item">
+                    <label>Berat Badan</label>
+                    <span>{{ $pendaftaran['berat_badan'] ?? '-' }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Tinggi Badan</label>
+                    <span>{{ $pendaftaran['tinggi_badan'] ?? '-' }}</span>
                 </div>
             </div>
             <div class="detail-row">
@@ -119,7 +155,27 @@
                     <span>{{ $pendaftaran['pekerjaan_ayah'] ?? '-' }}</span>
                 </div>
             </div>
-            
+            <div class="detail-row">
+                <div class="detail-item">
+                    <label>Pendidikan Terakhir</label>
+                    <span>{{ $pendaftaran['pendidikan_ayah'] ?? '-' }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Tempat Lahir</label>
+                    <span>{{ $pendaftaran['tempat_lahir_ayah'] ?? '-' }}</span>
+                </div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-item">
+                    <label>Tanggal Lahir</label>
+                    <span>{{ $pendaftaran['tanggal_lahir_ayah'] ?? '-' }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>No. Telepon</label>
+                    <span>{{ $pendaftaran['no_telp_ayah'] ?? '-' }}</span>
+                </div>
+            </div>
+
             <h4 class="subsection-title">Ibu</h4>
             <div class="detail-row">
                 <div class="detail-item">
@@ -131,8 +187,62 @@
                     <span>{{ $pendaftaran['pekerjaan_ibu'] ?? '-' }}</span>
                 </div>
             </div>
-            
-            <h4 class="subsection-title">Kontak</h4>
+            <div class="detail-row">
+                <div class="detail-item">
+                    <label>Pendidikan Terakhir</label>
+                    <span>{{ $pendaftaran['pendidikan_ibu'] ?? '-' }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Tempat Lahir</label>
+                    <span>{{ $pendaftaran['tempat_lahir_ibu'] ?? '-' }}</span>
+                </div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-item">
+                    <label>Tanggal Lahir</label>
+                    <span>{{ $pendaftaran['tanggal_lahir_ibu'] ?? '-' }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>No. Telepon</label>
+                    <span>{{ $pendaftaran['no_telp_ibu'] ?? '-' }}</span>
+                </div>
+            </div>
+
+            @if(!empty($pendaftaran['nama_wali']) && $pendaftaran['nama_wali'] !== '-')
+            <h4 class="subsection-title">Wali</h4>
+            <div class="detail-row">
+                <div class="detail-item">
+                    <label>Nama Wali</label>
+                    <span>{{ $pendaftaran['nama_wali'] }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Pekerjaan</label>
+                    <span>{{ $pendaftaran['pekerjaan_wali'] ?? '-' }}</span>
+                </div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-item">
+                    <label>Pendidikan Terakhir</label>
+                    <span>{{ $pendaftaran['pendidikan_wali'] ?? '-' }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Tempat Lahir</label>
+                    <span>{{ $pendaftaran['tempat_lahir_wali'] ?? '-' }}</span>
+                </div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-item">
+                    <label>Tanggal Lahir</label>
+                    <span>{{ $pendaftaran['tanggal_lahir_wali'] ?? '-' }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>No. Telepon</label>
+                    <span>{{ $pendaftaran['no_telp_wali'] ?? '-' }}</span>
+                </div>
+            </div>
+            @endif
+
+            <h4 class="subsection-title">Kontak & Alamat</h4>
             <div class="detail-row">
                 <div class="detail-item">
                     <label>Nomor Telepon</label>
@@ -692,38 +802,27 @@
             </svg>
         </div>
         <h3 class="modal-title">Terima & Pilih Kelas</h3>
-        <p class="modal-message">Pilih kelas untuk <strong>{{ $pendaftaran['nama_siswa'] }}</strong></p>
+        <p class="modal-message">Penempatan kelas untuk <strong>{{ $pendaftaran['nama_siswa'] }}</strong></p>
         <form action="{{ route('admin.pendaftaran.terima', $pendaftaran['id']) }}" method="POST">
             @csrf
-            <div class="kelas-grid">
-                <label class="kelas-option">
-                    <input type="radio" name="kelas" value="A1" required>
-                    <span class="kelas-card kelas-card--a">
-                        <span class="kelas-label">A1</span>
-                        <span class="kelas-desc">TK A - Kelas 1</span>
-                    </span>
-                </label>
-                <label class="kelas-option">
-                    <input type="radio" name="kelas" value="A2" required>
-                    <span class="kelas-card kelas-card--a">
-                        <span class="kelas-label">A2</span>
-                        <span class="kelas-desc">TK A - Kelas 2</span>
-                    </span>
-                </label>
-                <label class="kelas-option">
-                    <input type="radio" name="kelas" value="B1" required>
-                    <span class="kelas-card kelas-card--b">
-                        <span class="kelas-label">B1</span>
-                        <span class="kelas-desc">TK B - Kelas 1</span>
-                    </span>
-                </label>
-                <label class="kelas-option">
-                    <input type="radio" name="kelas" value="B2" required>
-                    <span class="kelas-card kelas-card--b">
-                        <span class="kelas-label">B2</span>
-                        <span class="kelas-desc">TK B - Kelas 2</span>
-                    </span>
-                </label>
+            <div class="form-group" style="margin-top:1.25rem;text-align:left;">
+                <label class="form-label required" style="display:block;margin-bottom:.4rem;">Kelas</label>
+                <select name="kelas" class="form-select" required>
+                    <option value="">-- Pilih Kelas --</option>
+                    <option value="A1">A1</option>
+                    <option value="B1">B1</option>
+                    <option value="B2">B2</option>
+                </select>
+            </div>
+            <div class="form-group" style="margin-top:1rem;text-align:left;">
+                <label class="form-label required" style="display:block;margin-bottom:.4rem;">Tahun Ajaran</label>
+                <select name="tahun_ajaran" class="form-select" required>
+                    <option value="">-- Pilih Tahun Ajaran --</option>
+                    @php $currentYear = date('Y'); @endphp
+                    @for($y = $currentYear - 1; $y <= $currentYear + 1; $y++)
+                        <option value="{{ $y }}/{{ $y + 1 }}">{{ $y }}/{{ $y + 1 }}</option>
+                    @endfor
+                </select>
             </div>
             <div class="modal-actions" style="margin-top: 1.5rem;">
                 <button type="button" class="btn btn--secondary" onclick="closeAcceptModal()">Batal</button>
@@ -761,7 +860,7 @@ function showAcceptModal() {
 
 function closeAcceptModal() {
     document.getElementById('acceptModal').classList.remove('active');
-    document.querySelectorAll('#acceptModal input[type="radio"]').forEach(r => r.checked = false);
+    document.querySelectorAll('#acceptModal select').forEach(s => s.value = '');
 }
 
 function showRejectModal() {

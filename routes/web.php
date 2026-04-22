@@ -51,6 +51,22 @@ Route::middleware('dummy.auth')->group(function () {
     Route::post('/admin/pendaftaran/{id}/terima', [AdminController::class, 'pendaftaranTerima'])->name('admin.pendaftaran.terima');
     Route::post('/admin/pendaftaran/{id}/tolak', [AdminController::class, 'pendaftaranTolak'])->name('admin.pendaftaran.tolak');
     
+    // Admin - Kelola Tahun Ajaran
+    Route::get('/admin/tahun-ajaran', [AdminController::class, 'tahunAjaranIndex'])->name('admin.tahun_ajaran.index');
+    Route::get('/admin/tahun-ajaran/create', [AdminController::class, 'tahunAjaranCreate'])->name('admin.tahun_ajaran.create');
+    Route::post('/admin/tahun-ajaran', [AdminController::class, 'tahunAjaranStore'])->name('admin.tahun_ajaran.store');
+    Route::get('/admin/tahun-ajaran/{id}/edit', [AdminController::class, 'tahunAjaranEdit'])->name('admin.tahun_ajaran.edit');
+    Route::put('/admin/tahun-ajaran/{id}', [AdminController::class, 'tahunAjaranUpdate'])->name('admin.tahun_ajaran.update');
+    Route::delete('/admin/tahun-ajaran/{id}', [AdminController::class, 'tahunAjaranDestroy'])->name('admin.tahun_ajaran.destroy');
+
+    // Admin - Kelola Kelas
+    Route::get('/admin/kelas', [AdminController::class, 'kelasIndex'])->name('admin.kelas.index');
+    Route::get('/admin/kelas/create', [AdminController::class, 'kelasCreate'])->name('admin.kelas.create');
+    Route::post('/admin/kelas', [AdminController::class, 'kelasStore'])->name('admin.kelas.store');
+    Route::get('/admin/kelas/{id}/edit', [AdminController::class, 'kelasEdit'])->name('admin.kelas.edit');
+    Route::put('/admin/kelas/{id}', [AdminController::class, 'kelasUpdate'])->name('admin.kelas.update');
+    Route::delete('/admin/kelas/{id}', [AdminController::class, 'kelasDestroy'])->name('admin.kelas.destroy');
+
     // Admin - Rekap Data DAPODIK
     Route::get('/admin/dapodik', [AdminController::class, 'dapodikIndex'])->name('admin.dapodik.index');
     
