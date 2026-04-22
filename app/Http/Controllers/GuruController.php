@@ -497,21 +497,47 @@ class GuruController extends Controller
 /**
      * Jadwal - Edit
      */
-    public function jadwalEdit($id)
+    public function jadwalEdit(Request $request, $id)
     {
-        // Dummy data jadwal
-        $allJadwal = [
-            1 => ['id' => 1, 'jenis' => 'kegiatan', 'nama' => 'Upacara Bendera', 'tanggal_raw' => '2026-03-10', 'waktu_mulai' => '07:00', 'waktu_selesai' => '08:00', 'lokasi' => 'Lapangan', 'kelas' => 'Semua', 'deskripsi' => ''],
-            2 => ['id' => 2, 'jenis' => 'kegiatan', 'nama' => 'Senam Pagi', 'tanggal_raw' => '2026-03-11', 'waktu_mulai' => '07:30', 'waktu_selesai' => '08:00', 'lokasi' => 'Lapangan', 'kelas' => 'Semua', 'deskripsi' => ''],
-            3 => ['id' => 3, 'jenis' => 'kegiatan', 'nama' => 'Outing Class', 'tanggal_raw' => '2026-03-12', 'waktu_mulai' => '08:00', 'waktu_selesai' => '12:00', 'lokasi' => 'Kebun Binatang', 'kelas' => 'TK B', 'deskripsi' => ''],
-            4 => ['id' => 4, 'jenis' => 'kegiatan', 'nama' => 'Lomba Mewarnai', 'tanggal_raw' => '2026-03-13', 'waktu_mulai' => '09:00', 'waktu_selesai' => '11:00', 'lokasi' => 'Aula', 'kelas' => 'Semua', 'deskripsi' => ''],
+        $jenis = $request->query('jenis', 'kegiatan');
+
+        $kegiatanData = [
+            1 => ['id' => 1, 'jenis' => 'kegiatan', 'nama' => 'Upacara Bendera', 'tanggal_raw' => '2026-03-10', 'waktu' => '07:00 - 08:00', 'lokasi' => 'Lapangan', 'kelas' => 'Semua', 'deskripsi' => ''],
+            2 => ['id' => 2, 'jenis' => 'kegiatan', 'nama' => 'Senam Pagi', 'tanggal_raw' => '2026-03-11', 'waktu' => '07:30 - 08:00', 'lokasi' => 'Lapangan', 'kelas' => 'Semua', 'deskripsi' => ''],
+            3 => ['id' => 3, 'jenis' => 'kegiatan', 'nama' => 'Outing Class', 'tanggal_raw' => '2026-03-12', 'waktu' => '08:00 - 12:00', 'lokasi' => 'Kebun Binatang', 'kelas' => 'TK B', 'deskripsi' => ''],
+            4 => ['id' => 4, 'jenis' => 'kegiatan', 'nama' => 'Lomba Mewarnai', 'tanggal_raw' => '2026-03-13', 'waktu' => '09:00 - 11:00', 'lokasi' => 'Aula', 'kelas' => 'Semua', 'deskripsi' => ''],
         ];
 
-        if (!isset($allJadwal[$id])) {
+        $pembelajaranData = [
+            1  => ['id' => 1,  'jenis' => 'pembelajaran', 'mapel' => 'Pembukaan & Doa',   'hari' => 'Senin',  'waktu' => '07:30 - 08:00', 'kelas' => 'Semua'],
+            2  => ['id' => 2,  'jenis' => 'pembelajaran', 'mapel' => 'Sentra Balok',      'hari' => 'Senin',  'waktu' => '08:00 - 09:00', 'kelas' => 'TK A'],
+            3  => ['id' => 3,  'jenis' => 'pembelajaran', 'mapel' => 'Sentra Alam',       'hari' => 'Senin',  'waktu' => '08:00 - 09:00', 'kelas' => 'TK B'],
+            4  => ['id' => 4,  'jenis' => 'pembelajaran', 'mapel' => 'Motorik Halus',     'hari' => 'Senin',  'waktu' => '09:00 - 10:00', 'kelas' => 'Semua'],
+            5  => ['id' => 5,  'jenis' => 'pembelajaran', 'mapel' => 'Senam Pagi',        'hari' => 'Selasa', 'waktu' => '07:30 - 08:00', 'kelas' => 'Semua'],
+            6  => ['id' => 6,  'jenis' => 'pembelajaran', 'mapel' => 'Sentra Seni',       'hari' => 'Selasa', 'waktu' => '08:00 - 09:00', 'kelas' => 'TK A'],
+            7  => ['id' => 7,  'jenis' => 'pembelajaran', 'mapel' => 'Sentra Peran',      'hari' => 'Selasa', 'waktu' => '08:00 - 09:00', 'kelas' => 'TK B'],
+            8  => ['id' => 8,  'jenis' => 'pembelajaran', 'mapel' => 'Menggambar Bebas',  'hari' => 'Selasa', 'waktu' => '09:00 - 10:00', 'kelas' => 'Semua'],
+            9  => ['id' => 9,  'jenis' => 'pembelajaran', 'mapel' => 'Pembukaan & Doa',   'hari' => 'Rabu',   'waktu' => '07:30 - 08:00', 'kelas' => 'Semua'],
+            10 => ['id' => 10, 'jenis' => 'pembelajaran', 'mapel' => 'Agama Islam',       'hari' => 'Rabu',   'waktu' => '08:00 - 09:00', 'kelas' => 'TK A'],
+            11 => ['id' => 11, 'jenis' => 'pembelajaran', 'mapel' => 'Agama Islam',       'hari' => 'Rabu',   'waktu' => '08:00 - 09:00', 'kelas' => 'TK B'],
+            12 => ['id' => 12, 'jenis' => 'pembelajaran', 'mapel' => 'Berhitung',         'hari' => 'Rabu',   'waktu' => '09:00 - 10:00', 'kelas' => 'Semua'],
+            13 => ['id' => 13, 'jenis' => 'pembelajaran', 'mapel' => 'Senam Pagi',        'hari' => 'Kamis',  'waktu' => '07:30 - 08:00', 'kelas' => 'Semua'],
+            14 => ['id' => 14, 'jenis' => 'pembelajaran', 'mapel' => 'Sentra Balok',      'hari' => 'Kamis',  'waktu' => '08:00 - 09:00', 'kelas' => 'TK B'],
+            15 => ['id' => 15, 'jenis' => 'pembelajaran', 'mapel' => 'Sentra Bahan Alam', 'hari' => 'Kamis',  'waktu' => '08:00 - 09:00', 'kelas' => 'TK A'],
+            16 => ['id' => 16, 'jenis' => 'pembelajaran', 'mapel' => 'Menyanyi & Musik',  'hari' => 'Kamis',  'waktu' => '09:00 - 10:00', 'kelas' => 'Semua'],
+            17 => ['id' => 17, 'jenis' => 'pembelajaran', 'mapel' => 'Senam & Olahraga',  'hari' => 'Jumat',  'waktu' => '07:30 - 08:00', 'kelas' => 'Semua'],
+            18 => ['id' => 18, 'jenis' => 'pembelajaran', 'mapel' => 'Sentra Peran',      'hari' => 'Jumat',  'waktu' => '08:00 - 09:00', 'kelas' => 'TK A'],
+            19 => ['id' => 19, 'jenis' => 'pembelajaran', 'mapel' => 'Sentra Seni',       'hari' => 'Jumat',  'waktu' => '08:00 - 09:00', 'kelas' => 'TK B'],
+            20 => ['id' => 20, 'jenis' => 'pembelajaran', 'mapel' => 'Cerita & Literasi', 'hari' => 'Jumat',  'waktu' => '09:00 - 10:00', 'kelas' => 'Semua'],
+        ];
+
+        $source = $jenis === 'pembelajaran' ? $pembelajaranData : $kegiatanData;
+
+        if (!isset($source[$id])) {
             return redirect()->route('guru.jadwal.index')->with('error', 'Jadwal tidak ditemukan.');
         }
 
-        $jadwal = $allJadwal[$id];
+        $jadwal = $source[$id];
 
         $kelasList = [
             ['id' => 1, 'nama' => 'A1'],

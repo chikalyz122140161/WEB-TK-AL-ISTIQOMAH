@@ -188,14 +188,17 @@
         </div>
 
         <div class="schedule-type-tabs">
-            <label class="schedule-type-tab {{ $jenis === 'kegiatan' ? 'active' : '' }}" id="tab-kegiatan">
-                <input type="radio" name="_tab" value="kegiatan" {{ $jenis === 'kegiatan' ? 'checked' : '' }}>
-                Jadwal Kegiatan
-            </label>
-            <label class="schedule-type-tab {{ $jenis === 'pembelajaran' ? 'active' : '' }}" id="tab-pembelajaran">
-                <input type="radio" name="_tab" value="pembelajaran" {{ $jenis === 'pembelajaran' ? 'checked' : '' }}>
-                Jadwal Pembelajaran
-            </label>
+            @if ($jenis === 'kegiatan')
+                <label class="schedule-type-tab active" id="tab-kegiatan">
+                    <input type="radio" name="_tab" value="kegiatan" checked>
+                    Jadwal Kegiatan
+                </label>
+            @else
+                <label class="schedule-type-tab active" id="tab-pembelajaran">
+                    <input type="radio" name="_tab" value="pembelajaran" checked>
+                    Jadwal Pembelajaran
+                </label>
+            @endif
         </div>
 
         {{-- Form: Edit Kegiatan --}}
