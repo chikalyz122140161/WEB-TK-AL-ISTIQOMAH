@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Detail Jadwal Konseling - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Detail Jadwal Konseling')
@@ -80,10 +80,10 @@
         letter-spacing: .3px;
         text-transform: uppercase;
     }
-    .badge--disetujui { background: #ffedd5; color: #c2410c; }
+    .badge--disetujui { background: #ffedd5; color: #3E2723; }
     .badge--pending   { background: #FFFDE7; color: #5D4037; border: 1px solid #3E272330; }
     .badge--selesai   { background: #3E2723; color: #FFFDE7; }
-    .badge--tolak     { background: #FEE2E2; color: #B91C1C; }
+    .badge--tolak     { background: #F0629220; color: #d81b72; }
 
     .detail-actions {
         display: flex;
@@ -112,7 +112,7 @@
         height: 38px;
         padding: 0 20px;
         background: #ffedd5;
-        color: #c2410c;
+        color: #3E2723;
         font-size: 13px;
         font-weight: 700;
         border: 1px solid #fed7aa;
@@ -124,16 +124,16 @@
     .btn-tolak, .btn-batalkan {
         height: 38px;
         padding: 0 20px;
-        background: #FEF2F2;
-        color: #B91C1C;
+        background: #F0629220;
+        color: #d81b72;
         font-size: 13px;
         font-weight: 700;
-        border: 1px solid #FECACA;
+        border: 1px solid #F0629230;
         border-radius: 8px;
         cursor: pointer;
         transition: background .15s;
     }
-    .btn-tolak:hover, .btn-batalkan:hover { background: #FEE2E2; }
+    .btn-tolak:hover, .btn-batalkan:hover { background: #F0629220; }
 
     /* Modal */
     .modal-overlay {
@@ -180,10 +180,10 @@
         cursor: pointer;
         transition: background .15s;
     }
-    .btn-modal-confirm.green { background: #ffedd5; color: #c2410c; }
+    .btn-modal-confirm.green { background: #ffedd5; color: #3E2723; }
     .btn-modal-confirm.green:hover { background: #fed7aa; }
-    .btn-modal-confirm.red { background: #FEE2E2; color: #B91C1C; }
-    .btn-modal-confirm.red:hover { background: #FECACA; }
+    .btn-modal-confirm.red { background: #F0629220; color: #d81b72; }
+    .btn-modal-confirm.red:hover { background: #F0629230; }
     .btn-modal-cancel {
         height: 38px;
         padding: 0 20px;

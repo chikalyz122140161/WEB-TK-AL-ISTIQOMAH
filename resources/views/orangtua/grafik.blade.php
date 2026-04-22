@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @php $userRole = 'Orang Tua'; @endphp
 
 @section('title', 'Grafik Perkembangan - SISTEM BK TK AL-ISTIQOMAH')
@@ -124,11 +124,11 @@
         border-radius: 50%;
     }
     .legend-dot--fisik { background: #F06292; }
-    .legend-dot--kognitif { background: #F59E0B; }
-    .legend-dot--bahasa { background: #10B981; }
+    .legend-dot--kognitif { background: #FFF176; }
+    .legend-dot--bahasa { background: #4CAF82; }
     .legend-dot--sosial { background: #4CAF82; }
-    .legend-dot--agama { background: #8B5CF6; }
-    .legend-dot--seni { background: #EC4899; }
+    .legend-dot--agama { background: #F06292; }
+    .legend-dot--seni { background: #F06292; }
 
     .chart-card__body {
         padding: 20px;
@@ -196,11 +196,11 @@
         fill: #fff;
     }
     .summary-card__icon--fisik { background: #F06292; }
-    .summary-card__icon--kognitif { background: #F59E0B; }
-    .summary-card__icon--bahasa { background: #10B981; }
+    .summary-card__icon--kognitif { background: #FFF176; }
+    .summary-card__icon--bahasa { background: #4CAF82; }
     .summary-card__icon--sosial { background: #4CAF82; }
-    .summary-card__icon--agama { background: #8B5CF6; }
-    .summary-card__icon--seni { background: #EC4899; }
+    .summary-card__icon--agama { background: #F06292; }
+    .summary-card__icon--seni { background: #F06292; }
 
     .summary-card__label {
         font-size: 11px;
@@ -220,7 +220,7 @@
         margin-top: 4px;
     }
     .summary-card__trend--up {
-        color: #10B981;
+        color: #4CAF82;
     }
     .summary-card__trend--down {
         color: #F06292;
@@ -367,15 +367,15 @@
                 {
                     label: 'Kognitif',
                     data: [2, 3, 3, 3, 4, 4],
-                    borderColor: '#F59E0B',
-                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    borderColor: '#FFF176',
+                    backgroundColor: 'rgba(76, 175, 130, 0.15)',
                     tension: 0.4
                 },
                 {
                     label: 'Bahasa',
                     data: [3, 3, 3, 4, 4, 4],
-                    borderColor: '#10B981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderColor: '#4CAF82',
+                    backgroundColor: 'rgba(76, 175, 130, 0.1)',
                     tension: 0.4
                 },
                 {
@@ -388,15 +388,15 @@
                 {
                     label: 'Agama & Moral',
                     data: [2, 3, 3, 4, 4, 4],
-                    borderColor: '#8B5CF6',
-                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                    borderColor: '#F06292',
+                    backgroundColor: 'rgba(240, 98, 146, 0.1)',
                     tension: 0.4
                 },
                 {
                     label: 'Seni',
                     data: [3, 3, 3, 3, 4, 4],
-                    borderColor: '#EC4899',
-                    backgroundColor: 'rgba(236, 72, 153, 0.1)',
+                    borderColor: '#F06292',
+                    backgroundColor: 'rgba(240, 98, 146, 0.1)',
                     tension: 0.4
                 }
             ]

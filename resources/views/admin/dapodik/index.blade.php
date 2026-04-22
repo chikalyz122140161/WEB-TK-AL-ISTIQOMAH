@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Rekap Data DAPODIK')
 
@@ -328,7 +328,7 @@
 }
 
 .dropdown-item:hover {
-    background: #f8fafc;
+    background: #FFFDE7;
 }
 
 .dropdown-item svg {

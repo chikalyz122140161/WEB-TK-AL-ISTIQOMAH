@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Edit Kehadiran - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Edit Kehadiran')
@@ -214,9 +214,9 @@
         display: none;
     }
     .status-selector__option--hadir.active {
-        border-color: #047857;
-        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-        color: #047857;
+        border-color: #2E8B60;
+        background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
+        color: #2E8B60;
     }
     .status-selector__option--izin.active {
         border-color: #5D4037;
@@ -225,13 +225,13 @@
     }
     .status-selector__option--sakit.active {
         border-color: #2E8B60;
-        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
         color: #2E8B60;
     }
     .status-selector__option--alpa.active {
-        border-color: #c0392b;
-        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-        color: #c0392b;
+        border-color: #d81b72;
+        background: linear-gradient(135deg, #F0629220 0%, #F0629230 100%);
+        color: #d81b72;
     }
 
     @media (max-width: 768px) {

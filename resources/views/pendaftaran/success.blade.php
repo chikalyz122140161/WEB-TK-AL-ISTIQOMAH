@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -15,7 +15,7 @@
         body {
             font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #d1fae5 0%, #E8F5E9 50%, #FFFDE7 100%);
+            background: linear-gradient(135deg, #4CAF8230 0%, #FFFDE7 50%, #FFFDE7 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -33,7 +33,7 @@
         .circle-1 {
             width: 300px;
             height: 300px;
-            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(76, 175, 130, 0.15) 0%, rgba(76, 175, 130, 0.1) 100%);
             border-radius: 50%;
             top: -100px;
             right: -100px;
@@ -42,7 +42,7 @@
         .circle-2 {
             width: 200px;
             height: 200px;
-            background: linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(14, 165, 233, 0.08) 100%);
+            background: linear-gradient(135deg, rgba(76, 175, 130, 0.12) 0%, rgba(76, 175, 130, 0.08) 100%);
             border-radius: 50%;
             bottom: 10%;
             left: -80px;
@@ -53,18 +53,18 @@
             position: fixed;
             width: 10px;
             height: 10px;
-            background: #fbbf24;
+            background: #FFF176;
             animation: fall 3s linear infinite;
             opacity: 0.8;
         }
 
-        .confetti:nth-child(1) { left: 10%; animation-delay: 0s; background: #f472b6; }
+        .confetti:nth-child(1) { left: 10%; animation-delay: 0s; background: #F06292; }
         .confetti:nth-child(2) { left: 20%; animation-delay: 0.5s; background: #3D9B72; }
         .confetti:nth-child(3) { left: 30%; animation-delay: 1s; background: #4CAF82; }
-        .confetti:nth-child(4) { left: 40%; animation-delay: 1.5s; background: #fbbf24; }
+        .confetti:nth-child(4) { left: 40%; animation-delay: 1.5s; background: #FFF176; }
         .confetti:nth-child(5) { left: 50%; animation-delay: 0.3s; background: #3D9B72; }
         .confetti:nth-child(6) { left: 60%; animation-delay: 0.8s; background: #a78bfa; }
-        .confetti:nth-child(7) { left: 70%; animation-delay: 1.3s; background: #f472b6; }
+        .confetti:nth-child(7) { left: 70%; animation-delay: 1.3s; background: #F06292; }
         .confetti:nth-child(8) { left: 80%; animation-delay: 0.6s; background: #3D9B72; }
         .confetti:nth-child(9) { left: 90%; animation-delay: 1.1s; background: #4CAF82; }
 
@@ -89,13 +89,13 @@
         .success-icon {
             width: 100px;
             height: 100px;
-            background: linear-gradient(135deg, #3D9B72 0%, #16a34a 100%);
+            background: linear-gradient(135deg, #3D9B72 0%, #4CAF82 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 28px;
-            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.35);
+            box-shadow: 0 10px 30px rgba(76, 175, 130, 0.35);
             animation: pulse 2s infinite;
         }
 
@@ -149,7 +149,7 @@
         }
 
         .info-box {
-            background: linear-gradient(135deg, #E8F5E9 0%, #bae6fd 100%);
+            background: linear-gradient(135deg, #FFFDE7 0%, #bae6fd 100%);
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 28px;

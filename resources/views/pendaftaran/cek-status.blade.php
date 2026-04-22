@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -15,7 +15,7 @@
         body {
             font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #E8F5E9 0%, #F9FBE7 50%, #FFFDE7 100%);
+            background: linear-gradient(135deg, #FFFDE7 0%, #FFFDE7 50%, #FFFDE7 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -34,7 +34,7 @@
         .circle-1 {
             width: 300px;
             height: 300px;
-            background: linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(14, 165, 233, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(76, 175, 130, 0.15) 0%, rgba(76, 175, 130, 0.1) 100%);
             border-radius: 50%;
             top: -100px;
             left: -100px;
@@ -43,7 +43,7 @@
         .circle-2 {
             width: 200px;
             height: 200px;
-            background: linear-gradient(135deg, rgba(244, 114, 182, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
+            background: linear-gradient(135deg, rgba(240, 98, 146, 0.12) 0%, rgba(240, 98, 146, 0.08) 100%);
             border-radius: 50%;
             bottom: 10%;
             right: -80px;
@@ -217,9 +217,9 @@
 
         /* Error Message */
         .error-message {
-            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-            border: 1px solid #fecaca;
-            color: #c0392b;
+            background: linear-gradient(135deg, #F0629220 0%, #F0629220 100%);
+            border: 1px solid #F0629230;
+            color: #d81b72;
             padding: 14px 16px;
             border-radius: 12px;
             font-size: 0.9rem;
@@ -266,21 +266,21 @@
 
         .status-pending {
             background: #FFF176;
-            color: #92400e;
+            color: #3E2723;
         }
 
         .status-review {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
             color: #2E8B60;
         }
 
         .status-approved {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
             color: #065f46;
         }
 
         .status-rejected {
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            background: linear-gradient(135deg, #F0629220 0%, #F0629230 100%);
             color: #991b1b;
         }
 
@@ -323,7 +323,7 @@
         .admin-notes h3 {
             font-size: 0.8rem;
             font-weight: 700;
-            color: #92400e;
+            color: #3E2723;
             margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 0.5px;

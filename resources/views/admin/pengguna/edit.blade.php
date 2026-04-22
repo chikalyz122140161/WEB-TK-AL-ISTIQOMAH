@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Edit Pengguna')
 
@@ -141,7 +141,7 @@
 
 .form-label.required::after {
     content: " *";
-    color: #c0392b;
+    color: #d81b72;
 }
 
 .form-input,
@@ -197,9 +197,9 @@
 
 /* Alert */
 .alert--danger {
-    background: #fee2e2;
-    color: #c0392b;
-    border: 1px solid #fecaca;
+    background: #F0629220;
+    color: #d81b72;
+    border: 1px solid #F0629230;
     padding: 1rem;
     border-radius: 8px;
     margin-bottom: 1rem;
@@ -215,12 +215,12 @@
 /* Status Select Styling */
 .status-select option[value="Pending"] {
     background: #FFF176;
-    color: #d97706;
+    color: #3E2723;
 }
 
 .status-select option[value="Aktif"] {
     background: #dcfce7;
-    color: #16a34a;
+    color: #4CAF82;
 }
 
 .status-select option[value="Nonaktif"] {

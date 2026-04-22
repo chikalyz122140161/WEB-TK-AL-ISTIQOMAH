@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Chat - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Chat dengan Orang Tua')
@@ -30,7 +30,7 @@
         padding: 14px 16px;
         font-size: 12px;
         font-weight: 700;
-        color: #c2410c;
+        color: #3E2723;
         text-transform: uppercase;
         letter-spacing: .5px;
         border-bottom: 1px solid #3E272320;
@@ -86,7 +86,7 @@
         border-bottom: 1px solid #3E272320;
         font-size: 14px;
         font-weight: 700;
-        color: #c2410c;
+        color: #3E2723;
         background: #fff7ed;
         flex-shrink: 0;
     }
@@ -159,7 +159,7 @@
         transition: border-color .15s;
     }
     .chat-input__field:focus {
-        border-color: #fb923c;
+        border-color: #F06292;
         background: #fff;
         box-shadow: 0 0 0 3px rgba(251,146,60,.15);
     }
