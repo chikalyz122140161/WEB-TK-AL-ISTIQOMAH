@@ -55,6 +55,17 @@
     background: #dbeafe;
     color: #1e40af;
 }
+.status-pill {
+    display: inline-block;
+    border-radius: 99px;
+    padding: .3rem 1rem;
+    font-size: .82rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+.status-pill--selesai  { background: #f3f4f6; color: #6b7280; }
+.status-pill--aktif    { background: #d1fae5; color: #065f46; }
+.status-pill--menunggu { background: #fef9c3; color: #854d0e; }
 .tahun-text {
     font-weight: 600;
     font-size: 1rem;
@@ -113,7 +124,8 @@
                     <th style="width:60px;">No</th>
                     <th>Tahun Ajaran</th>
                     <th>Semester</th>
-                    <th style="width:160px;">Aksi</th>
+                    <th>Status</th>
+                    <th style="width:200px;">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -127,20 +139,32 @@
                         </span>
                     </td>
                     <td>
+                        <span class="status-pill status-pill--{{ $item['status'] }}">
+                            {{ ucfirst($item['status']) }}
+                        </span>
+                    </td>
+                    <td>
                         <div class="btn-row">
-                            <a href="{{ route('admin.tahun_ajaran.edit', $item['id']) }}" class="btn btn--secondary btn--sm">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
-                                Edit
-                            </a>
-                            <form action="{{ route('admin.tahun_ajaran.destroy', $item['id']) }}" method="POST"
-                                  onsubmit="return confirm('Hapus Tahun Ajaran {{ $item['tahun_ajaran'] }} Semester {{ ucfirst($item['semester']) }}?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn--danger btn--sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
-                                    Hapus
-                                </button>
-                            </form>
+                            @if ($item['status'] === 'selesai')
+                                <a href="{{ route('admin.tahun_ajaran.show', $item['id']) }}" class="btn btn--secondary btn--sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd"/></svg>
+                                    Lihat Riwayat
+                                </a>
+                            @else
+                                <a href="{{ route('admin.tahun_ajaran.edit', $item['id']) }}" class="btn btn--secondary btn--sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
+                                    Edit
+                                </a>
+                                <form action="{{ route('admin.tahun_ajaran.destroy', $item['id']) }}" method="POST"
+                                      onsubmit="return confirm('Hapus Tahun Ajaran {{ $item['tahun_ajaran'] }} Semester {{ ucfirst($item['semester']) }}?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn--danger btn--sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
+                                        Hapus
+                                    </button>
+                                </form>
+                            @endif
                         </div>
                     </td>
                 </tr>

@@ -445,9 +445,43 @@ class AdminController extends Controller
     private function dummyTahunAjaran()
     {
         return [
-            ['id' => 1, 'tahun_ajaran' => '2024/2025', 'semester' => 'ganjil'],
-            ['id' => 2, 'tahun_ajaran' => '2024/2025', 'semester' => 'genap'],
-            ['id' => 3, 'tahun_ajaran' => '2025/2026', 'semester' => 'ganjil'],
+            ['id' => 1, 'tahun_ajaran' => '2023/2024', 'semester' => 'ganjil', 'status' => 'selesai'],
+            ['id' => 2, 'tahun_ajaran' => '2023/2024', 'semester' => 'genap',  'status' => 'selesai'],
+            ['id' => 3, 'tahun_ajaran' => '2024/2025', 'semester' => 'ganjil', 'status' => 'selesai'],
+            ['id' => 4, 'tahun_ajaran' => '2024/2025', 'semester' => 'genap',  'status' => 'aktif'],
+            ['id' => 5, 'tahun_ajaran' => '2025/2026', 'semester' => 'ganjil', 'status' => 'menunggu'],
+        ];
+    }
+
+    private function dummyRiwayatKenaikan()
+    {
+        // Riwayat perubahan class term per siswa, dikelompokkan per tahun ajaran (yang sudah selesai)
+        return [
+            // Tahun Ajaran 2023/2024 Ganjil (id=1)
+            1 => [
+                ['siswa_nama' => 'Ahmad Fauzi',     'nis' => '2023001', 'kelas_asal' => 'A1', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'A1 — 2023/2024 Genap'],
+                ['siswa_nama' => 'Siti Nurhaliza',  'nis' => '2023002', 'kelas_asal' => 'A1', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'A1 — 2023/2024 Genap'],
+                ['siswa_nama' => 'Budi Santoso',    'nis' => '2023003', 'kelas_asal' => 'A1', 'aksi' => 'tinggal_kelas',  'class_term_tujuan' => 'A1 — 2023/2024 Genap'],
+                ['siswa_nama' => 'Dewi Lestari',    'nis' => '2023004', 'kelas_asal' => 'B1', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B1 — 2023/2024 Genap'],
+                ['siswa_nama' => 'Eko Prasetyo',    'nis' => '2023005', 'kelas_asal' => 'B2', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B2 — 2023/2024 Genap'],
+            ],
+            // Tahun Ajaran 2023/2024 Genap (id=2)
+            2 => [
+                ['siswa_nama' => 'Ahmad Fauzi',     'nis' => '2023001', 'kelas_asal' => 'A1', 'aksi' => 'ganti_kelas',   'class_term_tujuan' => 'B1 — 2024/2025 Ganjil'],
+                ['siswa_nama' => 'Siti Nurhaliza',  'nis' => '2023002', 'kelas_asal' => 'A1', 'aksi' => 'ganti_kelas',   'class_term_tujuan' => 'B2 — 2024/2025 Ganjil'],
+                ['siswa_nama' => 'Budi Santoso',    'nis' => '2023003', 'kelas_asal' => 'A1', 'aksi' => 'tinggal_kelas',  'class_term_tujuan' => 'A1 — 2024/2025 Ganjil'],
+                ['siswa_nama' => 'Dewi Lestari',    'nis' => '2023004', 'kelas_asal' => 'B1', 'aksi' => 'ganti_kelas',   'class_term_tujuan' => 'B1 — 2024/2025 Ganjil'],
+                ['siswa_nama' => 'Eko Prasetyo',    'nis' => '2023005', 'kelas_asal' => 'B2', 'aksi' => 'ganti_kelas',   'class_term_tujuan' => 'B2 — 2024/2025 Ganjil'],
+            ],
+            // Tahun Ajaran 2024/2025 Ganjil (id=3)
+            3 => [
+                ['siswa_nama' => 'Ahmad Fauzi',     'nis' => '2024001', 'kelas_asal' => 'B1', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B1 — 2024/2025 Genap'],
+                ['siswa_nama' => 'Siti Nurhaliza',  'nis' => '2024002', 'kelas_asal' => 'B2', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B2 — 2024/2025 Genap'],
+                ['siswa_nama' => 'Budi Santoso',    'nis' => '2023003', 'kelas_asal' => 'A1', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'A1 — 2024/2025 Genap'],
+                ['siswa_nama' => 'Dewi Lestari',    'nis' => '2023004', 'kelas_asal' => 'B1', 'aksi' => 'tinggal_kelas',  'class_term_tujuan' => 'B1 — 2024/2025 Genap'],
+                ['siswa_nama' => 'Eko Prasetyo',    'nis' => '2023005', 'kelas_asal' => 'B2', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B2 — 2024/2025 Genap'],
+                ['siswa_nama' => 'Fitri Handayani', 'nis' => '2024006', 'kelas_asal' => 'A1', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'A1 — 2024/2025 Genap'],
+            ],
         ];
     }
 
@@ -455,6 +489,18 @@ class AdminController extends Controller
     {
         $data = collect($this->dummyTahunAjaran());
         return view('admin.tahun_ajaran.index', compact('data'));
+    }
+
+    public function tahunAjaranShow($id)
+    {
+        $item = collect($this->dummyTahunAjaran())->firstWhere('id', (int) $id);
+        if (!$item || $item['status'] !== 'selesai') {
+            return redirect()->route('admin.tahun_ajaran.index')->with('error', 'Riwayat hanya tersedia untuk tahun ajaran yang sudah selesai.');
+        }
+
+        $riwayat = $this->dummyRiwayatKenaikan()[(int) $id] ?? [];
+
+        return view('admin.tahun_ajaran.show', compact('item', 'riwayat'));
     }
 
     public function tahunAjaranCreate()
@@ -944,5 +990,189 @@ class AdminController extends Controller
         $totalTKB       = collect($siswa)->filter(fn($s) => in_array($s['kelas'], ['TK B1', 'TK B2']))->count();
 
         return view('admin.dapodik.index', compact('siswa', 'totalSiswa', 'totalLaki', 'totalPerempuan', 'totalTKA', 'totalTKB'));
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // KENAIKAN SISWA
+    // ═══════════════════════════════════════════════════════
+
+    private function dummyClassTerms()
+    {
+        return [
+            // 2023/2024 Ganjil (tahun_ajaran_id=1) — selesai, isPass=true
+            ['id' => 1,  'kelas_id' => 1, 'kelas_nama' => 'A1', 'tahun_ajaran_id' => 1, 'tahun_ajaran' => '2023/2024', 'semester' => 'ganjil', 'status' => 'selesai', 'isPass' => true],
+            ['id' => 2,  'kelas_id' => 2, 'kelas_nama' => 'B1', 'tahun_ajaran_id' => 1, 'tahun_ajaran' => '2023/2024', 'semester' => 'ganjil', 'status' => 'selesai', 'isPass' => true],
+            ['id' => 3,  'kelas_id' => 3, 'kelas_nama' => 'B2', 'tahun_ajaran_id' => 1, 'tahun_ajaran' => '2023/2024', 'semester' => 'ganjil', 'status' => 'selesai', 'isPass' => true],
+            // 2023/2024 Genap (tahun_ajaran_id=2) — selesai, isPass=true
+            ['id' => 4,  'kelas_id' => 1, 'kelas_nama' => 'A1', 'tahun_ajaran_id' => 2, 'tahun_ajaran' => '2023/2024', 'semester' => 'genap',  'status' => 'selesai', 'isPass' => true],
+            ['id' => 5,  'kelas_id' => 2, 'kelas_nama' => 'B1', 'tahun_ajaran_id' => 2, 'tahun_ajaran' => '2023/2024', 'semester' => 'genap',  'status' => 'selesai', 'isPass' => true],
+            ['id' => 6,  'kelas_id' => 3, 'kelas_nama' => 'B2', 'tahun_ajaran_id' => 2, 'tahun_ajaran' => '2023/2024', 'semester' => 'genap',  'status' => 'selesai', 'isPass' => true],
+            // 2024/2025 Ganjil (tahun_ajaran_id=3) — selesai, isPass=true
+            ['id' => 7,  'kelas_id' => 1, 'kelas_nama' => 'A1', 'tahun_ajaran_id' => 3, 'tahun_ajaran' => '2024/2025', 'semester' => 'ganjil', 'status' => 'selesai', 'isPass' => true],
+            ['id' => 8,  'kelas_id' => 2, 'kelas_nama' => 'B1', 'tahun_ajaran_id' => 3, 'tahun_ajaran' => '2024/2025', 'semester' => 'ganjil', 'status' => 'selesai', 'isPass' => true],
+            ['id' => 9,  'kelas_id' => 3, 'kelas_nama' => 'B2', 'tahun_ajaran_id' => 3, 'tahun_ajaran' => '2024/2025', 'semester' => 'ganjil', 'status' => 'selesai', 'isPass' => true],
+            // 2024/2025 Genap (tahun_ajaran_id=4) — aktif, isPass=false
+            ['id' => 10, 'kelas_id' => 1, 'kelas_nama' => 'A1', 'tahun_ajaran_id' => 4, 'tahun_ajaran' => '2024/2025', 'semester' => 'genap',  'status' => 'aktif',   'isPass' => false],
+            ['id' => 11, 'kelas_id' => 2, 'kelas_nama' => 'B1', 'tahun_ajaran_id' => 4, 'tahun_ajaran' => '2024/2025', 'semester' => 'genap',  'status' => 'aktif',   'isPass' => false],
+            ['id' => 12, 'kelas_id' => 3, 'kelas_nama' => 'B2', 'tahun_ajaran_id' => 4, 'tahun_ajaran' => '2024/2025', 'semester' => 'genap',  'status' => 'aktif',   'isPass' => false],
+            // 2025/2026 Ganjil (tahun_ajaran_id=5) — menunggu, isPass=false
+            ['id' => 13, 'kelas_id' => 1, 'kelas_nama' => 'A1', 'tahun_ajaran_id' => 5, 'tahun_ajaran' => '2025/2026', 'semester' => 'ganjil', 'status' => 'menunggu', 'isPass' => false],
+            ['id' => 14, 'kelas_id' => 2, 'kelas_nama' => 'B1', 'tahun_ajaran_id' => 5, 'tahun_ajaran' => '2025/2026', 'semester' => 'ganjil', 'status' => 'menunggu', 'isPass' => false],
+            ['id' => 15, 'kelas_id' => 3, 'kelas_nama' => 'B2', 'tahun_ajaran_id' => 5, 'tahun_ajaran' => '2025/2026', 'semester' => 'ganjil', 'status' => 'menunggu', 'isPass' => false],
+        ];
+    }
+
+    private function dummyEnrollmentHistory()
+    {
+        return [
+            // class_term 1: A1 2023/2024 Ganjil
+            1 => [
+                ['siswa_nama' => 'Ahmad Fauzi',    'nis' => '2023001', 'nisn' => '0111111111', 'gender' => 'L', 'enrollment_status' => 'selesai', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'A1 — 2023/2024 Genap'],
+                ['siswa_nama' => 'Siti Nurhaliza', 'nis' => '2023002', 'nisn' => '0111111112', 'gender' => 'P', 'enrollment_status' => 'selesai', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'A1 — 2023/2024 Genap'],
+                ['siswa_nama' => 'Budi Santoso',   'nis' => '2023003', 'nisn' => '0111111113', 'gender' => 'L', 'enrollment_status' => 'selesai', 'aksi' => 'tinggal_kelas',  'class_term_tujuan' => 'A1 — 2023/2024 Genap'],
+            ],
+            // class_term 2: B1 2023/2024 Ganjil
+            2 => [
+                ['siswa_nama' => 'Dewi Lestari',   'nis' => '2023004', 'nisn' => '0111111114', 'gender' => 'P', 'enrollment_status' => 'selesai', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B1 — 2023/2024 Genap'],
+                ['siswa_nama' => 'Eko Prasetyo',   'nis' => '2023005', 'nisn' => '0111111115', 'gender' => 'L', 'enrollment_status' => 'selesai', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B1 — 2023/2024 Genap'],
+            ],
+            // class_term 3: B2 2023/2024 Ganjil
+            3 => [
+                ['siswa_nama' => 'Fitri Handayani','nis' => '2023006', 'nisn' => '0111111116', 'gender' => 'P', 'enrollment_status' => 'selesai', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B2 — 2023/2024 Genap'],
+                ['siswa_nama' => 'Galih Wirawan',  'nis' => '2023007', 'nisn' => '0111111117', 'gender' => 'L', 'enrollment_status' => 'selesai', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B2 — 2023/2024 Genap'],
+            ],
+            // class_term 4: A1 2023/2024 Genap
+            4 => [
+                ['siswa_nama' => 'Ahmad Fauzi',    'nis' => '2023001', 'nisn' => '0111111111', 'gender' => 'L', 'enrollment_status' => 'selesai', 'aksi' => 'ganti_kelas',   'class_term_tujuan' => 'B1 — 2024/2025 Ganjil'],
+                ['siswa_nama' => 'Siti Nurhaliza', 'nis' => '2023002', 'nisn' => '0111111112', 'gender' => 'P', 'enrollment_status' => 'selesai', 'aksi' => 'ganti_kelas',   'class_term_tujuan' => 'B2 — 2024/2025 Ganjil'],
+                ['siswa_nama' => 'Budi Santoso',   'nis' => '2023003', 'nisn' => '0111111113', 'gender' => 'L', 'enrollment_status' => 'selesai', 'aksi' => 'tinggal_kelas',  'class_term_tujuan' => 'A1 — 2024/2025 Ganjil'],
+            ],
+            // class_term 5: B1 2023/2024 Genap
+            5 => [
+                ['siswa_nama' => 'Dewi Lestari',   'nis' => '2023004', 'nisn' => '0111111114', 'gender' => 'P', 'enrollment_status' => 'selesai', 'aksi' => 'ganti_kelas',   'class_term_tujuan' => 'B1 — 2024/2025 Ganjil'],
+                ['siswa_nama' => 'Eko Prasetyo',   'nis' => '2023005', 'nisn' => '0111111115', 'gender' => 'L', 'enrollment_status' => 'selesai', 'aksi' => 'tinggal_kelas',  'class_term_tujuan' => 'B1 — 2024/2025 Ganjil'],
+            ],
+            // class_term 6: B2 2023/2024 Genap
+            6 => [
+                ['siswa_nama' => 'Fitri Handayani','nis' => '2023006', 'nisn' => '0111111116', 'gender' => 'P', 'enrollment_status' => 'selesai', 'aksi' => 'ganti_kelas',   'class_term_tujuan' => 'B2 — 2024/2025 Ganjil'],
+                ['siswa_nama' => 'Galih Wirawan',  'nis' => '2023007', 'nisn' => '0111111117', 'gender' => 'L', 'enrollment_status' => 'selesai', 'aksi' => 'ganti_kelas',   'class_term_tujuan' => 'B2 — 2024/2025 Ganjil'],
+            ],
+            // class_term 7: A1 2024/2025 Ganjil
+            7 => [
+                ['siswa_nama' => 'Budi Santoso',   'nis' => '2023003', 'nisn' => '0111111113', 'gender' => 'L', 'enrollment_status' => 'selesai', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'A1 — 2024/2025 Genap'],
+                ['siswa_nama' => 'Hana Rahmawati', 'nis' => '2024008', 'nisn' => '0123456788', 'gender' => 'P', 'enrollment_status' => 'selesai', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'A1 — 2024/2025 Genap'],
+            ],
+            // class_term 8: B1 2024/2025 Ganjil
+            8 => [
+                ['siswa_nama' => 'Ahmad Fauzi',    'nis' => '2024001', 'nisn' => '0123456781', 'gender' => 'L', 'enrollment_status' => 'selesai', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B1 — 2024/2025 Genap'],
+                ['siswa_nama' => 'Dewi Lestari',   'nis' => '2023004', 'nisn' => '0111111114', 'gender' => 'P', 'enrollment_status' => 'selesai', 'aksi' => 'tinggal_kelas',  'class_term_tujuan' => 'B1 — 2024/2025 Genap'],
+                ['siswa_nama' => 'Eko Prasetyo',   'nis' => '2023005', 'nisn' => '0111111115', 'gender' => 'L', 'enrollment_status' => 'selesai', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B1 — 2024/2025 Genap'],
+            ],
+            // class_term 9: B2 2024/2025 Ganjil
+            9 => [
+                ['siswa_nama' => 'Siti Nurhaliza', 'nis' => '2024002', 'nisn' => '0123456782', 'gender' => 'P', 'enrollment_status' => 'selesai', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B2 — 2024/2025 Genap'],
+                ['siswa_nama' => 'Fitri Handayani','nis' => '2023006', 'nisn' => '0111111116', 'gender' => 'P', 'enrollment_status' => 'selesai', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B2 — 2024/2025 Genap'],
+                ['siswa_nama' => 'Galih Wirawan',  'nis' => '2023007', 'nisn' => '0111111117', 'gender' => 'L', 'enrollment_status' => 'selesai', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B2 — 2024/2025 Genap'],
+            ],
+        ];
+    }
+
+    private function dummyStudents()
+    {
+        return [
+            ['id' => 1, 'nama' => 'Ahmad Fauzi',       'nis' => '2024001', 'nisn' => '0123456781', 'gender' => 'L'],
+            ['id' => 2, 'nama' => 'Siti Nurhaliza',    'nis' => '2024002', 'nisn' => '0123456782', 'gender' => 'P'],
+            ['id' => 3, 'nama' => 'Budi Santoso',      'nis' => '2024003', 'nisn' => '0123456783', 'gender' => 'L'],
+            ['id' => 4, 'nama' => 'Dewi Lestari',      'nis' => '2024004', 'nisn' => '0123456784', 'gender' => 'P'],
+            ['id' => 5, 'nama' => 'Eko Prasetyo',      'nis' => '2024005', 'nisn' => '0123456785', 'gender' => 'L'],
+            ['id' => 6, 'nama' => 'Fitri Handayani',   'nis' => '2024006', 'nisn' => '0123456786', 'gender' => 'P'],
+            ['id' => 7, 'nama' => 'Galih Wirawan',     'nis' => '2024007', 'nisn' => '0123456787', 'gender' => 'L'],
+            ['id' => 8, 'nama' => 'Hana Rahmawati',    'nis' => '2024008', 'nisn' => '0123456788', 'gender' => 'P'],
+            ['id' => 9, 'nama' => 'Irfan Maulana',     'nis' => '2024009', 'nisn' => '0123456789', 'gender' => 'L'],
+            ['id' => 10,'nama' => 'Julia Santika',     'nis' => '2024010', 'nisn' => '0123456790', 'gender' => 'P'],
+        ];
+    }
+
+    private function dummyEnrollments()
+    {
+        return [
+            // class_term 10 → A1 2024/2025 Genap (aktif)
+            ['id' => 1, 'student_id' => 1, 'class_term_id' => 10, 'status' => 'aktif'],
+            ['id' => 2, 'student_id' => 2, 'class_term_id' => 10, 'status' => 'aktif'],
+            ['id' => 3, 'student_id' => 3, 'class_term_id' => 10, 'status' => 'aktif'],
+            ['id' => 4, 'student_id' => 4, 'class_term_id' => 10, 'status' => 'aktif'],
+            // class_term 11 → B1 2024/2025 Genap (aktif)
+            ['id' => 5, 'student_id' => 5, 'class_term_id' => 11, 'status' => 'aktif'],
+            ['id' => 6, 'student_id' => 6, 'class_term_id' => 11, 'status' => 'aktif'],
+            ['id' => 7, 'student_id' => 7, 'class_term_id' => 11, 'status' => 'aktif'],
+            // class_term 12 → B2 2024/2025 Genap (aktif)
+            ['id' => 8,  'student_id' => 8,  'class_term_id' => 12, 'status' => 'aktif'],
+            ['id' => 9,  'student_id' => 9,  'class_term_id' => 12, 'status' => 'aktif'],
+            ['id' => 10, 'student_id' => 10, 'class_term_id' => 12, 'status' => 'aktif'],
+        ];
+    }
+
+    public function kenaikanIndex()
+    {
+        $enrollments = collect($this->dummyEnrollments());
+        $history     = $this->dummyEnrollmentHistory();
+
+        $classTerms = collect($this->dummyClassTerms())->map(function ($ct) use ($enrollments, $history) {
+            if ($ct['isPass']) {
+                $ct['jumlah_siswa'] = count($history[$ct['id']] ?? []);
+            } else {
+                $ct['jumlah_siswa'] = $enrollments->where('class_term_id', $ct['id'])->count();
+            }
+            return $ct;
+        });
+
+        // Group by tahun_ajaran untuk tampilan terorganisir
+        $grouped = $classTerms->groupBy('tahun_ajaran');
+
+        return view('admin.kenaikan.index', compact('grouped'));
+    }
+
+    public function kenaikanDetail($id)
+    {
+        $classTerm = collect($this->dummyClassTerms())->firstWhere('id', (int) $id);
+        if (!$classTerm || !$classTerm['isPass']) {
+            return redirect()->route('admin.kenaikan.index')->with('error', 'Detail hanya tersedia untuk class term yang sudah diproses.');
+        }
+
+        $history = $this->dummyEnrollmentHistory()[(int) $id] ?? [];
+
+        return view('admin.kenaikan.detail', compact('classTerm', 'history'));
+    }
+
+    public function kenaikanShow($id)
+    {
+        $classTerm = collect($this->dummyClassTerms())->firstWhere('id', (int) $id);
+        if (!$classTerm || $classTerm['status'] !== 'aktif') {
+            return redirect()->route('admin.kenaikan.index')->with('error', 'Class term tidak ditemukan.');
+        }
+
+        $enrollments = collect($this->dummyEnrollments())
+            ->where('class_term_id', (int) $id)
+            ->values();
+
+        $students = collect($this->dummyStudents());
+
+        $siswaList = $enrollments->map(function ($e) use ($students) {
+            $s = $students->firstWhere('id', $e['student_id']);
+            return array_merge($e, $s ?? []);
+        });
+
+        // Semua class term kecuali yang sedang diproses, untuk dipilih sebagai tujuan
+        $classTermOptions = collect($this->dummyClassTerms())
+            ->where('id', '!=', (int) $id)
+            ->values();
+
+        return view('admin.kenaikan.show', compact('classTerm', 'siswaList', 'classTermOptions'));
+    }
+
+    public function kenaikanProses(Request $request, $id)
+    {
+        return redirect()->route('admin.kenaikan.index')
+            ->with('success', 'Proses kenaikan siswa berhasil disimpan. Class term telah ditutup.');
     }
 }

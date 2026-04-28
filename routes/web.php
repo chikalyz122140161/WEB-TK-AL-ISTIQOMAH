@@ -55,6 +55,7 @@ Route::middleware('dummy.auth')->group(function () {
     Route::get('/admin/tahun-ajaran', [AdminController::class, 'tahunAjaranIndex'])->name('admin.tahun_ajaran.index');
     Route::get('/admin/tahun-ajaran/create', [AdminController::class, 'tahunAjaranCreate'])->name('admin.tahun_ajaran.create');
     Route::post('/admin/tahun-ajaran', [AdminController::class, 'tahunAjaranStore'])->name('admin.tahun_ajaran.store');
+    Route::get('/admin/tahun-ajaran/{id}', [AdminController::class, 'tahunAjaranShow'])->name('admin.tahun_ajaran.show');
     Route::get('/admin/tahun-ajaran/{id}/edit', [AdminController::class, 'tahunAjaranEdit'])->name('admin.tahun_ajaran.edit');
     Route::put('/admin/tahun-ajaran/{id}', [AdminController::class, 'tahunAjaranUpdate'])->name('admin.tahun_ajaran.update');
     Route::delete('/admin/tahun-ajaran/{id}', [AdminController::class, 'tahunAjaranDestroy'])->name('admin.tahun_ajaran.destroy');
@@ -95,6 +96,12 @@ Route::middleware('dummy.auth')->group(function () {
     Route::get('/admin/aktivitas-tahun-ajaran', [AdminController::class, 'aktivitasTahunAjaranIndex'])->name('admin.aktivitas_tahun_ajaran.index');
     Route::get('/admin/aktivitas-tahun-ajaran/{id}/edit', [AdminController::class, 'aktivitasTahunAjaranEdit'])->name('admin.aktivitas_tahun_ajaran.edit');
     Route::put('/admin/aktivitas-tahun-ajaran/{id}', [AdminController::class, 'aktivitasTahunAjaranUpdate'])->name('admin.aktivitas_tahun_ajaran.update');
+
+    // Admin - Kenaikan Siswa
+    Route::get('/admin/kenaikan', [AdminController::class, 'kenaikanIndex'])->name('admin.kenaikan.index');
+    Route::get('/admin/kenaikan/{id}/detail', [AdminController::class, 'kenaikanDetail'])->name('admin.kenaikan.detail');
+    Route::get('/admin/kenaikan/{id}', [AdminController::class, 'kenaikanShow'])->name('admin.kenaikan.show');
+    Route::post('/admin/kenaikan/{id}/proses', [AdminController::class, 'kenaikanProses'])->name('admin.kenaikan.proses');
 
     // Admin - Rekap Data DAPODIK
     Route::get('/admin/dapodik', [AdminController::class, 'dapodikIndex'])->name('admin.dapodik.index');
