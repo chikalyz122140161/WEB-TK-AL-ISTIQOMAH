@@ -563,6 +563,270 @@ class AdminController extends Controller
     }
 
     // ═══════════════════════════════════════════════════════
+    // KELOLA EKSTRAKURIKULER (DUMMY)
+    // ═══════════════════════════════════════════════════════
+    private function dummyEkstrakurikuler()
+    {
+        return [
+            [
+                'id'        => 1,
+                'nama'      => 'Menari',
+                'penilaian' => [
+                    ['id' => 1, 'nama' => 'Kelenturan'],
+                    ['id' => 2, 'nama' => 'Ekspresi'],
+                    ['id' => 3, 'nama' => 'Hafalan Gerakan'],
+                ],
+            ],
+            [
+                'id'        => 2,
+                'nama'      => 'Mewarnai',
+                'penilaian' => [
+                    ['id' => 4, 'nama' => 'Kerapian'],
+                    ['id' => 5, 'nama' => 'Kreativitas Warna'],
+                    ['id' => 6, 'nama' => 'Ketepatan Bidang'],
+                ],
+            ],
+            [
+                'id'        => 3,
+                'nama'      => 'Sains Sederhana',
+                'penilaian' => [
+                    ['id' => 7, 'nama' => 'Rasa Ingin Tahu'],
+                    ['id' => 8, 'nama' => 'Ketelitian'],
+                ],
+            ],
+            [
+                'id'        => 4,
+                'nama'      => 'Bercerita',
+                'penilaian' => [
+                    ['id' => 9,  'nama' => 'Kelancaran'],
+                    ['id' => 10, 'nama' => 'Intonasi'],
+                    ['id' => 11, 'nama' => 'Kepercayaan Diri'],
+                ],
+            ],
+        ];
+    }
+
+    public function ekstrakurikulerIndex()
+    {
+        $ekstrakurikuler = collect($this->dummyEkstrakurikuler());
+        return view('admin.ekstrakurikuler.index', compact('ekstrakurikuler'));
+    }
+
+    public function ekstrakurikulerCreate()
+    {
+        return view('admin.ekstrakurikuler.create');
+    }
+
+    public function ekstrakurikulerStore(Request $request)
+    {
+        $request->validate([
+            'nama'        => 'required|string|max:100',
+            'penilaian'   => 'nullable|array',
+            'penilaian.*' => 'nullable|string|max:100',
+        ]);
+
+        return redirect()->route('admin.ekstrakurikuler.index')
+            ->with('success', "Ekstrakurikuler {$request->nama} berhasil ditambahkan.");
+    }
+
+    public function ekstrakurikulerEdit($id)
+    {
+        $data = collect($this->dummyEkstrakurikuler())->firstWhere('id', (int) $id);
+        if (!$data) {
+            abort(404);
+        }
+        $ekstrakurikuler = (object) $data;
+        return view('admin.ekstrakurikuler.edit', compact('ekstrakurikuler'));
+    }
+
+    public function ekstrakurikulerUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'nama'        => 'required|string|max:100',
+            'penilaian'   => 'nullable|array',
+            'penilaian.*' => 'nullable|string|max:100',
+        ]);
+
+        return redirect()->route('admin.ekstrakurikuler.index')
+            ->with('success', "Ekstrakurikuler {$request->nama} berhasil diperbarui.");
+    }
+
+    public function ekstrakurikulerDestroy($id)
+    {
+        $data = collect($this->dummyEkstrakurikuler())->firstWhere('id', (int) $id);
+        $nama = $data ? $data['nama'] : 'Tidak diketahui';
+
+        return redirect()->route('admin.ekstrakurikuler.index')
+            ->with('success', "Ekstrakurikuler {$nama} berhasil dihapus.");
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // KELOLA KONSELING (DUMMY)
+    // ═══════════════════════════════════════════════════════
+    private function dummyKonseling()
+    {
+        return [
+            [
+                'id'        => 1,
+                'nama'      => 'Konseling Sosial-Emosional',
+                'penilaian' => [
+                    ['id' => 1, 'nama' => 'Kemampuan Berinteraksi'],
+                    ['id' => 2, 'nama' => 'Pengelolaan Emosi'],
+                    ['id' => 3, 'nama' => 'Empati'],
+                ],
+            ],
+            [
+                'id'        => 2,
+                'nama'      => 'Konseling Perilaku',
+                'penilaian' => [
+                    ['id' => 4, 'nama' => 'Kepatuhan Aturan'],
+                    ['id' => 5, 'nama' => 'Kemandirian'],
+                    ['id' => 6, 'nama' => 'Tanggung Jawab'],
+                ],
+            ],
+            [
+                'id'        => 3,
+                'nama'      => 'Konseling Belajar',
+                'penilaian' => [
+                    ['id' => 7, 'nama' => 'Konsentrasi'],
+                    ['id' => 8, 'nama' => 'Minat Belajar'],
+                ],
+            ],
+            [
+                'id'        => 4,
+                'nama'      => 'Konseling Komunikasi',
+                'penilaian' => [
+                    ['id' => 9,  'nama' => 'Kemampuan Bercerita'],
+                    ['id' => 10, 'nama' => 'Kepercayaan Diri'],
+                    ['id' => 11, 'nama' => 'Kemampuan Mendengarkan'],
+                ],
+            ],
+        ];
+    }
+
+    public function konselingIndex()
+    {
+        $konseling = collect($this->dummyKonseling());
+        return view('admin.konseling.index', compact('konseling'));
+    }
+
+    public function konselingCreate()
+    {
+        return view('admin.konseling.create');
+    }
+
+    public function konselingStore(Request $request)
+    {
+        $request->validate([
+            'nama'        => 'required|string|max:100',
+            'penilaian'   => 'nullable|array',
+            'penilaian.*' => 'nullable|string|max:100',
+        ]);
+
+        return redirect()->route('admin.konseling.index')
+            ->with('success', "Konseling {$request->nama} berhasil ditambahkan.");
+    }
+
+    public function konselingEdit($id)
+    {
+        $data = collect($this->dummyKonseling())->firstWhere('id', (int) $id);
+        if (!$data) {
+            abort(404);
+        }
+        $konseling = (object) $data;
+        return view('admin.konseling.edit', compact('konseling'));
+    }
+
+    public function konselingUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'nama'        => 'required|string|max:100',
+            'penilaian'   => 'nullable|array',
+            'penilaian.*' => 'nullable|string|max:100',
+        ]);
+
+        return redirect()->route('admin.konseling.index')
+            ->with('success', "Konseling {$request->nama} berhasil diperbarui.");
+    }
+
+    public function konselingDestroy($id)
+    {
+        $data = collect($this->dummyKonseling())->firstWhere('id', (int) $id);
+        $nama = $data ? $data['nama'] : 'Tidak diketahui';
+
+        return redirect()->route('admin.konseling.index')
+            ->with('success', "Konseling {$nama} berhasil dihapus.");
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // KELOLA MATA PELAJARAN (DUMMY)
+    // ═══════════════════════════════════════════════════════
+    private function dummyMataPelajaran()
+    {
+        return [
+            ['id' => 1, 'nama' => 'Pendidikan Agama Islam'],
+            ['id' => 2, 'nama' => 'Sentra Balok'],
+            ['id' => 3, 'nama' => 'Sentra Bahan Alam'],
+            ['id' => 4, 'nama' => 'Sentra Seni'],
+            ['id' => 5, 'nama' => 'Sentra Peran'],
+            ['id' => 6, 'nama' => 'Bahasa Indonesia'],
+            ['id' => 7, 'nama' => 'Berhitung'],
+            ['id' => 8, 'nama' => 'Menyanyi & Musik'],
+            ['id' => 9, 'nama' => 'Senam & Olahraga'],
+        ];
+    }
+
+    public function mataPelajaranIndex()
+    {
+        $mataPelajaran = collect($this->dummyMataPelajaran());
+        return view('admin.mata_pelajaran.index', compact('mataPelajaran'));
+    }
+
+    public function mataPelajaranCreate()
+    {
+        return view('admin.mata_pelajaran.create');
+    }
+
+    public function mataPelajaranStore(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:100',
+        ]);
+
+        return redirect()->route('admin.mata_pelajaran.index')
+            ->with('success', "Mata pelajaran {$request->nama} berhasil ditambahkan.");
+    }
+
+    public function mataPelajaranEdit($id)
+    {
+        $data = collect($this->dummyMataPelajaran())->firstWhere('id', (int) $id);
+        if (!$data) {
+            abort(404);
+        }
+        $mataPelajaran = (object) $data;
+        return view('admin.mata_pelajaran.edit', compact('mataPelajaran'));
+    }
+
+    public function mataPelajaranUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:100',
+        ]);
+
+        return redirect()->route('admin.mata_pelajaran.index')
+            ->with('success', "Mata pelajaran {$request->nama} berhasil diperbarui.");
+    }
+
+    public function mataPelajaranDestroy($id)
+    {
+        $data = collect($this->dummyMataPelajaran())->firstWhere('id', (int) $id);
+        $nama = $data ? $data['nama'] : 'Tidak diketahui';
+
+        return redirect()->route('admin.mata_pelajaran.index')
+            ->with('success', "Mata pelajaran {$nama} berhasil dihapus.");
+    }
+
+    // ═══════════════════════════════════════════════════════
     // REKAP DATA DAPODIK
     // ═══════════════════════════════════════════════════════
     public function dapodikIndex()

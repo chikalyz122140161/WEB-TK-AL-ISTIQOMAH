@@ -67,6 +67,30 @@ Route::middleware('dummy.auth')->group(function () {
     Route::put('/admin/kelas/{id}', [AdminController::class, 'kelasUpdate'])->name('admin.kelas.update');
     Route::delete('/admin/kelas/{id}', [AdminController::class, 'kelasDestroy'])->name('admin.kelas.destroy');
 
+    // Admin - Kelola Ekstrakurikuler
+    Route::get('/admin/ekstrakurikuler', [AdminController::class, 'ekstrakurikulerIndex'])->name('admin.ekstrakurikuler.index');
+    Route::get('/admin/ekstrakurikuler/create', [AdminController::class, 'ekstrakurikulerCreate'])->name('admin.ekstrakurikuler.create');
+    Route::post('/admin/ekstrakurikuler', [AdminController::class, 'ekstrakurikulerStore'])->name('admin.ekstrakurikuler.store');
+    Route::get('/admin/ekstrakurikuler/{id}/edit', [AdminController::class, 'ekstrakurikulerEdit'])->name('admin.ekstrakurikuler.edit');
+    Route::put('/admin/ekstrakurikuler/{id}', [AdminController::class, 'ekstrakurikulerUpdate'])->name('admin.ekstrakurikuler.update');
+    Route::delete('/admin/ekstrakurikuler/{id}', [AdminController::class, 'ekstrakurikulerDestroy'])->name('admin.ekstrakurikuler.destroy');
+
+    // Admin - Kelola Konseling
+    Route::get('/admin/konseling', [AdminController::class, 'konselingIndex'])->name('admin.konseling.index');
+    Route::get('/admin/konseling/create', [AdminController::class, 'konselingCreate'])->name('admin.konseling.create');
+    Route::post('/admin/konseling', [AdminController::class, 'konselingStore'])->name('admin.konseling.store');
+    Route::get('/admin/konseling/{id}/edit', [AdminController::class, 'konselingEdit'])->name('admin.konseling.edit');
+    Route::put('/admin/konseling/{id}', [AdminController::class, 'konselingUpdate'])->name('admin.konseling.update');
+    Route::delete('/admin/konseling/{id}', [AdminController::class, 'konselingDestroy'])->name('admin.konseling.destroy');
+
+    // Admin - Kelola Mata Pelajaran
+    Route::get('/admin/mata-pelajaran', [AdminController::class, 'mataPelajaranIndex'])->name('admin.mata_pelajaran.index');
+    Route::get('/admin/mata-pelajaran/create', [AdminController::class, 'mataPelajaranCreate'])->name('admin.mata_pelajaran.create');
+    Route::post('/admin/mata-pelajaran', [AdminController::class, 'mataPelajaranStore'])->name('admin.mata_pelajaran.store');
+    Route::get('/admin/mata-pelajaran/{id}/edit', [AdminController::class, 'mataPelajaranEdit'])->name('admin.mata_pelajaran.edit');
+    Route::put('/admin/mata-pelajaran/{id}', [AdminController::class, 'mataPelajaranUpdate'])->name('admin.mata_pelajaran.update');
+    Route::delete('/admin/mata-pelajaran/{id}', [AdminController::class, 'mataPelajaranDestroy'])->name('admin.mata_pelajaran.destroy');
+
     // Admin - Rekap Data DAPODIK
     Route::get('/admin/dapodik', [AdminController::class, 'dapodikIndex'])->name('admin.dapodik.index');
     
