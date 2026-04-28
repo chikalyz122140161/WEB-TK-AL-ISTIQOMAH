@@ -91,6 +91,11 @@ Route::middleware('dummy.auth')->group(function () {
     Route::put('/admin/mata-pelajaran/{id}', [AdminController::class, 'mataPelajaranUpdate'])->name('admin.mata_pelajaran.update');
     Route::delete('/admin/mata-pelajaran/{id}', [AdminController::class, 'mataPelajaranDestroy'])->name('admin.mata_pelajaran.destroy');
 
+    // Admin - Kelola Aktivitas Tahun Ajaran (assign mapel/ekskul/konseling ke class term)
+    Route::get('/admin/aktivitas-tahun-ajaran', [AdminController::class, 'aktivitasTahunAjaranIndex'])->name('admin.aktivitas_tahun_ajaran.index');
+    Route::get('/admin/aktivitas-tahun-ajaran/{id}/edit', [AdminController::class, 'aktivitasTahunAjaranEdit'])->name('admin.aktivitas_tahun_ajaran.edit');
+    Route::put('/admin/aktivitas-tahun-ajaran/{id}', [AdminController::class, 'aktivitasTahunAjaranUpdate'])->name('admin.aktivitas_tahun_ajaran.update');
+
     // Admin - Rekap Data DAPODIK
     Route::get('/admin/dapodik', [AdminController::class, 'dapodikIndex'])->name('admin.dapodik.index');
     

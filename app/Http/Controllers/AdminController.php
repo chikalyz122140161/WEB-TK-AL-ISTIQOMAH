@@ -827,6 +827,94 @@ class AdminController extends Controller
     }
 
     // ═══════════════════════════════════════════════════════
+    // KELOLA AKTIVITAS TAHUN AJARAN (DUMMY)
+    // Mengaitkan mata pelajaran, ekstrakurikuler, konseling ke class_term (tahun ajaran)
+    // ═══════════════════════════════════════════════════════
+    private function dummyAktivitasTahunAjaran()
+    {
+        // Pivot dummy: untuk tiap class_term_id, simpan array id mapel/ekskul/konseling yang sudah di-assign
+        return [
+            1 => [
+                'mata_pelajaran_ids' => [1, 2, 4, 6, 7],
+                'ekstrakurikuler_ids' => [1, 2],
+                'konseling_ids' => [1, 3],
+            ],
+            2 => [
+                'mata_pelajaran_ids' => [1, 3, 5, 8],
+                'ekstrakurikuler_ids' => [3],
+                'konseling_ids' => [2],
+            ],
+            3 => [
+                'mata_pelajaran_ids' => [],
+                'ekstrakurikuler_ids' => [],
+                'konseling_ids' => [],
+            ],
+        ];
+    }
+
+    public function aktivitasTahunAjaranIndex()
+    {
+        $tahunAjaran     = collect($this->dummyTahunAjaran());
+        $aktivitas       = $this->dummyAktivitasTahunAjaran();
+        $mataPelajaran   = collect($this->dummyMataPelajaran())->keyBy('id');
+        $ekstrakurikuler = collect($this->dummyEkstrakurikuler())->keyBy('id');
+        $konseling       = collect($this->dummyKonseling())->keyBy('id');
+
+        $rows = $tahunAjaran->map(function ($ta) use ($aktivitas, $mataPelajaran, $ekstrakurikuler, $konseling) {
+            $assign = $aktivitas[$ta['id']] ?? ['mata_pelajaran_ids' => [], 'ekstrakurikuler_ids' => [], 'konseling_ids' => []];
+
+            return [
+                'id'              => $ta['id'],
+                'tahun_ajaran'    => $ta['tahun_ajaran'],
+                'semester'        => $ta['semester'],
+                'mata_pelajaran'  => collect($assign['mata_pelajaran_ids'])->map(fn($id) => $mataPelajaran[$id]['nama'] ?? null)->filter()->values()->all(),
+                'ekstrakurikuler' => collect($assign['ekstrakurikuler_ids'])->map(fn($id) => $ekstrakurikuler[$id]['nama'] ?? null)->filter()->values()->all(),
+                'konseling'       => collect($assign['konseling_ids'])->map(fn($id) => $konseling[$id]['nama'] ?? null)->filter()->values()->all(),
+            ];
+        });
+
+        return view('admin.aktivitas_tahun_ajaran.index', compact('rows'));
+    }
+
+    public function aktivitasTahunAjaranEdit($id)
+    {
+        $ta = collect($this->dummyTahunAjaran())->firstWhere('id', (int) $id);
+        if (!$ta) {
+            abort(404);
+        }
+
+        $aktivitas      = $this->dummyAktivitasTahunAjaran();
+        $assigned       = $aktivitas[$ta['id']] ?? ['mata_pelajaran_ids' => [], 'ekstrakurikuler_ids' => [], 'konseling_ids' => []];
+
+        $tahunAjaran     = (object) $ta;
+        $mataPelajaran   = collect($this->dummyMataPelajaran());
+        $ekstrakurikuler = collect($this->dummyEkstrakurikuler());
+        $konseling       = collect($this->dummyKonseling());
+
+        return view('admin.aktivitas_tahun_ajaran.edit', compact(
+            'tahunAjaran', 'mataPelajaran', 'ekstrakurikuler', 'konseling', 'assigned'
+        ));
+    }
+
+    public function aktivitasTahunAjaranUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'mata_pelajaran_ids'   => 'nullable|array',
+            'mata_pelajaran_ids.*' => 'integer',
+            'ekstrakurikuler_ids'  => 'nullable|array',
+            'ekstrakurikuler_ids.*' => 'integer',
+            'konseling_ids'        => 'nullable|array',
+            'konseling_ids.*'      => 'integer',
+        ]);
+
+        $ta = collect($this->dummyTahunAjaran())->firstWhere('id', (int) $id);
+        $label = $ta ? "{$ta['tahun_ajaran']} " . ucfirst($ta['semester']) : 'Tidak diketahui';
+
+        return redirect()->route('admin.aktivitas_tahun_ajaran.index')
+            ->with('success', "Aktivitas Tahun Ajaran {$label} berhasil diperbarui.");
+    }
+
+    // ═══════════════════════════════════════════════════════
     // REKAP DATA DAPODIK
     // ═══════════════════════════════════════════════════════
     public function dapodikIndex()
