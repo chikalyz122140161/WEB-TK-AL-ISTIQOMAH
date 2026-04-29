@@ -293,9 +293,28 @@ class GuruController extends Controller
 
     public function inputPerkembangan()
     {
-        $daftarSiswa = $this->getDaftarSiswa();
+        $classTerms     = $this->dummyRapotClassTerms();
+        $studentsByCt   = $this->dummyRapotStudents();
+        $counselingByCt = $this->dummyRapotCounselingAll();
 
-        return view('guru.input_perkembangan', compact('daftarSiswa'));
+        // Siswa di-flatten dengan info class_term untuk label
+        $daftarSiswa = [];
+        foreach ($studentsByCt as $ctId => $students) {
+            $ct = collect($classTerms)->firstWhere('id', $ctId);
+            $ctLabel = $ct
+                ? "Kelas {$ct['kelas_nama']} - {$ct['tahun_ajaran']} " . ucfirst($ct['semester'])
+                : '';
+            foreach ($students as $s) {
+                $daftarSiswa[] = [
+                    'id'            => $s['id'],
+                    'nama'          => $s['nama'],
+                    'class_term_id' => $ctId,
+                    'class_term_label' => $ctLabel,
+                ];
+            }
+        }
+
+        return view('guru.input_perkembangan', compact('daftarSiswa', 'classTerms', 'counselingByCt'));
     }
 
     public function storeInputPerkembangan(Request $request)
