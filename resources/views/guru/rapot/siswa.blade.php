@@ -87,9 +87,58 @@
         color: #fff; font-size: 10px; font-weight: 700;
         display: inline-flex; align-items: center; justify-content: center;
     }
-    .subject-row__fields { display: flex; gap: 12px; flex-wrap: wrap; }
-    .field-level { min-width: 160px; flex-shrink: 0; }
-    .field-catatan { flex: 1; min-width: 180px; }
+    .subject-row__fields { display: flex; flex-direction: column; gap: 12px; }
+    .field-deskripsi { width: 100%; }
+    .field-foto { width: 100%; }
+
+    /* Foto upload */
+    .foto-upload-wrap {
+        border: 2px dashed #d6d3d1;
+        border-radius: 8px;
+        padding: 14px;
+        background: #fff;
+        transition: border-color 0.2s, background 0.2s;
+    }
+    .foto-upload-wrap:hover { border-color: #3D9B72; background: #f0fdf4; }
+    .foto-upload-wrap input[type="file"] {
+        font-size: 12px;
+        color: #57534e;
+        width: 100%;
+    }
+    .foto-upload-wrap input[type="file"]::file-selector-button {
+        padding: 6px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #fff;
+        background: linear-gradient(135deg, #3D9B72, #2E8B60);
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+    .foto-preview {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        background: #f9fafb;
+        border-radius: 6px;
+        font-size: 12px;
+        color: #57534e;
+    }
+    .foto-preview img {
+        width: 40px; height: 40px;
+        border-radius: 6px;
+        object-fit: cover;
+        border: 1px solid #e7e5e4;
+    }
+    .foto-preview a {
+        color: #3D9B72;
+        font-weight: 600;
+        text-decoration: none;
+    }
+    .foto-preview a:hover { text-decoration: underline; }
 
     /* Extracurricular / Counseling group */
     .group-box {
@@ -210,7 +259,7 @@
         <span><span class="legend-dot ld-bsb"></span> <strong>BSB</strong> = Berkembang Sangat Baik</span>
     </div>
 
-    <form action="{{ route('guru.rapot.siswa.save', [$classTerm['id'], $student['id']]) }}" method="POST" id="rapotForm">
+    <form action="{{ route('guru.rapot.siswa.save', [$classTerm['id'], $student['id']]) }}" method="POST" id="rapotForm" enctype="multipart/form-data">
         @csrf
 
         {{-- ── 1. Mata Pelajaran ─────────────────────────────────────────── --}}
@@ -222,9 +271,9 @@
             <div class="form-section__body">
                 @foreach ($subjects as $i => $sub)
                     @php
-                        $subScore = $scores['subjects'][$sub['id']] ?? ['level' => null, 'catatan' => ''];
-                        $lvl      = $subScore['level'] ?? '';
-                        $lvCls    = $lvl ? 'lv-' . strtolower($lvl) : '';
+                        $subScore   = $scores['subjects'][$sub['id']] ?? ['deskripsi' => '', 'foto' => null];
+                        $deskripsi  = $subScore['deskripsi'] ?? ($subScore['catatan'] ?? '');
+                        $fotoUrl    = $subScore['foto'] ?? null;
                     @endphp
                     <div class="subject-row">
                         <div class="subject-row__label">
@@ -232,23 +281,27 @@
                             {{ $sub['nama'] }}
                         </div>
                         <div class="subject-row__fields">
-                            <div class="field-level">
-                                <label class="lbl">Level Pencapaian</label>
-                                <select name="subjects[{{ $sub['id'] }}][level]"
-                                        class="form-select {{ $lvCls }}"
-                                        onchange="updateSelectStyle(this)">
-                                    <option value="">-- Pilih --</option>
-                                    <option value="BB"  {{ $lvl === 'BB'  ? 'selected' : '' }}>BB — Belum Berkembang</option>
-                                    <option value="MB"  {{ $lvl === 'MB'  ? 'selected' : '' }}>MB — Mulai Berkembang</option>
-                                    <option value="BSH" {{ $lvl === 'BSH' ? 'selected' : '' }}>BSH — Berkembang Sesuai Harapan</option>
-                                    <option value="BSB" {{ $lvl === 'BSB' ? 'selected' : '' }}>BSB — Berkembang Sangat Baik</option>
-                                </select>
-                            </div>
-                            <div class="field-catatan">
-                                <label class="lbl">Catatan (opsional)</label>
-                                <textarea name="subjects[{{ $sub['id'] }}][catatan]"
+                            <div class="field-deskripsi">
+                                <label class="lbl">Deskripsi Perkembangan</label>
+                                <textarea name="subjects[{{ $sub['id'] }}][deskripsi]"
                                           class="form-textarea"
-                                          placeholder="Deskripsi perkembangan...">{{ $subScore['catatan'] ?? '' }}</textarea>
+                                          rows="3"
+                                          placeholder="Tuliskan deskripsi perkembangan siswa pada mata pelajaran ini...">{{ $deskripsi }}</textarea>
+                            </div>
+                            <div class="field-foto">
+                                <label class="lbl">Lampiran Foto (opsional)</label>
+                                <div class="foto-upload-wrap">
+                                    <input type="file"
+                                           name="subjects[{{ $sub['id'] }}][foto]"
+                                           accept="image/*">
+                                    @if ($fotoUrl)
+                                        <div class="foto-preview">
+                                            <img src="{{ $fotoUrl }}" alt="Foto {{ $sub['nama'] }}">
+                                            <span>Foto saat ini tersimpan.</span>
+                                            <a href="{{ $fotoUrl }}" target="_blank">Lihat</a>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>

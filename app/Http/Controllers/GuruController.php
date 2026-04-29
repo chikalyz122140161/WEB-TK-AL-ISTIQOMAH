@@ -767,8 +767,10 @@ class GuruController extends Controller
 
         $subjectScores = [];
         foreach (($this->dummyRapotSubjectsAll()[$classTermId] ?? []) as $sub) {
-            $idx = abs(crc32($studentId . $sub['id'])) % 4;
-            $subjectScores[$sub['id']] = ['level' => $levels[$idx], 'catatan' => ''];
+            $subjectScores[$sub['id']] = [
+                'deskripsi' => 'Ananda menunjukkan perkembangan yang baik pada mata pelajaran ' . $sub['nama'] . '.',
+                'foto'      => null,
+            ];
         }
 
         $extScores = [];
@@ -799,7 +801,7 @@ class GuruController extends Controller
     {
         $subjectScores = [];
         foreach (($this->dummyRapotSubjectsAll()[$classTermId] ?? []) as $sub) {
-            $subjectScores[$sub['id']] = ['level' => null, 'catatan' => ''];
+            $subjectScores[$sub['id']] = ['deskripsi' => '', 'foto' => null];
         }
         $extScores = [];
         foreach (($this->dummyRapotExtracurricularsAll()[$classTermId] ?? []) as $ext) {
@@ -890,8 +892,35 @@ class GuruController extends Controller
     public function rapotSiswaSave(Request $request, $classTermId, $studentId)
     {
         $key = 'rapot_' . $classTermId . '_' . $studentId;
+
+        // Pertahankan foto yang sudah ada di session
+        $existingScores = session($key, []);
+        $existingSubjects = $existingScores['subjects'] ?? [];
+
+        $subjectsInput = $request->input('subjects', []);
+        $subjects = [];
+
+        foreach ($subjectsInput as $subId => $data) {
+            $deskripsi = $data['deskripsi'] ?? ($data['catatan'] ?? '');
+            $existingFoto = $existingSubjects[$subId]['foto'] ?? null;
+
+            $fotoUrl = $existingFoto;
+            if ($request->hasFile("subjects.{$subId}.foto")) {
+                $file = $request->file("subjects.{$subId}.foto");
+                if ($file && $file->isValid()) {
+                    $path = $file->store('rapot-foto', 'public');
+                    $fotoUrl = asset('storage/' . $path);
+                }
+            }
+
+            $subjects[$subId] = [
+                'deskripsi' => $deskripsi,
+                'foto'      => $fotoUrl,
+            ];
+        }
+
         session([$key => [
-            'subjects'         => $request->input('subjects', []),
+            'subjects'         => $subjects,
             'extracurriculars' => $request->input('extracurriculars', []),
             'counseling'       => $request->input('counseling', []),
             'catatan_guru'     => $request->input('catatan_guru', ''),
