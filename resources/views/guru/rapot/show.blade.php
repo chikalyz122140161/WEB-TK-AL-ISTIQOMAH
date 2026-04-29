@@ -1,7 +1,7 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
-@section('title', 'Detail Rapot Semester - SISTEM TK AL-ISTIQOMAH')
-@section('page_title', 'Detail Rapot Semester')
+@section('title', 'Daftar Siswa - Rapot Semester')
+@section('page_title', 'Rapot Semester')
 
 @section('sidebar')
     @include('guru.partials.sidebar')
@@ -9,527 +9,209 @@
 
 @push('styles')
 <style>
-    /* Back Link */
     .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        color: #3E2723;
-        font-size: 14px;
-        font-weight: 500;
-        text-decoration: none;
-        margin-bottom: 20px;
-        transition: all 0.2s;
+        display: inline-flex; align-items: center; gap: 7px;
+        color: #3E2723; font-size: 13px; font-weight: 500;
+        text-decoration: none; margin-bottom: 20px; transition: color 0.2s;
     }
-    .back-link:hover {
-        color: #4CAF82;
-    }
-    .back-link svg {
-        width: 16px;
-        height: 16px;
-        fill: currentColor;
-    }
+    .back-link:hover { color: #3D9B72; }
+    .back-link svg { width: 15px; height: 15px; fill: currentColor; }
 
-    /* Page Actions */
-    .page-actions {
-        display: flex;
-        gap: 12px;
-        margin-bottom: 24px;
-        flex-wrap: wrap;
+    .ct-banner {
+        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
+        border-radius: 12px; padding: 20px 24px; margin-bottom: 22px;
+        display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
     }
-    .btn-action {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 10px 18px;
-        font-size: 13px;
-        font-weight: 600;
-        border-radius: 8px;
-        text-decoration: none;
-        transition: all 0.3s;
-        border: none;
-        cursor: pointer;
-    }
-    .btn-action svg {
-        width: 16px;
-        height: 16px;
-        fill: currentColor;
-    }
-    .btn-edit {
-        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
-        color: #3E2723;
-    }
-    .btn-edit:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(76,175,130, 0.3);
-    }
-    .btn-print {
-        background: #3E2723;
-        color: #fff;
-    }
-    .btn-print:hover {
-        background: #006b5a;
-    }
-    .btn-delete {
-        background: #F0629220;
-        color: #d81b72;
-    }
-    .btn-delete:hover {
-        background: #F0629230;
-    }
-
-    /* Student Header Card */
-    .student-header {
-        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
-        border-radius: 16px;
-        padding: 24px;
-        margin-bottom: 24px;
-        display: flex;
-        gap: 20px;
-        align-items: center;
-    }
-    .student-avatar {
-        width: 80px;
-        height: 80px;
-        background: #4CAF82;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 32px;
-        font-weight: 700;
-        color: #3E2723;
+    .ct-banner__badge {
+        width: 52px; height: 52px; border-radius: 12px;
+        background: rgba(255,255,255,0.2);
+        color: #fff; font-size: 18px; font-weight: 800;
+        display: flex; align-items: center; justify-content: center;
         flex-shrink: 0;
     }
-    .student-info {
-        flex: 1;
+    .ct-banner__info { flex: 1; }
+    .ct-banner__title { color: #fff; font-size: 17px; font-weight: 700; margin: 0 0 4px; }
+    .ct-banner__meta  { display: flex; flex-wrap: wrap; gap: 14px; }
+    .ct-banner__meta span {
+        color: rgba(255,255,255,0.85); font-size: 12px;
+        display: flex; align-items: center; gap: 5px;
     }
-    .student-name {
-        color: #fff;
-        font-size: 22px;
-        font-weight: 700;
-        margin: 0 0 8px 0;
-    }
-    .student-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
-    }
-    .student-meta__item {
-        color: rgba(255,255,255,0.8);
-        font-size: 13px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-    .student-meta__item svg {
-        width: 14px;
-        height: 14px;
-        fill: #4CAF82;
-    }
-    .student-status {
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-    .student-status.terbit {
-        background: rgba(16,185,129,0.2);
-        color: #4CAF82;
-    }
-    .student-status.draft {
-        background: rgba(76,175,130,0.2);
-        color: #4CAF82;
-    }
-    @media (max-width: 600px) {
-        .student-header {
-            flex-direction: column;
-            text-align: center;
-        }
-        .student-meta {
-            justify-content: center;
-        }
-    }
+    .ct-banner__meta svg { width: 13px; height: 13px; fill: rgba(255,255,255,0.7); }
+    .ct-banner__progress { text-align: right; }
+    .ct-banner__progress .num { color: #fff; font-size: 26px; font-weight: 800; line-height: 1; }
+    .ct-banner__progress .lbl { color: rgba(255,255,255,0.75); font-size: 11px; }
 
-    /* Section Card */
-    .section-card {
-        background: #fff;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        margin-bottom: 24px;
+    .alert-success {
+        background: #d1fae5; border: 1px solid #34d399; color: #065f46;
+        padding: 11px 16px; border-radius: 8px; margin-bottom: 16px;
+        display: flex; align-items: center; gap: 8px; font-size: 13px;
     }
-    .section-card__header {
-        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
-        padding: 16px 24px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-    .section-card__header svg {
-        width: 22px;
-        height: 22px;
-        fill: #4CAF82;
-    }
-    .section-card__title {
-        color: #fff;
-        font-size: 16px;
-        font-weight: 600;
-        margin: 0;
-    }
-    .section-card__body {
-        padding: 24px;
-    }
+    .alert-success svg { width: 16px; height: 16px; flex-shrink: 0; fill: currentColor; }
 
-    /* Nilai Items */
-    .nilai-list {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
+    .table-wrap {
+        background: #fff; border: 1px solid #e7e5e4;
+        border-radius: 10px; overflow: hidden;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
-    .nilai-item {
-        background: #FFFDE7;
-        border-radius: 12px;
-        padding: 20px;
-        border-left: 4px solid #4CAF82;
+    .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .data-table thead th {
+        background: #f9fafb; color: #6b7280; font-weight: 600;
+        font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em;
+        padding: 11px 14px; text-align: left; border-bottom: 1px solid #e7e5e4;
+        white-space: nowrap;
     }
-    .nilai-item__header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 12px;
-    }
-    .nilai-item__title {
-        font-size: 15px;
-        font-weight: 600;
-        color: #3E2723;
-    }
-    .nilai-badge {
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-    .nilai-badge.bb {
-        background: #F0629220;
-        color: #d81b72;
-    }
-    .nilai-badge.mb {
-        background: #FFF176;
-        color: #3E2723;
-    }
-    .nilai-badge.bsh {
-        background: #4CAF8230;
-        color: #059669;
-    }
-    .nilai-badge.bsb {
-        background: #4CAF8230;
-        color: #3D9B72;
-    }
-    .nilai-item__desc {
-        font-size: 14px;
-        color: #5D4037;
-        line-height: 1.6;
-    }
+    .data-table tbody tr { border-bottom: 1px solid #f5f5f4; transition: background 0.15s; }
+    .data-table tbody tr:last-child { border-bottom: none; }
+    .data-table tbody tr:hover { background: #f9fafb; }
+    .data-table tbody td { padding: 12px 14px; color: #3E2723; vertical-align: middle; }
 
-    /* Kehadiran Grid */
-    .kehadiran-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
+    .avatar {
+        width: 34px; height: 34px; border-radius: 50%;
+        background: linear-gradient(135deg, #3D9B72, #2E8B60);
+        color: #fff; font-size: 13px; font-weight: 700;
+        display: inline-flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
     }
-    @media (max-width: 600px) {
-        .kehadiran-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-    .kehadiran-item {
-        background: #FFFDE7;
-        border-radius: 12px;
-        padding: 20px;
-        text-align: center;
-    }
-    .kehadiran-item__value {
-        font-size: 32px;
-        font-weight: 700;
-        color: #3E2723;
-        margin-bottom: 4px;
-    }
-    .kehadiran-item__label {
-        font-size: 12px;
-        color: #5D4037;
-        text-transform: uppercase;
-        font-weight: 600;
-    }
-    .kehadiran-item.hadir { border-bottom: 3px solid #4CAF82; }
-    .kehadiran-item.izin { border-bottom: 3px solid #4CAF82; }
-    .kehadiran-item.sakit { border-bottom: 3px solid #FFF176; }
-    .kehadiran-item.alpa { border-bottom: 3px solid #d81b60; }
+    .student-name-cell { display: flex; align-items: center; gap: 10px; }
 
-    /* Catatan Box */
-    .catatan-box {
-        background: #fffbeb;
-        border: 1px solid #FFF176;
-        border-radius: 10px;
-        padding: 16px 20px;
-        margin-bottom: 16px;
+    .jk-pill {
+        font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 20px;
     }
-    .catatan-box__label {
-        font-size: 12px;
-        font-weight: 600;
-        color: #3E2723;
-        text-transform: uppercase;
-        margin-bottom: 8px;
-    }
-    .catatan-box__text {
-        font-size: 14px;
-        color: #78350f;
-        line-height: 1.6;
-    }
-    .catatan-box.rekomendasi {
-        background: #ecfdf5;
-        border-color: #6ee7b7;
-    }
-    .catatan-box.rekomendasi .catatan-box__label {
-        color: #065f46;
-    }
-    .catatan-box.rekomendasi .catatan-box__text {
-        color: #2E8B60;
-    }
+    .jk-pill--L { background: #dbeafe; color: #1d4ed8; }
+    .jk-pill--P { background: #fce7f3; color: #be185d; }
 
-    /* Legend */
-    .legend-inline {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
-        padding: 12px 16px;
-        background: #4CAF8220;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        font-size: 11px;
-        color: #5D4037;
+    .rapot-pill {
+        font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+        display: inline-flex; align-items: center; gap: 5px;
     }
-    .legend-inline__item {
-        display: flex;
-        align-items: center;
-        gap: 6px;
+    .rapot-pill--sudah { background: #dcfce7; color: #166534; }
+    .rapot-pill--belum { background: #fef9c3; color: #854d0e; }
+    .rapot-pill svg { width: 11px; height: 11px; fill: currentColor; }
+
+    .btn-input {
+        display: inline-flex; align-items: center; gap: 5px;
+        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
+        color: #fff; padding: 6px 13px; font-size: 12px; font-weight: 600;
+        border-radius: 7px; text-decoration: none; transition: all 0.2s;
+        box-shadow: 0 2px 6px rgba(61,155,114,0.25); white-space: nowrap;
     }
-    .legend-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
+    .btn-input:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(61,155,114,0.35); }
+    .btn-input svg { width: 12px; height: 12px; fill: currentColor; }
+
+    .btn-edit {
+        display: inline-flex; align-items: center; gap: 5px;
+        background: #f3f4f6; color: #374151;
+        padding: 6px 13px; font-size: 12px; font-weight: 600;
+        border-radius: 7px; text-decoration: none; transition: background 0.2s;
+        white-space: nowrap;
     }
-    .legend-dot.bb { background: #F06292; }
-    .legend-dot.mb { background: #FFF176; }
-    .legend-dot.bsh { background: #4CAF82; }
-    .legend-dot.bsb { background: #4CAF82; }
+    .btn-edit:hover { background: #e5e7eb; }
+    .btn-edit svg { width: 12px; height: 12px; fill: currentColor; }
 </style>
 @endpush
 
 @section('content')
-
-    {{-- Back Link --}}
     <a href="{{ route('guru.rapot.index') }}" class="back-link">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.28 7.72a.75.75 0 0 1 0 1.06l-2.47 2.47H21a.75.75 0 0 1 0 1.5H4.81l2.47 2.47a.75.75 0 1 1-1.06 1.06l-3.75-3.75a.75.75 0 0 1 0-1.06l3.75-3.75a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"/></svg>
-        Kembali ke Daftar Rapot
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M7.28 7.72a.75.75 0 0 1 0 1.06l-2.47 2.47H21a.75.75 0 0 1 0 1.5H4.81l2.47 2.47a.75.75 0 1 1-1.06 1.06l-3.75-3.75a.75.75 0 0 1 0-1.06l3.75-3.75a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"/></svg>
+        Kembali ke Daftar Class Term
     </a>
 
-    {{-- Page Actions --}}
-    <div class="page-actions">
-        <a href="{{ route('guru.rapot.edit', $rapot['id']) }}" class="btn-action btn-edit">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"/></svg>
-            Edit Rapot
-        </a>
-        <button class="btn-action btn-print" onclick="window.print()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.875 1.5C6.839 1.5 6 2.34 6 3.375v2.99c-.426.053-.851.11-1.274.174-1.454.218-2.476 1.483-2.476 2.917v6.294a3 3 0 0 0 3 3h.27l-.155 1.705A1.875 1.875 0 0 0 7.232 22.5h9.536a1.875 1.875 0 0 0 1.867-2.045l-.155-1.705h.27a3 3 0 0 0 3-3V9.456c0-1.434-1.022-2.7-2.476-2.917A48.716 48.716 0 0 0 18 6.366V3.375c0-1.036-.84-1.875-1.875-1.875h-8.25ZM16.5 6.205v-2.83A.375.375 0 0 0 16.125 3h-8.25a.375.375 0 0 0-.375.375v2.83a49.353 49.353 0 0 1 9 0Zm-.217 8.265c.178.018.317.16.333.337l.526 5.784a.375.375 0 0 1-.374.413H7.232a.375.375 0 0 1-.374-.413l.526-5.784a.373.373 0 0 1 .333-.337 41.741 41.741 0 0 1 8.566 0Z" clip-rule="evenodd"/></svg>
-            Cetak
-        </button>
-        <button type="button" class="btn-action btn-delete" onclick="document.getElementById('deleteModalShow').style.display='flex'">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
-                Hapus
-            </button>
-    </div>
-
-    {{-- Student Header --}}
-    <div class="student-header">
-        <div class="student-avatar">{{ strtoupper(substr($rapot['siswa']['nama'], 0, 1)) }}</div>
-        <div class="student-info">
-            <h2 class="student-name">{{ $rapot['siswa']['nama'] }}</h2>
-            <div class="student-meta">
-                <div class="student-meta__item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002c-.114.06-.227.119-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 7.5 12.173v-.224c0-.131.067-.248.172-.311a54.615 54.615 0 0 1 4.653-2.52.75.75 0 0 0-.65-1.352 56.123 56.123 0 0 0-4.78 2.589 1.858 1.858 0 0 0-.859 1.228 49.803 49.803 0 0 0-4.634-1.527.75.75 0 0 1-.231-1.337A60.653 60.653 0 0 1 11.7 2.805Z"/><path d="M13.06 15.473a48.45 48.45 0 0 1 7.666-3.282c.134 1.414.22 2.843.255 4.284a.75.75 0 0 1-.46.711 47.87 47.87 0 0 0-8.105 4.342.75.75 0 0 1-.832 0 47.87 47.87 0 0 0-8.104-4.342.75.75 0 0 1-.461-.71c.035-1.442.121-2.87.255-4.286a48.401 48.401 0 0 1 7.667 3.282 49.847 49.847 0 0 1 2.119.001Z"/></svg>
-                    {{ $rapot['kelas'] }}
-                </div>
-                <div class="student-meta__item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
-                    {{ $rapot['tahun_ajaran'] }}
-                </div>
-                <div class="student-meta__item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
-                    Semester {{ $rapot['semester'] }}
-                </div>
-                @if($rapot['tanggal_terbit'])
-                <div class="student-meta__item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12.75 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM7.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM8.25 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM9.75 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM10.5 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM12.75 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM14.25 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 13.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"/><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/></svg>
-                    Terbit: {{ \Carbon\Carbon::parse($rapot['tanggal_terbit'])->isoFormat('D MMMM Y') }}
-                </div>
-                @endif
+    {{-- Banner --}}
+    <div class="ct-banner">
+        <div class="ct-banner__badge">{{ $classTerm['kelas_nama'] }}</div>
+        <div class="ct-banner__info">
+            <h2 class="ct-banner__title">Kelas {{ $classTerm['kelas_nama'] }}</h2>
+            <div class="ct-banner__meta">
+                <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
+                    {{ $classTerm['tahun_ajaran'] }}
+                </span>
+                <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
+                    Semester {{ ucfirst($classTerm['semester']) }}
+                </span>
+                <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 4.8 11.06a.75.75 0 0 1-.231-1.337A60.65 60.65 0 0 1 11.7 2.805Z"/></svg>
+                    {{ $total }} Siswa
+                </span>
             </div>
         </div>
-        <span class="student-status {{ $rapot['status'] == 'Terbit' ? 'terbit' : 'draft' }}">{{ $rapot['status'] }}</span>
-    </div>
-
-    {{-- Capaian Perkembangan --}}
-    <div class="section-card">
-        <div class="section-card__header">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.49 4.49 0 0 1-3.498-1.306 4.491 4.491 0 0 1-1.307-3.498A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 0 1 1.307-3.497 4.49 4.49 0 0 1 3.497-1.307Z" clip-rule="evenodd"/></svg>
-            <h3 class="section-card__title">Capaian Perkembangan</h3>
-        </div>
-        <div class="section-card__body">
-            {{-- Legend --}}
-            <div class="legend-inline">
-                <div class="legend-inline__item"><span class="legend-dot bb"></span><strong>BB</strong> = Belum Berkembang</div>
-                <div class="legend-inline__item"><span class="legend-dot mb"></span><strong>MB</strong> = Mulai Berkembang</div>
-                <div class="legend-inline__item"><span class="legend-dot bsh"></span><strong>BSH</strong> = Berkembang Sesuai Harapan</div>
-                <div class="legend-inline__item"><span class="legend-dot bsb"></span><strong>BSB</strong> = Berkembang Sangat Baik</div>
-            </div>
-
-            <div class="nilai-list">
-                {{-- Agama & Moral --}}
-                <div class="nilai-item">
-                    <div class="nilai-item__header">
-                        <span class="nilai-item__title">1. Nilai Agama & Moral</span>
-                        <span class="nilai-badge {{ strtolower($rapot['nilai']['agama_moral']) }}">{{ $rapot['nilai']['agama_moral'] }}</span>
-                    </div>
-                    <p class="nilai-item__desc">{{ $rapot['nilai']['agama_moral_deskripsi'] }}</p>
-                </div>
-
-                {{-- Fisik Motorik --}}
-                <div class="nilai-item">
-                    <div class="nilai-item__header">
-                        <span class="nilai-item__title">2. Fisik Motorik</span>
-                        <span class="nilai-badge {{ strtolower($rapot['nilai']['fisik_motorik']) }}">{{ $rapot['nilai']['fisik_motorik'] }}</span>
-                    </div>
-                    <p class="nilai-item__desc">{{ $rapot['nilai']['fisik_motorik_deskripsi'] }}</p>
-                </div>
-
-                {{-- Kognitif --}}
-                <div class="nilai-item">
-                    <div class="nilai-item__header">
-                        <span class="nilai-item__title">3. Kognitif</span>
-                        <span class="nilai-badge {{ strtolower($rapot['nilai']['kognitif']) }}">{{ $rapot['nilai']['kognitif'] }}</span>
-                    </div>
-                    <p class="nilai-item__desc">{{ $rapot['nilai']['kognitif_deskripsi'] }}</p>
-                </div>
-
-                {{-- Bahasa --}}
-                <div class="nilai-item">
-                    <div class="nilai-item__header">
-                        <span class="nilai-item__title">4. Bahasa</span>
-                        <span class="nilai-badge {{ strtolower($rapot['nilai']['bahasa']) }}">{{ $rapot['nilai']['bahasa'] }}</span>
-                    </div>
-                    <p class="nilai-item__desc">{{ $rapot['nilai']['bahasa_deskripsi'] }}</p>
-                </div>
-
-                {{-- Sosial Emosional --}}
-                <div class="nilai-item">
-                    <div class="nilai-item__header">
-                        <span class="nilai-item__title">5. Sosial Emosional</span>
-                        <span class="nilai-badge {{ strtolower($rapot['nilai']['sosial_emosional']) }}">{{ $rapot['nilai']['sosial_emosional'] }}</span>
-                    </div>
-                    <p class="nilai-item__desc">{{ $rapot['nilai']['sosial_emosional_deskripsi'] }}</p>
-                </div>
-
-                {{-- Seni --}}
-                <div class="nilai-item">
-                    <div class="nilai-item__header">
-                        <span class="nilai-item__title">6. Seni</span>
-                        <span class="nilai-badge {{ strtolower($rapot['nilai']['seni']) }}">{{ $rapot['nilai']['seni'] }}</span>
-                    </div>
-                    <p class="nilai-item__desc">{{ $rapot['nilai']['seni_deskripsi'] }}</p>
-                </div>
-            </div>
+        <div class="ct-banner__progress">
+            <div class="num">{{ $sudahRapot }}/{{ $total }}</div>
+            <div class="lbl">rapot terisi</div>
         </div>
     </div>
 
-    {{-- Kehadiran --}}
-    <div class="section-card">
-        <div class="section-card__header">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" /></svg>
-            <h3 class="section-card__title">Rekap Kehadiran</h3>
+    @if (session('success'))
+        <div class="alert-success">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
+            {{ session('success') }}
         </div>
-        <div class="section-card__body">
-            <div class="kehadiran-grid">
-                <div class="kehadiran-item hadir">
-                    <div class="kehadiran-item__value">{{ $rapot['kehadiran']['hadir'] }}</div>
-                    <div class="kehadiran-item__label">Hadir</div>
-                </div>
-                <div class="kehadiran-item izin">
-                    <div class="kehadiran-item__value">{{ $rapot['kehadiran']['izin'] }}</div>
-                    <div class="kehadiran-item__label">Izin</div>
-                </div>
-                <div class="kehadiran-item sakit">
-                    <div class="kehadiran-item__value">{{ $rapot['kehadiran']['sakit'] }}</div>
-                    <div class="kehadiran-item__label">Sakit</div>
-                </div>
-                <div class="kehadiran-item alpa">
-                    <div class="kehadiran-item__value">{{ $rapot['kehadiran']['alpa'] }}</div>
-                    <div class="kehadiran-item__label">Alpa</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Catatan & Rekomendasi --}}
-    @if($rapot['catatan_guru'] || $rapot['rekomendasi'])
-    <div class="section-card">
-        <div class="section-card__header">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z"/><path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z"/></svg>
-            <h3 class="section-card__title">Catatan & Rekomendasi</h3>
-        </div>
-        <div class="section-card__body">
-            @if($rapot['catatan_guru'])
-            <div class="catatan-box">
-                <div class="catatan-box__label">Catatan Guru</div>
-                <p class="catatan-box__text">{{ $rapot['catatan_guru'] }}</p>
-            </div>
-            @endif
-            
-            @if($rapot['rekomendasi'])
-            <div class="catatan-box rekomendasi">
-                <div class="catatan-box__label">Rekomendasi</div>
-                <p class="catatan-box__text">{{ $rapot['rekomendasi'] }}</p>
-            </div>
-            @endif
-        </div>
-    </div>
     @endif
 
-<!-- Delete Confirmation Modal -->
-<div id="deleteModalShow" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
-    <div style="background:#fff;border-radius:12px;padding:32px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
-        <div style="width:56px;height:56px;background:#F0629220;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#d81b60" style="width:28px;height:28px;"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
-        </div>
-        <h3 style="font-size:18px;font-weight:700;color:#3E2723;margin:0 0 8px;">Hapus Rapot?</h3>
-        <p style="font-size:14px;color:#5D4037;margin:0 0 24px;">Apakah Anda yakin ingin menghapus rapot milik <strong>{{ $rapot['siswa']['nama'] }}</strong>? Tindakan ini tidak dapat dibatalkan.</p>
-        <div style="display:flex;gap:12px;justify-content:center;">
-            <button type="button" onclick="document.getElementById('deleteModalShow').style.display='none'" style="padding:10px 24px;border-radius:8px;border:none;background:#FFFDE7;color:#5D4037;font-size:14px;font-weight:600;cursor:pointer;">Batal</button>
-            <form action="{{ route('guru.rapot.destroy', $rapot['id']) }}" method="POST" style="display:inline;">
-                @csrf
-                @method('DELETE')
-                <button type="submit" style="padding:10px 24px;border-radius:8px;border:none;background:#d81b60;color:#fff;font-size:14px;font-weight:600;cursor:pointer;">Ya, Hapus</button>
-            </form>
-        </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Siswa</th>
+                    <th>NIS</th>
+                    <th>Jenis Kelamin</th>
+                    <th>Status Rapot</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($students as $i => $s)
+                    <tr>
+                        <td>{{ $i + 1 }}</td>
+                        <td>
+                            <div class="student-name-cell">
+                                <div class="avatar">{{ strtoupper(substr($s['nama'], 0, 1)) }}</div>
+                                <span style="font-weight:600">{{ $s['nama'] }}</span>
+                            </div>
+                        </td>
+                        <td style="color:#78716c">{{ $s['nis'] }}</td>
+                        <td>
+                            <span class="jk-pill jk-pill--{{ $s['jenis_kelamin'] }}">
+                                {{ $s['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan' }}
+                            </span>
+                        </td>
+                        <td>
+                            @if ($s['has_report'])
+                                <span class="rapot-pill rapot-pill--sudah">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
+                                    Sudah Diisi
+                                </span>
+                            @else
+                                <span class="rapot-pill rapot-pill--belum">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd"/></svg>
+                                    Belum Diisi
+                                </span>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($s['has_report'])
+                                <a href="{{ route('guru.rapot.siswa.form', [$classTerm['id'], $s['id']]) }}" class="btn-edit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"/></svg>
+                                    Edit Nilai
+                                </a>
+                            @else
+                                <a href="{{ route('guru.rapot.siswa.form', [$classTerm['id'], $s['id']]) }}" class="btn-input">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
+                                    Input Nilai
+                                </a>
+                            @endif
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" style="text-align:center;padding:40px;color:#a8a29e;font-size:13px;">
+                            Belum ada siswa terdaftar di class term ini.
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
-</div>
-
-@push('scripts')
-<script>
-document.getElementById('deleteModalShow').addEventListener('click', function(e) {
-    if (e.target === this) this.style.display = 'none';
-});
-</script>
-@endpush
-
 @endsection

@@ -570,168 +570,380 @@ class GuruController extends Controller
     // RAPOT SEMESTER
     // ═══════════════════════════════════════════════════════
 
-    /**
-     * Rapot - Index (Daftar semua rapot)
-     */
-    public function rapotIndex(Request $request)
+    private function dummyRapotClassTerms(): array
     {
-        $filterKelas = $request->input('kelas', '');
-        $filterSemester = $request->input('semester', '');
-        $filterTahun = $request->input('tahun', '');
-
-        // Dummy data rapot
-        $rapotList = [
-            ['id' => 1, 'siswa' => 'Ahmad Fauzi', 'kelas' => 'TK A', 'tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil', 'tanggal_terbit' => '15 Des 2025', 'status' => 'Terbit'],
-            ['id' => 2, 'siswa' => 'Siti Nurhaliza', 'kelas' => 'TK A', 'tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil', 'tanggal_terbit' => '15 Des 2025', 'status' => 'Terbit'],
-            ['id' => 3, 'siswa' => 'Budi Santoso', 'kelas' => 'TK B', 'tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil', 'tanggal_terbit' => '15 Des 2025', 'status' => 'Terbit'],
-            ['id' => 4, 'siswa' => 'Dewi Lestari', 'kelas' => 'TK A', 'tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil', 'tanggal_terbit' => null, 'status' => 'Draft'],
-            ['id' => 5, 'siswa' => 'Eko Prasetyo', 'kelas' => 'TK B', 'tahun_ajaran' => '2024/2025', 'semester' => 'Genap', 'tanggal_terbit' => '20 Jun 2025', 'status' => 'Terbit'],
+        return [
+            ['id' => 'ct1', 'kelas_nama' => 'A1', 'tahun_ajaran' => '2025/2026', 'semester' => 'ganjil', 'status' => 'aktif'],
+            ['id' => 'ct2', 'kelas_nama' => 'A2', 'tahun_ajaran' => '2025/2026', 'semester' => 'ganjil', 'status' => 'aktif'],
+            ['id' => 'ct3', 'kelas_nama' => 'B1', 'tahun_ajaran' => '2025/2026', 'semester' => 'ganjil', 'status' => 'aktif'],
+            ['id' => 'ct4', 'kelas_nama' => 'B2', 'tahun_ajaran' => '2025/2026', 'semester' => 'ganjil', 'status' => 'aktif'],
+            ['id' => 'ct5', 'kelas_nama' => 'A1', 'tahun_ajaran' => '2024/2025', 'semester' => 'genap',  'status' => 'selesai'],
+            ['id' => 'ct6', 'kelas_nama' => 'B1', 'tahun_ajaran' => '2024/2025', 'semester' => 'genap',  'status' => 'selesai'],
         ];
-
-        // Filter data
-        $rapotList = collect($rapotList)->filter(function ($item) use ($filterKelas, $filterSemester, $filterTahun) {
-            if ($filterKelas && $item['kelas'] !== $filterKelas) return false;
-            if ($filterSemester && $item['semester'] !== $filterSemester) return false;
-            if ($filterTahun && $item['tahun_ajaran'] !== $filterTahun) return false;
-            return true;
-        })->values()->all();
-
-        return view('guru.rapot.index', compact('rapotList', 'filterKelas', 'filterSemester', 'filterTahun'));
     }
 
-    /**
-     * Rapot - Create (Form tambah rapot baru)
-     */
+    private function dummyRapotStudents(): array
+    {
+        return [
+            'ct1' => [
+                ['id' => 's1',  'nama' => 'Ahmad Fauzi',     'nis' => '2025001', 'jenis_kelamin' => 'L', 'has_report' => true],
+                ['id' => 's2',  'nama' => 'Siti Nurhaliza',  'nis' => '2025002', 'jenis_kelamin' => 'P', 'has_report' => true],
+                ['id' => 's3',  'nama' => 'Budi Santoso',    'nis' => '2025003', 'jenis_kelamin' => 'L', 'has_report' => false],
+                ['id' => 's4',  'nama' => 'Dewi Lestari',    'nis' => '2025004', 'jenis_kelamin' => 'P', 'has_report' => false],
+            ],
+            'ct2' => [
+                ['id' => 's5',  'nama' => 'Eko Prasetyo',    'nis' => '2025005', 'jenis_kelamin' => 'L', 'has_report' => false],
+                ['id' => 's6',  'nama' => 'Rina Susanti',    'nis' => '2025006', 'jenis_kelamin' => 'P', 'has_report' => false],
+                ['id' => 's7',  'nama' => 'Doni Saputra',    'nis' => '2025007', 'jenis_kelamin' => 'L', 'has_report' => false],
+            ],
+            'ct3' => [
+                ['id' => 's8',  'nama' => 'Fitri Handayani', 'nis' => '2025008', 'jenis_kelamin' => 'P', 'has_report' => true],
+                ['id' => 's9',  'nama' => 'Gilang Permana',  'nis' => '2025009', 'jenis_kelamin' => 'L', 'has_report' => false],
+                ['id' => 's10', 'nama' => 'Hana Pertiwi',    'nis' => '2025010', 'jenis_kelamin' => 'P', 'has_report' => false],
+            ],
+            'ct4' => [
+                ['id' => 's11', 'nama' => 'Indra Kusuma',    'nis' => '2025011', 'jenis_kelamin' => 'L', 'has_report' => false],
+                ['id' => 's12', 'nama' => 'Julia Safitri',   'nis' => '2025012', 'jenis_kelamin' => 'P', 'has_report' => false],
+                ['id' => 's13', 'nama' => 'Kevin Pratama',   'nis' => '2025013', 'jenis_kelamin' => 'L', 'has_report' => false],
+            ],
+            'ct5' => [
+                ['id' => 's1',  'nama' => 'Ahmad Fauzi',     'nis' => '2025001', 'jenis_kelamin' => 'L', 'has_report' => true],
+                ['id' => 's2',  'nama' => 'Siti Nurhaliza',  'nis' => '2025002', 'jenis_kelamin' => 'P', 'has_report' => true],
+                ['id' => 's3',  'nama' => 'Budi Santoso',    'nis' => '2025003', 'jenis_kelamin' => 'L', 'has_report' => true],
+                ['id' => 's4',  'nama' => 'Dewi Lestari',    'nis' => '2025004', 'jenis_kelamin' => 'P', 'has_report' => true],
+            ],
+            'ct6' => [
+                ['id' => 's8',  'nama' => 'Fitri Handayani', 'nis' => '2025008', 'jenis_kelamin' => 'P', 'has_report' => true],
+                ['id' => 's9',  'nama' => 'Gilang Permana',  'nis' => '2025009', 'jenis_kelamin' => 'L', 'has_report' => true],
+                ['id' => 's10', 'nama' => 'Hana Pertiwi',    'nis' => '2025010', 'jenis_kelamin' => 'P', 'has_report' => true],
+            ],
+        ];
+    }
+
+    private function dummyRapotSubjectsAll(): array
+    {
+        $subjects = [
+            ['id' => 'sub1', 'nama' => 'Nilai Agama & Moral'],
+            ['id' => 'sub2', 'nama' => 'Fisik Motorik'],
+            ['id' => 'sub3', 'nama' => 'Kognitif'],
+            ['id' => 'sub4', 'nama' => 'Bahasa'],
+            ['id' => 'sub5', 'nama' => 'Sosial Emosional'],
+            ['id' => 'sub6', 'nama' => 'Seni'],
+        ];
+        return array_fill_keys(['ct1', 'ct2', 'ct3', 'ct4', 'ct5', 'ct6'], $subjects);
+    }
+
+    private function dummyRapotExtracurricularsAll(): array
+    {
+        return [
+            'ct1' => [
+                ['id' => 'ext1', 'nama' => 'Menggambar', 'assessments' => [
+                    ['id' => 'ea1', 'nama' => 'Kreativitas'],
+                    ['id' => 'ea2', 'nama' => 'Ketelitian'],
+                    ['id' => 'ea3', 'nama' => 'Kebersihan Karya'],
+                ]],
+                ['id' => 'ext2', 'nama' => 'Menyanyi', 'assessments' => [
+                    ['id' => 'ea4', 'nama' => 'Intonasi'],
+                    ['id' => 'ea5', 'nama' => 'Hafalan Lagu'],
+                ]],
+            ],
+            'ct2' => [
+                ['id' => 'ext1', 'nama' => 'Menggambar', 'assessments' => [
+                    ['id' => 'ea1', 'nama' => 'Kreativitas'],
+                    ['id' => 'ea2', 'nama' => 'Ketelitian'],
+                ]],
+                ['id' => 'ext3', 'nama' => 'Olahraga', 'assessments' => [
+                    ['id' => 'ea6', 'nama' => 'Kecepatan'],
+                    ['id' => 'ea7', 'nama' => 'Ketangkasan'],
+                ]],
+            ],
+            'ct3' => [
+                ['id' => 'ext4', 'nama' => 'Tari Tradisional', 'assessments' => [
+                    ['id' => 'ea8',  'nama' => 'Ketepatan Gerakan'],
+                    ['id' => 'ea9',  'nama' => 'Ekspresi'],
+                    ['id' => 'ea10', 'nama' => 'Hafalan Koreografi'],
+                ]],
+            ],
+            'ct4' => [
+                ['id' => 'ext2', 'nama' => 'Menyanyi', 'assessments' => [
+                    ['id' => 'ea4', 'nama' => 'Intonasi'],
+                    ['id' => 'ea5', 'nama' => 'Hafalan Lagu'],
+                ]],
+                ['id' => 'ext3', 'nama' => 'Olahraga', 'assessments' => [
+                    ['id' => 'ea6', 'nama' => 'Kecepatan'],
+                    ['id' => 'ea7', 'nama' => 'Ketangkasan'],
+                ]],
+            ],
+            'ct5' => [
+                ['id' => 'ext1', 'nama' => 'Menggambar', 'assessments' => [
+                    ['id' => 'ea1', 'nama' => 'Kreativitas'],
+                    ['id' => 'ea2', 'nama' => 'Ketelitian'],
+                ]],
+                ['id' => 'ext2', 'nama' => 'Menyanyi', 'assessments' => [
+                    ['id' => 'ea4', 'nama' => 'Intonasi'],
+                    ['id' => 'ea5', 'nama' => 'Hafalan Lagu'],
+                ]],
+            ],
+            'ct6' => [
+                ['id' => 'ext4', 'nama' => 'Tari Tradisional', 'assessments' => [
+                    ['id' => 'ea8', 'nama' => 'Ketepatan Gerakan'],
+                    ['id' => 'ea9', 'nama' => 'Ekspresi'],
+                ]],
+                ['id' => 'ext3', 'nama' => 'Olahraga', 'assessments' => [
+                    ['id' => 'ea6', 'nama' => 'Kecepatan'],
+                    ['id' => 'ea7', 'nama' => 'Ketangkasan'],
+                ]],
+            ],
+        ];
+    }
+
+    private function dummyRapotCounselingAll(): array
+    {
+        return [
+            'ct1' => [
+                ['id' => 'con1', 'nama' => 'Perkembangan Sosial', 'assessments' => [
+                    ['id' => 'ca1', 'nama' => 'Interaksi dengan teman'],
+                    ['id' => 'ca2', 'nama' => 'Kemampuan berbagi'],
+                    ['id' => 'ca3', 'nama' => 'Kepatuhan aturan'],
+                ]],
+                ['id' => 'con2', 'nama' => 'Perkembangan Emosi', 'assessments' => [
+                    ['id' => 'ca4', 'nama' => 'Mengelola emosi'],
+                    ['id' => 'ca5', 'nama' => 'Empati terhadap teman'],
+                ]],
+            ],
+            'ct2' => [
+                ['id' => 'con1', 'nama' => 'Perkembangan Sosial', 'assessments' => [
+                    ['id' => 'ca1', 'nama' => 'Interaksi dengan teman'],
+                    ['id' => 'ca2', 'nama' => 'Kemampuan berbagi'],
+                ]],
+                ['id' => 'con3', 'nama' => 'Perkembangan Kognitif', 'assessments' => [
+                    ['id' => 'ca6', 'nama' => 'Daya tangkap'],
+                    ['id' => 'ca7', 'nama' => 'Kreativitas berpikir'],
+                ]],
+            ],
+            'ct3' => [
+                ['id' => 'con2', 'nama' => 'Perkembangan Emosi', 'assessments' => [
+                    ['id' => 'ca4', 'nama' => 'Mengelola emosi'],
+                    ['id' => 'ca5', 'nama' => 'Empati terhadap teman'],
+                ]],
+                ['id' => 'con3', 'nama' => 'Perkembangan Kognitif', 'assessments' => [
+                    ['id' => 'ca6', 'nama' => 'Daya tangkap'],
+                    ['id' => 'ca7', 'nama' => 'Kreativitas berpikir'],
+                ]],
+            ],
+            'ct4' => [
+                ['id' => 'con1', 'nama' => 'Perkembangan Sosial', 'assessments' => [
+                    ['id' => 'ca1', 'nama' => 'Interaksi dengan teman'],
+                    ['id' => 'ca2', 'nama' => 'Kemampuan berbagi'],
+                    ['id' => 'ca3', 'nama' => 'Kepatuhan aturan'],
+                ]],
+            ],
+            'ct5' => [
+                ['id' => 'con1', 'nama' => 'Perkembangan Sosial', 'assessments' => [
+                    ['id' => 'ca1', 'nama' => 'Interaksi dengan teman'],
+                    ['id' => 'ca2', 'nama' => 'Kemampuan berbagi'],
+                ]],
+                ['id' => 'con2', 'nama' => 'Perkembangan Emosi', 'assessments' => [
+                    ['id' => 'ca4', 'nama' => 'Mengelola emosi'],
+                    ['id' => 'ca5', 'nama' => 'Empati terhadap teman'],
+                ]],
+            ],
+            'ct6' => [
+                ['id' => 'con3', 'nama' => 'Perkembangan Kognitif', 'assessments' => [
+                    ['id' => 'ca6', 'nama' => 'Daya tangkap'],
+                    ['id' => 'ca7', 'nama' => 'Kreativitas berpikir'],
+                ]],
+                ['id' => 'con2', 'nama' => 'Perkembangan Emosi', 'assessments' => [
+                    ['id' => 'ca4', 'nama' => 'Mengelola emosi'],
+                    ['id' => 'ca5', 'nama' => 'Empati terhadap teman'],
+                ]],
+            ],
+        ];
+    }
+
+    private function dummyRapotPrefilledScores(string $classTermId, string $studentId): array
+    {
+        $levels = ['BSH', 'BSB', 'MB', 'BSH'];
+
+        $subjectScores = [];
+        foreach (($this->dummyRapotSubjectsAll()[$classTermId] ?? []) as $sub) {
+            $idx = abs(crc32($studentId . $sub['id'])) % 4;
+            $subjectScores[$sub['id']] = ['level' => $levels[$idx], 'catatan' => ''];
+        }
+
+        $extScores = [];
+        foreach (($this->dummyRapotExtracurricularsAll()[$classTermId] ?? []) as $ext) {
+            foreach ($ext['assessments'] as $ea) {
+                $idx = abs(crc32($studentId . $ea['id'])) % 4;
+                $extScores[$ea['id']] = $levels[$idx];
+            }
+        }
+
+        $conScores = [];
+        foreach (($this->dummyRapotCounselingAll()[$classTermId] ?? []) as $con) {
+            foreach ($con['assessments'] as $ca) {
+                $idx = abs(crc32($studentId . $ca['id'])) % 4;
+                $conScores[$ca['id']] = $levels[$idx];
+            }
+        }
+
+        return [
+            'subjects'         => $subjectScores,
+            'extracurriculars' => $extScores,
+            'counseling'       => $conScores,
+            'catatan_guru'     => 'Ananda menunjukkan perkembangan yang baik selama semester ini.',
+        ];
+    }
+
+    private function buildEmptyScores(string $classTermId): array
+    {
+        $subjectScores = [];
+        foreach (($this->dummyRapotSubjectsAll()[$classTermId] ?? []) as $sub) {
+            $subjectScores[$sub['id']] = ['level' => null, 'catatan' => ''];
+        }
+        $extScores = [];
+        foreach (($this->dummyRapotExtracurricularsAll()[$classTermId] ?? []) as $ext) {
+            foreach ($ext['assessments'] as $ea) {
+                $extScores[$ea['id']] = null;
+            }
+        }
+        $conScores = [];
+        foreach (($this->dummyRapotCounselingAll()[$classTermId] ?? []) as $con) {
+            foreach ($con['assessments'] as $ca) {
+                $conScores[$ca['id']] = null;
+            }
+        }
+        return ['subjects' => $subjectScores, 'extracurriculars' => $extScores, 'counseling' => $conScores, 'catatan_guru' => ''];
+    }
+
+    private function getRapotScores(string $classTermId, string $studentId, bool $hasDummyReport): array
+    {
+        $key = 'rapot_' . $classTermId . '_' . $studentId;
+        if (session()->has($key)) {
+            return session($key);
+        }
+        if ($hasDummyReport) {
+            return $this->dummyRapotPrefilledScores($classTermId, $studentId);
+        }
+        return $this->buildEmptyScores($classTermId);
+    }
+
+    public function rapotIndex()
+    {
+        $allStudents = $this->dummyRapotStudents();
+
+        $classTerms = collect($this->dummyRapotClassTerms())->map(function ($ct) use ($allStudents) {
+            $students   = $allStudents[$ct['id']] ?? [];
+            $total      = count($students);
+            $sudahRapot = collect($students)->filter(function ($s) use ($ct) {
+                return $s['has_report'] || session()->has('rapot_' . $ct['id'] . '_' . $s['id']);
+            })->count();
+            $ct['total_siswa'] = $total;
+            $ct['sudah_rapot'] = $sudahRapot;
+            return $ct;
+        });
+
+        $grouped = $classTerms->groupBy('tahun_ajaran');
+        return view('guru.rapot.index', compact('grouped'));
+    }
+
+    public function rapotShow($id)
+    {
+        $classTerm = collect($this->dummyRapotClassTerms())->firstWhere('id', $id);
+        if (!$classTerm) {
+            return redirect()->route('guru.rapot.index')->with('error', 'Class term tidak ditemukan.');
+        }
+
+        $students = collect($this->dummyRapotStudents()[$id] ?? [])
+            ->map(function ($s) use ($id) {
+                $s['has_report'] = $s['has_report'] || session()->has('rapot_' . $id . '_' . $s['id']);
+                return $s;
+            })
+            ->values();
+
+        $sudahRapot = $students->where('has_report', true)->count();
+        $total      = $students->count();
+
+        return view('guru.rapot.show', compact('classTerm', 'students', 'sudahRapot', 'total'));
+    }
+
+    public function rapotSiswaForm($classTermId, $studentId)
+    {
+        $classTerm = collect($this->dummyRapotClassTerms())->firstWhere('id', $classTermId);
+        if (!$classTerm) abort(404);
+
+        $student = collect($this->dummyRapotStudents()[$classTermId] ?? [])->firstWhere('id', $studentId);
+        if (!$student) abort(404);
+
+        $hasReport        = $student['has_report'] || session()->has('rapot_' . $classTermId . '_' . $studentId);
+        $subjects         = $this->dummyRapotSubjectsAll()[$classTermId] ?? [];
+        $extracurriculars = $this->dummyRapotExtracurricularsAll()[$classTermId] ?? [];
+        $counselings      = $this->dummyRapotCounselingAll()[$classTermId] ?? [];
+        $scores           = $this->getRapotScores($classTermId, $studentId, $student['has_report']);
+
+        return view('guru.rapot.siswa', compact(
+            'classTerm', 'student', 'hasReport',
+            'subjects', 'extracurriculars', 'counselings', 'scores'
+        ));
+    }
+
+    public function rapotSiswaSave(Request $request, $classTermId, $studentId)
+    {
+        $key = 'rapot_' . $classTermId . '_' . $studentId;
+        session([$key => [
+            'subjects'         => $request->input('subjects', []),
+            'extracurriculars' => $request->input('extracurriculars', []),
+            'counseling'       => $request->input('counseling', []),
+            'catatan_guru'     => $request->input('catatan_guru', ''),
+        ]]);
+
+        return redirect()->route('guru.rapot.show', $classTermId)
+            ->with('success', 'Nilai rapot berhasil disimpan.');
+    }
+
     public function rapotCreate()
     {
-        // Dummy data siswa
         $siswaList = [
-            ['id' => 1, 'nama' => 'Ahmad Fauzi', 'kelas' => 'TK A'],
+            ['id' => 1, 'nama' => 'Ahmad Fauzi',    'kelas' => 'TK A'],
             ['id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A'],
-            ['id' => 3, 'nama' => 'Budi Santoso', 'kelas' => 'TK B'],
-            ['id' => 4, 'nama' => 'Dewi Lestari', 'kelas' => 'TK A'],
-            ['id' => 5, 'nama' => 'Eko Prasetyo', 'kelas' => 'TK B'],
-            ['id' => 6, 'nama' => 'Rina Susanti', 'kelas' => 'TK A'],
-            ['id' => 7, 'nama' => 'Doni Saputra', 'kelas' => 'TK B'],
+            ['id' => 3, 'nama' => 'Budi Santoso',   'kelas' => 'TK B'],
         ];
-
         return view('guru.rapot.create', compact('siswaList'));
     }
 
-    /**
-     * Rapot - Store (Simpan rapot baru)
-     */
     public function rapotStore(Request $request)
     {
-        // Dummy - redirect with success
         return redirect()->route('guru.rapot.index')->with('success', 'Rapot berhasil ditambahkan.');
     }
 
-    /**
-     * Rapot - Show (Detail rapot)
-     */
-    public function rapotShow($id)
-    {
-        // Dummy data rapot detail dengan struktur nested
-        $rapot = [
-            'id' => $id,
-            'siswa' => [
-                'id' => 1,
-                'nama' => 'Ahmad Fauzi',
-            ],
-            'kelas' => 'TK A',
-            'tahun_ajaran' => '2025/2026',
-            'semester' => 'Ganjil',
-            'tanggal_terbit' => '2025-12-15',
-            'status' => 'Terbit',
-            'nilai' => [
-                'agama_moral' => 'BSH',
-                'agama_moral_deskripsi' => 'Anak sudah mampu melaksanakan ibadah sederhana (berdoa sebelum dan sesudah makan), mengenal ciptaan Tuhan, serta menunjukkan sikap santun dan hormat kepada guru dan teman.',
-                'fisik_motorik' => 'BSB',
-                'fisik_motorik_deskripsi' => 'Anak sangat aktif dalam kegiatan motorik kasar seperti berlari dan melompat. Motorik halus juga berkembang baik, mampu memegang pensil dengan benar dan mewarnai dalam garis.',
-                'kognitif' => 'BSH',
-                'kognitif_deskripsi' => 'Anak mampu mengenal angka 1-10, menghitung benda konkrit, mengenal warna dasar, dan menyelesaikan puzzle sederhana dengan baik.',
-                'bahasa' => 'BSH',
-                'bahasa_deskripsi' => 'Anak mampu berkomunikasi dengan jelas, menceritakan pengalaman sederhana, mengenal huruf vokal, dan menyimak cerita dengan antusias.',
-                'sosial_emosional' => 'BSH',
-                'sosial_emosional_deskripsi' => 'Anak dapat bermain bersama teman, berbagi mainan, mengantri dengan tertib, dan menunjukkan empati ketika teman sedih.',
-                'seni' => 'BSB',
-                'seni_deskripsi' => 'Anak sangat kreatif dalam kegiatan seni, suka menggambar dan mewarnai, aktif bernyanyi dan mengikuti gerak lagu dengan semangat.',
-            ],
-            'kehadiran' => [
-                'hadir' => 85,
-                'izin' => 3,
-                'sakit' => 2,
-                'alpa' => 0,
-            ],
-            'catatan_guru' => 'Ananda menunjukkan perkembangan yang sangat baik selama semester ini. Aktif dalam setiap kegiatan pembelajaran dan dapat bekerja sama dengan teman-temannya.',
-            'rekomendasi' => 'Disarankan untuk terus memberikan stimulasi membaca di rumah dengan buku cerita bergambar. Ajak anak berdiskusi tentang lingkungan sekitar.',
-        ];
-
-        return view('guru.rapot.show', compact('rapot'));
-    }
-
-    /**
-     * Rapot - Edit (Form edit rapot)
-     */
     public function rapotEdit($id)
     {
-        $siswaList = $this->getDaftarSiswa();
-
-        // Dummy data rapot untuk edit dengan struktur nested
+        $siswaList = [['id' => 1, 'nama' => 'Ahmad Fauzi', 'kelas' => 'TK A']];
         $rapot = [
-            'id' => $id,
-            'siswa' => [
-                'id' => 1,
-                'nama' => 'Ahmad Fauzi',
-            ],
-            'kelas' => 'TK A',
-            'tahun_ajaran' => '2025/2026',
-            'semester' => 'Ganjil',
-            'tanggal_terbit' => '2025-12-15',
-            'status' => 'Terbit',
+            'id' => $id, 'siswa' => ['id' => 1, 'nama' => 'Ahmad Fauzi'],
+            'kelas' => 'TK A', 'tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil',
+            'tanggal_terbit' => '2025-12-15', 'status' => 'Terbit',
             'nilai' => [
-                'agama_moral' => 'BSH',
-                'agama_moral_deskripsi' => 'Anak sudah mampu melaksanakan ibadah sederhana (berdoa sebelum dan sesudah makan), mengenal ciptaan Tuhan, serta menunjukkan sikap santun dan hormat kepada guru dan teman.',
-                'fisik_motorik' => 'BSB',
-                'fisik_motorik_deskripsi' => 'Anak sangat aktif dalam kegiatan motorik kasar seperti berlari dan melompat. Motorik halus juga berkembang baik, mampu memegang pensil dengan benar dan mewarnai dalam garis.',
-                'kognitif' => 'BSH',
-                'kognitif_deskripsi' => 'Anak mampu mengenal angka 1-10, menghitung benda konkrit, mengenal warna dasar, dan menyelesaikan puzzle sederhana dengan baik.',
-                'bahasa' => 'BSH',
-                'bahasa_deskripsi' => 'Anak mampu berkomunikasi dengan jelas, menceritakan pengalaman sederhana, mengenal huruf vokal, dan menyimak cerita dengan antusias.',
-                'sosial_emosional' => 'BSH',
-                'sosial_emosional_deskripsi' => 'Anak dapat bermain bersama teman, berbagi mainan, mengantri dengan tertib, dan menunjukkan empati ketika teman sedih.',
-                'seni' => 'BSB',
-                'seni_deskripsi' => 'Anak sangat kreatif dalam kegiatan seni, suka menggambar dan mewarnai, aktif bernyanyi dan mengikuti gerak lagu dengan semangat.',
+                'agama_moral' => 'BSH', 'agama_moral_deskripsi' => '',
+                'fisik_motorik' => 'BSB', 'fisik_motorik_deskripsi' => '',
+                'kognitif' => 'BSH', 'kognitif_deskripsi' => '',
+                'bahasa' => 'BSH', 'bahasa_deskripsi' => '',
+                'sosial_emosional' => 'BSH', 'sosial_emosional_deskripsi' => '',
+                'seni' => 'BSB', 'seni_deskripsi' => '',
             ],
-            'kehadiran' => [
-                'hadir' => 85,
-                'izin' => 3,
-                'sakit' => 2,
-                'alpa' => 0,
-            ],
-            'catatan_guru' => 'Ananda menunjukkan perkembangan yang sangat baik selama semester ini. Aktif dalam setiap kegiatan pembelajaran dan dapat bekerja sama dengan teman-temannya.',
-            'rekomendasi' => 'Disarankan untuk terus memberikan stimulasi membaca di rumah dengan buku cerita bergambar. Ajak anak berdiskusi tentang lingkungan sekitar.',
+            'kehadiran'    => ['hadir' => 85, 'izin' => 3, 'sakit' => 2, 'alpa' => 0],
+            'catatan_guru' => '', 'rekomendasi' => '',
         ];
-
         return view('guru.rapot.edit', compact('rapot', 'siswaList'));
     }
 
-    /**
-     * Rapot - Update (Update rapot)
-     */
     public function rapotUpdate(Request $request, $id)
     {
-        // Dummy - redirect with success
         return redirect()->route('guru.rapot.index')->with('success', 'Rapot berhasil diupdate.');
     }
 
-    /**
-     * Rapot - Destroy (Hapus rapot)
-     */
     public function rapotDestroy($id)
     {
-        // Dummy - redirect with success
         return redirect()->route('guru.rapot.index')->with('success', 'Rapot berhasil dihapus.');
     }
 }

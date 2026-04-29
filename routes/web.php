@@ -162,6 +162,8 @@ Route::middleware('dummy.auth')->group(function () {
     Route::get('/guru/rapot/{id}/edit', [GuruController::class, 'rapotEdit'])->name('guru.rapot.edit');
     Route::put('/guru/rapot/{id}', [GuruController::class, 'rapotUpdate'])->name('guru.rapot.update');
     Route::delete('/guru/rapot/{id}', [GuruController::class, 'rapotDestroy'])->name('guru.rapot.destroy');
+    Route::get('/guru/rapot/{classTermId}/siswa/{studentId}', [GuruController::class, 'rapotSiswaForm'])->name('guru.rapot.siswa.form');
+    Route::post('/guru/rapot/{classTermId}/siswa/{studentId}', [GuruController::class, 'rapotSiswaSave'])->name('guru.rapot.siswa.save');
 
     // ═══════════════════════════════════════════════════════
     // ORANG TUA ROUTES
