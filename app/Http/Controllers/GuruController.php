@@ -233,61 +233,94 @@ class GuruController extends Controller
 
     public function grafik()
     {
-        $daftarSiswa = $this->getDaftarSiswa();
+        $classTerms     = $this->dummyRapotClassTerms();
+        $studentsByCt   = $this->dummyRapotStudents();
+        $counselingByCt = $this->dummyRapotCounselingAll();
 
-        // 6 bulan (1 semester)
-        $daftarMinggu = range(1, 6);
-        $siswaAktif   = $daftarSiswa[0]; // default: Ahmad Rizky
-        $mingguAktif  = 6;
+        // Jumlah minggu per semester (1 semester ≈ 18 minggu efektif)
+        $weeksPerSemester = 12;
 
-        // Dummy data per siswa per bulan (6 bulan = 1 semester) — nanti diganti query database
-        // Format: nilaiPerSiswa[siswa_id][bulan] = [aspek => nilai]
-        // Skala: 1=BB, 2=MB, 3=BSH, 4=BSB
-        $nilaiPerSiswa = [
-            1 => [ // Ahmad Rizky — mulai MB, akhir BSH-BSB
-                1 => ['fisik_motorik'=>2,'kognitif'=>2,'bahasa'=>2,'sosial_emosional'=>2,'nilai_agama_moral'=>2,'seni'=>2],
-                2 => ['fisik_motorik'=>2,'kognitif'=>2,'bahasa'=>3,'sosial_emosional'=>2,'nilai_agama_moral'=>2,'seni'=>2],
-                3 => ['fisik_motorik'=>3,'kognitif'=>3,'bahasa'=>3,'sosial_emosional'=>2,'nilai_agama_moral'=>3,'seni'=>3],
-                4 => ['fisik_motorik'=>3,'kognitif'=>3,'bahasa'=>3,'sosial_emosional'=>3,'nilai_agama_moral'=>3,'seni'=>3],
-                5 => ['fisik_motorik'=>3,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>3,'nilai_agama_moral'=>4,'seni'=>3],
-                6 => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
-            ],
-            2 => [ // Anisa Putri — cepat berkembang
-                1 => ['fisik_motorik'=>2,'kognitif'=>2,'bahasa'=>3,'sosial_emosional'=>2,'nilai_agama_moral'=>2,'seni'=>3],
-                2 => ['fisik_motorik'=>3,'kognitif'=>2,'bahasa'=>3,'sosial_emosional'=>3,'nilai_agama_moral'=>3,'seni'=>3],
-                3 => ['fisik_motorik'=>3,'kognitif'=>3,'bahasa'=>4,'sosial_emosional'=>3,'nilai_agama_moral'=>3,'seni'=>4],
-                4 => ['fisik_motorik'=>4,'kognitif'=>3,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
-                5 => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
-                6 => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
-            ],
-            3 => [ // Muhammad Fauzi — kognitif menonjol
-                1 => ['fisik_motorik'=>2,'kognitif'=>3,'bahasa'=>2,'sosial_emosional'=>2,'nilai_agama_moral'=>3,'seni'=>2],
-                2 => ['fisik_motorik'=>2,'kognitif'=>3,'bahasa'=>2,'sosial_emosional'=>2,'nilai_agama_moral'=>3,'seni'=>2],
-                3 => ['fisik_motorik'=>3,'kognitif'=>4,'bahasa'=>3,'sosial_emosional'=>3,'nilai_agama_moral'=>4,'seni'=>3],
-                4 => ['fisik_motorik'=>3,'kognitif'=>4,'bahasa'=>3,'sosial_emosional'=>3,'nilai_agama_moral'=>4,'seni'=>3],
-                5 => ['fisik_motorik'=>3,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>3,'nilai_agama_moral'=>4,'seni'=>4],
-                6 => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
-            ],
-            4 => [ // Tika Rahayu — mulai BB, berkembang perlahan
-                1 => ['fisik_motorik'=>1,'kognitif'=>1,'bahasa'=>2,'sosial_emosional'=>2,'nilai_agama_moral'=>1,'seni'=>1],
-                2 => ['fisik_motorik'=>2,'kognitif'=>2,'bahasa'=>2,'sosial_emosional'=>2,'nilai_agama_moral'=>2,'seni'=>2],
-                3 => ['fisik_motorik'=>2,'kognitif'=>2,'bahasa'=>3,'sosial_emosional'=>3,'nilai_agama_moral'=>2,'seni'=>2],
-                4 => ['fisik_motorik'=>3,'kognitif'=>3,'bahasa'=>3,'sosial_emosional'=>3,'nilai_agama_moral'=>3,'seni'=>3],
-                5 => ['fisik_motorik'=>3,'kognitif'=>3,'bahasa'=>3,'sosial_emosional'=>4,'nilai_agama_moral'=>3,'seni'=>3],
-                6 => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
-            ],
-            5 => [ // Siti Aisyah — seni menonjol sejak awal
-                1 => ['fisik_motorik'=>2,'kognitif'=>2,'bahasa'=>2,'sosial_emosional'=>2,'nilai_agama_moral'=>2,'seni'=>3],
-                2 => ['fisik_motorik'=>2,'kognitif'=>2,'bahasa'=>2,'sosial_emosional'=>3,'nilai_agama_moral'=>3,'seni'=>4],
-                3 => ['fisik_motorik'=>3,'kognitif'=>3,'bahasa'=>3,'sosial_emosional'=>3,'nilai_agama_moral'=>3,'seni'=>4],
-                4 => ['fisik_motorik'=>3,'kognitif'=>3,'bahasa'=>3,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
-                5 => ['fisik_motorik'=>3,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
-                6 => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
-            ],
-        ];
+        // Generate dummy weekly scores per (class_term, siswa, assessment, week)
+        // Format: $weeklyScores[$ctId][$studentId][$assessmentId] = [w1, w2, ..., wN]
+        $weeklyScores = [];
+        $palette = ['#3D9B72', '#F59E0B', '#3B82F6', '#EC4899', '#8B5CF6', '#06B6D4'];
+
+        foreach ($counselingByCt as $ctId => $counselings) {
+            $students = $studentsByCt[$ctId] ?? [];
+            foreach ($students as $student) {
+                foreach ($counselings as $con) {
+                    foreach ($con['assessments'] as $ca) {
+                        $seed = abs(crc32($ctId . $student['id'] . $ca['id']));
+                        $start = ($seed % 2) + 1; // 1 atau 2
+                        $scores = [];
+                        $current = $start;
+                        for ($w = 1; $w <= $weeksPerSemester; $w++) {
+                            // Skor naik perlahan dengan variasi pseudo-random
+                            $rand = abs(crc32($ctId . $student['id'] . $ca['id'] . $w)) % 10;
+                            if ($rand >= 7 && $current < 4) {
+                                $current++;
+                            } elseif ($rand <= 1 && $current > 1) {
+                                $current--;
+                            }
+                            $scores[] = $current;
+                        }
+                        $weeklyScores[$ctId][$student['id']][$ca['id']] = $scores;
+                    }
+                }
+            }
+        }
+
+        // Bangun struktur untuk view: per (class_term, siswa) → counseling groups dengan assessments + scores per minggu
+        $chartData = [];
+        foreach ($classTerms as $ct) {
+            $ctId = $ct['id'];
+            $students = $studentsByCt[$ctId] ?? [];
+            $counselings = $counselingByCt[$ctId] ?? [];
+
+            foreach ($students as $student) {
+                $key = $ctId . '__' . $student['id'];
+                $colorIdx = 0;
+                $groups = [];
+
+                foreach ($counselings as $con) {
+                    $assessments = [];
+                    foreach ($con['assessments'] as $ca) {
+                        $assessments[] = [
+                            'id'     => $ca['id'],
+                            'nama'   => $ca['nama'],
+                            'scores' => $weeklyScores[$ctId][$student['id']][$ca['id']] ?? [],
+                        ];
+                    }
+                    $groups[] = [
+                        'nama'        => $con['nama'],
+                        'color'       => $palette[$colorIdx % count($palette)],
+                        'assessments' => $assessments,
+                    ];
+                    $colorIdx++;
+                }
+
+                $totalAssessments = collect($groups)->sum(fn($g) => count($g['assessments']));
+
+                $chartData[$key] = [
+                    'class_term' => [
+                        'kelas'        => $ct['kelas_nama'],
+                        'tahun_ajaran' => $ct['tahun_ajaran'],
+                        'semester'     => $ct['semester'],
+                    ],
+                    'siswa' => [
+                        'id'   => $student['id'],
+                        'nama' => $student['nama'],
+                        'nis'  => $student['nis'] ?? '-',
+                    ],
+                    'weeks'             => range(1, $weeksPerSemester),
+                    'total_assessments' => $totalAssessments,
+                    'groups'            => $groups,
+                ];
+            }
+        }
 
         return view('guru.grafik', compact(
-            'daftarSiswa', 'daftarMinggu', 'siswaAktif', 'mingguAktif', 'nilaiPerSiswa'
+            'classTerms', 'studentsByCt', 'chartData', 'weeksPerSemester'
         ));
     }
 
