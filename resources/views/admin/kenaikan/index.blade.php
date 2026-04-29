@@ -38,118 +38,177 @@
         margin: 0;
     }
 
-    .ct-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 16px;
+    /* Toolbar */
+    .table-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
     }
-    .ct-card {
+    .search-wrap {
+        position: relative;
+        flex: 1;
+        min-width: 200px;
+        max-width: 360px;
+    }
+    .search-wrap svg {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 15px;
+        height: 15px;
+        fill: #a8a29e;
+        pointer-events: none;
+    }
+    .search-input {
+        width: 100%;
+        padding: 8px 12px 8px 32px;
+        font-size: 13px;
+        border: 1px solid #e7e5e4;
+        border-radius: 8px;
+        outline: none;
+        background: #fff;
+        color: #3E2723;
+        box-sizing: border-box;
+    }
+    .search-input:focus { border-color: #3D9B72; box-shadow: 0 0 0 3px rgba(61,155,114,0.12); }
+
+    .filter-select {
+        padding: 8px 12px;
+        font-size: 13px;
+        border: 1px solid #e7e5e4;
+        border-radius: 8px;
+        outline: none;
+        background: #fff;
+        color: #3E2723;
+        cursor: pointer;
+        min-width: 170px;
+    }
+    .filter-select:focus { border-color: #3D9B72; box-shadow: 0 0 0 3px rgba(61,155,114,0.12); }
+
+    .result-count {
+        font-size: 12px;
+        color: #a8a29e;
+        margin-left: auto;
+        white-space: nowrap;
+    }
+
+    /* Table */
+    .table-wrap {
         background: #fff;
         border: 1px solid #e7e5e4;
         border-radius: 10px;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
+        overflow: hidden;
         box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-        transition: box-shadow 0.2s;
     }
-    .ct-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+    .data-table thead th {
+        background: #f9fafb;
+        color: #6b7280;
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 11px 14px;
+        text-align: left;
+        border-bottom: 1px solid #e7e5e4;
+        white-space: nowrap;
+    }
+    .data-table tbody tr {
+        border-bottom: 1px solid #f5f5f4;
+        transition: background 0.15s;
+    }
+    .data-table tbody tr:last-child { border-bottom: none; }
+    .data-table tbody tr:hover { background: #f9fafb; }
+    .data-table tbody td {
+        padding: 11px 14px;
+        color: #3E2723;
+        vertical-align: middle;
+    }
 
-    .ct-card__head {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .ct-kelas-badge {
-        width: 48px;
-        height: 48px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, #3D9B72, #2E8B60);
-        color: #fff;
-        font-size: 16px;
-        font-weight: 700;
-        display: flex;
+    .kelas-badge {
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        flex-shrink: 0;
+        width: 38px;
+        height: 38px;
+        border-radius: 9px;
+        background: linear-gradient(135deg, #3D9B72, #2E8B60);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
     }
-    .ct-status-pill {
+
+    .status-pill {
         font-size: 11px;
         font-weight: 600;
         padding: 3px 10px;
         border-radius: 20px;
         text-transform: capitalize;
+        display: inline-block;
     }
-    .ct-status-pill--aktif    { background: #d1fae5; color: #065f46; }
-    .ct-status-pill--selesai  { background: #f3f4f6; color: #6b7280; }
-    .ct-status-pill--menunggu { background: #fef9c3; color: #854d0e; }
+    .status-pill--aktif    { background: #d1fae5; color: #065f46; }
+    .status-pill--selesai  { background: #f3f4f6; color: #6b7280; }
+    .status-pill--menunggu { background: #fef9c3; color: #854d0e; }
 
-    .ct-card__body { font-size: 13px; color: #57534e; line-height: 1.7; }
-    .ct-card__body strong { color: #3E2723; }
-
-    .ct-card__footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding-top: 8px;
-        border-top: 1px solid #f5f5f4;
+    .ispass-pill {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 20px;
+        display: inline-block;
     }
-    .ct-siswa-count {
-        font-size: 13px;
-        color: #78716c;
-        display: flex;
+    .ispass-pill--true  { background: #dcfce7; color: #166534; }
+    .ispass-pill--false { background: #fee2e2; color: #991b1b; }
+
+    .siswa-count {
+        display: inline-flex;
         align-items: center;
         gap: 5px;
+        color: #78716c;
     }
-    .ct-siswa-count svg { width: 15px; height: 15px; fill: #a8a29e; }
+    .siswa-count svg { width: 14px; height: 14px; fill: #a8a29e; }
 
     .btn-proses {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: 5px;
         background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
         color: #fff;
-        padding: 8px 16px;
-        font-size: 13px;
+        padding: 6px 13px;
+        font-size: 12px;
         font-weight: 600;
-        border-radius: 8px;
+        border-radius: 7px;
         text-decoration: none;
         transition: all 0.2s;
-        box-shadow: 0 2px 8px rgba(61,155,114,0.3);
+        box-shadow: 0 2px 6px rgba(61,155,114,0.25);
+        white-space: nowrap;
     }
-    .btn-proses:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(61,155,114,0.4); }
-    .btn-proses svg { width: 14px; height: 14px; fill: currentColor; }
+    .btn-proses:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(61,155,114,0.35); }
+    .btn-proses svg { width: 13px; height: 13px; fill: currentColor; }
+
     .btn-detail {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: 5px;
         background: #f3f4f6;
         color: #374151;
-        padding: 8px 16px;
-        font-size: 13px;
+        padding: 6px 13px;
+        font-size: 12px;
         font-weight: 600;
-        border-radius: 8px;
+        border-radius: 7px;
         text-decoration: none;
-        transition: all 0.2s;
+        transition: background 0.2s;
+        white-space: nowrap;
     }
     .btn-detail:hover { background: #e5e7eb; }
-    .btn-detail svg { width: 14px; height: 14px; fill: currentColor; }
-    .group-label {
-        font-size: 13px;
-        font-weight: 600;
-        color: #78716c;
-        margin: 24px 0 10px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .group-label::after {
-        content: '';
-        flex: 1;
-        height: 1px;
-        background: #e7e5e4;
-    }
+    .btn-detail svg { width: 13px; height: 13px; fill: currentColor; }
 
     .empty-state {
         text-align: center;
@@ -158,6 +217,13 @@
     }
     .empty-state svg { width: 48px; height: 48px; fill: #d6d3d1; margin-bottom: 12px; }
     .empty-state p { font-size: 14px; margin: 0; }
+
+    .no-results {
+        text-align: center;
+        padding: 40px 20px;
+        color: #a8a29e;
+        font-size: 13px;
+    }
 </style>
 @endpush
 
@@ -182,42 +248,138 @@
             <p>Belum ada class term.</p>
         </div>
     @else
-        @foreach ($grouped as $tahunAjaran => $terms)
-            <div class="group-label">{{ $tahunAjaran }}</div>
-            <div class="ct-grid">
-                @foreach ($terms as $ct)
-                    <div class="ct-card">
-                        <div class="ct-card__head">
-                            <div class="ct-kelas-badge">{{ $ct['kelas_nama'] }}</div>
-                            <span class="ct-status-pill ct-status-pill--{{ $ct['status'] }}">
-                                {{ ucfirst($ct['status']) }}
-                            </span>
-                        </div>
-                        <div class="ct-card__body">
-                            <strong>Tahun Ajaran</strong> {{ $ct['tahun_ajaran'] }}<br>
-                            <strong>Semester</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ ucfirst($ct['semester']) }}
-                        </div>
-                        <div class="ct-card__footer">
-                            <span class="ct-siswa-count">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 4.8 11.06a.75.75 0 0 1-.231-1.337A60.65 60.65 0 0 1 11.7 2.805Z"/><path d="M6 16.5a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0v-3.75a.75.75 0 0 1 .75-.75Zm9.75 0a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0v-3.75a.75.75 0 0 1 .75-.75Z"/></svg>
-                                {{ $ct['jumlah_siswa'] }} siswa
-                            </span>
-
-                            @if ($ct['isPass'])
-                                <a href="{{ route('admin.kenaikan.detail', $ct['id']) }}" class="btn-detail">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd"/></svg>
-                                    Lihat Detail
-                                </a>
-                            @elseif ($ct['status'] === 'aktif')
-                                <a href="{{ route('admin.kenaikan.show', $ct['id']) }}" class="btn-proses">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clip-rule="evenodd"/></svg>
-                                    Proses Kenaikan
-                                </a>
-                            @endif
-                        </div>
-                    </div>
-                @endforeach
+        <div class="table-toolbar">
+            <div class="search-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd"/></svg>
+                <input type="text" id="searchInput" class="search-input" placeholder="Cari kelas, tahun ajaran, semester...">
             </div>
-        @endforeach
+            <select id="filterIsPass" class="filter-select">
+                <option value="">Semua isPass</option>
+                <option value="true">isPass: True</option>
+                <option value="false">isPass: False</option>
+            </select>
+            <span class="result-count" id="resultCount"></span>
+        </div>
+
+        <div class="table-wrap">
+            <table class="data-table" id="kenaikanTable">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Kelas</th>
+                        <th>Tahun Ajaran</th>
+                        <th>Semester</th>
+                        <th>Status</th>
+                        <th>isPass</th>
+                        <th>Jumlah Siswa</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    @php $no = 1; @endphp
+                    @foreach ($grouped as $tahunAjaran => $terms)
+                        @foreach ($terms as $ct)
+                        <tr
+                            data-search="{{ strtolower($ct['kelas_nama'] . ' ' . $ct['tahun_ajaran'] . ' ' . $ct['semester']) }}"
+                            data-ispass="{{ $ct['isPass'] ? 'true' : 'false' }}"
+                        >
+                            <td>{{ $no++ }}</td>
+                            <td><span class="kelas-badge">{{ $ct['kelas_nama'] }}</span></td>
+                            <td>{{ $ct['tahun_ajaran'] }}</td>
+                            <td>{{ ucfirst($ct['semester']) }}</td>
+                            <td>
+                                <span class="status-pill status-pill--{{ $ct['status'] }}">
+                                    {{ ucfirst($ct['status']) }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="ispass-pill ispass-pill--{{ $ct['isPass'] ? 'true' : 'false' }}">
+                                    {{ $ct['isPass'] ? 'True' : 'False' }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="siswa-count">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 4.8 11.06a.75.75 0 0 1-.231-1.337A60.65 60.65 0 0 1 11.7 2.805Z"/><path d="M6 16.5a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0v-3.75a.75.75 0 0 1 .75-.75Zm9.75 0a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0v-3.75a.75.75 0 0 1 .75-.75Z"/></svg>
+                                    {{ $ct['jumlah_siswa'] }} siswa
+                                </span>
+                            </td>
+                            <td>
+                                @if ($ct['isPass'])
+                                    <a href="{{ route('admin.kenaikan.detail', $ct['id']) }}" class="btn-detail">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd"/></svg>
+                                        Lihat Detail
+                                    </a>
+                                @elseif ($ct['status'] === 'aktif')
+                                    <a href="{{ route('admin.kenaikan.show', $ct['id']) }}" class="btn-proses">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clip-rule="evenodd"/></svg>
+                                        Proses Kenaikan
+                                    </a>
+                                @else
+                                    <span style="color:#a8a29e;font-size:12px;">—</span>
+                                @endif
+                            </td>
+                        </tr>
+                        @endforeach
+                    @endforeach
+                </tbody>
+            </table>
+            <div class="no-results" id="noResults" style="display:none;">
+                Tidak ada data yang cocok dengan pencarian.
+            </div>
+        </div>
     @endif
 @endsection
+
+@push('scripts')
+<script>
+    (function () {
+        const searchInput  = document.getElementById('searchInput');
+        const filterIsPass = document.getElementById('filterIsPass');
+        const tableBody    = document.getElementById('tableBody');
+        const noResults    = document.getElementById('noResults');
+        const resultCount  = document.getElementById('resultCount');
+
+        if (!tableBody) return;
+
+        const allRows = Array.from(tableBody.querySelectorAll('tr'));
+        const total   = allRows.length;
+
+        function applyFilters() {
+            const keyword  = searchInput.value.toLowerCase().trim();
+            const ispass   = filterIsPass.value;
+            let visible    = 0;
+
+            allRows.forEach(function (row) {
+                const searchText = row.dataset.search || '';
+                const rowIsPass  = row.dataset.ispass || '';
+
+                const matchSearch = !keyword || searchText.includes(keyword);
+                const matchIsPass = !ispass  || rowIsPass === ispass;
+
+                if (matchSearch && matchIsPass) {
+                    row.style.display = '';
+                    visible++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            noResults.style.display   = visible === 0 ? 'block' : 'none';
+            resultCount.textContent   = visible + ' dari ' + total + ' data';
+
+            /* Re-number visible rows */
+            let no = 1;
+            allRows.forEach(function (row) {
+                if (row.style.display !== 'none') {
+                    row.cells[0].textContent = no++;
+                }
+            });
+        }
+
+        searchInput.addEventListener('input', applyFilters);
+        filterIsPass.addEventListener('change', applyFilters);
+
+        applyFilters();
+    })();
+</script>
+@endpush
