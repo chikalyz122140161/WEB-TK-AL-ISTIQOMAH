@@ -312,7 +312,73 @@ class OrangTuaController extends Controller
 
     public function grafik()
     {
-        return view('orangtua.grafik');
+        $W      = 12;
+        $levels = ['BB', 'MB', 'BSH', 'BSB'];
+
+        $student   = ['id' => 's1', 'nama' => 'Ahmad Faruq', 'nis' => '2025001'];
+        $classTerm = ['kelas' => 'A1', 'tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil'];
+
+        $subjects = [
+            ['id' => 'sub1', 'nama' => 'Nilai Agama & Moral', 'short' => 'NAM'],
+            ['id' => 'sub2', 'nama' => 'Fisik Motorik',       'short' => 'FM'],
+            ['id' => 'sub3', 'nama' => 'Kognitif',            'short' => 'Kognitif'],
+            ['id' => 'sub4', 'nama' => 'Bahasa',              'short' => 'Bahasa'],
+            ['id' => 'sub5', 'nama' => 'Sosial Emosional',    'short' => 'Sosem'],
+            ['id' => 'sub6', 'nama' => 'Seni',                'short' => 'Seni'],
+        ];
+
+        // Deterministic weekly scores per subject
+        $raw = [];
+        foreach ($subjects as $sub) {
+            $seed = abs(crc32('ct1' . $student['id'] . $sub['id']));
+            $cur  = ($seed % 2) + 2;
+            for ($w = 1; $w <= $W; $w++) {
+                $r = abs(crc32('ct1' . $student['id'] . $sub['id'] . $w)) % 10;
+                if ($r >= 7 && $cur < 4) $cur++;
+                elseif ($r <= 1 && $cur > 1) $cur--;
+                $raw[$sub['id']][$w] = $cur;
+            }
+        }
+
+        // Current week stats
+        $bsb = $bsh = $mb = $bb = 0;
+        foreach ($subjects as $sub) {
+            $v = $raw[$sub['id']][$W];
+            if ($v === 4)      $bsb++;
+            elseif ($v === 3)  $bsh++;
+            elseif ($v === 2)  $mb++;
+            else               $bb++;
+        }
+
+        // Radar: score per subject at current week
+        $radar = [];
+        foreach ($subjects as $sub) {
+            $radar[$sub['id']] = $raw[$sub['id']][$W];
+        }
+
+        // Weekly summary: avg across all subjects per week
+        $weekAvg = [];
+        for ($w = 1; $w <= $W; $w++) {
+            $vals = array_map(fn($s) => $raw[$s['id']][$w], $subjects);
+            $weekAvg[$w] = round(array_sum($vals) / count($vals), 2);
+        }
+
+        $grafikData = [
+            'student'      => $student,
+            'class_term'   => $classTerm,
+            'bsb'          => $bsb,
+            'bsh'          => $bsh,
+            'mb'           => $mb,
+            'bb'           => $bb,
+            'current_week' => $W,
+            'weeks'        => range(1, $W),
+            'subjects'     => $subjects,
+            'scores'       => $raw,
+            'radar'        => $radar,
+            'week_avg'     => $weekAvg,
+        ];
+
+        return view('orangtua.grafik', compact('grafikData'));
     }
 
     public function chat()
