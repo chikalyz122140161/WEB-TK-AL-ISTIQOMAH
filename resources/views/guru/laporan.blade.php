@@ -1,225 +1,266 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Laporan Perkembangan - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Laporan Perkembangan Siswa')
 
 @push('styles')
 <style>
-    /* Filter bar */
-    .filter-bar {
+    .lp-filter {
         background: #fff;
-        border: 1px solid #3E272320;
+        border: 1px solid var(--border, #e7e5e4);
         border-radius: 10px;
-        padding: 14px 20px;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
+        padding: 14px 16px;
+        margin-bottom: 16px;
+        box-shadow: var(--shadow-xs, 0 1px 3px rgba(0,0,0,0.04));
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) auto;
+        gap: 12px;
+        align-items: end;
     }
-    .filter-select {
-        height: 36px;
-        padding: 0 32px 0 12px;
-        font-size: 13px;
-        color: #3E2723;
-        background: #FFFDE7 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236B7280'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z' clip-rule='evenodd'/%3E%3C/svg%3E") no-repeat right 8px center;
-        background-size: 18px;
-        border: 1px solid #3E272330;
-        border-radius: 8px;
-        outline: none;
-        appearance: none;
-        cursor: pointer;
-        font-family: inherit;
-        min-width: 150px;
+    .lp-field { display: flex; flex-direction: column; gap: 4px; }
+    .lp-field__label {
+        font-size: 11px; font-weight: 600;
+        color: #6b7280; text-transform: uppercase; letter-spacing: .04em;
+    }
+    .lp-select {
+        padding: 9px 13px; font-size: 13px;
+        border: 1px solid #e7e5e4; border-radius: 7px;
+        background: #fff; color: #3E2723; outline: none;
+        cursor: pointer; font-family: inherit;
         transition: border-color .15s;
+        appearance: none;
     }
-    .filter-select:focus { border-color: #F06292; box-shadow: 0 0 0 3px rgba(251,146,60,.15); }
-    .btn-filter {
-        height: 36px;
-        padding: 0 20px;
-        background: #3D9B72;
-        color: #fff;
-        font-size: 13px;
-        font-weight: 700;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        letter-spacing: .4px;
-        transition: background .15s;
-    }
-    .btn-filter:hover { background: #2E8B60; }
+    .lp-select:focus { border-color: #3D9B72; box-shadow: 0 0 0 3px rgba(61,155,114,0.12); }
 
-    /* ── Table card ─────────────────────────────────────── */
-    .table-card {
+    .lp-btn {
+        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
+        color: #fff; border: none;
+        padding: 10px 22px; font-size: 13px; font-weight: 600;
+        border-radius: 8px; cursor: pointer;
+        font-family: inherit;
+        box-shadow: 0 2px 6px rgba(61,155,114,0.25);
+        transition: all .15s;
+    }
+    .lp-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(61,155,114,0.35); }
+    .lp-btn--ghost {
+        background: #f3f4f6; color: #374151;
+        box-shadow: none;
+    }
+    .lp-btn--ghost:hover { background: #e5e7eb; }
+
+    .lp-card {
         background: #fff;
-        border: 1px solid #3E272320;
+        border: 1px solid #e7e5e4;
         border-radius: 10px;
         overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
-    .laporan-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 13px;
+    .lp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .lp-table thead tr {
+        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
     }
-    .laporan-table thead tr {
-        background: #3D9B72;
-        color: #fff;
-    }
-    .laporan-table thead th {
-        padding: 12px 16px;
-        text-align: left;
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: .4px;
-        text-transform: uppercase;
+    .lp-table th {
+        color: #fff; padding: 14px 16px; text-align: left;
+        font-size: 11px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: .04em;
         white-space: nowrap;
     }
-    .laporan-table thead th:first-child { width: 48px; text-align: center; }
-    .laporan-table tbody tr {
-        border-bottom: 1px solid #FFFDE7;
-        transition: background .1s;
+    .lp-table td {
+        padding: 14px 16px;
+        border-bottom: 1px solid #f3f4f6;
+        color: #3E2723; vertical-align: middle;
     }
-    .laporan-table tbody tr:last-child { border-bottom: none; }
-    .laporan-table tbody tr:hover { background: #fff7ed; }
-    .laporan-table tbody td {
-        padding: 11px 16px;
-        color: #3E2723;
-        vertical-align: middle;
+    .lp-table tbody tr:last-child td { border-bottom: none; }
+    .lp-table tbody tr:hover td { background: #fafafa; }
+
+    .lp-row-no { color: #9ca3af; font-size: 12px; font-weight: 500; }
+
+    .lp-pill {
+        display: inline-flex; align-items: center;
+        background: #ecfdf5; color: #065f46;
+        border-radius: 99px; padding: 3px 10px;
+        font-size: 11px; font-weight: 600;
+        border: 1px solid #a7f3d0;
     }
-    .laporan-table tbody td:first-child { text-align: center; color: #5D4037; font-weight: 600; }
-    .rata-rata {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        font-weight: 700;
-        color: #3E2723;
+    .lp-pill--kelas { background: #eef2ff; color: #3730a3; border-color: #c7d2fe; }
+    .lp-pill--week  { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+
+    .lp-rata {
+        display: inline-flex; align-items: center; gap: 8px;
+        font-weight: 700; color: #3E2723;
     }
-    .rata-rata__bar {
-        width: 48px;
-        height: 6px;
-        background: #ffedd5;
-        border-radius: 3px;
-        overflow: hidden;
+    .lp-rata__bar {
+        width: 60px; height: 5px;
+        background: #f3f4f6; border-radius: 99px; overflow: hidden;
     }
-    .rata-rata__fill {
+    .lp-rata__bar-fill {
         height: 100%;
-        background: #F06292;
-        border-radius: 3px;
+        background: linear-gradient(90deg, #3D9B72, #2E8B60);
+        border-radius: 99px;
     }
 
-    /* ── Action links ────────────────────────────────────── */
-    .aksi-links {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        flex-wrap: nowrap;
+    .lp-aksi { display: flex; gap: 6px; flex-wrap: wrap; }
+    .lp-aksi a {
+        display: inline-flex; align-items: center; gap: 4px;
+        padding: 6px 11px; font-size: 11px; font-weight: 600;
+        border-radius: 6px; text-decoration: none;
+        transition: all .15s;
     }
-    .aksi-links a {
-        font-size: 12px;
-        font-weight: 600;
-        padding: 4px 10px;
-        border-radius: 5px;
-        text-decoration: none;
-        white-space: nowrap;
-        transition: background .12s, color .12s;
+    .lp-aksi__view {
+        background: #ecfdf5; color: #065f46;
+        border: 1px solid #a7f3d0;
     }
-    .aksi-lihat  { background: #ecfdf5; color: #2E8B60; }
-    .aksi-lihat:hover  { background: #4CAF8230; }
-    .aksi-edit   { background: #FFFBEB; color: #5D4037; }
-    .aksi-edit:hover   { background: #FFF176; }
-    .aksi-pdf    { background: #F0629220; color: #d81b72; }
-    .aksi-pdf:hover    { background: #F0629220; }
+    .lp-aksi__view:hover { background: #d1fae5; }
+    .lp-aksi__edit {
+        background: #fef3c7; color: #92400e;
+        border: 1px solid #fde68a;
+    }
+    .lp-aksi__edit:hover { background: #fde68a; }
 
-    /* Empty state  */
-    .empty-state {
-        text-align: center;
-        padding: 48px 24px;
-        color: #5D4037;
-        font-size: 14px;
+    .lp-empty {
+        padding: 50px 20px; text-align: center;
+        color: #9ca3af; font-size: 13px;
     }
 </style>
 @endpush
 
-{{-- SIDEBAR --}}
 @section('sidebar')
     @include('guru.partials.sidebar')
 @endsection
 
-{{-- CONTENT --}}
 @section('content')
-
-    <h2 style="margin:0 0 20px;font-size:20px;font-weight:700;color:#3E2723;text-transform:uppercase;letter-spacing:.5px;">
+    <h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#3E2723;">
         Laporan Perkembangan Siswa
     </h2>
 
-    {{-- Filter bar --}}
-    <form method="GET" action="{{ route('guru.laporan_bk') }}" class="filter-bar">
-        <select class="filter-select" name="siswa_id">
-            <option value="">Semua Siswa</option>
-            @foreach ($daftarSiswa as $s)
-                <option value="{{ $s['id'] }}" {{ request('siswa_id') == $s['id'] ? 'selected' : '' }}>
-                    {{ $s['nama'] }}
-                </option>
-            @endforeach
-        </select>
-        <select class="filter-select" name="minggu">
-            <option value="">Semua Minggu</option>
-            @foreach (range(1, 20) as $m)
-                <option value="{{ $m }}" {{ request('minggu') == $m ? 'selected' : '' }}>
-                    Minggu {{ $m }}
-                </option>
-            @endforeach
-        </select>
-        <button type="submit" class="btn-filter">FILTER</button>
+    {{-- Filter --}}
+    <form method="GET" action="{{ route('guru.laporan_bk') }}" class="lp-filter">
+        <div class="lp-field">
+            <label class="lp-field__label">Tahun Ajaran / Semester</label>
+            <select class="lp-select" name="semester" id="filterSemester">
+                <option value="">Semua Semester</option>
+                @foreach ($semesters as $sm)
+                    <option value="{{ $sm['id'] }}" {{ ($filters['semester'] ?? '') === $sm['id'] ? 'selected' : '' }}>
+                        {{ $sm['label'] }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="lp-field">
+            <label class="lp-field__label">Kelas</label>
+            <select class="lp-select" name="kelas" id="filterKelas">
+                <option value="">Semua Kelas</option>
+                @foreach ($kelas as $k)
+                    <option value="{{ $k['id'] }}" {{ ($filters['kelas'] ?? '') === $k['id'] ? 'selected' : '' }}>
+                        Kelas {{ $k['nama'] }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="lp-field">
+            <label class="lp-field__label">Siswa</label>
+            <select class="lp-select" name="siswa" id="filterSiswa">
+                <option value="">Semua Siswa</option>
+                @foreach ($allSiswa as $s)
+                    <option value="{{ $s['id'] }}"
+                            data-kelas="{{ collect($siswaByKelas)->search(fn($arr) => collect($arr)->contains('id', $s['id'])) }}"
+                            {{ ($filters['siswa'] ?? '') === $s['id'] ? 'selected' : '' }}>
+                        {{ $s['nama'] }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="lp-field">
+            <label class="lp-field__label">Minggu</label>
+            <select class="lp-select" name="minggu">
+                <option value="">Semua Minggu</option>
+                @foreach ($weeks as $w)
+                    <option value="{{ $w }}" {{ (string)($filters['minggu'] ?? '') === (string)$w ? 'selected' : '' }}>
+                        Minggu {{ $w }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="lp-field" style="flex-direction:row;gap:8px;">
+            <button type="submit" class="lp-btn">Filter</button>
+            <a href="{{ route('guru.laporan_bk') }}" class="lp-btn lp-btn--ghost" style="padding:10px 18px;text-decoration:none;display:inline-flex;align-items:center;">Reset</a>
+        </div>
     </form>
 
     {{-- Table --}}
-    <div class="table-card">
-        <table class="laporan-table">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama Siswa</th>
-                    <th>Kelas</th>
-                    <th>Minggu</th>
-                    <th>Tanggal</th>
-                    <th>Rata-rata</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($laporan as $i => $row)
-                <tr>
-                    <td>{{ $i + 1 }}</td>
-                    <td>{{ $row['nama'] }}</td>
-                    <td>{{ $row['kelas'] }}</td>
-                    <td>{{ $row['minggu'] }}</td>
-                    <td>{{ $row['tanggal'] }}</td>
-                    <td>
-                        <div class="rata-rata">
-                            {{ number_format($row['rata_rata'], 1) }}
-                            <div class="rata-rata__bar">
-                                <div class="rata-rata__fill" style="width:{{ ($row['rata_rata'] / 5) * 100 }}%"></div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="aksi-links">
-                            <a href="{{ route('guru.laporan_bk.show', $row['id']) }}" class="aksi-lihat">[LIHAT]</a>
-                            <a href="{{ route('guru.laporan_bk.edit', $row['id']) }}" class="aksi-edit">[EDIT]</a>
-                            <a href="javascript:void(0)" class="aksi-pdf" onclick="alert('Mengunduh PDF laporan {{ $row['nama'] }}')">[PDF]</a>
-                        </div>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="7">
-                        <div class="empty-state">Belum ada data laporan.</div>
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+    <div class="lp-card">
+        @if (count($laporan) === 0)
+            <div class="lp-empty">Belum ada data laporan untuk filter yang dipilih.</div>
+        @else
+            <table class="lp-table">
+                <thead>
+                    <tr>
+                        <th style="width:50px;">No</th>
+                        <th>Nama Siswa</th>
+                        <th>Kelas</th>
+                        <th>Semester</th>
+                        <th>Minggu</th>
+                        <th>Tanggal</th>
+                        <th>Rata-rata</th>
+                        <th style="width:140px;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($laporan as $i => $row)
+                        @php
+                            $pct = $row['rata_rata'] > 0 ? round(($row['rata_rata'] / 4) * 100) : 0;
+                        @endphp
+                        <tr>
+                            <td class="lp-row-no">{{ $i + 1 }}</td>
+                            <td style="font-weight:600;">{{ $row['siswa_nama'] }}</td>
+                            <td><span class="lp-pill lp-pill--kelas">{{ $row['kelas'] }}</span></td>
+                            <td style="font-size:12px;color:#6b7280;">{{ $row['semester'] }}</td>
+                            <td><span class="lp-pill lp-pill--week">Minggu {{ $row['minggu'] }}</span></td>
+                            <td>{{ $row['tanggal_label'] }}</td>
+                            <td>
+                                <div class="lp-rata">
+                                    <span>{{ number_format($row['rata_rata'], 1) }}</span>
+                                    <div class="lp-rata__bar">
+                                        <div class="lp-rata__bar-fill" style="width:{{ $pct }}%"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="lp-aksi">
+                                    <a href="{{ route('guru.laporan_bk.show', $row['id']) }}" class="lp-aksi__view">Lihat</a>
+                                    <a href="{{ route('guru.laporan_bk.edit', $row['id']) }}" class="lp-aksi__edit">Edit</a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
     </div>
 
 @endsection
+
+@push('scripts')
+<script>
+const siswaByKelas = @json($siswaByKelas);
+const filterKelas  = document.getElementById('filterKelas');
+const filterSiswa  = document.getElementById('filterSiswa');
+
+// Filter siswa dropdown saat kelas berubah
+filterKelas.addEventListener('change', () => {
+    const kelas = filterKelas.value;
+    Array.from(filterSiswa.options).forEach(opt => {
+        if (opt.value === '') return;
+        opt.hidden = kelas && opt.dataset.kelas !== kelas;
+    });
+    if (filterSiswa.selectedOptions[0]?.hidden) filterSiswa.value = '';
+});
+
+// Trigger initial filter
+filterKelas.dispatchEvent(new Event('change'));
+</script>
+@endpush

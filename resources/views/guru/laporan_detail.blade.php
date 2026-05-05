@@ -1,176 +1,144 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Detail Laporan Perkembangan - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Detail Laporan Perkembangan')
 
 @push('styles')
 <style>
-    .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 14px;
-        font-weight: 500;
-        color: #5D4037;
-        margin-bottom: 20px;
-        transition: color 0.2s;
-        text-decoration: none;
+    .ld-back {
+        display: inline-flex; align-items: center; gap: 6px;
+        color: #3E2723; font-size: 13px; font-weight: 500;
+        text-decoration: none; margin-bottom: 14px;
+        transition: color .15s;
     }
-    .back-link:hover { color: #3E2723; }
-    .back-link svg { width: 16px; height: 16px; fill: currentColor; }
+    .ld-back:hover { color: #3D9B72; }
+    .ld-back svg { width: 14px; height: 14px; fill: currentColor; }
 
-    .detail-card {
-        background: #fff;
-        border: 1px solid #3E272320;
-        border-radius: 12px;
-        overflow: hidden;
-        max-width: 820px;
-    }
-    .detail-card__header {
+    .ld-banner {
         background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
+        border-radius: 14px;
+        padding: 22px 26px;
         color: #fff;
-        padding: 24px 28px;
+        margin-bottom: 16px;
+        box-shadow: 0 3px 10px rgba(61,155,114,0.25);
     }
-    .detail-card__title {
-        font-size: 18px;
-        font-weight: 700;
-        margin: 0 0 10px;
-        letter-spacing: .3px;
+    .ld-banner__title { font-size: 18px; font-weight: 700; margin: 0 0 12px; }
+    .ld-banner__meta {
+        display: flex; flex-wrap: wrap; gap: 18px;
+        font-size: 13px; opacity: 0.95;
     }
-    .detail-card__meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px 24px;
-        font-size: 13px;
-        opacity: 0.92;
-        line-height: 1.6;
-    }
-    .detail-card__meta span {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-    .detail-card__meta svg { width: 14px; height: 14px; fill: currentColor; }
+    .ld-banner__meta span { display: inline-flex; align-items: center; gap: 6px; }
+    .ld-banner__meta svg { width: 14px; height: 14px; fill: rgba(255,255,255,0.85); }
 
-    .detail-card__body {
-        padding: 28px;
+    .ld-avg {
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin-bottom: 18px;
+        color: #fff;
+        display: flex; justify-content: space-between; align-items: center;
+        box-shadow: 0 2px 8px rgba(61,155,114,0.22);
     }
+    .ld-avg__title { font-size: 14px; font-weight: 600; margin: 0; }
+    .ld-avg__sub   { font-size: 11px; opacity: 0.85; margin-top: 3px; }
+    .ld-avg__value { font-size: 36px; font-weight: 800; line-height: 1; }
 
-    /* Score section header */
-    .section-label {
-        font-size: 11px;
-        font-weight: 700;
-        color: #5D4037;
-        text-transform: uppercase;
-        letter-spacing: .6px;
-        margin: 0 0 16px;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #F06292;
+    .ld-section-title {
+        font-size: 13px; font-weight: 700;
+        color: #3E2723; text-transform: uppercase; letter-spacing: .04em;
+        margin: 0 0 12px;
+        padding-bottom: 6px;
+        border-bottom: 2px solid #3D9B72;
         display: inline-block;
     }
 
-    /* Aspect grid */
-    .aspect-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 14px;
-        margin-bottom: 28px;
-    }
-    @media (max-width: 600px) {
-        .aspect-grid { grid-template-columns: 1fr; }
-    }
-    .aspect-item {
-        background: #FFF7ED;
-        border: 1px solid #FED7AA;
-        border-radius: 10px;
-        padding: 18px 20px;
-    }
-    .aspect-item__label {
-        font-size: 11px;
-        font-weight: 700;
-        color: #ffffff;
-        text-transform: uppercase;
-        letter-spacing: .5px;
-        margin-bottom: 8px;
-    }
-    .aspect-item__score {
-        font-size: 34px;
-        font-weight: 800;
-        color: #2E8B60;
-        line-height: 1;
-        margin-bottom: 10px;
-    }
-    .aspect-item__score span {
-        font-size: 14px;
-        font-weight: 500;
-        color: #5D4037;
-    }
-    .aspect-item__bar {
-        height: 8px;
-        background: #FED7AA;
-        border-radius: 4px;
+    .ld-konseling {
+        background: #fff;
+        border: 1px solid #e7e5e4;
+        border-radius: 12px;
+        margin-bottom: 14px;
         overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
-    .aspect-item__bar-fill {
-        height: 100%;
-        border-radius: 4px;
-        background: linear-gradient(90deg, #3D9B72 0%, #4CAF82 100%);
-        transition: width .4s;
+    .ld-konseling__head {
+        background: #f9fafb;
+        padding: 12px 18px;
+        border-bottom: 1px solid #e7e5e4;
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 10px;
     }
-    .aspect-item__desc {
-        font-size: 11px;
-        color: #5D4037;
-        margin-top: 6px;
+    .ld-konseling__title {
+        font-size: 14px; font-weight: 700; color: #3E2723;
+        display: inline-flex; align-items: center; gap: 8px;
+        margin: 0;
+    }
+    .ld-konseling__title svg { width: 16px; height: 16px; fill: #3D9B72; }
+    .ld-konseling__meta {
+        display: flex; gap: 8px; align-items: center;
+        font-size: 11px; color: #6b7280;
+    }
+    .ld-konseling__avg {
+        background: #ecfdf5; color: #065f46;
+        padding: 3px 10px; border-radius: 99px;
+        font-weight: 700; font-size: 11px;
+        border: 1px solid #a7f3d0;
     }
 
-    /* Rata-rata card */
-    .rata-card {
-        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
+    .ld-items { padding: 0; }
+    .ld-item {
+        padding: 12px 18px;
+        border-bottom: 1px solid #f3f4f6;
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 14px;
+    }
+    .ld-item:last-child { border-bottom: none; }
+    .ld-item__label { font-size: 13px; color: #3E2723; flex: 1; }
+    .ld-item__score { display: inline-flex; align-items: center; gap: 10px; }
+
+    .ld-bar {
+        width: 110px; height: 6px;
+        background: #f3f4f6; border-radius: 99px; overflow: hidden;
+    }
+    .ld-bar__fill { height: 100%; border-radius: 99px; transition: width .35s; }
+    .ld-bar--bb  .ld-bar__fill { background: #f87171; }
+    .ld-bar--mb  .ld-bar__fill { background: #facc15; }
+    .ld-bar--bsh .ld-bar__fill { background: #4ade80; }
+    .ld-bar--bsb .ld-bar__fill { background: #22c55e; }
+
+    .ld-badge {
+        display: inline-block;
+        font-size: 10px; font-weight: 700;
+        padding: 3px 9px; border-radius: 4px;
+        min-width: 36px; text-align: center;
+    }
+    .ld-badge--bb  { background: #fee2e2; color: #b91c1c; }
+    .ld-badge--mb  { background: #fef3c7; color: #92400e; }
+    .ld-badge--bsh { background: #dcfce7; color: #166534; }
+    .ld-badge--bsb { background: #bbf7d0; color: #14532d; }
+    .ld-badge--none{ background: #f3f4f6; color: #9ca3af; }
+
+    .ld-skala {
+        background: #fff;
+        border: 1px solid #e7e5e4;
         border-radius: 10px;
-        padding: 18px 22px;
-        margin-bottom: 28px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        color: #fff;
-    }
-    .rata-card__label {
-        font-size: 13px;
-        font-weight: 700;
-        opacity: .85;
-        letter-spacing: .3px;
-    }
-    .rata-card__value {
-        font-size: 36px;
-        font-weight: 800;
-        line-height: 1;
-    }
-    .rata-card__sub {
+        padding: 12px 18px;
+        margin-top: 14px;
         font-size: 12px;
-        opacity: .75;
-        margin-top: 2px;
     }
-
-    /* Notes section */
-    .note-section {
-        background: #FFFDE7;
-        border: 1px solid #3E272320;
-        border-radius: 10px;
-        padding: 20px;
+    .ld-skala__title {
+        font-size: 11px; font-weight: 700;
+        color: #3E2723; text-transform: uppercase;
+        letter-spacing: .04em; margin: 0 0 8px;
     }
-    .note-section__label {
-        font-size: 11px;
-        font-weight: 700;
-        color: #5D4037;
-        text-transform: uppercase;
-        letter-spacing: .5px;
-        margin-bottom: 10px;
+    .ld-skala__list {
+        list-style: none; margin: 0; padding: 0;
+        display: flex; flex-wrap: wrap; gap: 14px;
     }
-    .note-section__text {
-        font-size: 14px;
-        color: #3E2723;
-        line-height: 1.8;
+    .ld-skala__list li {
+        display: inline-flex; align-items: center; gap: 6px;
+        color: #57534e;
     }
+    .ld-skala__dot { width: 10px; height: 10px; border-radius: 50%; }
 </style>
 @endpush
 
@@ -179,75 +147,81 @@
 @endsection
 
 @section('content')
-
-    <a href="{{ route('guru.laporan_bk') }}" class="back-link">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd"/></svg>
-        Kembali ke Laporan Perkembangan
+    <a href="{{ route('guru.laporan_bk') }}" class="ld-back">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M7.28 7.72a.75.75 0 0 1 0 1.06l-2.47 2.47H21a.75.75 0 0 1 0 1.5H4.81l2.47 2.47a.75.75 0 1 1-1.06 1.06l-3.75-3.75a.75.75 0 0 1 0-1.06l3.75-3.75a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"/></svg>
+        Kembali ke Daftar Laporan
     </a>
 
-    @php
-        $aspekList = [
-            ['key' => 'fisik_motorik',    'label' => 'Fisik-Motorik'],
-            ['key' => 'kognitif',          'label' => 'Kognitif'],
-            ['key' => 'bahasa',            'label' => 'Bahasa'],
-            ['key' => 'sosial_emosional',  'label' => 'Sosial-Emosional'],
-            ['key' => 'nilai_agama_moral', 'label' => 'Agama & Moral'],
-            ['key' => 'seni',              'label' => 'Seni'],
-        ];
-        $skalaDesc = ['', 'Belum Berkembang', 'Mulai Berkembang', 'Berkembang Sesuai Harapan', 'Berkembang Sangat Baik'];
-    @endphp
-
-    <div class="detail-card">
-        <div class="detail-card__header">
-            <div class="detail-card__title">Laporan Perkembangan Mingguan</div>
-            <div class="detail-card__meta">
-                <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
-                    {{ $laporan['nama'] }} &mdash; {{ $laporan['kelas'] }}
-                </span>
-                <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
-                    Minggu {{ $laporan['minggu'] }} &mdash; {{ $laporan['tanggal'] }}
-                </span>
-            </div>
+    <div class="ld-banner">
+        <h2 class="ld-banner__title">Laporan Perkembangan Mingguan</h2>
+        <div class="ld-banner__meta">
+            <span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2 7.5 4.019 7.5 6.5ZM20 21h1.5a.5.5 0 0 0 .5-.5C22 17.57 18.43 14 14.5 14h-5C5.57 14 2 17.57 2 20.5a.5.5 0 0 0 .5.5H20Z"/></svg>
+                {{ $laporan['siswa_nama'] }} — Kelas {{ $laporan['kelas'] }}
+            </span>
+            <span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
+                Minggu {{ $laporan['minggu'] }} — {{ $laporan['tanggal_label'] }}
+            </span>
+            <span>{{ $laporan['semester'] }}</span>
         </div>
+    </div>
 
-        <div class="detail-card__body">
+    <div class="ld-avg">
+        <div>
+            <h3 class="ld-avg__title">Rata-rata Nilai Perkembangan</h3>
+            <p class="ld-avg__sub">BB / MB / BSH / BSB</p>
+        </div>
+        <div class="ld-avg__value">{{ number_format($laporan['rata_rata'], 1) }}</div>
+    </div>
 
-            {{-- Rata-rata --}}
-            <div class="rata-card">
-                <div>
-                    <div class="rata-card__label">Rata-rata Nilai Perkembangan</div>
-                    <div class="rata-card__sub">BB / MB / BSH / BSB</div>
-                </div>
-                <div>
-                    <div class="rata-card__value">{{ number_format($laporan['rata_rata'], 1) }}</div>
+    <h3 class="ld-section-title">Capaian per Konseling</h3>
+
+    @forelse ($laporan['konselings'] as $kon)
+        <div class="ld-konseling">
+            <div class="ld-konseling__head">
+                <h4 class="ld-konseling__title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd"/></svg>
+                    {{ $kon['nama'] }}
+                </h4>
+                <div class="ld-konseling__meta">
+                    <span>{{ $kon['count'] }} poin penilaian</span>
+                    <span class="ld-konseling__avg">Rata: {{ number_format($kon['avg'], 1) }}</span>
                 </div>
             </div>
-
-            {{-- Aspek perkembangan --}}
-            <p class="section-label">Capaian Per Aspek</p>
-            <div class="aspect-grid">
-                @foreach ($aspekList as $a)
-                @php $skor = $laporan['nilai'][$a['key']] ?? 0; @endphp
-                <div class="aspect-item">
-                    <div class="aspect-item__label">{{ $a['label'] }}</div>
-                    <div class="aspect-item__score">{{ $skor }} <span>/ 4</span></div>
-                    <div class="aspect-item__bar">
-                        <div class="aspect-item__bar-fill" style="width: {{ ($skor / 4) * 100 }}%"></div>
+            <div class="ld-items">
+                @foreach ($kon['items'] as $item)
+                    @php
+                        $kode = $item['kode'];
+                        $level = $item['level'];
+                        $pct = $level !== null ? ($level / 4) * 100 : 0;
+                        $barCls = $level !== null ? 'ld-bar--' . strtolower($kode) : '';
+                        $badgeCls = $level !== null ? 'ld-badge--' . strtolower($kode) : 'ld-badge--none';
+                    @endphp
+                    <div class="ld-item">
+                        <div class="ld-item__label">{{ $item['nama'] }}</div>
+                        <div class="ld-item__score">
+                            <div class="ld-bar {{ $barCls }}">
+                                <div class="ld-bar__fill" style="width: {{ $pct }}%"></div>
+                            </div>
+                            <span class="ld-badge {{ $badgeCls }}">{{ $kode }}</span>
+                        </div>
                     </div>
-                    <div class="aspect-item__desc">{{ $skalaDesc[$skor] ?? '' }}</div>
-                </div>
                 @endforeach
             </div>
-
-            {{-- Catatan guru --}}
-            <div class="note-section">
-                <div class="note-section__label">Catatan Guru</div>
-                <div class="note-section__text">{{ $laporan['catatan'] }}</div>
-            </div>
-
         </div>
+    @empty
+        <p style="color:#9ca3af;font-style:italic;">Belum ada data konseling untuk laporan ini.</p>
+    @endforelse
+
+    <div class="ld-skala">
+        <p class="ld-skala__title">Keterangan Skala</p>
+        <ul class="ld-skala__list">
+            <li><span class="ld-skala__dot" style="background:#f87171"></span> <strong>BB</strong> — Belum Berkembang</li>
+            <li><span class="ld-skala__dot" style="background:#facc15"></span> <strong>MB</strong> — Mulai Berkembang</li>
+            <li><span class="ld-skala__dot" style="background:#4ade80"></span> <strong>BSH</strong> — Berkembang Sesuai Harapan</li>
+            <li><span class="ld-skala__dot" style="background:#22c55e"></span> <strong>BSB</strong> — Berkembang Sangat Baik</li>
+        </ul>
     </div>
 
 @endsection

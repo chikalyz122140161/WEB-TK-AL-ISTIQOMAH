@@ -139,56 +139,188 @@ class GuruController extends Controller
         return redirect()->route('guru.chat', ['kontak_id' => $request->kontak_id ?? 1]);
     }
 
-    public function laporan(Request $request)
+    /**
+     * Bangun semua dummy laporan perkembangan dari dataset grafik.
+     * Setiap (semester × siswa × minggu) jadi satu laporan dengan id deterministic.
+     */
+    private function buildDummyLaporanList()
     {
-        $daftarSiswa = $this->getDaftarSiswa();
+        $ds   = $this->dummyGrafikDataset();
+        $W    = 12;
+        $rows = [];
+        $id   = 1;
 
-        // Dummy data laporan — nanti diganti query database
-        $semua = [
-            ['id' => 1, 'siswa_id' => 1, 'nama' => 'Ahmad Fauzi',   'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 3.8],
-            ['id' => 2, 'siswa_id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.0],
-            ['id' => 3, 'siswa_id' => 3, 'nama' => 'Budi Santoso',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 3.7],
-            ['id' => 4, 'siswa_id' => 4, 'nama' => 'Dewi Lestari',   'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.0],
-            ['id' => 5, 'siswa_id' => 5, 'nama' => 'Eko Prasetyo',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.0],
+        // Tanggal anchor per semester (minggu 1)
+        $anchors = [
+            'sm1' => '2025-08-01', // 2025/2026 Ganjil
+            'sm2' => '2025-01-13', // 2024/2025 Genap
         ];
 
-        // Filter
-        $laporan = collect($semua);
-        if ($request->filled('siswa_id')) {
-            $laporan = $laporan->where('siswa_id', (int) $request->siswa_id);
+        // Bangun lookup raw scores yang sama dengan grafik() agar konsisten
+        foreach ($ds['semesters'] as $sm) {
+            $smId   = $sm['id'];
+            $anchor = $anchors[$smId] ?? '2025-08-01';
+
+            foreach ($ds['kelas'] as $k) {
+                $kelasId = $k['id'];
+                $siswas  = $ds['siswaByKelas'][$kelasId] ?? [];
+
+                foreach ($siswas as $s) {
+                    // Generate skor yang sama dengan grafik() (deterministic)
+                    $rawSiswa = [];
+                    foreach ($ds['konselings'] as $con) {
+                        foreach ($con['assessments'] as $ca) {
+                            $seed = abs(crc32($smId . $s['id'] . $ca['id']));
+                            $cur  = ($seed % 2) + 2;
+                            for ($w = 1; $w <= $W; $w++) {
+                                $r = abs(crc32($smId . $s['id'] . $ca['id'] . $w)) % 10;
+                                if ($r >= 7 && $cur < 4) $cur++;
+                                elseif ($r <= 1 && $cur > 1) $cur--;
+                                $rawSiswa[$ca['id']][$w] = $cur;
+                            }
+                        }
+                    }
+
+                    for ($w = 1; $w <= $W; $w++) {
+                        // Hitung rata-rata semua poin pada minggu ini
+                        $sum = 0; $cnt = 0;
+                        foreach ($ds['konselings'] as $con) {
+                            foreach ($con['assessments'] as $ca) {
+                                $sum += $rawSiswa[$ca['id']][$w];
+                                $cnt++;
+                            }
+                        }
+                        $avg = $cnt ? round($sum / $cnt, 2) : 0;
+
+                        $tanggal = date('Y-m-d', strtotime($anchor . ' +' . ($w - 1) . ' weeks'));
+
+                        $rows[] = [
+                            'id'           => $id++,
+                            'semester_id'  => $smId,
+                            'semester'     => $sm['label'],
+                            'kelas_id'     => $kelasId,
+                            'kelas'        => $k['nama'],
+                            'siswa_id'     => $s['id'],
+                            'siswa_nama'   => $s['nama'],
+                            'minggu'       => $w,
+                            'tanggal'      => $tanggal,
+                            'tanggal_label'=> date('d M Y', strtotime($tanggal)),
+                            'rata_rata'    => $avg,
+                            'scores'       => $rawSiswa, // [assessmentId => [week => level]]
+                        ];
+                    }
+                }
+            }
         }
-        if ($request->filled('minggu')) {
-            $laporan = $laporan->where('minggu', (int) $request->minggu);
+
+        return $rows;
+    }
+
+    public function laporan(Request $request)
+    {
+        $ds      = $this->dummyGrafikDataset();
+        $semua   = $this->buildDummyLaporanList();
+        $laporan = collect($semua);
+
+        // Filter
+        $smFilter    = $request->input('semester');
+        $kelasFilter = $request->input('kelas');
+        $siswaFilter = $request->input('siswa');
+        $mingguFilter= $request->input('minggu');
+
+        if ($smFilter) {
+            $laporan = $laporan->where('semester_id', $smFilter);
+        }
+        if ($kelasFilter) {
+            $laporan = $laporan->where('kelas_id', $kelasFilter);
+        }
+        if ($siswaFilter) {
+            $laporan = $laporan->where('siswa_id', $siswaFilter);
+        }
+        if ($mingguFilter) {
+            $laporan = $laporan->where('minggu', (int) $mingguFilter);
+        }
+
+        // Default: tampilkan minggu terakhir saja kalau belum ada filter minggu (hindari overload row)
+        if (!$mingguFilter) {
+            $laporan = $laporan->groupBy('siswa_id')->map(fn($g) => $g->sortByDesc('minggu')->first())->values();
+        } else {
+            $laporan = $laporan->values();
         }
 
         return view('guru.laporan', [
-            'laporan'     => $laporan->values()->all(),
-            'daftarSiswa' => $daftarSiswa,
+            'laporan'   => $laporan->all(),
+            'semesters' => $ds['semesters'],
+            'kelas'     => $ds['kelas'],
+            'siswaByKelas' => $ds['siswaByKelas'],
+            'allSiswa'  => collect($ds['siswaByKelas'])->flatten(1)->values()->all(),
+            'weeks'     => range(1, 12),
+            'filters'   => [
+                'semester' => $smFilter,
+                'kelas'    => $kelasFilter,
+                'siswa'    => $siswaFilter,
+                'minggu'   => $mingguFilter,
+            ],
         ]);
     }
 
     public function laporanBkShow($id)
     {
-        // Dummy data — nanti diganti query database
-        $semua = [
-            1 => ['id' => 1, 'nama' => 'Ahmad Fauzi',   'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 3.8,
-                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>3,'nilai_agama_moral'=>4,'seni'=>4],
-                  'catatan' => 'Ahmad menunjukkan perkembangan yang sangat baik. Aktif dan antusias dalam kegiatan belajar.'],
-            2 => ['id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.0,
-                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
-                  'catatan' => 'Siti sangat aktif berkomunikasi dan berinteraksi dengan teman-temannya. Kemampuan bahasa sangat menonjol.'],
-            3 => ['id' => 3, 'nama' => 'Budi Santoso',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 3.7,
-                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>3,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>3],
-                  'catatan' => 'Budi berkembang baik. Perlu sedikit pendampingan di aspek bahasa dan seni.'],
-            4 => ['id' => 4, 'nama' => 'Dewi Lestari',   'kelas' => 'TK A', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.0,
-                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
-                  'catatan' => 'Dewi berkembang sesuai harapan di semua aspek. Tetap pertahankan dan tingkatkan.'],
-            5 => ['id' => 5, 'nama' => 'Eko Prasetyo',   'kelas' => 'TK B', 'minggu' => 12, 'tanggal' => '22 Nov 2024', 'rata_rata' => 4.0,
-                  'nilai' => ['fisik_motorik'=>4,'kognitif'=>4,'bahasa'=>4,'sosial_emosional'=>4,'nilai_agama_moral'=>4,'seni'=>4],
-                  'catatan' => 'Eko sangat aktif secara fisik dan memiliki nilai agama yang baik. Tetap semangat!'],
+        $ds    = $this->dummyGrafikDataset();
+        $semua = $this->buildDummyLaporanList();
+        $row   = collect($semua)->firstWhere('id', (int) $id);
+
+        if (!$row) {
+            return redirect()->route('guru.laporan_bk')->with('error', 'Laporan tidak ditemukan.');
+        }
+
+        // Bangun struktur per konseling beserta skor per poin penilaian pada minggu ini
+        $LV = [1 => 'BB', 2 => 'MB', 3 => 'BSH', 4 => 'BSB'];
+        $LV_LABEL = [
+            'BB'  => 'Belum Berkembang',
+            'MB'  => 'Mulai Berkembang',
+            'BSH' => 'Berkembang Sesuai Harapan',
+            'BSB' => 'Berkembang Sangat Baik',
         ];
 
-        $laporan = $semua[$id] ?? $semua[1];
+        $minggu = $row['minggu'];
+        $konselings = [];
+        $totalSum = 0; $totalCnt = 0;
+
+        foreach ($ds['konselings'] as $con) {
+            $items = [];
+            $sum = 0; $cnt = 0;
+            foreach ($con['assessments'] as $ca) {
+                $level = $row['scores'][$ca['id']][$minggu] ?? null;
+                if ($level !== null) {
+                    $sum += $level; $cnt++;
+                    $totalSum += $level; $totalCnt++;
+                }
+                $items[] = [
+                    'nama'  => $ca['nama'],
+                    'level' => $level,
+                    'kode'  => $level !== null ? $LV[$level] : '-',
+                    'label' => $level !== null ? $LV_LABEL[$LV[$level]] : '-',
+                ];
+            }
+            $konselings[] = [
+                'nama'  => $con['nama'],
+                'items' => $items,
+                'avg'   => $cnt ? round($sum / $cnt, 2) : 0,
+                'count' => $cnt,
+            ];
+        }
+
+        $laporan = [
+            'id'            => $row['id'],
+            'siswa_nama'    => $row['siswa_nama'],
+            'kelas'         => $row['kelas'],
+            'semester'      => $row['semester'],
+            'minggu'        => $row['minggu'],
+            'tanggal_label' => $row['tanggal_label'],
+            'rata_rata'     => $totalCnt ? round($totalSum / $totalCnt, 2) : 0,
+            'konselings'    => $konselings,
+        ];
 
         return view('guru.laporan_detail', ['laporan' => $laporan]);
     }
