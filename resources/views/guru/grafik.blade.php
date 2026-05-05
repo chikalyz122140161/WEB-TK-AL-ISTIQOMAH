@@ -15,12 +15,19 @@
         border: 1px solid var(--border);
         border-radius: 10px;
         padding: 14px 16px;
-        display: flex; gap: 12px; flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
         margin-bottom: 16px;
         box-shadow: var(--shadow-xs);
     }
+    .gp-field { display: flex; flex-direction: column; gap: 4px; }
+    .gp-field__label {
+        font-size: 11px; font-weight: 600;
+        color: var(--text-mid); text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
     .gp-select {
-        flex: 1; min-width: 200px;
         padding: 9px 13px; font-size: 13px;
         border: 1px solid var(--border); border-radius: 7px;
         background: #fff; color: var(--text); outline: none;
@@ -39,95 +46,83 @@
     }
     @media (max-width: 640px) { .gp-stats { grid-template-columns: repeat(2, 1fr); } }
 
-    /* ── Tabs ────────────────────────────────── */
-    .gp-tabs {
-        display: flex; gap: 8px;
-        flex-wrap: wrap; margin-bottom: 14px;
+    /* ── Chart card grid ─────────────────────── */
+    .gp-chart-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
     }
-    .gp-tab {
-        padding: 8px 18px; font-size: 13px; font-weight: 600;
-        border-radius: 8px; cursor: pointer;
-        border: 1.5px solid var(--border); outline: none;
-        font-family: inherit; transition: all .15s;
-        background: #fff; color: var(--text-mid);
-    }
-    .gp-tab.is-active {
-        background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
-        color: #fff; border-color: transparent;
-        box-shadow: 0 2px 8px var(--green-20);
-    }
-    .gp-tab:not(.is-active):hover {
-        border-color: var(--green); color: var(--green-dark);
-    }
+    .gp-chart-grid.is-single { grid-template-columns: 1fr; }
+    @media (max-width: 900px) { .gp-chart-grid { grid-template-columns: 1fr; } }
 
-    /* ── Chart card ──────────────────────────── */
     .gp-chart-card {
         background: #fff;
         border: 1px solid var(--border);
         border-radius: 12px;
-        padding: 20px 20px 14px;
-        margin-bottom: 14px;
+        padding: 16px 18px 14px;
         box-shadow: var(--shadow-xs);
     }
-    .gp-chart-wrap { position: relative; height: 300px; }
+    .gp-chart-card__head {
+        display: flex; justify-content: space-between; align-items: center;
+        gap: 10px; margin-bottom: 8px;
+    }
+    .gp-chart-card__title {
+        font-size: 14px; font-weight: 700;
+        color: var(--text); margin: 0;
+        display: flex; align-items: center; gap: 8px;
+    }
+    .gp-chart-card__title svg { width: 16px; height: 16px; fill: var(--green-dark); }
+    .gp-chart-card__sub {
+        font-size: 11px; color: var(--text-mid);
+    }
+    .gp-chart-card__count {
+        background: #f3f4f6; color: #374151;
+        border-radius: 99px; padding: 2px 9px;
+        font-size: 11px; font-weight: 600;
+    }
+    .gp-chart-wrap { position: relative; height: 260px; }
+    .gp-chart-grid.is-single .gp-chart-wrap { height: 320px; }
 
     /* ── Legend ──────────────────────────────── */
     .gp-legend {
-        display: flex; flex-wrap: wrap; gap: 14px;
-        margin-top: 14px; padding-top: 12px;
+        display: flex; flex-wrap: wrap; gap: 10px;
+        margin-top: 10px; padding-top: 8px;
         border-top: 1px solid var(--border-subtle);
     }
     .gp-legend__item {
-        display: inline-flex; align-items: center; gap: 6px;
-        font-size: 12px; color: var(--text-mid);
+        display: inline-flex; align-items: center; gap: 5px;
+        font-size: 11px; color: var(--text-mid);
     }
-    .gp-legend__dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .gp-legend__dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
-    /* ── Student table ───────────────────────── */
-    .gp-table-card {
+    /* ── Skala ──────────────────────────────── */
+    .gp-skala {
         background: #fff;
         border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 16px 18px 20px;
-        box-shadow: var(--shadow-xs);
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-top: 14px;
+        font-size: 12px;
     }
-    .gp-table-title {
-        font-size: 13px; font-weight: 700;
-        color: var(--text); margin: 0 0 12px;
+    .gp-skala__title {
+        font-size: 11px; font-weight: 700; color: var(--text);
+        text-transform: uppercase; letter-spacing: 0.04em; margin: 0 0 8px;
     }
-    .gp-tbl-wrap { overflow-x: auto; }
-    .gp-tbl {
-        width: 100%; border-collapse: collapse;
-        font-size: 12px; white-space: nowrap;
+    .gp-skala__list {
+        list-style: none; margin: 0; padding: 0;
+        display: flex; flex-wrap: wrap; gap: 14px;
     }
-    .gp-tbl th {
-        padding: 8px 10px; text-align: left;
-        color: var(--text-mid); font-size: 11px;
-        font-weight: 600; text-transform: uppercase; letter-spacing: .04em;
-        border-bottom: 1px solid var(--border);
+    .gp-skala__list li {
+        display: flex; align-items: center; gap: 6px;
+        color: var(--text-mid);
     }
-    .gp-tbl td {
-        padding: 9px 10px;
-        border-bottom: 1px solid var(--border-subtle);
-        color: var(--text); vertical-align: middle;
-    }
-    .gp-tbl tbody tr:last-child td { border-bottom: none; }
-    .gp-tbl tbody tr:hover td { background: #fafaf8; }
-
-    .lv {
-        display: inline-block; font-size: 10px; font-weight: 700;
-        padding: 2px 8px; border-radius: 4px;
-    }
-    .lv-BB  { background: #fee2e2; color: #b91c1c; }
-    .lv-MB  { background: #fef3c7; color: #92400e; }
-    .lv-BSH { background: #dcfce7; color: #166534; }
-    .lv-BSB { background: #bbf7d0; color: #14532d; }
-    .lv-avg { font-weight: 700; color: var(--text); }
+    .gp-skala__list li strong { color: var(--text); }
+    .gp-skala__dot { width: 10px; height: 10px; border-radius: 50%; }
 
     /* ── Empty ───────────────────────────────── */
     .gp-empty {
-        text-align: center; padding: 60px 20px;
-        color: #a8a29e; font-size: 14px;
+        text-align: center; padding: 50px 20px;
+        color: #a8a29e; font-size: 13px;
         background: #fff; border: 1px dashed var(--border);
         border-radius: 12px;
     }
@@ -139,95 +134,107 @@
     {{-- Header --}}
     <div style="margin-bottom:16px">
         <span style="background:linear-gradient(135deg,var(--green),var(--green-dark));color:#fff;padding:7px 16px;border-radius:8px;font-size:14px;font-weight:700;box-shadow:0 2px 8px var(--green-20);">
-            Grafik Perkembangan — Guru
+            Grafik Perkembangan Konseling — Guru
         </span>
     </div>
 
     {{-- Filters --}}
     <div class="gp-filter-card">
-        <select class="gp-select" id="selCt">
-            <option value="" disabled selected>-- Pilih Kelas --</option>
-            @foreach ($classTerms as $ct)
-                <option value="{{ $ct['id'] }}">
-                    Kelas {{ $ct['kelas_nama'] }} — {{ $ct['tahun_ajaran'] }} {{ ucfirst($ct['semester']) }}
-                </option>
-            @endforeach
-        </select>
-        <select class="gp-select" id="selAspek" disabled>
-            <option value="__all__">Semua Aspek</option>
-        </select>
+        <div class="gp-field">
+            <label class="gp-field__label">Semester</label>
+            <select class="gp-select" id="selSemester">
+                @foreach ($grafikPayload['semesters'] as $sm)
+                    <option value="{{ $sm['id'] }}">{{ $sm['label'] }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="gp-field">
+            <label class="gp-field__label">Kelas</label>
+            <select class="gp-select" id="selKelas">
+                <option value="__all__">Semua Kelas</option>
+                @foreach ($grafikPayload['kelas'] as $k)
+                    <option value="{{ $k['id'] }}">{{ $k['nama'] }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="gp-field">
+            <label class="gp-field__label">Siswa</label>
+            <select class="gp-select" id="selSiswa">
+                <option value="__all__">Semua Siswa</option>
+            </select>
+        </div>
+        <div class="gp-field">
+            <label class="gp-field__label">Minggu</label>
+            <select class="gp-select" id="selMinggu">
+                <option value="__all__">Semua Minggu</option>
+                @foreach ($grafikPayload['weeks'] as $w)
+                    <option value="{{ $w }}">Minggu {{ $w }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="gp-field">
+            <label class="gp-field__label">Konseling</label>
+            <select class="gp-select" id="selKonseling">
+                <option value="__all__">Semua Konseling</option>
+                @foreach ($grafikPayload['konselings'] as $con)
+                    <option value="{{ $con['id'] }}">{{ $con['nama'] }}</option>
+                @endforeach
+            </select>
+        </div>
     </div>
 
     {{-- Stats --}}
-    <div class="gp-stats" id="statsRow" style="display:none">
+    <div class="gp-stats" id="statsRow">
         <div class="stat-card stat-card--primary">
             <div class="stat-card__header">
-                <span class="stat-card__label">Total Siswa</span>
-                <svg class="stat-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2 7.5 4.019 7.5 6.5ZM20 21h1.5a.5.5 0 0 0 .5-.5C22 17.57 18.43 14 14.5 14h-5C5.57 14 2 17.57 2 20.5a.5.5 0 0 0 .5.5H20Z"/></svg>
-            </div>
-            <div class="stat-card__value" id="sSiswa">0</div>
-            <div class="stat-card__sub">Siswa di kelas ini</div>
-        </div>
-        <div class="stat-card stat-card--secondary">
-            <div class="stat-card__header">
-                <span class="stat-card__label">BSB Minggu Ini</span>
+                <span class="stat-card__label">BSB</span>
                 <svg class="stat-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd"/></svg>
             </div>
             <div class="stat-card__value" id="sBsb">0</div>
             <div class="stat-card__sub">Berkembang Sangat Baik</div>
         </div>
+        <div class="stat-card">
+            <div class="stat-card__header">
+                <span class="stat-card__label">BSH</span>
+                <svg class="stat-card__icon stat-card__icon--green" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
+            </div>
+            <div class="stat-card__value" id="sBsh">0</div>
+            <div class="stat-card__sub">Berkembang Sesuai Harapan</div>
+        </div>
+        <div class="stat-card stat-card--secondary">
+            <div class="stat-card__header">
+                <span class="stat-card__label">MB</span>
+                <svg class="stat-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
+            </div>
+            <div class="stat-card__value" id="sMb">0</div>
+            <div class="stat-card__sub">Mulai Berkembang</div>
+        </div>
         <div class="stat-card stat-card--accent">
             <div class="stat-card__header">
-                <span class="stat-card__label">Perlu Perhatian</span>
+                <span class="stat-card__label">BB</span>
                 <svg class="stat-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd"/></svg>
             </div>
             <div class="stat-card__value" id="sBb">0</div>
-            <div class="stat-card__sub">Belum Berkembang (BB)</div>
-        </div>
-        <div class="stat-card stat-card--neutral">
-            <div class="stat-card__header">
-                <span class="stat-card__label">Minggu Aktif</span>
-                <svg class="stat-card__icon stat-card__icon--green" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
-            </div>
-            <div class="stat-card__value stat-card__value--text" id="sWeek">Mg. -</div>
-            <div class="stat-card__sub">Periode berjalan</div>
+            <div class="stat-card__sub">Belum Berkembang</div>
         </div>
     </div>
 
-    {{-- Tabs --}}
-    <div class="gp-tabs" id="tabRow" style="display:none">
-        <button class="gp-tab is-active" data-tab="tren">Tren Kelas</button>
-        <button class="gp-tab" data-tab="distribusi">Distribusi</button>
-        <button class="gp-tab" data-tab="radar">Radar Aspek</button>
+    {{-- Chart grid --}}
+    <div class="gp-chart-grid" id="chartGrid"></div>
+
+    <div class="gp-empty" id="emptyState" style="display:none">
+        Tidak ada data untuk filter yang dipilih.
     </div>
 
-    {{-- Chart card --}}
-    <div class="gp-chart-card" id="chartCard" style="display:none">
-        <div class="gp-chart-wrap">
-            <canvas id="myChart"></canvas>
-        </div>
-        <div class="gp-legend">
-            <span class="gp-legend__item"><span class="gp-legend__dot" style="background:#f87171"></span>BB — Belum Berkembang</span>
-            <span class="gp-legend__item"><span class="gp-legend__dot" style="background:#fbbf24"></span>MB — Mulai Berkembang</span>
-            <span class="gp-legend__item"><span class="gp-legend__dot" style="background:#4CAF82"></span>BSH — Berkembang Sesuai Harapan</span>
-            <span class="gp-legend__item"><span class="gp-legend__dot" style="background:#2E8B60"></span>BSB — Berkembang Sangat Baik</span>
-        </div>
-    </div>
-
-    {{-- Student table --}}
-    <div class="gp-table-card" id="tableSection" style="display:none">
-        <p class="gp-table-title" id="tableTitle">Status siswa — minggu -</p>
-        <div class="gp-tbl-wrap">
-            <table class="gp-tbl">
-                <thead id="tblHead"></thead>
-                <tbody id="tblBody"></tbody>
-            </table>
-        </div>
-    </div>
-
-    {{-- Empty --}}
-    <div class="gp-empty" id="emptyState">
-        Pilih kelas untuk menampilkan grafik perkembangan.
+    {{-- Skala --}}
+    <div class="gp-skala">
+        <p class="gp-skala__title">Keterangan Skala</p>
+        <ul class="gp-skala__list">
+            <li><span class="gp-skala__dot" style="background:#f87171"></span> <strong>1 (BB)</strong> — Belum Berkembang</li>
+            <li><span class="gp-skala__dot" style="background:#facc15"></span> <strong>2 (MB)</strong> — Mulai Berkembang</li>
+            <li><span class="gp-skala__dot" style="background:#4ade80"></span> <strong>3 (BSH)</strong> — Berkembang Sesuai Harapan</li>
+            <li><span class="gp-skala__dot" style="background:#22c55e"></span> <strong>4 (BSB)</strong> — Berkembang Sangat Baik</li>
+        </ul>
     </div>
 
 @endsection
@@ -235,246 +242,278 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-const grafikData = @json($grafikData);
+const PAYLOAD = @json($grafikPayload);
 
-const selCt      = document.getElementById('selCt');
-const selAspek   = document.getElementById('selAspek');
-const statsRow   = document.getElementById('statsRow');
-const tabRow     = document.getElementById('tabRow');
-const chartCard  = document.getElementById('chartCard');
-const tableSection = document.getElementById('tableSection');
-const emptyState = document.getElementById('emptyState');
+const KELAS_PALETTE = ['#3D9B72', '#F59E0B', '#3B82F6', '#EC4899'];
+const SISWA_PALETTE = ['#3D9B72','#F59E0B','#3B82F6','#EC4899','#8B5CF6','#06B6D4','#EF4444','#10B981','#F97316','#6366F1','#14B8A6','#A855F7'];
 
-let ctData    = null;
-let activeTab = 'tren';
-let chart     = null;
+const LV   = {1:'BB', 2:'MB', 3:'BSH', 4:'BSB'};
+const TICK = '#5D4037';
+const GRID = 'rgba(62,39,35,0.06)';
 
-const TICK  = '#5D4037';
-const GRID  = 'rgba(62,39,35,0.06)';
-const BORD  = 'rgba(62,39,35,0.12)';
-const TTBG  = '#ffffff';
-const TTBC  = 'rgba(62,39,35,0.15)';
-const LV    = {1:'BB', 2:'MB', 3:'BSH', 4:'BSB'};
-const GREEN = '#4CAF82';
-const GREEN_DARK = '#3D9B72';
+const selSemester = document.getElementById('selSemester');
+const selKelas    = document.getElementById('selKelas');
+const selSiswa    = document.getElementById('selSiswa');
+const selMinggu   = document.getElementById('selMinggu');
+const selKonseling= document.getElementById('selKonseling');
+const chartGrid   = document.getElementById('chartGrid');
+const emptyState  = document.getElementById('emptyState');
 
-function shortName(name) {
-    const p = name.trim().split(' ');
-    return p.length > 1 ? p[0] + ' ' + p[p.length - 1][0] + '.' : p[0];
+let charts = [];
+
+function hexA(hex, a) {
+    const r = parseInt(hex.slice(1,3),16),
+          g = parseInt(hex.slice(3,5),16),
+          b = parseInt(hex.slice(5,7),16);
+    return `rgba(${r},${g},${b},${a})`;
 }
 
-selCt.addEventListener('change', () => {
-    ctData = grafikData[selCt.value] || null;
-    if (!ctData) return;
-    selAspek.innerHTML = '<option value="__all__">Semua Aspek</option>'
-        + ctData.subjects.map(s => `<option value="${s.id}">${s.nama}</option>`).join('');
-    selAspek.disabled = false;
-    selAspek.value    = '__all__';
-    render('__all__');
-});
+function destroyCharts() {
+    charts.forEach(c => c.destroy());
+    charts = [];
+}
 
-selAspek.addEventListener('change', () => {
-    if (ctData) render(selAspek.value);
-});
+function refreshSiswaDropdown() {
+    const kelas = selKelas.value;
+    let list = [];
+    if (kelas === '__all__') {
+        Object.values(PAYLOAD.siswaByKelas).forEach(arr => list = list.concat(arr));
+    } else {
+        list = PAYLOAD.siswaByKelas[kelas] || [];
+    }
+    const prev = selSiswa.value;
+    selSiswa.innerHTML = '<option value="__all__">Semua Siswa</option>'
+        + list.map(s => `<option value="${s.id}">${s.nama}</option>`).join('');
+    selSiswa.value = list.find(s => s.id === prev) ? prev : '__all__';
+}
 
-document.querySelectorAll('.gp-tab').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.gp-tab').forEach(b => b.classList.remove('is-active'));
-        btn.classList.add('is-active');
-        activeTab = btn.dataset.tab;
-        if (!ctData) return;
-        buildChart(selAspek.value);
-        tableSection.style.display = activeTab === 'tren' ? 'block' : 'none';
+[selSemester, selKelas, selSiswa, selMinggu, selKonseling].forEach(sel => {
+    sel.addEventListener('change', () => {
+        if (sel === selKelas) refreshSiswaDropdown();
+        render();
     });
 });
 
-function render(aspekId) {
-    document.getElementById('sSiswa').textContent = ctData.total_siswa;
-    document.getElementById('sBsb').textContent   = ctData.bsb_count;
-    document.getElementById('sBb').textContent    = ctData.bb_count;
-    document.getElementById('sWeek').textContent  = 'Mg. ' + ctData.current_week;
+function render() {
+    const f = {
+        sem:   selSemester.value,
+        kelas: selKelas.value,
+        siswa: selSiswa.value,
+        week:  selMinggu.value,
+        kons:  selKonseling.value,
+    };
 
-    buildChart(aspekId);
-    buildTable();
-
-    statsRow.style.display     = 'grid';
-    tabRow.style.display       = 'flex';
-    chartCard.style.display    = 'block';
-    emptyState.style.display   = 'none';
-    tableSection.style.display = activeTab === 'tren' ? 'block' : 'none';
+    renderStats(f);
+    renderCharts(f);
 }
 
-function buildChart(aspekId) {
-    if (chart) { chart.destroy(); chart = null; }
-    const ctx = document.getElementById('myChart').getContext('2d');
-    if      (activeTab === 'tren')       trenChart(ctx, aspekId);
-    else if (activeTab === 'distribusi') distribusiChart(ctx, aspekId);
-    else if (activeTab === 'radar')      radarChart(ctx);
+function getSiswaIdsInScope(f) {
+    if (f.siswa !== '__all__') return [f.siswa];
+    if (f.kelas !== '__all__') return (PAYLOAD.siswaByKelas[f.kelas] || []).map(s => s.id);
+    return Object.values(PAYLOAD.siswaByKelas).flat().map(s => s.id);
 }
 
-/* ── Tren Kelas (line) ── */
-function trenChart(ctx, aspekId) {
-    const weeks  = ctData.weeks;
-    const labels = weeks.map(w => 'Mg' + w);
-    let lineData, lineLabel;
+function getKonselingsInScope(f) {
+    return f.kons === '__all__' ? PAYLOAD.konselings : PAYLOAD.konselings.filter(c => c.id === f.kons);
+}
 
-    if (aspekId === '__all__') {
-        lineData  = weeks.map(w => ctData.class_avg[w]);
-        lineLabel = 'Rata-rata Kelas';
+function renderStats(f) {
+    const counts = {1:0, 2:0, 3:0, 4:0};
+    const siswaIds = getSiswaIdsInScope(f);
+    const konselings = getKonselingsInScope(f);
+    const weeks = f.week === '__all__' ? PAYLOAD.weeks : [parseInt(f.week, 10)];
+    const rawSem = PAYLOAD.raw[f.sem] || {};
+
+    siswaIds.forEach(sid => {
+        konselings.forEach(con => {
+            con.assessments.forEach(ca => {
+                weeks.forEach(w => {
+                    const v = (((rawSem[sid] || {})[ca.id]) || {})[w];
+                    if (v !== undefined && counts[v] !== undefined) counts[v]++;
+                });
+            });
+        });
+    });
+
+    document.getElementById('sBsb').textContent = counts[4];
+    document.getElementById('sBsh').textContent = counts[3];
+    document.getElementById('sMb').textContent  = counts[2];
+    document.getElementById('sBb').textContent  = counts[1];
+}
+
+function renderCharts(f) {
+    destroyCharts();
+    chartGrid.innerHTML = '';
+
+    const konselings = getKonselingsInScope(f);
+    chartGrid.classList.toggle('is-single', konselings.length === 1);
+
+    if (konselings.length === 0) {
+        emptyState.style.display = 'block';
+        return;
+    }
+    emptyState.style.display = 'none';
+
+    konselings.forEach((con, idx) => {
+        const card = document.createElement('div');
+        card.className = 'gp-chart-card';
+        card.innerHTML = `
+            <div class="gp-chart-card__head">
+                <h3 class="gp-chart-card__title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2.25 13.5a8.25 8.25 0 0 1 8.25-8.25.75.75 0 0 1 .75.75v6.75H18a.75.75 0 0 1 .75.75 8.25 8.25 0 0 1-16.5 0Z" clip-rule="evenodd"/><path fill-rule="evenodd" d="M12.75 3a.75.75 0 0 1 .75-.75 8.25 8.25 0 0 1 8.25 8.25.75.75 0 0 1-.75.75h-7.5a.75.75 0 0 1-.75-.75V3Z" clip-rule="evenodd"/></svg>
+                    ${con.nama}
+                </h3>
+                <span class="gp-chart-card__count">${con.assessments.length} poin</span>
+            </div>
+            <p class="gp-chart-card__sub" id="sub-${con.id}"></p>
+            <div class="gp-chart-wrap"><canvas id="canvas-${con.id}"></canvas></div>
+            <div class="gp-legend" id="legend-${con.id}"></div>
+        `;
+        chartGrid.appendChild(card);
+
+        buildKonselingChart(con, f);
+    });
+}
+
+function buildKonselingChart(con, f) {
+    const labels = PAYLOAD.weeks.map(w => 'Mg' + w);
+    let datasets = [];
+    let subText = '';
+
+    if (f.siswa !== '__all__') {
+        // Single line: skor rata-rata siswa untuk konseling ini
+        const data = ((PAYLOAD.bySiswa[f.sem] || {})[con.id] || {})[f.siswa] || {};
+        const arr = PAYLOAD.weeks.map(w => data[w] ?? null);
+        const siswaName = findSiswaName(f.siswa);
+        datasets = [{
+            label: siswaName,
+            data: arr,
+            borderColor: KELAS_PALETTE[0],
+            backgroundColor: hexA(KELAS_PALETTE[0], 0.15),
+            borderWidth: 2.5,
+            pointRadius: 4,
+            tension: 0.35,
+            fill: true,
+        }];
+        subText = `Rata-rata skor ${siswaName} untuk ${con.assessments.length} poin penilaian.`;
+    } else if (f.kelas !== '__all__') {
+        // Lines per siswa di kelas itu
+        const siswas = PAYLOAD.siswaByKelas[f.kelas] || [];
+        datasets = siswas.map((s, i) => {
+            const data = ((PAYLOAD.bySiswa[f.sem] || {})[con.id] || {})[s.id] || {};
+            const color = SISWA_PALETTE[i % SISWA_PALETTE.length];
+            return {
+                label: s.nama,
+                data: PAYLOAD.weeks.map(w => data[w] ?? null),
+                borderColor: color,
+                backgroundColor: hexA(color, 0.1),
+                borderWidth: 2,
+                pointRadius: 3,
+                tension: 0.35,
+                fill: false,
+            };
+        });
+        subText = `Rata-rata skor per siswa di kelas ${f.kelas} untuk ${con.assessments.length} poin penilaian.`;
     } else {
-        lineData  = weeks.map(w => ctData.subject_avg[aspekId][w]);
-        const sub = ctData.subjects.find(s => s.id === aspekId);
-        lineLabel = sub ? sub.short : aspekId;
+        // Default: lines per kelas
+        datasets = PAYLOAD.kelas.map((k, i) => {
+            const data = ((PAYLOAD.byKelas[f.sem] || {})[con.id] || {})[k.id] || {};
+            const color = KELAS_PALETTE[i % KELAS_PALETTE.length];
+            return {
+                label: 'Kelas ' + k.nama,
+                data: PAYLOAD.weeks.map(w => data[w] ?? null),
+                borderColor: color,
+                backgroundColor: hexA(color, 0.1),
+                borderWidth: 2,
+                pointRadius: 3,
+                tension: 0.35,
+                fill: false,
+            };
+        });
+        subText = `Rata-rata kelas (semua siswa × ${con.assessments.length} poin penilaian).`;
     }
 
-    chart = new Chart(ctx, {
+    document.getElementById('sub-' + con.id).textContent = subText;
+
+    // Render legend chips
+    const legendEl = document.getElementById('legend-' + con.id);
+    legendEl.innerHTML = datasets.map(ds => `
+        <span class="gp-legend__item"><span class="gp-legend__dot" style="background:${ds.borderColor}"></span>${ds.label}</span>
+    `).join('');
+
+    // Vertical line annotation when minggu filtered
+    const wIndex = f.week === '__all__' ? null : (PAYLOAD.weeks.indexOf(parseInt(f.week, 10)));
+
+    const ctx = document.getElementById('canvas-' + con.id).getContext('2d');
+    const chart = new Chart(ctx, {
         type: 'line',
-        data: {
-            labels,
-            datasets: [
-                {
-                    label: lineLabel,
-                    data: lineData,
-                    borderColor: GREEN,
-                    backgroundColor: 'rgba(76,175,130,0.1)',
-                    borderWidth: 2.5,
-                    tension: 0.35,
-                    pointRadius: 4,
-                    pointBackgroundColor: GREEN,
-                    fill: true,
-                },
-                {
-                    label: 'Target BSH',
-                    data: Array(weeks.length).fill(3),
-                    borderColor: 'rgba(76,175,130,0.35)',
-                    borderDash: [6, 4],
-                    borderWidth: 1.5,
-                    pointRadius: 0,
-                    fill: false,
-                },
-            ],
-        },
-        options: chartOptions(),
-    });
-}
-
-/* ── Distribusi (bar) ── */
-function distribusiChart(ctx, aspekId) {
-    const subjects = aspekId === '__all__'
-        ? ctData.subjects
-        : ctData.subjects.filter(s => s.id === aspekId);
-
-    const lvColors = { BB:'#f87171', MB:'#fbbf24', BSH:'#4CAF82', BSB:'#2E8B60' };
-    const datasets = ['BB','MB','BSH','BSB'].map(lv => ({
-        label: lv,
-        data: subjects.map(s => (ctData.distribution[s.id] || {})[lv] || 0),
-        backgroundColor: lvColors[lv],
-        borderRadius: 4,
-    }));
-
-    chart = new Chart(ctx, {
-        type: 'bar',
-        data: { labels: subjects.map(s => s.short), datasets },
+        data: { labels, datasets },
         options: {
-            ...chartOptions(),
-            plugins: {
-                ...chartOptions().plugins,
-                legend: {
-                    position: 'bottom',
-                    labels: { color: TICK, font: { size: 11 }, boxWidth: 10, padding: 12 },
-                },
-            },
-        },
-    });
-}
-
-/* ── Radar Aspek ── */
-function radarChart(ctx) {
-    chart = new Chart(ctx, {
-        type: 'radar',
-        data: {
-            labels: ctData.subjects.map(s => s.short),
-            datasets: [{
-                label: 'Rata-rata Kelas',
-                data: ctData.subjects.map(s => ctData.radar[s.id] || 0),
-                backgroundColor: 'rgba(76,175,130,0.2)',
-                borderColor: GREEN,
-                pointBackgroundColor: GREEN,
-                borderWidth: 2,
-            }],
-        },
-        options: {
-            responsive: true, maintainAspectRatio: false,
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'nearest', intersect: false },
             plugins: {
                 legend: { display: false },
-                tooltip: ttOptions(),
+                tooltip: {
+                    backgroundColor: '#fff',
+                    titleColor: '#3E2723',
+                    bodyColor: '#5D4037',
+                    borderColor: 'rgba(62,39,35,0.15)',
+                    borderWidth: 1,
+                    callbacks: {
+                        label: item => {
+                            const v = item.raw;
+                            if (v == null) return ' ' + item.dataset.label + ': -';
+                            const tag = LV[Math.round(v)] ? ` (${LV[Math.round(v)]})` : '';
+                            return ` ${item.dataset.label}: ${v}${tag}`;
+                        }
+                    }
+                },
             },
             scales: {
-                r: {
-                    min: 0, max: 4,
-                    ticks: { stepSize: 1, callback: v => LV[v] || '', color: TICK, backdropColor: 'transparent', font: { size: 10 } },
+                y: {
+                    min: 1, max: 4,
+                    ticks: { stepSize: 1, callback: v => LV[v] || '', color: TICK, font: { size: 11 } },
                     grid: { color: GRID },
-                    angleLines: { color: BORD },
-                    pointLabels: { color: TICK, font: { size: 12, weight: '600' } },
+                },
+                x: {
+                    ticks: { color: TICK, font: { size: 11 } },
+                    grid: { display: false },
                 },
             },
         },
-    });
-}
-
-function chartOptions() {
-    return {
-        responsive: true, maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        plugins: {
-            legend: { display: false },
-            tooltip: ttOptions(),
-        },
-        scales: {
-            y: {
-                min: 1, max: 4,
-                ticks: { stepSize: 1, callback: v => LV[v] || '', color: TICK, font: { size: 11 } },
-                grid: { color: GRID }, border: { color: BORD },
-            },
-            x: {
-                ticks: { color: TICK, font: { size: 11 } },
-                grid: { display: false }, border: { color: BORD },
-            },
-        },
-    };
-}
-
-function ttOptions() {
-    return {
-        backgroundColor: TTBG,
-        titleColor: '#3E2723',
-        bodyColor: '#5D4037',
-        borderColor: TTBC,
-        borderWidth: 1,
-        callbacks: {
-            label: item => {
-                if (item.dataset.label === 'Target BSH') return null;
-                const v = item.raw;
-                const tag = LV[Math.round(v)] ? ` (${LV[Math.round(v)]})` : '';
-                return ` ${item.dataset.label}: ${v}${tag}`;
+        plugins: wIndex !== null ? [{
+            id: 'weekHighlight',
+            afterDraw(chart) {
+                const x = chart.scales.x.getPixelForValue(wIndex);
+                const ctx = chart.ctx;
+                const top = chart.chartArea.top;
+                const bot = chart.chartArea.bottom;
+                ctx.save();
+                ctx.strokeStyle = 'rgba(220,38,38,0.5)';
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([4, 3]);
+                ctx.beginPath();
+                ctx.moveTo(x, top);
+                ctx.lineTo(x, bot);
+                ctx.stroke();
+                ctx.restore();
             }
-        }
-    };
+        }] : [],
+    });
+    charts.push(chart);
 }
 
-/* ── Student table ── */
-function buildTable() {
-    const subjects = ctData.subjects;
-    document.getElementById('tableTitle').textContent = `Status siswa — minggu ${ctData.current_week}`;
-    document.getElementById('tblHead').innerHTML =
-        '<tr><th>Siswa</th>' + subjects.map(s => `<th>${s.short}</th>`).join('') + '<th>Rata</th></tr>';
-    document.getElementById('tblBody').innerHTML = ctData.table.map(row => {
-        const cells = subjects.map(s => {
-            const lv = row.scores[s.id] || '-';
-            return `<td><span class="lv lv-${lv}">${lv}</span></td>`;
-        }).join('');
-        return `<tr><td style="font-weight:600">${shortName(row.nama)}</td>${cells}<td><span class="lv-avg">${row.avg}</span></td></tr>`;
-    }).join('');
+function findSiswaName(id) {
+    for (const arr of Object.values(PAYLOAD.siswaByKelas)) {
+        const m = arr.find(s => s.id === id);
+        if (m) return m.nama;
+    }
+    return id;
 }
+
+// Init
+refreshSiswaDropdown();
+render();
 </script>
 @endpush

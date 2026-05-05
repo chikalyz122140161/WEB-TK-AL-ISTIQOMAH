@@ -231,8 +231,151 @@ class GuruController extends Controller
         return redirect()->route('guru.laporan_bk')->with('success', 'Laporan perkembangan berhasil diperbarui.');
     }
 
+    private function dummyGrafikDataset()
+    {
+        return [
+            'semesters' => [
+                ['id' => 'sm1', 'label' => '2025/2026 Ganjil'],
+                ['id' => 'sm2', 'label' => '2024/2025 Genap'],
+            ],
+            'kelas' => [
+                ['id' => 'A1', 'nama' => 'A1'],
+                ['id' => 'A2', 'nama' => 'A2'],
+                ['id' => 'B1', 'nama' => 'B1'],
+                ['id' => 'B2', 'nama' => 'B2'],
+            ],
+            'siswaByKelas' => [
+                'A1' => [
+                    ['id' => 's1', 'nama' => 'Aulia Rahma'],
+                    ['id' => 's2', 'nama' => 'Bima Saputra'],
+                    ['id' => 's3', 'nama' => 'Citra Maharani'],
+                ],
+                'A2' => [
+                    ['id' => 's4', 'nama' => 'Dimas Pratama'],
+                    ['id' => 's5', 'nama' => 'Eka Putri'],
+                    ['id' => 's6', 'nama' => 'Fadhil Hakim'],
+                ],
+                'B1' => [
+                    ['id' => 's7',  'nama' => 'Gita Lestari'],
+                    ['id' => 's8',  'nama' => 'Hafiz Ramadhan'],
+                    ['id' => 's9',  'nama' => 'Indah Sari'],
+                ],
+                'B2' => [
+                    ['id' => 's10', 'nama' => 'Jihan Aulia'],
+                    ['id' => 's11', 'nama' => 'Kenzo Putra'],
+                ],
+            ],
+            'konselings' => [
+                [
+                    'id' => 'con1', 'nama' => 'Perkembangan Sosial',
+                    'assessments' => [
+                        ['id' => 'ca1', 'nama' => 'Interaksi dengan teman'],
+                        ['id' => 'ca2', 'nama' => 'Kemampuan berbagi'],
+                        ['id' => 'ca3', 'nama' => 'Kepatuhan aturan'],
+                    ],
+                ],
+                [
+                    'id' => 'con2', 'nama' => 'Perkembangan Emosi',
+                    'assessments' => [
+                        ['id' => 'ca4', 'nama' => 'Mengelola emosi'],
+                        ['id' => 'ca5', 'nama' => 'Empati terhadap teman'],
+                    ],
+                ],
+                [
+                    'id' => 'con3', 'nama' => 'Perkembangan Kognitif',
+                    'assessments' => [
+                        ['id' => 'ca6', 'nama' => 'Daya tangkap'],
+                        ['id' => 'ca7', 'nama' => 'Kreativitas berpikir'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function grafik()
     {
+        $ds         = $this->dummyGrafikDataset();
+        $semesters  = $ds['semesters'];
+        $kelas      = $ds['kelas'];
+        $siswaByKelas = $ds['siswaByKelas'];
+        $konselings = $ds['konselings'];
+        $W = 12;
+
+        // Generate weekly scores: $raw[semId][siswaId][assessmentId][week] = level (1-4)
+        $raw = [];
+        foreach ($semesters as $sm) {
+            $smId = $sm['id'];
+            foreach ($kelas as $k) {
+                $siswas = $siswaByKelas[$k['id']] ?? [];
+                foreach ($siswas as $s) {
+                    foreach ($konselings as $con) {
+                        foreach ($con['assessments'] as $ca) {
+                            $seed = abs(crc32($smId . $s['id'] . $ca['id']));
+                            $cur  = ($seed % 2) + 2; // start MB or BSH
+                            for ($w = 1; $w <= $W; $w++) {
+                                $r = abs(crc32($smId . $s['id'] . $ca['id'] . $w)) % 10;
+                                if ($r >= 7 && $cur < 4) $cur++;
+                                elseif ($r <= 1 && $cur > 1) $cur--;
+                                $raw[$smId][$s['id']][$ca['id']][$w] = $cur;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Aggregation: average per (sem, konseling, kelas, week) → rata2 semua siswa di kelas × semua poin di konseling
+        $byKelas = [];
+        // Aggregation: average per (sem, konseling, siswa, week) → rata2 semua poin di konseling untuk siswa itu
+        $bySiswa = [];
+
+        foreach ($semesters as $sm) {
+            $smId = $sm['id'];
+            foreach ($konselings as $con) {
+                $conId = $con['id'];
+                $aIds  = array_column($con['assessments'], 'id');
+
+                foreach ($kelas as $k) {
+                    $kId = $k['id'];
+                    $siswas = $siswaByKelas[$kId] ?? [];
+
+                    for ($w = 1; $w <= $W; $w++) {
+                        $sum = 0; $cnt = 0;
+                        foreach ($siswas as $s) {
+                            foreach ($aIds as $aId) {
+                                $val = $raw[$smId][$s['id']][$aId][$w] ?? null;
+                                if ($val !== null) { $sum += $val; $cnt++; }
+                            }
+                        }
+                        $byKelas[$smId][$conId][$kId][$w] = $cnt ? round($sum / $cnt, 2) : 0;
+                    }
+
+                    foreach ($siswas as $s) {
+                        for ($w = 1; $w <= $W; $w++) {
+                            $sum = 0; $cnt = 0;
+                            foreach ($aIds as $aId) {
+                                $val = $raw[$smId][$s['id']][$aId][$w] ?? null;
+                                if ($val !== null) { $sum += $val; $cnt++; }
+                            }
+                            $bySiswa[$smId][$conId][$s['id']][$w] = $cnt ? round($sum / $cnt, 2) : 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        $grafikPayload = [
+            'semesters'    => $semesters,
+            'kelas'        => $kelas,
+            'siswaByKelas' => $siswaByKelas,
+            'konselings'   => $konselings,
+            'weeks'        => range(1, $W),
+            'byKelas'      => $byKelas,
+            'bySiswa'      => $bySiswa,
+            'raw'          => $raw,
+        ];
+
+        // Variabel lama tetap dikembalikan agar tidak break view kalau ada referensi lama
         $classTerms   = $this->dummyRapotClassTerms();
         $studentsByCt = $this->dummyRapotStudents();
         $subjectsByCt = $this->dummyRapotSubjectsAll();
@@ -282,13 +425,15 @@ class GuruController extends Controller
                 $classAvg[$w] = count($all) ? round(array_sum($all) / count($all), 2) : 0;
             }
 
-            // Stats at current week (week = W)
-            $bsb = $bb = 0;
+            // Stats at current week (week = W) — hitung 4 level
+            $bb = $mb = $bsh = $bsb = 0;
             foreach ($students as $s) {
                 foreach ($subjects as $sub) {
                     $v = $raw[$s['id']][$sub['id']][$W] ?? 2;
-                    if ($v === 4) $bsb++;
                     if ($v === 1) $bb++;
+                    elseif ($v === 2) $mb++;
+                    elseif ($v === 3) $bsh++;
+                    elseif ($v === 4) $bsb++;
                 }
             }
 
@@ -331,6 +476,8 @@ class GuruController extends Controller
                 'class_term'   => ['kelas' => $ct['kelas_nama'], 'tahun_ajaran' => $ct['tahun_ajaran'], 'semester' => $ct['semester']],
                 'total_siswa'  => count($students),
                 'bsb_count'    => $bsb,
+                'bsh_count'    => $bsh,
+                'mb_count'     => $mb,
                 'bb_count'     => $bb,
                 'current_week' => $W,
                 'weeks'        => range(1, $W),
@@ -347,7 +494,7 @@ class GuruController extends Controller
             ];
         }
 
-        return view('guru.grafik', compact('classTerms', 'grafikData'));
+        return view('guru.grafik', compact('classTerms', 'grafikData', 'grafikPayload'));
     }
 
     public function inputPerkembangan()
