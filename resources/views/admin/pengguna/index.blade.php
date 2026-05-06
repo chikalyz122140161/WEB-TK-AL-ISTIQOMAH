@@ -304,9 +304,9 @@
 }
 
 .alert--success {
-    background: #dcfce7;
-    color: #3E2723;
-    border: 1px solid #86efac;
+    background: rgba(76,175,130,0.12);
+    color: #2E8B60;
+    border: 1px solid rgba(76,175,130,0.3);
 }
 
 .mb-4 { margin-bottom: 1rem; }

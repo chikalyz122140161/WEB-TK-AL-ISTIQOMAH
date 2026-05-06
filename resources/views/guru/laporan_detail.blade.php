@@ -78,10 +78,10 @@
         font-size: 11px; color: #6b7280;
     }
     .ld-konseling__avg {
-        background: #ecfdf5; color: #065f46;
+        background: rgba(76,175,130,0.12); color: #2E8B60;
         padding: 3px 10px; border-radius: 99px;
         font-weight: 700; font-size: 11px;
-        border: 1px solid #a7f3d0;
+        border: 1px solid rgba(76,175,130,0.3);
     }
 
     .ld-items { padding: 0; }
@@ -100,10 +100,10 @@
         background: #f3f4f6; border-radius: 99px; overflow: hidden;
     }
     .ld-bar__fill { height: 100%; border-radius: 99px; transition: width .35s; }
-    .ld-bar--bb  .ld-bar__fill { background: #f87171; }
-    .ld-bar--mb  .ld-bar__fill { background: #facc15; }
-    .ld-bar--bsh .ld-bar__fill { background: #4ade80; }
-    .ld-bar--bsb .ld-bar__fill { background: #22c55e; }
+    .ld-bar--bb  .ld-bar__fill { background: #d81b72; }
+    .ld-bar--mb  .ld-bar__fill { background: #e6db00; }
+    .ld-bar--bsh .ld-bar__fill { background: #4CAF82; }
+    .ld-bar--bsb .ld-bar__fill { background: #2E8B60; }
 
     .ld-badge {
         display: inline-block;
@@ -111,10 +111,10 @@
         padding: 3px 9px; border-radius: 4px;
         min-width: 36px; text-align: center;
     }
-    .ld-badge--bb  { background: #fee2e2; color: #b91c1c; }
-    .ld-badge--mb  { background: #fef3c7; color: #92400e; }
-    .ld-badge--bsh { background: #dcfce7; color: #166534; }
-    .ld-badge--bsb { background: #bbf7d0; color: #14532d; }
+    .ld-badge--bb  { background: rgba(240,98,146,0.12); color: #d81b72; }
+    .ld-badge--mb  { background: #FFF176; color: #5D4037; }
+    .ld-badge--bsh { background: rgba(76,175,130,0.15); color: #2E8B60; }
+    .ld-badge--bsb { background: rgba(76,175,130,0.25); color: #2E8B60; }
     .ld-badge--none{ background: #f3f4f6; color: #9ca3af; }
 
     .ld-skala {
@@ -217,10 +217,10 @@
     <div class="ld-skala">
         <p class="ld-skala__title">Keterangan Skala</p>
         <ul class="ld-skala__list">
-            <li><span class="ld-skala__dot" style="background:#f87171"></span> <strong>BB</strong> — Belum Berkembang</li>
-            <li><span class="ld-skala__dot" style="background:#facc15"></span> <strong>MB</strong> — Mulai Berkembang</li>
-            <li><span class="ld-skala__dot" style="background:#4ade80"></span> <strong>BSH</strong> — Berkembang Sesuai Harapan</li>
-            <li><span class="ld-skala__dot" style="background:#22c55e"></span> <strong>BSB</strong> — Berkembang Sangat Baik</li>
+            <li><span class="ld-skala__dot" style="background:#d81b72"></span> <strong>BB</strong> — Belum Berkembang</li>
+            <li><span class="ld-skala__dot" style="background:#e6db00"></span> <strong>MB</strong> — Mulai Berkembang</li>
+            <li><span class="ld-skala__dot" style="background:#4CAF82"></span> <strong>BSH</strong> — Berkembang Sesuai Harapan</li>
+            <li><span class="ld-skala__dot" style="background:#2E8B60"></span> <strong>BSB</strong> — Berkembang Sangat Baik</li>
         </ul>
     </div>
 

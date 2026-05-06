@@ -56,9 +56,9 @@
 .poin-chip {
     display: inline-flex;
     align-items: center;
-    background: #ecfdf5;
-    color: #065f46;
-    border: 1px solid #a7f3d0;
+    background: rgba(76,175,130,0.12);
+    color: #2E8B60;
+    border: 1px solid rgba(76,175,130,0.3);
     border-radius: 99px;
     padding: .25rem .7rem;
     font-size: .8rem;

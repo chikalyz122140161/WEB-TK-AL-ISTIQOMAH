@@ -183,7 +183,7 @@
         }
 
         .section-icon.purple {
-            background: linear-gradient(135deg, #F06292 0%, #7c3aed 100%);
+            background: linear-gradient(135deg, #F06292 0%, #d81b72 100%);
         }
 
         .section-desc {

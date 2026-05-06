@@ -55,18 +55,18 @@
         padding: 4px 12px;
         border-radius: 20px;
     }
-    .semester-pill--ganjil  { background: #fef9c3; color: #854d0e; }
-    .semester-pill--genap   { background: #dbeafe; color: #1e40af; }
-    .semester-pill--menunggu{ background: #f3f4f6; color: #6b7280; }
+    .semester-pill--ganjil  { background: #FFF176; color: #5D4037; }
+    .semester-pill--genap   { background: rgba(76,175,130,0.15); color: #2E8B60; }
+    .semester-pill--menunggu{ background: rgba(62,39,35,0.08); color: #5D4037; }
 
     .notice-box {
-        background: #fef3c7;
-        border: 1px solid #f59e0b;
+        background: #FFF176;
+        border: 1px solid #e6db00;
         border-radius: 8px;
         padding: 12px 16px;
         margin-bottom: 20px;
         font-size: 13px;
-        color: #92400e;
+        color: #5D4037;
         display: flex;
         align-items: flex-start;
         gap: 8px;
@@ -114,8 +114,8 @@
         padding: 2px 8px;
         border-radius: 12px;
     }
-    .gender-badge--l { background: #dbeafe; color: #1e40af; }
-    .gender-badge--p { background: #fce7f3; color: #9d174d; }
+    .gender-badge--l { background: rgba(76,175,130,0.15); color: #2E8B60; }
+    .gender-badge--p { background: rgba(240,98,146,0.12); color: #d81b72; }
 
     .td-select {
         padding: 8px 10px;

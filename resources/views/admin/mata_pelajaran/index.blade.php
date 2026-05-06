@@ -13,8 +13,8 @@
     border-collapse: collapse;
 }
 .mapel-table thead tr {
-    background: #f8fafb;
-    border-bottom: 2px solid #e5e7eb;
+    background: #FFFDE7;
+    border-bottom: 2px solid #e6db00;
 }
 .mapel-table th {
     padding: 14px 20px;
@@ -22,7 +22,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: .05em;
-    color: #6b7280;
+    color: #5D4037;
     text-align: left;
     white-space: nowrap;
 }
@@ -37,7 +37,7 @@
     border-bottom: none;
 }
 .mapel-table tbody tr:hover td {
-    background: #f9fafb;
+    background: #FFFDE7;
 }
 .mapel-name {
     font-weight: 600;

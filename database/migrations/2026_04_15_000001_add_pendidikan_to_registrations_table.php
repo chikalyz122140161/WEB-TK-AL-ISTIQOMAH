@@ -8,9 +8,15 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('registrations', function (Blueprint $table) {
-            $table->string('pendidikan_ayah')->nullable()->after('pekerjaan_ayah');
-            $table->string('pendidikan_ibu')->nullable()->after('pekerjaan_ibu');
-            $table->string('pendidikan_wali')->nullable()->after('pekerjaan_wali');
+            if (!Schema::hasColumn('registrations', 'pendidikan_ayah')) {
+                $table->string('pendidikan_ayah')->nullable()->after('pekerjaan_ayah');
+            }
+            if (!Schema::hasColumn('registrations', 'pendidikan_ibu')) {
+                $table->string('pendidikan_ibu')->nullable()->after('pekerjaan_ibu');
+            }
+            if (!Schema::hasColumn('registrations', 'pendidikan_wali')) {
+                $table->string('pendidikan_wali')->nullable()->after('pekerjaan_ibu');
+            }
         });
     }
 

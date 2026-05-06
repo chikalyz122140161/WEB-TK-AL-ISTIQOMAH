@@ -248,11 +248,11 @@
         color: #5D4037;
     }
     .status-badge--approved {
-        background: #ECFDF5;
+        background: rgba(76,175,130,0.12);
         color: #2E8B60;
     }
     .status-badge--completed {
-        background: #ecfdf5;
+        background: rgba(76,175,130,0.12);
         color: #2E8B60;
     }
     .status-badge--cancelled {
@@ -262,8 +262,8 @@
 
     /* Info Alert */
     .info-alert {
-        background: #ecfdf5;
-        border: 1px solid #4CAF8230;
+        background: rgba(76,175,130,0.10);
+        border: 1px solid rgba(76,175,130,0.25);
         border-radius: 8px;
         padding: 16px 20px;
         margin-bottom: 24px;

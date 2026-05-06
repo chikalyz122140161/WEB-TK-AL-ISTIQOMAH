@@ -58,12 +58,12 @@
     margin-top: .35rem;
 }
 .semester-pill--ganjil {
-    background: #fef3c7;
-    color: #92400e;
+    background: #FFF176;
+    color: #5D4037;
 }
 .semester-pill--genap {
-    background: #dbeafe;
-    color: #1e40af;
+    background: rgba(76,175,130,0.15);
+    color: #2E8B60;
 }
 .assign-block {
     margin-bottom: .65rem;
@@ -101,19 +101,19 @@
     font-weight: 500;
 }
 .chip--mapel {
-    background: #f5f3ff;
-    color: #5b21b6;
-    border: 1px solid #ddd6fe;
+    background: #FFFDE7;
+    color: #5D4037;
+    border: 1px solid #e6db00;
 }
 .chip--ekskul {
-    background: #ecfdf5;
-    color: #065f46;
-    border: 1px solid #a7f3d0;
+    background: rgba(76,175,130,0.12);
+    color: #2E8B60;
+    border: 1px solid rgba(76,175,130,0.3);
 }
 .chip--konseling {
-    background: #eff6ff;
-    color: #1e40af;
-    border: 1px solid #bfdbfe;
+    background: rgba(76,175,130,0.12);
+    color: #2E8B60;
+    border: 1px solid rgba(76,175,130,0.3);
 }
 .chip-empty {
     color: #9ca3af;

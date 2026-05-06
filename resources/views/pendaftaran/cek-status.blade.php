@@ -275,13 +275,13 @@
         }
 
         .status-approved {
-            background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
-            color: #065f46;
+            background: rgba(76,175,130,0.15);
+            color: #2E8B60;
         }
 
         .status-rejected {
-            background: linear-gradient(135deg, #F0629220 0%, #F0629230 100%);
-            color: #991b1b;
+            background: rgba(240,98,146,0.12);
+            color: #d81b72;
         }
 
         .info-table {
@@ -314,7 +314,7 @@
         }
 
         .admin-notes {
-            background: linear-gradient(135deg, #FFFDE7 0%, #fef9c3 100%);
+            background: linear-gradient(135deg, #FFFDE7 0%, #FFF176 100%);
             border-radius: 12px;
             padding: 16px;
             margin-top: 20px;

@@ -171,12 +171,12 @@
         .sidebar__avatar {
             width: 34px; height: 34px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.22);
-            color: #ffffff;
+            background: #FFF176;
+            color: #5D4037;
             display: flex; align-items: center; justify-content: center;
             font-size: 13px; font-weight: 700;
             flex-shrink: 0;
-            border: 1.5px solid rgba(255,255,255,0.35);
+            border: 1.5px solid #e6db00;
         }
         .sidebar__profile-info { flex: 1; min-width: 0; line-height: 1.3; }
         .sidebar__profile-name { font-size: 13px; font-weight: 600; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -256,12 +256,12 @@
         .header-avatar {
             width: 34px; height: 34px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.22);
-            color: #ffffff;
+            background: #FFF176;
+            color: #5D4037;
             display: flex; align-items: center; justify-content: center;
             font-size: 13px; font-weight: 700;
             cursor: pointer;
-            border: 1.5px solid rgba(255,255,255,0.35);
+            border: 1.5px solid #e6db00;
         }
         .header-account { line-height: 1.3; }
         .header-account__name { font-size: 13px; font-weight: 600; color: #ffffff; }

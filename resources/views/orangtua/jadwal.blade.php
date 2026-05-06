@@ -38,7 +38,7 @@
         text-decoration: none;
     }
     .tab-btn:hover {
-        background: #f0fdf4;
+        background: rgba(76,175,130,0.08);
         color: #2E8B60;
     }
     .tab-btn.active {
@@ -329,9 +329,9 @@
     .kegiatan-badge {
         display: inline-flex;
         align-items: center;
-        background: #ecfdf5;
+        background: rgba(76,175,130,0.12);
         color: #2E8B60;
-        border: 1px solid #a7f3d0;
+        border: 1px solid rgba(76,175,130,0.3);
         padding: 4px 10px;
         border-radius: 20px;
         font-size: 12px;

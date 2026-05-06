@@ -219,8 +219,8 @@
 }
 
 .status-select option[value="Aktif"] {
-    background: #dcfce7;
-    color: #4CAF82;
+    background: rgba(76,175,130,0.15);
+    color: #2E8B60;
 }
 
 .status-select option[value="Nonaktif"] {

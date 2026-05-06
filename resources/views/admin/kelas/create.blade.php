@@ -6,6 +6,17 @@
     @include('admin.partials.sidebar')
 @endsection
 
+@push('styles')
+<style>
+.kelas-info-strip { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.kelas-info-item { flex: 1; min-width: 140px; border-radius: 8px; padding: 12px 16px; font-size: 13px; }
+.kelas-info-item--green { background: rgba(76,175,130,0.1); border: 1px solid rgba(76,175,130,0.3); color: #2E8B60; }
+.kelas-info-item--yellow { background: #FFF176; border: 1px solid #e6db00; color: #5D4037; }
+.kelas-info-item--pink { background: rgba(240,98,146,0.08); border: 1px solid rgba(240,98,146,0.25); color: #d81b72; }
+.kelas-info-item strong { display: block; font-weight: 700; margin-bottom: 3px; }
+</style>
+@endpush
+
 @section('content')
 <div class="page-header">
     <div class="page-header__left">
@@ -29,6 +40,18 @@
     </ul>
 </div>
 @endif
+
+<div class="kelas-info-strip">
+    <div class="kelas-info-item kelas-info-item--green">
+        <strong>TK A</strong>Kelas untuk anak usia 4–5 tahun
+    </div>
+    <div class="kelas-info-item kelas-info-item--yellow">
+        <strong>TK B</strong>Kelas untuk anak usia 5–6 tahun
+    </div>
+    <div class="kelas-info-item kelas-info-item--pink">
+        <strong>Perhatian</strong>Jumlah maksimum siswa per kelas berlaku
+    </div>
+</div>
 
 <div class="card">
     <div class="card__header">

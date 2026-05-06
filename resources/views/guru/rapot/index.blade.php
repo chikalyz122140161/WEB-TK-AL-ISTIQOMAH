@@ -10,7 +10,7 @@
 @push('styles')
 <style>
     .alert-success {
-        background: #d1fae5; border: 1px solid #34d399; color: #065f46;
+        background: rgba(76,175,130,0.12); border: 1px solid rgba(76,175,130,0.3); color: #2E8B60;
         padding: 12px 16px; border-radius: 8px; margin-bottom: 20px;
         display: flex; align-items: center; gap: 8px; font-size: 14px;
     }
@@ -27,7 +27,7 @@
     }
     .ta-group__label svg { width: 14px; height: 14px; fill: #3D9B72; }
     .ta-group__count {
-        background: #f3f4f6; color: #6b7280;
+        background: rgba(62,39,35,0.08); color: #5D4037;
         border-radius: 99px; padding: 1px 9px;
         font-size: 11px; font-weight: 600;
     }
@@ -81,16 +81,16 @@
         padding: 3px 10px; border-radius: 99px;
         text-transform: capitalize;
     }
-    .semester-pill--ganjil { background: #fef3c7; color: #92400e; }
-    .semester-pill--genap  { background: #dbeafe; color: #1e40af; }
+    .semester-pill--ganjil { background: #FFF176; color: #5D4037; }
+    .semester-pill--genap  { background: rgba(76,175,130,0.15); color: #2E8B60; }
 
     .ct-status-pill {
         font-size: 11px; font-weight: 600; padding: 3px 10px;
         border-radius: 99px; text-transform: capitalize;
     }
-    .ct-status-pill--aktif    { background: #d1fae5; color: #065f46; }
-    .ct-status-pill--selesai  { background: #f3f4f6; color: #6b7280; }
-    .ct-status-pill--menunggu { background: #fef9c3; color: #854d0e; }
+    .ct-status-pill--aktif    { background: rgba(76,175,130,0.15); color: #2E8B60; }
+    .ct-status-pill--selesai  { background: rgba(62,39,35,0.08); color: #5D4037; }
+    .ct-status-pill--menunggu { background: #FFF176; color: #5D4037; }
 
     .progress-cell { min-width: 180px; }
     .progress-cell__label {

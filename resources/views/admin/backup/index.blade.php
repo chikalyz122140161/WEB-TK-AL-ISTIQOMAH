@@ -207,9 +207,9 @@ document.getElementById('deleteBackupModal').addEventListener('click', function(
 }
 
 .alert--success {
-    background: #dcfce7;
-    color: #3E2723;
-    border: 1px solid #86efac;
+    background: rgba(76,175,130,0.12);
+    color: #2E8B60;
+    border: 1px solid rgba(76,175,130,0.3);
     margin-bottom: 1rem;
 }
 
@@ -274,11 +274,12 @@ document.getElementById('deleteBackupModal').addEventListener('click', function(
 
 .btn--warning {
     background: #FFF176;
-    color: white;
+    color: #5D4037;
+    border: 1px solid #e6db00;
 }
 
 .btn--warning:hover {
-    background: #3E2723;
+    background: #f9ed50;
 }
 
 /* File Cell */
@@ -352,12 +353,13 @@ document.getElementById('deleteBackupModal').addEventListener('click', function(
 }
 
 .btn--secondary {
-    background: #f1f5f9;
+    background: #FFF176;
     color: #5D4037;
+    border: 1px solid #e6db00;
 }
 
 .btn--secondary:hover {
-    background: #e2e8f0;
+    background: #f9ed50;
     color: #3E2723;
 }
 

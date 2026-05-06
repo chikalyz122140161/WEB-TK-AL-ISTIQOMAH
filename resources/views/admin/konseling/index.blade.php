@@ -13,8 +13,8 @@
     border-collapse: collapse;
 }
 .konseling-table thead tr {
-    background: #f8fafb;
-    border-bottom: 2px solid #e5e7eb;
+    background: #FFFDE7;
+    border-bottom: 2px solid #e6db00;
 }
 .konseling-table th {
     padding: 14px 20px;
@@ -22,7 +22,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: .05em;
-    color: #6b7280;
+    color: #5D4037;
     text-align: left;
     white-space: nowrap;
 }
@@ -37,7 +37,7 @@
     border-bottom: none;
 }
 .konseling-table tbody tr:hover td {
-    background: #f9fafb;
+    background: #FFFDE7;
 }
 .konseling-name {
     font-weight: 600;
@@ -56,9 +56,9 @@
 .poin-chip {
     display: inline-flex;
     align-items: center;
-    background: #eff6ff;
-    color: #1e40af;
-    border: 1px solid #bfdbfe;
+    background: rgba(76,175,130,0.12);
+    color: #2E8B60;
+    border: 1px solid rgba(76,175,130,0.3);
     border-radius: 99px;
     padding: .25rem .7rem;
     font-size: .8rem;
@@ -71,8 +71,9 @@
 }
 .poin-count {
     display: inline-block;
-    background: #f3f4f6;
-    color: #374151;
+    background: #FFFDE7;
+    color: #5D4037;
+    border: 1px solid #e6db00;
     border-radius: 99px;
     padding: .2rem .65rem;
     font-size: .75rem;

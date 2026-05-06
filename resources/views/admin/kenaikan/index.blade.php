@@ -10,9 +10,9 @@
 @push('styles')
 <style>
     .alert-success {
-        background: #d1fae5;
-        border: 1px solid #34d399;
-        color: #065f46;
+        background: rgba(76,175,130,0.12);
+        border: 1px solid rgba(76,175,130,0.3);
+        color: #2E8B60;
         padding: 12px 16px;
         border-radius: 8px;
         margin-bottom: 20px;
@@ -153,9 +153,9 @@
         text-transform: capitalize;
         display: inline-block;
     }
-    .status-pill--aktif    { background: #d1fae5; color: #065f46; }
-    .status-pill--selesai  { background: #f3f4f6; color: #6b7280; }
-    .status-pill--menunggu { background: #fef9c3; color: #854d0e; }
+    .status-pill--aktif    { background: rgba(76,175,130,0.15); color: #2E8B60; }
+    .status-pill--selesai  { background: rgba(62,39,35,0.08); color: #5D4037; }
+    .status-pill--menunggu { background: #FFF176; color: #5D4037; }
 
     .ispass-pill {
         font-size: 11px;
@@ -164,8 +164,8 @@
         border-radius: 20px;
         display: inline-block;
     }
-    .ispass-pill--true  { background: #dcfce7; color: #166534; }
-    .ispass-pill--false { background: #fee2e2; color: #991b1b; }
+    .ispass-pill--true  { background: rgba(76,175,130,0.15); color: #2E8B60; }
+    .ispass-pill--false { background: rgba(240,98,146,0.12); color: #d81b72; }
 
     .siswa-count {
         display: inline-flex;
@@ -197,8 +197,9 @@
         display: inline-flex;
         align-items: center;
         gap: 5px;
-        background: #f3f4f6;
-        color: #374151;
+        background: #FFF176;
+        color: #5D4037;
+        border: 1px solid #e6db00;
         padding: 6px 13px;
         font-size: 12px;
         font-weight: 600;
@@ -207,7 +208,7 @@
         transition: background 0.2s;
         white-space: nowrap;
     }
-    .btn-detail:hover { background: #e5e7eb; }
+    .btn-detail:hover { background: #f9ed50; }
     .btn-detail svg { width: 13px; height: 13px; fill: currentColor; }
 
     .empty-state {

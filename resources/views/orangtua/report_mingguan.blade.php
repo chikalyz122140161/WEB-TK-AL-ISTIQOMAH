@@ -71,23 +71,23 @@
         padding: 5px 14px; border-radius: 6px; border: 1.5px solid;
         letter-spacing: 0.02em;
     }
-    .lv-BB  { background: #fff5f5; border-color: #fca5a5; color: #dc2626; }
-    .lv-MB  { background: #fffdf0; border-color: #fde68a; color: #ca8a04; }
-    .lv-BSH { background: #f0fff4; border-color: #86efac; color: #16a34a; }
-    .lv-BSB { background: #f0fff4; border-color: #4ade80; color: #15803d; }
+    .lv-BB  { background: rgba(240,98,146,0.06); border-color: rgba(240,98,146,0.4); color: #d81b72; }
+    .lv-MB  { background: #FFFDE7; border-color: #e6db00; color: #5D4037; }
+    .lv-BSH { background: rgba(76,175,130,0.08); border-color: rgba(76,175,130,0.4); color: #2E8B60; }
+    .lv-BSB { background: rgba(76,175,130,0.12); border-color: rgba(76,175,130,0.6); color: #2E8B60; }
 
     /* Legend */
     .legend-bar {
         display: flex; flex-wrap: wrap; gap: 14px;
-        background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;
+        background: rgba(76,175,130,0.06); border: 1px solid rgba(76,175,130,0.2); border-radius: 8px;
         padding: 10px 16px; margin-bottom: 18px; font-size: 12px; color: #3E2723;
     }
     .legend-bar span { display: flex; align-items: center; gap: 6px; }
     .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
-    .ld-bb  { background: #f87171; }
-    .ld-mb  { background: #facc15; }
-    .ld-bsh { background: #4ade80; }
-    .ld-bsb { background: #22c55e; }
+    .ld-bb  { background: #d81b72; }
+    .ld-mb  { background: #e6db00; }
+    .ld-bsh { background: #4CAF82; }
+    .ld-bsb { background: #2E8B60; }
 
     /* Student info strip */
     .student-strip {

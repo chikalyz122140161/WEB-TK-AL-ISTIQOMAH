@@ -48,12 +48,12 @@
     text-transform: capitalize;
 }
 .semester-pill--ganjil {
-    background: #fef3c7;
-    color: #92400e;
+    background: #FFF176;
+    color: #5D4037;
 }
 .semester-pill--genap {
-    background: #dbeafe;
-    color: #1e40af;
+    background: rgba(76,175,130,0.15);
+    color: #2E8B60;
 }
 .status-pill {
     display: inline-block;
@@ -63,9 +63,9 @@
     font-weight: 600;
     text-transform: capitalize;
 }
-.status-pill--selesai  { background: #f3f4f6; color: #6b7280; }
-.status-pill--aktif    { background: #d1fae5; color: #065f46; }
-.status-pill--menunggu { background: #fef9c3; color: #854d0e; }
+.status-pill--selesai  { background: rgba(62,39,35,0.08); color: #5D4037; }
+.status-pill--aktif    { background: rgba(76,175,130,0.15); color: #2E8B60; }
+.status-pill--menunggu { background: #FFF176; color: #5D4037; }
 .tahun-text {
     font-weight: 600;
     font-size: 1rem;

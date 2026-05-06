@@ -9,8 +9,8 @@
 @push('styles')
 <style>
 .ta-info {
-    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-    border: 1px solid #a7f3d0;
+    background: linear-gradient(135deg, rgba(76,175,130,0.08) 0%, rgba(76,175,130,0.15) 100%);
+    border: 1px solid rgba(76,175,130,0.3);
     border-radius: 12px;
     padding: 1rem 1.25rem;
     margin-bottom: 1.5rem;
@@ -22,7 +22,7 @@
     width: 44px;
     height: 44px;
     border-radius: 12px;
-    background: #34d399;
+    background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
     color: white;
     display: flex;
     align-items: center;
@@ -96,7 +96,7 @@
 }
 .checkbox-item:hover {
     border-color: #3D9B72;
-    background: #f0fdf4;
+    background: rgba(76,175,130,0.06);
 }
 .checkbox-item input[type="checkbox"] {
     width: 16px;
@@ -106,11 +106,11 @@
 }
 .checkbox-item input[type="checkbox"]:checked + span {
     font-weight: 600;
-    color: #065f46;
+    color: #2E8B60;
 }
 .checkbox-item:has(input:checked) {
-    border-color: #34d399;
-    background: #ecfdf5;
+    border-color: rgba(76,175,130,0.4);
+    background: rgba(76,175,130,0.08);
 }
 .checkbox-item span {
     font-size: .9rem;
@@ -122,9 +122,9 @@
     font-size: .9rem;
     padding: 1rem 0;
 }
-.section-icon--mapel { color: #7c3aed; }
-.section-icon--ekskul { color: #059669; }
-.section-icon--konseling { color: #2563eb; }
+.section-icon--mapel { color: #3D9B72; }
+.section-icon--ekskul { color: #2E8B60; }
+.section-icon--konseling { color: #3D9B72; }
 </style>
 @endpush
 

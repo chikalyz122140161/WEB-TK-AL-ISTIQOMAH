@@ -42,7 +42,7 @@
     .ct-banner__progress .lbl { color: rgba(255,255,255,0.75); font-size: 11px; }
 
     .alert-success {
-        background: #d1fae5; border: 1px solid #34d399; color: #065f46;
+        background: rgba(76,175,130,0.12); border: 1px solid rgba(76,175,130,0.3); color: #2E8B60;
         padding: 11px 16px; border-radius: 8px; margin-bottom: 16px;
         display: flex; align-items: center; gap: 8px; font-size: 13px;
     }
@@ -77,15 +77,15 @@
     .jk-pill {
         font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 20px;
     }
-    .jk-pill--L { background: #dbeafe; color: #1d4ed8; }
-    .jk-pill--P { background: #fce7f3; color: #be185d; }
+    .jk-pill--L { background: rgba(76,175,130,0.15); color: #2E8B60; }
+    .jk-pill--P { background: rgba(240,98,146,0.12); color: #d81b72; }
 
     .rapot-pill {
         font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
         display: inline-flex; align-items: center; gap: 5px;
     }
-    .rapot-pill--sudah { background: #dcfce7; color: #166534; }
-    .rapot-pill--belum { background: #fef9c3; color: #854d0e; }
+    .rapot-pill--sudah { background: rgba(76,175,130,0.15); color: #2E8B60; }
+    .rapot-pill--belum { background: #FFF176; color: #5D4037; }
     .rapot-pill svg { width: 11px; height: 11px; fill: currentColor; }
 
     .btn-input {

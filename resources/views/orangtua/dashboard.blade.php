@@ -204,6 +204,12 @@
     .activity-item__icon--chat svg {
         fill: #3E2723;
     }
+    .activity-item__icon--pesan {
+        background: rgba(240,98,146,0.12);
+    }
+    .activity-item__icon--pesan svg {
+        fill: #d81b72;
+    }
     .activity-item__icon svg {
         width: 18px;
         height: 18px;
@@ -334,7 +340,7 @@
             </div>
 
             <div class="activity-item">
-                <div class="activity-item__icon activity-item__icon--chat">
+                <div class="activity-item__icon activity-item__icon--pesan">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 0 0 6 21.75a6.721 6.721 0 0 0 3.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.09.768 4.04 2.084 5.558a8.96 8.96 0 0 1-1.603 2.596.75.75 0 0 0 .53 1.28 6.72 6.72 0 0 0 1.543-.09Z" clip-rule="evenodd"/></svg>
                 </div>
                 <div class="activity-item__content">

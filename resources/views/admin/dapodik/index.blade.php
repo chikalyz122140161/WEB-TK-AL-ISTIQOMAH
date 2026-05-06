@@ -101,12 +101,12 @@
     </div>
     <div class="stats-summary__divider"></div>
     <div class="stats-summary__item">
-        <span class="stats-summary__value">{{ $totalLaki }}</span>
+        <span class="stats-summary__value" style="color:#2E8B60;">{{ $totalLaki }}</span>
         <span class="stats-summary__label">Laki-laki</span>
     </div>
     <div class="stats-summary__divider"></div>
     <div class="stats-summary__item">
-        <span class="stats-summary__value">{{ $totalPerempuan }}</span>
+        <span class="stats-summary__value" style="color:#d81b72;">{{ $totalPerempuan }}</span>
         <span class="stats-summary__label">Perempuan</span>
     </div>
     <div class="stats-summary__divider"></div>
@@ -254,12 +254,13 @@
 }
 
 .btn--secondary {
-    background: #f1f5f9;
+    background: #FFF176;
     color: #5D4037;
+    border: 1px solid #e6db00;
 }
 
 .btn--secondary:hover {
-    background: #e2e8f0;
+    background: #f9ed50;
 }
 
 .btn--primary {

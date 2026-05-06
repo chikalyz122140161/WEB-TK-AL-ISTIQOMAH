@@ -661,7 +661,7 @@
 }
 
 .modal-icon--success {
-    background: #dcfce7;
+    background: rgba(76,175,130,0.15);
 }
 
 .modal-icon--success svg {

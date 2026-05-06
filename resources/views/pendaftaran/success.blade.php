@@ -125,7 +125,7 @@
         }
 
         .registration-code-box {
-            background: linear-gradient(135deg, #FFFDE7 0%, #fef9c3 100%);
+            background: linear-gradient(135deg, #FFFDE7 0%, #FFF176 100%);
             border: 3px dashed #3D9B72;
             border-radius: 16px;
             padding: 24px;

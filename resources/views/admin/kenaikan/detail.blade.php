@@ -37,8 +37,8 @@
         width: 52px;
         height: 52px;
         border-radius: 12px;
-        background: #f3f4f6;
-        color: #6b7280;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+        color: #fff;
         font-size: 16px;
         font-weight: 700;
         display: flex;
@@ -55,8 +55,8 @@
         padding: 4px 12px;
         border-radius: 20px;
     }
-    .semester-pill--ganjil { background: #fef9c3; color: #854d0e; }
-    .semester-pill--genap  { background: #dbeafe; color: #1e40af; }
+    .semester-pill--ganjil { background: #FFF176; color: #5D4037; }
+    .semester-pill--genap  { background: rgba(76,175,130,0.15); color: #2E8B60; }
     .ispass-pill {
         font-size: 11px;
         font-weight: 600;
@@ -105,8 +105,8 @@
         padding: 2px 8px;
         border-radius: 12px;
     }
-    .gender-badge--l { background: #dbeafe; color: #1e40af; }
-    .gender-badge--p { background: #fce7f3; color: #9d174d; }
+    .gender-badge--l { background: rgba(76,175,130,0.15); color: #2E8B60; }
+    .gender-badge--p { background: rgba(240,98,146,0.12); color: #d81b72; }
 
     .aksi-badge {
         display: inline-block;
@@ -115,9 +115,9 @@
         padding: 3px 10px;
         border-radius: 20px;
     }
-    .aksi-badge--ganti_semester { background: #dbeafe; color: #1e40af; }
-    .aksi-badge--ganti_kelas    { background: #d1fae5; color: #065f46; }
-    .aksi-badge--tinggal_kelas  { background: #fef3c7; color: #92400e; }
+    .aksi-badge--ganti_semester { background: rgba(76,175,130,0.15); color: #2E8B60; }
+    .aksi-badge--ganti_kelas    { background: rgba(76,175,130,0.15); color: #2E8B60; }
+    .aksi-badge--tinggal_kelas  { background: #FFF176; color: #5D4037; }
 
     .enrollment-status {
         font-size: 11px;

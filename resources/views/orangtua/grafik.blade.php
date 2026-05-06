@@ -201,10 +201,10 @@
     <div class="gp-skala">
         <p class="gp-skala__title">Keterangan Skala</p>
         <ul class="gp-skala__list">
-            <li><span class="gp-skala__dot" style="background:#f87171"></span> <strong>1 (BB)</strong> — Belum Berkembang</li>
-            <li><span class="gp-skala__dot" style="background:#facc15"></span> <strong>2 (MB)</strong> — Mulai Berkembang</li>
-            <li><span class="gp-skala__dot" style="background:#4ade80"></span> <strong>3 (BSH)</strong> — Berkembang Sesuai Harapan</li>
-            <li><span class="gp-skala__dot" style="background:#22c55e"></span> <strong>4 (BSB)</strong> — Berkembang Sangat Baik</li>
+            <li><span class="gp-skala__dot" style="background:#d81b72"></span> <strong>1 (BB)</strong> — Belum Berkembang</li>
+            <li><span class="gp-skala__dot" style="background:#e6db00"></span> <strong>2 (MB)</strong> — Mulai Berkembang</li>
+            <li><span class="gp-skala__dot" style="background:#4CAF82"></span> <strong>3 (BSH)</strong> — Berkembang Sesuai Harapan</li>
+            <li><span class="gp-skala__dot" style="background:#2E8B60"></span> <strong>4 (BSB)</strong> — Berkembang Sangat Baik</li>
         </ul>
     </div>
 

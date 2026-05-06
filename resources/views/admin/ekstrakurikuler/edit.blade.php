@@ -33,23 +33,23 @@
     justify-content: center;
     width: 38px;
     height: 38px;
-    border: 1px solid #fecaca;
-    background: #fef2f2;
-    color: #b91c1c;
+    border: 1px solid rgba(240,98,146,0.3);
+    background: rgba(240,98,146,0.08);
+    color: #d81b72;
     border-radius: 8px;
     cursor: pointer;
     transition: all .15s;
 }
 .btn-remove-poin:hover {
-    background: #fee2e2;
+    background: rgba(240,98,146,0.15);
 }
 .btn-add-poin {
     display: inline-flex;
     align-items: center;
     gap: .4rem;
-    background: #ecfdf5;
-    color: #065f46;
-    border: 1px dashed #34d399;
+    background: rgba(76,175,130,0.10);
+    color: #2E8B60;
+    border: 1px dashed rgba(76,175,130,0.5);
     padding: .55rem 1rem;
     border-radius: 8px;
     font-size: .875rem;
@@ -59,7 +59,7 @@
     transition: all .15s;
 }
 .btn-add-poin:hover {
-    background: #d1fae5;
+    background: rgba(76,175,130,0.18);
 }
 .section-divider {
     margin: 1.5rem 0 1rem;

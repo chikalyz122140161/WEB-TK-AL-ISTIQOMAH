@@ -6,7 +6,7 @@
 @push('styles')
 <style>
     .alert-success {
-        background: #d1fae5; border: 1px solid #34d399; color: #065f46;
+        background: rgba(76,175,130,0.12); border: 1px solid rgba(76,175,130,0.3); color: #2E8B60;
         padding: 12px 16px; border-radius: 8px; margin-bottom: 20px;
         display: flex; align-items: center; gap: 8px; font-size: 14px;
     }
@@ -74,23 +74,23 @@
     }
     .assessment-row__select { min-width: 160px; }
 
-    select.lv-bb  { border-color: #fca5a5; background: #fff5f5; color: #dc2626; }
-    select.lv-mb  { border-color: #fde68a; background: #fffdf0; color: #ca8a04; }
-    select.lv-bsh { border-color: #86efac; background: #f0fff4; color: #16a34a; }
-    select.lv-bsb { border-color: #4ade80; background: #f0fff4; color: #15803d; }
+    select.lv-bb  { border-color: rgba(240,98,146,0.4); background: rgba(240,98,146,0.06); color: #d81b72; }
+    select.lv-mb  { border-color: #e6db00; background: #FFFDE7; color: #5D4037; }
+    select.lv-bsh { border-color: rgba(76,175,130,0.4); background: rgba(76,175,130,0.08); color: #2E8B60; }
+    select.lv-bsb { border-color: rgba(76,175,130,0.6); background: rgba(76,175,130,0.12); color: #2E8B60; }
 
     /* Legend */
     .legend-bar {
         display: flex; flex-wrap: wrap; gap: 14px;
-        background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;
+        background: rgba(76,175,130,0.06); border: 1px solid rgba(76,175,130,0.2); border-radius: 8px;
         padding: 10px 16px; margin-bottom: 18px; font-size: 12px; color: #3E2723;
     }
     .legend-bar span { display: flex; align-items: center; gap: 6px; }
     .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
-    .ld-bb  { background: #f87171; }
-    .ld-mb  { background: #facc15; }
-    .ld-bsh { background: #4ade80; }
-    .ld-bsb { background: #22c55e; }
+    .ld-bb  { background: #d81b72; }
+    .ld-mb  { background: #e6db00; }
+    .ld-bsh { background: #4CAF82; }
+    .ld-bsb { background: #2E8B60; }
 
     /* Empty class term placeholder */
     .ct-placeholder {

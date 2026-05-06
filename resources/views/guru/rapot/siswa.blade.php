@@ -40,21 +40,21 @@
     .mode-pill {
         padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
     }
-    .mode-pill--input { background: #fef9c3; color: #854d0e; }
-    .mode-pill--edit  { background: #dcfce7; color: #166534; }
+    .mode-pill--input { background: #FFF176; color: #5D4037; }
+    .mode-pill--edit  { background: rgba(76,175,130,0.15); color: #2E8B60; }
 
     /* Legend */
     .legend-bar {
         display: flex; flex-wrap: wrap; gap: 14px;
-        background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;
+        background: rgba(76,175,130,0.06); border: 1px solid rgba(76,175,130,0.2); border-radius: 8px;
         padding: 10px 16px; margin-bottom: 20px; font-size: 12px; color: #3E2723;
     }
     .legend-bar span { display: flex; align-items: center; gap: 6px; }
     .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
-    .ld-bb  { background: #f87171; }
-    .ld-mb  { background: #facc15; }
-    .ld-bsh { background: #4ade80; }
-    .ld-bsb { background: #22c55e; }
+    .ld-bb  { background: #d81b72; }
+    .ld-mb  { background: #e6db00; }
+    .ld-bsh { background: #4CAF82; }
+    .ld-bsb { background: #2E8B60; }
 
     /* Section card */
     .form-section {
@@ -99,7 +99,7 @@
         background: #fff;
         transition: border-color 0.2s, background 0.2s;
     }
-    .foto-upload-wrap:hover { border-color: #3D9B72; background: #f0fdf4; }
+    .foto-upload-wrap:hover { border-color: #3D9B72; background: rgba(76,175,130,0.06); }
     .foto-upload-wrap input[type="file"] {
         font-size: 12px;
         color: #57534e;
@@ -181,16 +181,16 @@
     textarea.form-textarea { resize: vertical; min-height: 60px; }
 
     /* Level badge colors */
-    select.form-select option[value="BB"]  { color: #dc2626; }
-    select.form-select option[value="MB"]  { color: #ca8a04; }
-    select.form-select option[value="BSH"] { color: #16a34a; }
-    select.form-select option[value="BSB"] { color: #15803d; }
+    select.form-select option[value="BB"]  { color: #d81b72; }
+    select.form-select option[value="MB"]  { color: #5D4037; }
+    select.form-select option[value="BSH"] { color: #2E8B60; }
+    select.form-select option[value="BSB"] { color: #2E8B60; }
 
     /* Level highlight on select */
-    select.lv-bb  { border-color: #fca5a5; background: #fff5f5; color: #dc2626; }
-    select.lv-mb  { border-color: #fde68a; background: #fffdf0; color: #ca8a04; }
-    select.lv-bsh { border-color: #86efac; background: #f0fff4; color: #16a34a; }
-    select.lv-bsb { border-color: #4ade80; background: #f0fff4; color: #15803d; }
+    select.lv-bb  { border-color: rgba(240,98,146,0.4); background: rgba(240,98,146,0.06); color: #d81b72; }
+    select.lv-mb  { border-color: #e6db00; background: #FFFDE7; color: #5D4037; }
+    select.lv-bsh { border-color: rgba(76,175,130,0.4); background: rgba(76,175,130,0.08); color: #2E8B60; }
+    select.lv-bsb { border-color: rgba(76,175,130,0.6); background: rgba(76,175,130,0.12); color: #2E8B60; }
 
     /* Catatan guru */
     .catatan-wrap { margin-top: 4px; }

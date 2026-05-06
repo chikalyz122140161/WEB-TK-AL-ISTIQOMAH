@@ -51,12 +51,12 @@
     letter-spacing: .03em;
 }
 .kelas-badge--a {
-    background: #d1fae5;
-    color: #065f46;
+    background: rgba(76,175,130,0.18);
+    color: #2E8B60;
 }
 .kelas-badge--b {
-    background: #dbeafe;
-    color: #1e40af;
+    background: #FFF176;
+    color: #5D4037;
 }
 .row-no {
     color: #9ca3af;

@@ -37,13 +37,13 @@
         width: 48px;
         height: 48px;
         border-radius: 12px;
-        background: #f3f4f6;
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
     }
-    .info-banner__icon svg { width: 22px; height: 22px; fill: #6b7280; }
+    .info-banner__icon svg { width: 22px; height: 22px; fill: #fff; }
     .info-banner__details { flex: 1; }
     .info-banner__details h3 { font-size: 15px; font-weight: 600; color: #3E2723; margin: 0 0 4px; }
     .info-banner__details p  { font-size: 13px; color: #78716c; margin: 0; }
@@ -63,8 +63,8 @@
         font-size: .8rem;
         font-weight: 600;
     }
-    .semester-pill--ganjil { background: #fef3c7; color: #92400e; }
-    .semester-pill--genap  { background: #dbeafe; color: #1e40af; }
+    .semester-pill--ganjil { background: #FFF176; color: #5D4037; }
+    .semester-pill--genap  { background: rgba(76,175,130,0.15); color: #2E8B60; }
 
     .riwayat-table-wrap {
         background: #fff;
@@ -118,9 +118,9 @@
         padding: 3px 10px;
         border-radius: 20px;
     }
-    .aksi-badge--ganti_semester { background: #dbeafe; color: #1e40af; }
-    .aksi-badge--ganti_kelas    { background: #d1fae5; color: #065f46; }
-    .aksi-badge--tinggal_kelas  { background: #fef3c7; color: #92400e; }
+    .aksi-badge--ganti_semester { background: rgba(76,175,130,0.15); color: #2E8B60; }
+    .aksi-badge--ganti_kelas    { background: rgba(76,175,130,0.15); color: #2E8B60; }
+    .aksi-badge--tinggal_kelas  { background: #FFF176; color: #5D4037; }
 
     .arrow-icon { color: #a8a29e; font-size: 16px; }
 

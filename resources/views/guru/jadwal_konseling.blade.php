@@ -118,7 +118,7 @@
         white-space: nowrap;
         transition: background .12s;
     }
-    .aksi-lihat     { background: #ecfdf5; color: #2E8B60; }
+    .aksi-lihat     { background: rgba(76,175,130,0.12); color: #2E8B60; }
     .aksi-lihat:hover     { background: #4CAF8230; }
     .aksi-edit      { background: #FFFBEB; color: #5D4037; }
     .aksi-edit:hover      { background: #FFF176; }

@@ -145,7 +145,7 @@
     .back-link svg { width: 16px; height: 16px; fill: currentColor; }
     .alert-success {
         background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
-        border: 1px solid #34d399;
+        border: 1px solid rgba(76,175,130,0.35);
         color: #2E8B60;
         padding: 12px 16px;
         border-radius: 8px;

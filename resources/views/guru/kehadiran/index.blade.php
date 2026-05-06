@@ -174,6 +174,9 @@
         background: linear-gradient(135deg, #F0629220 0%, #F0629230 100%);
         color: #d81b72;
     }
+    .status-option--alpa { color: #d81b72; border-color: rgba(240,98,146,0.3); }
+    .status-option--alpa:hover { border-color: #d81b72; background: rgba(240,98,146,0.08); }
+    .status-option--alpa.active { border-color: #d81b72; background: rgba(240,98,146,0.12); color: #d81b72; }
     .btn-edit {
         display: inline-flex;
         align-items: center;
@@ -214,7 +217,7 @@
     /* Alert */
     .alert-success {
         background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
-        border: 1px solid #34d399;
+        border: 1px solid rgba(76,175,130,0.35);
         color: #2E8B60;
         padding: 12px 16px;
         border-radius: 8px;
@@ -405,7 +408,7 @@
                                 <input type="radio" name="status[{{ $siswa['id'] }}]" value="sakit">
                                 Sakit
                             </label>
-                            <label class="status-option">
+                            <label class="status-option status-option--alpa">
                                 <input type="radio" name="status[{{ $siswa['id'] }}]" value="alpa">
                                 Alpa
                             </label>
