@@ -46,15 +46,16 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
-        color: #3E2723;
+        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
+        color: #fff;
         padding: 10px 20px;
         font-size: 14px;
         font-weight: 600;
         border: none;
         cursor: pointer;
-        border-radius: 6px;
-        transition: all 0.3s;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(61,155,114,0.25);
+        transition: all 0.2s;
     }
     .btn-tampilkan:hover {
         transform: translateY(-1px);

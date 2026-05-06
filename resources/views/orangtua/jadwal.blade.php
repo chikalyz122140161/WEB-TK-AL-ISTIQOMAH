@@ -29,7 +29,7 @@
         padding: 14px 24px;
         font-size: 14px;
         font-weight: 600;
-        color: #5D4037;
+        color: #3D9B72;
         background: transparent;
         border: none;
         border-radius: 8px;
@@ -38,19 +38,24 @@
         text-decoration: none;
     }
     .tab-btn:hover {
-        background: #FFFDE7;
-        color: #3E2723;
+        background: #f0fdf4;
+        color: #2E8B60;
     }
     .tab-btn.active {
-        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         color: #fff;
+        box-shadow: 0 2px 8px rgba(76,175,130,0.35);
+    }
+    .tab-btn--kegiatan.active {
+        background: linear-gradient(135deg, #F06292 0%, #d81b72 100%);
+        box-shadow: 0 2px 8px rgba(240,98,146,0.35);
     }
     .tab-btn svg {
         width: 20px;
         height: 20px;
     }
     .tab-btn.active svg {
-        fill: #4CAF82;
+        fill: #fff;
     }
 
     /* Filter Bar */
@@ -90,15 +95,16 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
-        color: #3E2723;
+        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
+        color: #fff;
         padding: 10px 20px;
         font-size: 14px;
         font-weight: 600;
         border: none;
         cursor: pointer;
-        border-radius: 6px;
-        transition: all 0.3s;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(61,155,114,0.25);
+        transition: all 0.2s;
     }
     .btn-tampilkan:hover {
         transform: translateY(-1px);
@@ -107,7 +113,6 @@
 
     /* Info Banner */
     .info-banner {
-        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
         border-radius: 12px;
         padding: 20px 24px;
         margin-bottom: 24px;
@@ -115,10 +120,18 @@
         align-items: center;
         gap: 16px;
     }
+    .info-banner--green {
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+        box-shadow: 0 4px 14px rgba(76,175,130,0.3);
+    }
+    .info-banner--pink {
+        background: linear-gradient(135deg, #F06292 0%, #d81b72 100%);
+        box-shadow: 0 4px 14px rgba(240,98,146,0.3);
+    }
     .info-banner__icon {
         width: 48px;
         height: 48px;
-        background: rgba(76,175,130, 0.2);
+        background: rgba(255,255,255,0.2);
         border-radius: 12px;
         display: flex;
         align-items: center;
@@ -128,7 +141,7 @@
     .info-banner__icon svg {
         width: 24px;
         height: 24px;
-        fill: #4CAF82;
+        fill: #fff;
     }
     .info-banner__content h3 {
         color: #fff;
@@ -136,7 +149,7 @@
         margin: 0 0 4px 0;
     }
     .info-banner__content p {
-        color: rgba(255,255,255,0.8);
+        color: rgba(255,255,255,0.85);
         font-size: 13px;
         margin: 0;
     }
@@ -150,9 +163,9 @@
         margin-bottom: 20px;
     }
     .schedule-card__header {
-        background: #FFFDE7;
+        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
         padding: 16px 20px;
-        border-bottom: 1px solid #3E272320;
+        border-bottom: none;
         display: flex;
         align-items: center;
         gap: 12px;
@@ -160,11 +173,11 @@
     .schedule-card__day {
         font-size: 16px;
         font-weight: 700;
-        color: #3E2723;
+        color: #fff;
     }
     .schedule-card__badge {
-        background: #4CAF82;
-        color: #3E2723;
+        background: rgba(255,255,255,0.2);
+        color: #fff;
         padding: 4px 12px;
         border-radius: 20px;
         font-size: 12px;
@@ -202,17 +215,17 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: rgba(0, 71, 62, 0.1);
+        background: rgba(61,155,114,0.12);
         padding: 6px 12px;
         border-radius: 6px;
         font-size: 13px;
         font-weight: 500;
-        color: #3E2723;
+        color: #2E8B60;
     }
     .time-badge svg {
         width: 14px;
         height: 14px;
-        fill: #3E2723;
+        fill: #2E8B60;
     }
 
     /* Kegiatan Cards */
@@ -233,14 +246,27 @@
         box-shadow: 0 8px 25px rgba(0,0,0,0.1);
     }
     .kegiatan-card__header {
-        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
         padding: 16px 20px;
+    }
+    /* Tiga varian warna header card */
+    .kegiatan-card__header--green {
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+    }
+    .kegiatan-card__header--yellow {
+        background: #FFF176;
+        border-bottom: 1px solid #e6db00;
+    }
+    .kegiatan-card__header--pink {
+        background: linear-gradient(135deg, #F06292 0%, #d81b72 100%);
     }
     .kegiatan-card__title {
         color: #fff;
         font-size: 16px;
         font-weight: 700;
         margin: 0;
+    }
+    .kegiatan-card__header--yellow .kegiatan-card__title {
+        color: #3E2723;
     }
     .kegiatan-card__body {
         padding: 16px 20px;
@@ -303,12 +329,13 @@
     .kegiatan-badge {
         display: inline-flex;
         align-items: center;
-        background: rgba(76, 175, 130, 0.15);
-        color: #d4920c;
+        background: #ecfdf5;
+        color: #2E8B60;
+        border: 1px solid #a7f3d0;
         padding: 4px 10px;
         border-radius: 20px;
         font-size: 12px;
-        font-weight: 500;
+        font-weight: 600;
     }
 
     /* Empty State */
@@ -342,7 +369,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 4.8 11.06a.75.75 0 0 1-.231-1.337A60.65 60.65 0 0 1 11.7 2.805Z"/><path d="M13.06 15.473a48.45 48.45 0 0 1 7.666-3.282c.134 1.414.22 2.843.255 4.284a.75.75 0 0 1-.46.711 47.87 47.87 0 0 0-8.105 4.342.75.75 0 0 1-.833 0 47.87 47.87 0 0 0-8.104-4.342.75.75 0 0 1-.461-.71c.035-1.442.121-2.87.255-4.286a48.45 48.45 0 0 1 7.667 3.282.75.75 0 0 0 1.12 0Z"/></svg>
             Jadwal Pembelajaran
         </a>
-        <a href="{{ route('orangtua.jadwal.kegiatan') }}" class="tab-btn {{ ($activeTab ?? '') == 'kegiatan' ? 'active' : '' }}">
+        <a href="{{ route('orangtua.jadwal.kegiatan') }}" class="tab-btn tab-btn--kegiatan {{ ($activeTab ?? '') == 'kegiatan' ? 'active' : '' }}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/></svg>
             Jadwal Kegiatan
         </a>
@@ -352,7 +379,7 @@
         {{-- JADWAL PEMBELAJARAN --}}
 
         {{-- Info Banner --}}
-        <div class="info-banner">
+        <div class="info-banner info-banner--green">
             <div class="info-banner__icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 4.8 11.06a.75.75 0 0 1-.231-1.337A60.65 60.65 0 0 1 11.7 2.805Z"/></svg>
             </div>
@@ -363,12 +390,14 @@
         </div>
 
         {{-- Satu card per hari --}}
+        @php $cardColors = ['green','yellow','pink']; $ci = 0; @endphp
         <div class="kegiatan-grid">
         @forelse($jadwalPembelajaran ?? [] as $hari => $jadwal)
+            @php $cc = $cardColors[$ci % 3]; $ci++; @endphp
             <div class="kegiatan-card">
-                <div class="kegiatan-card__header">
+                <div class="kegiatan-card__header kegiatan-card__header--{{ $cc }}">
                     <h3 class="kegiatan-card__title">{{ $hari }}</h3>
-                    <span style="color:rgba(255,255,255,0.7); font-size:12px;">{{ count($jadwal) }} kegiatan</span>
+                    <span style="color:{{ $cc === 'yellow' ? 'rgba(62,39,35,0.6)' : 'rgba(255,255,255,0.75)' }}; font-size:12px;">{{ count($jadwal) }} kegiatan</span>
                 </div>
                 <div class="kegiatan-card__body">
                     @foreach($jadwal as $item)
@@ -429,7 +458,7 @@
         @endphp
 
         {{-- Info Banner --}}
-        <div class="info-banner">
+        <div class="info-banner info-banner--pink">
             <div class="info-banner__icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
             </div>
@@ -441,10 +470,12 @@
 
         {{-- Kegiatan Grid --}}
         @if(!empty($jadwalKegiatan))
+            @php $cardColors = ['green','yellow','pink']; $ki = 0; @endphp
             <div class="kegiatan-grid">
                 @foreach($jadwalKegiatan as $kegiatan)
+                    @php $kc = $cardColors[$ki % 3]; $ki++; @endphp
                     <div class="kegiatan-card">
-                        <div class="kegiatan-card__header">
+                        <div class="kegiatan-card__header kegiatan-card__header--{{ $kc }}">
                             <h3 class="kegiatan-card__title">{{ $kegiatan['nama'] }}</h3>
                         </div>
                         <div class="kegiatan-card__body">

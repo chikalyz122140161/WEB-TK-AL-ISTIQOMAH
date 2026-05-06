@@ -69,7 +69,7 @@
             margin-bottom: 20px;
         }
         .section-title {
-            background: #3E2723;
+            background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
             color: #fff;
             padding: 8px 12px;
             font-size: 12px;

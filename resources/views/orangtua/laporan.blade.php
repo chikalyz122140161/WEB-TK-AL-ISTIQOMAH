@@ -164,7 +164,7 @@
         margin-top: 24px;
     }
     .detail-card__header {
-        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         color: #fff;
         padding: 20px 24px;
         border-radius: 8px 8px 0 0;

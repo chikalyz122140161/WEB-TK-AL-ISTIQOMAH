@@ -134,7 +134,7 @@
     {{-- Header --}}
     <div style="margin-bottom:16px">
         <span style="background:linear-gradient(135deg,var(--green),var(--green-dark));color:#fff;padding:7px 16px;border-radius:8px;font-size:14px;font-weight:700;box-shadow:0 2px 8px var(--green-20);">
-            Grafik Perkembangan Konseling — Guru
+            Grafik Perkembangan Konseling
         </span>
     </div>
 

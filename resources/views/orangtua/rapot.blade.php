@@ -12,7 +12,7 @@
 <style>
     /* Info Banner */
     .info-banner {
-        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         border-radius: 12px;
         padding: 20px 24px;
         margin-bottom: 24px;
@@ -135,7 +135,7 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         color: #fff;
         padding: 12px 16px;
         font-size: 13px;

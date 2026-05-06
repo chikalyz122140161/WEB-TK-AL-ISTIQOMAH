@@ -37,7 +37,7 @@
         width: 52px;
         height: 52px;
         border-radius: 12px;
-        background: linear-gradient(135deg, #3D9B72, #2E8B60);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         color: #fff;
         font-size: 18px;
         font-weight: 700;
@@ -143,7 +143,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         color: #fff;
         padding: 10px 24px;
         font-size: 14px;

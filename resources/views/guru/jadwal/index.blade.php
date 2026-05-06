@@ -96,18 +96,20 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: #3E272320;
-        color: #3E2723;
+        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
+        color: #fff;
         padding: 10px 20px;
         font-size: 14px;
-        font-weight: 500;
+        font-weight: 600;
         border: none;
         cursor: pointer;
         border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(61,155,114,0.25);
         transition: all 0.2s;
     }
     .btn-secondary:hover {
-        background: #3E272330;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(61,155,114,0.35);
     }
     .btn-danger {
         display: inline-flex;
@@ -243,7 +245,7 @@
         box-shadow: 0 6px 20px rgba(0,0,0,0.1);
     }
     .pembelajaran-card__header {
-        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         padding: 14px 18px;
         display: flex;
         align-items: center;
@@ -340,6 +342,8 @@
         font-size: 13px;
         border-radius: 8px;
         white-space: nowrap;
+        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
+        color: #fff;
     }
     
     /* Alert */
@@ -637,7 +641,7 @@
                 <option value="TK A" {{ request('kelas') == 'TK A' ? 'selected' : '' }}>TK A</option>
                 <option value="TK B" {{ request('kelas') == 'TK B' ? 'selected' : '' }}>TK B</option>
             </select>
-            <button type="submit" class="btn-secondary" style="height:38px;padding:0 18px;font-size:13px;border-radius:8px;">Filter</button>
+            <button type="submit" class="btn-secondary">Filter</button>
         </form>
         
         <!-- Tab Content: Jadwal Kegiatan -->

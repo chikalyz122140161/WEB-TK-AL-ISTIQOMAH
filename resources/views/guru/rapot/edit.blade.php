@@ -32,7 +32,7 @@
 
     /* Info Banner */
     .info-banner {
-        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         border-radius: 12px;
         padding: 16px 20px;
         display: flex;
@@ -91,7 +91,7 @@
         margin-bottom: 24px;
     }
     .form-card__header {
-        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         padding: 16px 24px;
         display: flex;
         align-items: center;

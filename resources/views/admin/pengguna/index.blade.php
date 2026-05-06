@@ -208,7 +208,7 @@
 .user-cell__avatar {
     width: 36px;
     height: 36px;
-    background: linear-gradient(135deg, #3E2723, #4CAF82);
+    background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
     color: white;
     border-radius: 50%;
     display: flex;

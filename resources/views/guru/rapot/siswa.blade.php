@@ -19,7 +19,7 @@
 
     /* Student header */
     .student-banner {
-        background: linear-gradient(135deg, #3E2723 0%, #2E8B60 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         border-radius: 12px; padding: 20px 24px; margin-bottom: 22px;
         display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
     }

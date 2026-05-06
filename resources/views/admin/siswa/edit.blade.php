@@ -513,7 +513,7 @@
 .linked-account-avatar {
     width: 48px;
     height: 48px;
-    background: linear-gradient(135deg, #3E2723, #4CAF82);
+    background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -605,7 +605,7 @@
 .document-icon {
     width: 40px;
     height: 40px;
-    background: linear-gradient(135deg, #3E2723, #4CAF82);
+    background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -694,7 +694,7 @@
 }
 
 .form-input-file::-webkit-file-upload-button {
-    background: linear-gradient(135deg, #3E2723, #4CAF82);
+    background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
     color: white;
     border: none;
     padding: 0.5rem 1rem;

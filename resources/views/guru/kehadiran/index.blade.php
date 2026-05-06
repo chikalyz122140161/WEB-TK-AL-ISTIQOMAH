@@ -102,18 +102,20 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: #3E272320;
-        color: #3E2723;
+        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
+        color: #fff;
         padding: 10px 20px;
         font-size: 14px;
-        font-weight: 500;
+        font-weight: 600;
         border: none;
         cursor: pointer;
         border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(61,155,114,0.25);
         transition: all 0.2s;
     }
     .btn-secondary:hover {
-        background: #3E272330;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(61,155,114,0.35);
     }
     .btn-row {
         display: flex;

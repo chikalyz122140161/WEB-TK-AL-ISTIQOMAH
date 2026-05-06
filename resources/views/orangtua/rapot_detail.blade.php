@@ -33,7 +33,7 @@
     
     /* Rapot Header */
     .rapot-header {
-        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         border-radius: 12px;
         padding: 24px;
         margin-bottom: 24px;
@@ -300,7 +300,7 @@
     .teacher-avatar {
         width: 48px;
         height: 48px;
-        background: linear-gradient(135deg, #3E2723 0%, #006b5a 100%);
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
         border-radius: 50%;
         display: flex;
         align-items: center;

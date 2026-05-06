@@ -99,7 +99,7 @@
     }
     .badge--disetujui { background: #ffedd5; color: #3E2723; }
     .badge--pending   { background: #FFFDE7; color: #5D4037; border: 1px solid #3E272330; }
-    .badge--selesai   { background: #3E2723; color: #FFFDE7; }
+    .badge--selesai   { background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%); color: #fff; }
     .badge--tolak     { background: #F0629220; color: #d81b72; }
 
     /* ── Aksi links ───────────────────────────────────── */
@@ -245,7 +245,7 @@
             value="{{ request('bulan_tahun', date('Y-m')) }}"
             style="min-width:160px;padding:0 12px;"
         >
-        <button type="submit" class="btn-new" style="background:#3E2723;">FILTER</button>
+        <button type="submit" class="btn-new">Filter</button>
     </form>
 
     {{-- Table --}}
