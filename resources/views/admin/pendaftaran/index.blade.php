@@ -203,7 +203,7 @@
 .student-cell__avatar {
     width: 38px;
     height: 38px;
-    background: linear-gradient(135deg, var(--text), var(--green));
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
     color: white;
     border-radius: 50%;
     display: flex;
