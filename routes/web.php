@@ -146,6 +146,8 @@ Route::middleware('dummy.auth')->group(function () {
     Route::get('/guru/chat', [GuruController::class, 'chat'])->name('guru.chat');
     Route::post('/guru/chat', [GuruController::class, 'kirimChat'])->name('guru.kirim_chat');
     Route::get('/guru/jadwal-konseling', [GuruController::class, 'jadwalKonseling'])->name('guru.jadwal_konseling');
+    Route::get('/guru/jadwal-konseling/buat/siswa', [GuruController::class, 'jadwalKonselingCreateSiswa'])->name('guru.jadwal_konseling.create_siswa');
+    Route::get('/guru/jadwal-konseling/buat/kelas', [GuruController::class, 'jadwalKonselingCreateKelas'])->name('guru.jadwal_konseling.create_kelas');
     Route::post('/guru/jadwal-konseling', [GuruController::class, 'storeJadwalKonseling'])->name('guru.store_jadwal_konseling');
     Route::get('/guru/jadwal-konseling/{id}', [GuruController::class, 'jadwalKonselingShow'])->name('guru.jadwal_konseling.show');
     Route::get('/guru/jadwal-konseling/{id}/edit', [GuruController::class, 'jadwalKonselingEdit'])->name('guru.jadwal_konseling.edit');

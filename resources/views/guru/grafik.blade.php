@@ -376,6 +376,11 @@ function renderCharts(f) {
 }
 
 function buildKonselingChart(con, f) {
+    // Mode minggu: bar chart per poin penilaian
+    if (f.week !== '__all__') {
+        return buildKonselingWeekChart(con, f);
+    }
+
     const labels = PAYLOAD.weeks.map(w => 'Mg' + w);
     let datasets = [];
     let subText = '';
@@ -500,6 +505,107 @@ function buildKonselingChart(con, f) {
                 ctx.restore();
             }
         }] : [],
+    });
+    charts.push(chart);
+}
+
+function buildKonselingWeekChart(con, f) {
+    const week    = parseInt(f.week, 10);
+    const rawSem  = PAYLOAD.raw[f.sem] || {};
+    const siswaIds= getSiswaIdsInScope(f);
+
+    // Hitung skor per poin penilaian: jika 1 siswa pakai langsung, kalau banyak pakai rata-rata
+    const labels = con.assessments.map(ca => ca.nama);
+    const values = con.assessments.map(ca => {
+        let sum = 0, cnt = 0;
+        siswaIds.forEach(sid => {
+            const v = (((rawSem[sid] || {})[ca.id]) || {})[week];
+            if (v !== undefined && v !== null) { sum += v; cnt++; }
+        });
+        return cnt ? +(sum / cnt).toFixed(2) : null;
+    });
+
+    // Warna bar by level (rounded)
+    const LV_COLOR = { 1: '#d81b72', 2: '#e6db00', 3: '#4CAF82', 4: '#2E8B60' };
+    const colors = values.map(v => v === null ? '#e7e5e4' : LV_COLOR[Math.round(v)] || '#e7e5e4');
+
+    let subText;
+    if (f.siswa !== '__all__') {
+        subText = `Skor per poin penilaian — ${findSiswaName(f.siswa)} pada Minggu ${week}.`;
+    } else if (f.kelas !== '__all__') {
+        subText = `Rata-rata skor per poin penilaian di Kelas ${f.kelas} pada Minggu ${week}.`;
+    } else {
+        subText = `Rata-rata skor per poin penilaian semua kelas pada Minggu ${week}.`;
+    }
+    document.getElementById('sub-' + con.id).textContent = subText;
+
+    // Legend = warna per level
+    document.getElementById('legend-' + con.id).innerHTML = `
+        <span class="gp-legend__item"><span class="gp-legend__dot" style="background:#d81b72"></span>BB (Belum Berkembang)</span>
+        <span class="gp-legend__item"><span class="gp-legend__dot" style="background:#e6db00"></span>MB (Mulai Berkembang)</span>
+        <span class="gp-legend__item"><span class="gp-legend__dot" style="background:#4CAF82"></span>BSH (Berkembang Sesuai Harapan)</span>
+        <span class="gp-legend__item"><span class="gp-legend__dot" style="background:#2E8B60"></span>BSB (Berkembang Sangat Baik)</span>
+    `;
+
+    const ctx = document.getElementById('canvas-' + con.id).getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Level',
+                data: values,
+                backgroundColor: colors,
+                borderColor: colors,
+                borderWidth: 1,
+                borderRadius: 6,
+                barPercentage: 0.7,
+                categoryPercentage: 0.85,
+            }],
+        },
+        options: {
+            indexAxis: 'y', // horizontal bars
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#fff',
+                    titleColor: '#3E2723',
+                    bodyColor: '#5D4037',
+                    borderColor: 'rgba(62,39,35,0.15)',
+                    borderWidth: 1,
+                    callbacks: {
+                        label: item => {
+                            const v = item.raw;
+                            if (v == null) return ' Belum ada nilai';
+                            const tag = LV[Math.round(v)] || '';
+                            return ` Level: ${v} (${tag})`;
+                        }
+                    }
+                },
+            },
+            scales: {
+                x: {
+                    min: 0, max: 4,
+                    ticks: {
+                        stepSize: 1,
+                        callback: v => v === 0 ? '0' : (LV[v] || ''),
+                        color: TICK,
+                        font: { size: 11 },
+                    },
+                    grid: { color: GRID },
+                },
+                y: {
+                    ticks: {
+                        color: TICK,
+                        font: { size: 11 },
+                        autoSkip: false,
+                    },
+                    grid: { display: false },
+                },
+            },
+        },
     });
     charts.push(chart);
 }

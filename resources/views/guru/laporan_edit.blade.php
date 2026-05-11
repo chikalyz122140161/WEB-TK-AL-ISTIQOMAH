@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Edit Laporan Perkembangan - SISTEM TK AL-ISTIQOMAH')
 @section('page_title', 'Edit Laporan Perkembangan')
@@ -6,185 +6,121 @@
 @push('styles')
 <style>
     .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 14px;
-        font-weight: 500;
-        color: #5D4037;
-        margin-bottom: 20px;
-        transition: color 0.2s;
+        display: inline-flex; align-items: center; gap: 6px;
+        font-size: 14px; font-weight: 500; color: #5D4037;
+        margin-bottom: 16px; transition: color .2s;
         text-decoration: none;
     }
     .back-link:hover { color: #3E2723; }
     .back-link svg { width: 16px; height: 16px; fill: currentColor; }
 
-    /*  Form card */
-    .form-card {
-        background: #fff;
-        border: 1px solid #3E272320;
-        border-radius: 12px;
-        padding: 28px 32px;
-        margin-bottom: 24px;
+    /* Section card (mengikuti style input_perkembangan) */
+    .form-section {
+        background: #fff; border: 1px solid #e7e5e4;
+        border-radius: 12px; margin-bottom: 18px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.04); overflow: hidden;
     }
-    .form-card__title {
-        font-size: 14px;
-        font-weight: 700;
-        color: #3E2723;
-        margin: 0 0 24px;
-        padding-bottom: 12px;
-        border-bottom: 2px solid #F06292;
-        letter-spacing: .3px;
-        text-transform: uppercase;
-        display: inline-block;
+    .form-section__head {
+        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
+        padding: 13px 20px; display: flex; align-items: center; gap: 10px;
     }
+    .form-section__head svg { width: 18px; height: 18px; fill: rgba(255,255,255,0.85); }
+    .form-section__title { color: #fff; font-size: 14px; font-weight: 600; margin: 0; }
 
-    /*  Field group */
-    .field-group {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        margin-bottom: 18px;
+    .form-section__body { padding: 20px; }
+
+    /* Field grid */
+    .field-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
     }
-    .field-group:last-child { margin-bottom: 0; }
+    .field-group { display: flex; flex-direction: column; gap: 5px; }
     .field-label {
-        font-size: 11px;
-        font-weight: 700;
-        color: #5D4037;
-        letter-spacing: .5px;
-        text-transform: uppercase;
+        font-size: 11px; font-weight: 600;
+        color: #6b7280; text-transform: uppercase; letter-spacing: .03em;
     }
     .field-control {
-        width: 100%;
-        height: 42px;
-        padding: 0 12px;
-        font-size: 14px;
-        color: #3E2723;
-        background: #FFFDE7;
-        border: 1px solid #3E272320;
-        border-radius: 8px;
-        outline: none;
+        width: 100%; padding: 9px 12px; font-size: 13px;
+        border: 1px solid #e7e5e4; border-radius: 7px;
+        background: #fff; color: #3E2723; outline: none;
+        box-sizing: border-box; transition: border-color .15s, box-shadow .15s;
         font-family: inherit;
-        box-sizing: border-box;
-        transition: border-color .15s;
     }
     .field-control:focus {
-        border-color: #F06292;
-        background: #fff;
-        box-shadow: 0 0 0 3px rgba(251,146,60,.15);
+        border-color: #3D9B72; box-shadow: 0 0 0 3px rgba(61,155,114,0.12);
     }
-    select.field-control { cursor: pointer; }
-    textarea.field-control {
-        height: 80px;
-        padding: 10px 12px;
-        resize: vertical;
-        line-height: 1.5;
-    }
-    .field-control[type="number"] {
-        -moz-appearance: textfield;
-        appearance: textfield;
-    }
-    .field-control[type="number"]::-webkit-outer-spin-button,
-    .field-control[type="number"]::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
+    .field-control[disabled],
+    .field-control[readonly] {
+        background: #f9fafb; color: #6b7280; cursor: default;
     }
 
-    /* Two-column grid */
-    .form-grid-2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
+    /* Group box (konseling) */
+    .group-box {
+        border: 1px solid #e7e5e4; border-radius: 8px;
+        margin-bottom: 12px; overflow: hidden;
     }
-    @media (max-width: 640px) { .form-grid-2 { grid-template-columns: 1fr; } }
+    .group-box:last-child { margin-bottom: 0; }
+    .group-box__head {
+        background: #f9fafb; padding: 10px 14px;
+        font-size: 13px; font-weight: 600; color: #3E2723;
+        display: flex; align-items: center; gap: 7px;
+        border-bottom: 1px solid #e7e5e4;
+    }
+    .group-box__head svg { width: 14px; height: 14px; fill: #3D9B72; }
+    .group-box__body { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
 
-    /* Dev block */
-    .dev-block {
-        margin-bottom: 22px;
-        padding-bottom: 22px;
-        border-bottom: 1px solid #FFFDE7;
+    .assessment-row {
+        display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
     }
-    .dev-block:last-child {
-        margin-bottom: 0;
-        padding-bottom: 0;
-        border-bottom: none;
+    .assessment-row__label {
+        flex: 1; min-width: 180px; font-size: 13px; color: #57534e;
     }
-    .dev-block__title {
-        font-size: 13px;
-        font-weight: 700;
-        color: #3E2723;
-        text-transform: uppercase;
-        letter-spacing: .3px;
-        margin-bottom: 10px;
-    }
-    .dev-block__title span {
-        color: #3D9B72;
-        font-weight: 800;
-        margin-right: 4px;
-    }
+    .assessment-row__select { min-width: 160px; }
 
-    /* Radio row */
-    .radio-row {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        margin-bottom: 10px;
-    }
-    .radio-row label {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 13px;
-        color: #3E2723;
-        cursor: pointer;
-        font-weight: 500;
-    }
-    .radio-row input[type="radio"] {
-        width: 15px;
-        height: 15px;
-        accent-color: #3D9B72;
-        cursor: pointer;
-    }
+    select.lv-bb  { border-color: #fca5a5; background: #fff5f5; color: #dc2626; }
+    select.lv-mb  { border-color: #fde68a; background: #fffdf0; color: #ca8a04; }
+    select.lv-bsh { border-color: #86efac; background: #f0fff4; color: #16a34a; }
+    select.lv-bsb { border-color: #4ade80; background: #f0fff4; color: #15803d; }
 
-    /* Action buttons */
-    .form-actions {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding-top: 4px;
+    /* Legend */
+    .legend-bar {
+        display: flex; flex-wrap: wrap; gap: 14px;
+        background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;
+        padding: 10px 16px; margin-bottom: 18px; font-size: 12px; color: #3E2723;
+    }
+    .legend-bar span { display: flex; align-items: center; gap: 6px; }
+    .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
+    .ld-bb  { background: #f87171; }
+    .ld-mb  { background: #facc15; }
+    .ld-bsh { background: #4ade80; }
+    .ld-bsb { background: #22c55e; }
+
+    /* Submit bar */
+    .submit-bar {
+        position: sticky; bottom: 0; z-index: 10;
+        background: rgba(255,255,255,0.95); backdrop-filter: blur(4px);
+        border-top: 1px solid #e7e5e4;
+        padding: 14px 0; margin-top: 8px;
+        display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
     }
     .btn-save {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        height: 40px;
-        padding: 0 24px;
-        background: #3D9B72;
-        color: #fff;
-        font-size: 14px;
-        font-weight: 700;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        letter-spacing: .3px;
-        transition: background .15s;
+        display: inline-flex; align-items: center; gap: 7px;
+        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
+        color: #fff; padding: 10px 22px; font-size: 14px; font-weight: 600;
+        border: none; border-radius: 9px; cursor: pointer; transition: all .2s;
+        box-shadow: 0 3px 8px rgba(61,155,114,0.3);
     }
-    .btn-save:hover { background: #2E8B60; }
+    .btn-save:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(61,155,114,0.4); }
+    .btn-save svg { width: 16px; height: 16px; fill: currentColor; }
     .btn-cancel {
-        display: inline-flex;
-        align-items: center;
-        height: 40px;
-        padding: 0 24px;
-        background: #fff;
-        color: #3E2723;
-        font-size: 14px;
-        font-weight: 600;
-        border: 1px solid #3E272330;
-        border-radius: 8px;
-        text-decoration: none;
-        transition: background .15s, border-color .15s;
+        display: inline-flex; align-items: center; gap: 7px;
+        background: #f3f4f6; color: #374151;
+        padding: 10px 18px; font-size: 14px; font-weight: 600;
+        border: none; border-radius: 9px; cursor: pointer;
+        text-decoration: none; transition: background .2s;
     }
-    .btn-cancel:hover { background: #FFFDE7; border-color: #5D4037; }
+    .btn-cancel:hover { background: #e5e7eb; }
 </style>
 @endpush
 
@@ -199,150 +135,112 @@
         Kembali ke Laporan Perkembangan
     </a>
 
-    <h2 style="margin:0 0 20px;font-size:20px;font-weight:700;color:#3E2723;text-transform:uppercase;letter-spacing:.5px;">
-        Edit Laporan Perkembangan
-    </h2>
-
     <form method="POST" action="{{ route('guru.laporan_bk.update', $laporan['id']) }}">
         @csrf
         @method('PUT')
 
-        {{-- Card 1: Data Dasar --}}
-        <div class="form-card">
-            <p class="form-card__title">Data Dasar</p>
-
-            <div class="field-group">
-                <label class="field-label" for="siswa_id">Siswa</label>
-                <select class="field-control" id="siswa_id" name="siswa_id" required>
-                    @foreach ($daftarSiswa as $s)
-                        <option value="{{ $s['id'] }}" {{ $s['id'] == $laporan['siswa_id'] ? 'selected' : '' }}>
-                            {{ $s['nama'] }} — {{ $s['kelas'] }}
-                        </option>
-                    @endforeach
-                </select>
+        {{-- Data Dasar --}}
+        <div class="form-section">
+            <div class="form-section__head">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
+                <h3 class="form-section__title">Data Dasar</h3>
             </div>
-
-            <div class="form-grid-2">
-                <div class="field-group">
-                    <label class="field-label" for="tahun_ajaran">Tahun Ajaran</label>
-                    <input
-                        class="field-control"
-                        type="number"
-                        id="tahun_ajaran"
-                        name="tahun_ajaran"
-                        min="2000"
-                        max="2100"
-                        value="{{ $laporan['tahun_ajaran'] }}"
-                        required
-                    >
-                </div>
-                <div class="field-group">
-                    <label class="field-label" for="semester">Semester</label>
-                    <select class="field-control" id="semester" name="semester" required>
-                        <option value="Ganjil" {{ $laporan['semester'] == 'Ganjil' ? 'selected' : '' }}>Ganjil</option>
-                        <option value="Genap"  {{ $laporan['semester'] == 'Genap'  ? 'selected' : '' }}>Genap</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-grid-2">
-                <div class="field-group">
-                    <label class="field-label" for="minggu_ke">Minggu Ke</label>
-                    <input
-                        class="field-control"
-                        type="number"
-                        id="minggu_ke"
-                        name="minggu_ke"
-                        min="1"
-                        max="52"
-                        value="{{ $laporan['minggu'] }}"
-                        required
-                    >
-                </div>
-                <div class="field-group">
-                    <label class="field-label" for="tanggal">Tanggal</label>
-                    <input
-                        class="field-control"
-                        type="date"
-                        id="tanggal"
-                        name="tanggal"
-                        value="{{ $laporan['tanggal'] }}"
-                        required
-                    >
+            <div class="form-section__body">
+                <div class="field-grid">
+                    <div class="field-group">
+                        <label class="field-label">Tahun Ajaran (Class Term)</label>
+                        <input class="field-control" type="text" value="{{ $laporan['semester'] }} — Kelas {{ $laporan['kelas'] }}" readonly>
+                        <input type="hidden" name="semester_id" value="{{ $laporan['semester_id'] }}">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Siswa</label>
+                        <input class="field-control" type="text" value="{{ $laporan['siswa_nama'] }}" readonly>
+                        <input type="hidden" name="siswa_id" value="{{ $laporan['siswa_id'] }}">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Minggu Ke</label>
+                        <input class="field-control" type="number" name="minggu_ke" min="1" max="52" value="{{ $laporan['minggu'] }}" required>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Tanggal</label>
+                        <input class="field-control" type="date" name="tanggal" value="{{ $laporan['tanggal'] }}" required>
+                    </div>
                 </div>
             </div>
         </div>
 
-        {{-- Card 2: Penilaian Perkembangan --}}
-        <div class="form-card">
-            <p class="form-card__title">Penilaian Perkembangan (BB / MB / BSH / BSB)</p>
-
-            @php
-                $aspek = [
-                    ['key' => 'fisik_motorik',    'num' => '1', 'label' => 'Fisik-Motorik'],
-                    ['key' => 'kognitif',          'num' => '2', 'label' => 'Kognitif'],
-                    ['key' => 'bahasa',            'num' => '3', 'label' => 'Bahasa'],
-                    ['key' => 'sosial_emosional',  'num' => '4', 'label' => 'Sosial-Emosional'],
-                    ['key' => 'nilai_agama_moral', 'num' => '5', 'label' => 'Nilai Agama & Moral'],
-                    ['key' => 'seni',              'num' => '6', 'label' => 'Seni'],
-                ];
-            @endphp
-
-            @foreach ($aspek as $a)
-            <div class="dev-block">
-                <div class="dev-block__title">
-                    <span>{{ $a['num'] }}.</span>{{ strtoupper($a['label']) }}
-                </div>
-                <div class="radio-row">
-                    @foreach (['1' => 'BB', '2' => 'MB', '3' => 'BSH', '4' => 'BSB'] as $val => $label)
-                    <label>
-                        <input
-                            type="radio"
-                            name="nilai_{{ $a['key'] }}"
-                            value="{{ $val }}"
-                            {{ ($laporan['nilai'][$a['key']] ?? '') == $val ? 'checked' : '' }}
-                            required
-                        >
-                        {{ $label }}
-                    </label>
-                    @endforeach
-                </div>
-                <div class="field-group" style="margin-bottom:0;">
-                    <textarea
-                        class="field-control"
-                        name="catatan_{{ $a['key'] }}"
-                        placeholder="Catatan perkembangan {{ strtolower($a['label']) }}..."
-                        rows="3"
-                    >{{ $laporan['catatan'][$a['key']] ?? '' }}</textarea>
-                </div>
+        {{-- Bimbingan Konseling --}}
+        <div class="form-section">
+            <div class="form-section__head">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 0 0 6 21.75a6.721 6.721 0 0 0 3.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.09.768 4.04 2.084 5.558a8.96 8.96 0 0 1-1.603 2.596.75.75 0 0 0 .53 1.28 6.72 6.72 0 0 0 1.543-.09Z" clip-rule="evenodd"/></svg>
+                <h3 class="form-section__title">Bimbingan Konseling</h3>
             </div>
-            @endforeach
-        </div>
+            <div class="form-section__body">
+                <div class="legend-bar">
+                    <span><span class="legend-dot ld-bb"></span> <strong>BB</strong> = Belum Berkembang</span>
+                    <span><span class="legend-dot ld-mb"></span> <strong>MB</strong> = Mulai Berkembang</span>
+                    <span><span class="legend-dot ld-bsh"></span> <strong>BSH</strong> = Berkembang Sesuai Harapan</span>
+                    <span><span class="legend-dot ld-bsb"></span> <strong>BSB</strong> = Berkembang Sangat Baik</span>
+                </div>
 
-        {{-- Card 3: Catatan Umum --}}
-        <div class="form-card">
-            <p class="form-card__title">Catatan Umum Guru</p>
-            <div class="field-group" style="margin-bottom:0;">
-                <textarea
-                    class="field-control"
-                    name="catatan_umum"
-                    rows="5"
-                    placeholder="Tuliskan catatan umum tentang perkembangan anak..."
-                >{{ $laporan['catatan_umum'] ?? '' }}</textarea>
+                @forelse ($laporan['konselings'] as $kon)
+                    <div class="group-box">
+                        <div class="group-box__head">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd"/></svg>
+                            {{ $kon['nama'] }}
+                        </div>
+                        <div class="group-box__body">
+                            @foreach ($kon['items'] as $item)
+                                @php
+                                    $LV   = [1 => 'BB', 2 => 'MB', 3 => 'BSH', 4 => 'BSB'];
+                                    $cur  = $item['level'];
+                                    $kode = $cur !== null ? $LV[$cur] : '';
+                                    $cls  = $kode ? 'lv-' . strtolower($kode) : '';
+                                @endphp
+                                <div class="assessment-row">
+                                    <div class="assessment-row__label">{{ $item['nama'] }}</div>
+                                    <div class="assessment-row__select">
+                                        <select name="counseling[{{ $kon['id'] }}][{{ $item['id'] }}]"
+                                                class="field-control {{ $cls }}"
+                                                onchange="updateSelectStyle(this)">
+                                            <option value="">-- Pilih Level --</option>
+                                            <option value="BB"  {{ $kode === 'BB'  ? 'selected' : '' }}>BB — Belum Berkembang</option>
+                                            <option value="MB"  {{ $kode === 'MB'  ? 'selected' : '' }}>MB — Mulai Berkembang</option>
+                                            <option value="BSH" {{ $kode === 'BSH' ? 'selected' : '' }}>BSH — Berkembang Sesuai Harapan</option>
+                                            <option value="BSB" {{ $kode === 'BSB' ? 'selected' : '' }}>BSB — Berkembang Sangat Baik</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @empty
+                    <p style="color:#9ca3af;font-style:italic;">Belum ada konseling yang dikaitkan.</p>
+                @endforelse
             </div>
         </div>
 
-        {{-- Action buttons --}}
-        <div class="form-actions">
+        {{-- Submit bar --}}
+        <div class="submit-bar">
             <button type="submit" class="btn-save">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" style="width:16px;height:16px;">
-                    <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/>
-                </svg>
-                SIMPAN PERUBAHAN
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd"/></svg>
+                Simpan Perubahan
             </button>
-            <a href="{{ route('guru.laporan_bk') }}" class="btn-cancel">BATAL</a>
+            <a href="{{ route('guru.laporan_bk') }}" class="btn-cancel">Batal</a>
         </div>
-
     </form>
 
 @endsection
+
+@push('scripts')
+<script>
+const levelClasses = { BB: 'lv-bb', MB: 'lv-mb', BSH: 'lv-bsh', BSB: 'lv-bsb' };
+
+function updateSelectStyle(el) {
+    el.classList.remove('lv-bb', 'lv-mb', 'lv-bsh', 'lv-bsb');
+    if (el.value && levelClasses[el.value]) {
+        el.classList.add(levelClasses[el.value]);
+    }
+}
+</script>
+@endpush
