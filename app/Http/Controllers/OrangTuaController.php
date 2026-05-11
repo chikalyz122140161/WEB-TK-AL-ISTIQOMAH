@@ -268,6 +268,92 @@ class OrangTuaController extends Controller
     
     public function rapotDetail($id)
     {
+        // Dummy mata pelajaran (deskripsi + foto opsional) — sesuai input guru
+        $mataPelajaran = [
+            [
+                'id'        => 'mp1',
+                'nama'      => 'Nilai Agama & Moral',
+                'deskripsi' => 'Ahmad memahami nilai-nilai agama dengan baik. Ia selalu berdoa sebelum dan sesudah kegiatan serta menunjukkan sikap sopan santun kepada teman dan guru.',
+                'foto'      => null,
+            ],
+            [
+                'id'        => 'mp2',
+                'nama'      => 'Fisik & Motorik',
+                'deskripsi' => 'Perkembangan fisik dan motorik Ahmad sangat baik. Ia sangat aktif dalam kegiatan gerak tubuh, mampu berlari, melompat, dan menangkap bola dengan koordinasi yang baik.',
+                'foto'      => 'https://placehold.co/600x400/4CAF82/ffffff?text=Foto+Olahraga',
+            ],
+            [
+                'id'        => 'mp3',
+                'nama'      => 'Kognitif',
+                'deskripsi' => 'Ahmad mampu mengenali bentuk, warna, dan angka sederhana. Ia menunjukkan kemampuan berpikir logis yang sesuai dengan usianya.',
+                'foto'      => null,
+            ],
+            [
+                'id'        => 'mp4',
+                'nama'      => 'Bahasa',
+                'deskripsi' => 'Ahmad mulai berkembang dalam kemampuan berbahasa. Ia mampu berkomunikasi dengan teman-temannya, namun masih perlu latihan dalam mengungkapkan ide secara runtut.',
+                'foto'      => null,
+            ],
+            [
+                'id'        => 'mp5',
+                'nama'      => 'Sosial Emosional',
+                'deskripsi' => 'Ahmad menunjukkan kemampuan bersosialisasi yang baik. Ia senang bermain bersama teman, mampu berbagi, dan menunjukkan empati kepada temannya.',
+                'foto'      => null,
+            ],
+            [
+                'id'        => 'mp6',
+                'nama'      => 'Seni',
+                'deskripsi' => 'Ahmad memiliki bakat seni yang menonjol. Ia sangat antusias dalam kegiatan menggambar dan mewarnai, serta menunjukkan kreativitas yang tinggi.',
+                'foto'      => 'https://placehold.co/600x400/F59E0B/ffffff?text=Karya+Seni+Ahmad',
+            ],
+        ];
+
+        // Dummy ekstrakurikuler — group dengan poin penilaian level
+        $ekstrakurikuler = [
+            [
+                'id' => 'ek1', 'nama' => 'Menari',
+                'assessments' => [
+                    ['nama' => 'Kelenturan',       'level' => 'BSH'],
+                    ['nama' => 'Ekspresi',         'level' => 'BSB'],
+                    ['nama' => 'Hafalan Gerakan',  'level' => 'BSH'],
+                ],
+            ],
+            [
+                'id' => 'ek2', 'nama' => 'Mewarnai',
+                'assessments' => [
+                    ['nama' => 'Kerapian',          'level' => 'BSB'],
+                    ['nama' => 'Kreativitas Warna', 'level' => 'BSB'],
+                    ['nama' => 'Ketepatan Bidang',  'level' => 'BSH'],
+                ],
+            ],
+        ];
+
+        // Dummy konseling — diambil dari input perkembangan (aggregate / latest)
+        $konseling = [
+            [
+                'id' => 'con1', 'nama' => 'Perkembangan Sosial',
+                'assessments' => [
+                    ['nama' => 'Interaksi dengan teman', 'level' => 'BSH'],
+                    ['nama' => 'Kemampuan berbagi',      'level' => 'BSB'],
+                    ['nama' => 'Kepatuhan aturan',       'level' => 'BSH'],
+                ],
+            ],
+            [
+                'id' => 'con2', 'nama' => 'Perkembangan Emosi',
+                'assessments' => [
+                    ['nama' => 'Mengelola emosi',      'level' => 'BSH'],
+                    ['nama' => 'Empati terhadap teman','level' => 'MB'],
+                ],
+            ],
+            [
+                'id' => 'con3', 'nama' => 'Perkembangan Kognitif',
+                'assessments' => [
+                    ['nama' => 'Daya tangkap',         'level' => 'BSH'],
+                    ['nama' => 'Kreativitas berpikir', 'level' => 'BSB'],
+                ],
+            ],
+        ];
+
         $rapot = [
             'id'             => $id,
             'tahun_ajaran'   => '2025/2026',
@@ -279,21 +365,10 @@ class OrangTuaController extends Controller
                 'nama' => 'Ahmad Fauzi',
                 'nis'  => '20240001',
             ],
-            'guru'           => 'Bu Siti, S.Pd',
-            'nilai'          => [
-                'agama_moral'              => 'BSH',
-                'agama_moral_deskripsi'    => 'Ahmad memahami nilai-nilai agama dengan baik. Ia selalu berdoa sebelum dan sesudah kegiatan serta menunjukkan sikap sopan santun kepada teman dan guru.',
-                'fisik_motorik'            => 'BSB',
-                'fisik_motorik_deskripsi'  => 'Perkembangan fisik dan motorik Ahmad sangat baik. Ia sangat aktif dalam kegiatan gerak tubuh, mampu berlari, melompat, dan menangkap bola dengan koordinasi yang baik.',
-                'kognitif'                 => 'BSH',
-                'kognitif_deskripsi'       => 'Ahmad mampu mengenali bentuk, warna, dan angka sederhana. Ia menunjukkan kemampuan berpikir logis yang sesuai dengan usianya.',
-                'bahasa'                   => 'MB',
-                'bahasa_deskripsi'         => 'Ahmad mulai berkembang dalam kemampuan berbahasa. Ia mampu berkomunikasi dengan teman-temannya, namun masih perlu latihan dalam mengungkapkan ide secara runtut.',
-                'sosial_emosional'         => 'BSH',
-                'sosial_emosional_deskripsi' => 'Ahmad menunjukkan kemampuan bersosialisasi yang baik. Ia senang bermain bersama teman, mampu berbagi, dan menunjukkan empati kepada temannya.',
-                'seni'                     => 'BSB',
-                'seni_deskripsi'           => 'Ahmad memiliki bakat seni yang menonjol. Ia sangat antusias dalam kegiatan menggambar dan mewarnai, serta menunjukkan kreativitas yang tinggi.',
-            ],
+            'guru'             => 'Bu Siti, S.Pd',
+            'mata_pelajaran'   => $mataPelajaran,
+            'ekstrakurikuler'  => $ekstrakurikuler,
+            'konseling'        => $konseling,
             'kehadiran'      => [
                 'hadir' => 78,
                 'izin'  => 3,
