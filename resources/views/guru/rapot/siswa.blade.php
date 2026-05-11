@@ -351,49 +351,7 @@
         </div>
         @endif
 
-        {{-- ── 3. Bimbingan Konseling ────────────────────────────────────── --}}
-        @if (count($counselings) > 0)
-        <div class="form-section">
-            <div class="form-section__head">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 0 0 6 21.75a6.721 6.721 0 0 0 3.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.09.768 4.04 2.084 5.558a8.96 8.96 0 0 1-1.603 2.596.75.75 0 0 0 .53 1.28 6.72 6.72 0 0 0 1.543-.09Z" clip-rule="evenodd"/></svg>
-                <h3 class="form-section__title">Bimbingan Konseling</h3>
-            </div>
-            <div class="form-section__body">
-                @foreach ($counselings as $con)
-                    <div class="group-box">
-                        <div class="group-box__head">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd"/></svg>
-                            {{ $con['nama'] }}
-                        </div>
-                        <div class="group-box__body">
-                            @foreach ($con['assessments'] as $ca)
-                                @php
-                                    $caLvl = $scores['counseling'][$ca['id']] ?? null;
-                                    $caCls = $caLvl ? 'lv-' . strtolower($caLvl) : '';
-                                @endphp
-                                <div class="assessment-row">
-                                    <div class="assessment-row__label">{{ $ca['nama'] }}</div>
-                                    <div class="assessment-row__select">
-                                        <select name="counseling[{{ $ca['id'] }}]"
-                                                class="form-select {{ $caCls }}"
-                                                onchange="updateSelectStyle(this)">
-                                            <option value="">-- Pilih --</option>
-                                            <option value="BB"  {{ $caLvl === 'BB'  ? 'selected' : '' }}>BB</option>
-                                            <option value="MB"  {{ $caLvl === 'MB'  ? 'selected' : '' }}>MB</option>
-                                            <option value="BSH" {{ $caLvl === 'BSH' ? 'selected' : '' }}>BSH</option>
-                                            <option value="BSB" {{ $caLvl === 'BSB' ? 'selected' : '' }}>BSB</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-        @endif
-
-        {{-- ── 4. Catatan Guru ───────────────────────────────────────────── --}}
+        {{-- ── 3. Catatan Guru ───────────────────────────────────────────── --}}
         <div class="form-section">
             <div class="form-section__head">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z"/><path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z"/></svg>

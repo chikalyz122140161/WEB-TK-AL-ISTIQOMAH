@@ -22,23 +22,74 @@ class OrangTuaController extends Controller
         return view('orangtua.dashboard');
     }
 
+    private function dummyClassTermsForPresensi(): array
+    {
+        return [
+            [
+                'id'           => 'ct1',
+                'label'        => 'Kelas A1 — 2025/2026 Ganjil',
+                'tahun_ajaran' => '2025/2026',
+                'semester'     => 'Ganjil',
+                'kelas'        => 'A1',
+                'bulan_aktif'  => [7, 8, 9, 10, 11, 12], // Juli – Desember
+            ],
+            [
+                'id'           => 'ct2',
+                'label'        => 'Kelas A1 — 2024/2025 Genap',
+                'tahun_ajaran' => '2024/2025',
+                'semester'     => 'Genap',
+                'kelas'        => 'A1',
+                'bulan_aktif'  => [1, 2, 3, 4, 5, 6], // Januari – Juni
+            ],
+        ];
+    }
+
     public function presensi(Request $request)
     {
-        $bulan   = $request->input('bulan', now()->month);
-        $tahun   = $request->input('tahun', now()->year);
-        $student = $this->getStudentData();
+        $student     = $this->getStudentData();
+        $classTerms  = $this->dummyClassTermsForPresensi();
 
-        // Dummy presensi data
-        $presensiData = ['hadir' => 18, 'izin' => 2, 'sakit' => 1, 'alpa' => 0];
-        $detailPresensi = [
-            ['tanggal' => '02 Mar 2026', 'hari' => 'Senin', 'status' => 'hadir', 'keterangan' => '-'],
-            ['tanggal' => '03 Mar 2026', 'hari' => 'Selasa', 'status' => 'hadir', 'keterangan' => '-'],
-            ['tanggal' => '04 Mar 2026', 'hari' => 'Rabu', 'status' => 'izin', 'keterangan' => 'Acara keluarga'],
-            ['tanggal' => '05 Mar 2026', 'hari' => 'Kamis', 'status' => 'hadir', 'keterangan' => '-'],
-            ['tanggal' => '06 Mar 2026', 'hari' => 'Jumat', 'status' => 'sakit', 'keterangan' => 'Demam'],
-        ];
+        $classTermId = $request->input('class_term_id', $classTerms[0]['id']);
+        $bulan       = (int) $request->input('bulan', now()->month);
 
-        return view('orangtua.presensi', compact('student', 'presensiData', 'detailPresensi'));
+        $activeCt = collect($classTerms)->firstWhere('id', $classTermId) ?? $classTerms[0];
+
+        // Dummy presensi yang berbeda per (class_term, bulan) untuk simulasi
+        $seed = abs(crc32($classTermId . '_' . $bulan));
+        $hadir = 14 + ($seed % 6);
+        $izin  = ($seed >> 3) % 3;
+        $sakit = ($seed >> 5) % 3;
+        $alpa  = ($seed >> 7) % 2;
+        $presensiData = compact('hadir', 'izin', 'sakit', 'alpa');
+
+        // Detail presensi dummy untuk bulan terpilih
+        $namaBulan = \Carbon\Carbon::create()->month($bulan)->translatedFormat('F');
+        $tahun     = explode('/', $activeCt['tahun_ajaran'])[$bulan <= 6 ? 1 : 0];
+
+        $detailPresensi = [];
+        $statusPool = ['hadir', 'hadir', 'hadir', 'hadir', 'hadir', 'izin', 'sakit'];
+        $hariNames  = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+        for ($i = 1; $i <= 8; $i++) {
+            $tgl = sprintf('%02d', $i + 1);
+            $idx = ($seed + $i) % count($statusPool);
+            $status = $statusPool[$idx];
+            $ket = match ($status) {
+                'izin'  => 'Acara keluarga',
+                'sakit' => 'Demam',
+                default => '-',
+            };
+            $detailPresensi[] = [
+                'tanggal'    => "$tgl " . substr($namaBulan, 0, 3) . " $tahun",
+                'hari'       => $hariNames[($i - 1) % 5],
+                'status'     => $status,
+                'keterangan' => $ket,
+            ];
+        }
+
+        return view('orangtua.presensi', compact(
+            'student', 'presensiData', 'detailPresensi',
+            'classTerms', 'classTermId', 'bulan', 'activeCt', 'namaBulan', 'tahun'
+        ));
     }
 
     public function laporan(Request $request)

@@ -176,21 +176,25 @@
     {{-- Filter --}}
     <form action="{{ route('orangtua.presensi') }}" method="GET" class="filter-bar">
         <div class="filter-group">
-            <label>Pilih Bulan</label>
-            <select name="bulan">
-                @for ($m = 1; $m <= 12; $m++)
-                    <option value="{{ $m }}" {{ (request('bulan', now()->month) == $m) ? 'selected' : '' }}>
-                        {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
+            <label>Pilih Class Term</label>
+            <select name="class_term_id" id="selectClassTerm">
+                @foreach ($classTerms as $ct)
+                    <option value="{{ $ct['id'] }}"
+                            data-bulan="{{ json_encode($ct['bulan_aktif']) }}"
+                            {{ $classTermId === $ct['id'] ? 'selected' : '' }}>
+                        {{ $ct['label'] }}
                     </option>
-                @endfor
+                @endforeach
             </select>
         </div>
         <div class="filter-group">
-            <label>Pilih Tahun</label>
-            <select name="tahun">
-                @for ($y = now()->year; $y >= now()->year - 2; $y--)
-                    <option value="{{ $y }}" {{ (request('tahun', now()->year) == $y) ? 'selected' : '' }}>{{ $y }}</option>
-                @endfor
+            <label>Pilih Bulan</label>
+            <select name="bulan" id="selectBulan">
+                @foreach ($activeCt['bulan_aktif'] as $m)
+                    <option value="{{ $m }}" {{ (int)$bulan === (int)$m ? 'selected' : '' }}>
+                        {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
+                    </option>
+                @endforeach
             </select>
         </div>
         <button type="submit" class="btn-tampilkan">TAMPILKAN</button>
@@ -198,14 +202,10 @@
 
     {{-- Statistik Presensi --}}
     @php
-        $bulan = request('bulan', now()->month);
-        $tahun = request('tahun', now()->year);
-        $namaBulan = \Carbon\Carbon::create()->month($bulan)->translatedFormat('F');
-
-        $hadir = $presensiData['hadir'] ?? 18;
-        $izin = $presensiData['izin'] ?? 1;
-        $sakit = $presensiData['sakit'] ?? 1;
-        $alpa = $presensiData['alpa'] ?? 0;
+        $hadir = $presensiData['hadir'] ?? 0;
+        $izin  = $presensiData['izin']  ?? 0;
+        $sakit = $presensiData['sakit'] ?? 0;
+        $alpa  = $presensiData['alpa']  ?? 0;
         $total = $hadir + $izin + $sakit + $alpa;
         $persen = $total > 0 ? round(($hadir / $total) * 100) : 0;
     @endphp
@@ -236,7 +236,11 @@
     {{-- Detail Kehadiran --}}
     <div class="detail-section">
         <div class="detail-section__header">
-            DETAIL KEHADIRAN – {{ $namaBulan }} {{ $tahun }} | {{ $student->name ?? 'Ahmad Fauzi' }}
+            DETAIL KEHADIRAN – {{ $namaBulan }} {{ $tahun }}
+            <span style="color:#5D4037;font-weight:500;font-size:12px;margin-left:6px;">
+                ({{ $activeCt['label'] }})
+            </span>
+            | {{ $student['nama'] ?? 'Ahmad Fauzi' }}
         </div>
         <div style="overflow-x: auto;">
             <table class="data-table">
@@ -276,5 +280,23 @@
             </table>
         </div>
     </div>
+
+    <script>
+        // Filter bulan otomatis ter-update saat class_term diubah
+        (function () {
+            var BULAN_NAMA = ['', 'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+            var ctSel    = document.getElementById('selectClassTerm');
+            var bulanSel = document.getElementById('selectBulan');
+            if (!ctSel || !bulanSel) return;
+
+            ctSel.addEventListener('change', function () {
+                var opt = ctSel.options[ctSel.selectedIndex];
+                var bulanList = JSON.parse(opt.dataset.bulan || '[]');
+                bulanSel.innerHTML = bulanList.map(function (m) {
+                    return '<option value="' + m + '">' + BULAN_NAMA[m] + '</option>';
+                }).join('');
+            });
+        })();
+    </script>
 
 @endsection
