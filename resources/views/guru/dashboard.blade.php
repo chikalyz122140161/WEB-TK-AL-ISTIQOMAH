@@ -13,134 +13,307 @@
 
 @push('styles')
 <style>
-    .section-header {
+    /* ─── Hero Banner ─── */
+    .db-hero {
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 50%, #2E8B60 100%);
+        border-radius: 16px;
+        padding: 22px 28px;
+        margin-bottom: 22px;
         display: flex;
         align-items: center;
-        gap: 12px;
-        margin-bottom: 16px;
-        padding-bottom: 12px;
-        border-bottom: 2px solid #4CAF82;
+        justify-content: space-between;
+        gap: 16px;
+        color: #fff;
+        box-shadow: 0 4px 20px rgba(61,155,114,0.22);
     }
-    .section-header__icon {
-        width: 40px;
-        height: 40px;
-        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
-        border-radius: 10px;
+    .db-hero__title { font-size: 20px; font-weight: 700; margin: 0 0 4px; }
+    .db-hero__sub   { font-size: 13px; opacity: .82; margin: 0; }
+    .db-hero__pills { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .db-hero__pill  {
+        background: rgba(255,255,255,.18);
+        border: 1px solid rgba(255,255,255,.28);
+        border-radius: 20px;
+        padding: 5px 13px;
+        font-size: 12px;
+        font-weight: 600;
         display: flex;
         align-items: center;
-        justify-content: center;
+        gap: 5px;
     }
-    .section-header__icon svg {
-        width: 22px;
-        height: 22px;
-        fill: #ffffff;
+    .db-hero__pill svg { width: 13px; height: 13px; fill: currentColor; flex-shrink: 0; }
+    @media (max-width: 768px) {
+        .db-hero { flex-direction: column; align-items: flex-start; }
+        .db-hero__pills { justify-content: flex-start; }
     }
-    .section-header__text h2 {
-        font-size: 18px;
-        font-weight: 700;
-        color: #3E2723;
-        margin: 0;
-    }
-    .section-header__text p {
-        font-size: 13px;
-        color: #5D4037;
-        margin: 2px 0 0;
-    }
-    .section-wrapper {
-        margin-bottom: 32px;
-    }
-    .stat-row-3 {
+
+    /* ─── Stat Row ─── */
+    .db-stat-row {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 16px;
+        gap: 14px;
+        margin-bottom: 24px;
+    }
+    @media (max-width: 1024px) { .db-stat-row { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px)  { .db-stat-row { grid-template-columns: 1fr; } }
+
+    /* Shared label / value / sub */
+    .dbs-label {
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: .07em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,.82);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 4px;
+    }
+    .dbs-label svg { width: 13px; height: 13px; fill: currentColor; flex-shrink: 0; }
+    .dbs-label--dark { color: rgba(62,39,35,.6); }
+    .dbs-val {
+        font-size: 40px;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.1;
+        margin-bottom: 3px;
+    }
+    .dbs-val--dark { color: #3E2723; }
+    .dbs-sub { font-size: 12px; color: rgba(255,255,255,.75); }
+    .dbs-sub--dark { color: rgba(62,39,35,.55); }
+
+    /* ─── Green Card (Total Siswa + Hadir) ─── */
+    .dbs-green {
+        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 55%, #2E8B60 100%);
+        border-radius: 16px;
+        padding: 20px 22px;
+        color: #fff;
+    }
+    .dbs-green__top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 8px;
+    }
+    .dbs-green__top > div:last-child .dbs-label { justify-content: flex-end; }
+    .dbs-green__values {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
         margin-bottom: 16px;
     }
-    @media (max-width: 1024px) {
-        .stat-row-3 { grid-template-columns: repeat(2, 1fr); }
+    .dbs-green__values > div:last-child { text-align: right; }
+    .dbs-green__bar-wrap {
+        background: rgba(255,255,255,.25);
+        border-radius: 6px;
+        height: 6px;
+        overflow: hidden;
+        margin-bottom: 7px;
     }
-    @media (max-width: 768px) {
-        .stat-row-3 { grid-template-columns: 1fr; }
+    .dbs-green__bar-fill {
+        height: 100%;
+        background: #fff;
+        border-radius: 6px;
+        transition: width .6s ease;
     }
+    .dbs-green__bar-label { font-size: 11px; color: rgba(255,255,255,.75); }
+
+    /* ─── Yellow Card (2 stats stacked) ─── */
+    .dbs-yellow {
+        background: #FFF176;
+        border-radius: 16px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+    .dbs-yellow__item { padding: 18px 22px; flex: 1; }
+    .dbs-sep { height: 1px; background: rgba(62,39,35,.1); margin: 0 22px; }
+
+    /* ─── Pink Card (2 stats stacked) ─── */
+    .dbs-pink {
+        background: #F06292;
+        border-radius: 16px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+    .dbs-pink__item { padding: 18px 22px; flex: 1; }
+    .dbs-sep--light { background: rgba(255,255,255,.22); margin: 0; }
+
+    /* ─── Bottom Grid ─── */
+    .db-bottom {
+        display: grid;
+        grid-template-columns: 1fr 360px;
+        gap: 16px;
+        align-items: start;
+    }
+    @media (max-width: 1100px) { .db-bottom { grid-template-columns: 1fr; } }
+
+    /* ─── Jadwal Stack ─── */
+    .db-jadwal-stack > .card + .card { margin-top: 14px; }
 </style>
 @endpush
 
-    {{-- ═══════════════════════════════════════════════════════
-         SECTION: ADMINISTRASI 
-    ═══════════════════════════════════════════════════════ --}}
-    <div class="section-wrapper">
-        <div class="section-header">
-            <div class="section-header__icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M7.502 6h7.128A3.375 3.375 0 0 1 18 9.375v9.375a3 3 0 0 0 3-3V6.108c0-1.505-1.125-2.811-2.664-2.94a48.972 48.972 0 0 0-.673-.05A3 3 0 0 0 15 1.5h-1.5a3 3 0 0 0-2.663 1.618c-.225.015-.45.032-.673.05C8.662 3.295 7.554 4.542 7.502 6ZM13.5 3A1.5 1.5 0 0 0 12 4.5h4.5A1.5 1.5 0 0 0 15 3h-1.5Z" clip-rule="evenodd"/><path fill-rule="evenodd" d="M3 9.375C3 8.339 3.84 7.5 4.875 7.5h9.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 0 1 3 20.625V9.375Zm9.586 4.594a.75.75 0 0 0-1.172-.938l-2.476 3.096-.908-.907a.75.75 0 0 0-1.06 1.06l1.5 1.5a.75.75 0 0 0 1.116-.062l3-3.75Z" clip-rule="evenodd"/></svg>
+{{-- ═══════════════════ HERO BANNER ═══════════════════ --}}
+<div class="db-hero">
+    <div>
+        <p class="db-hero__title">Selamat Datang Kembali &#128075;</p>
+        <p class="db-hero__sub">Semester Ganjil 2025/2026 &nbsp;&middot;&nbsp; Kelas A1 &amp; B1</p>
+    </div>
+    <div class="db-hero__pills">
+        <span class="db-hero__pill">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.49 4.49 0 0 1-3.498-1.306 4.491 4.491 0 0 1-1.307-3.498A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 0 1 1.307-3.497 4.49 4.49 0 0 1 3.497-1.307Zm7.007 6.387a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
+            {{ $hadirHariIni ?? 18 }} / {{ $totalSiswa ?? 36 }} Hadir
+        </span>
+        <span class="db-hero__pill">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4.913 2.658c2.075-.27 4.19-.408 6.337-.408 2.147 0 4.262.139 6.337.408 1.922.25 3.291 1.861 3.405 3.727a4.403 4.403 0 0 0-1.032-.211 50.89 50.89 0 0 0-8.42 0c-2.358.196-4.04 2.19-4.04 4.434v4.286a4.47 4.47 0 0 0 2.433 3.984L7.28 21.53A.75.75 0 0 1 6 21v-4.03a48.527 48.527 0 0 1-1.087-.128C2.905 16.58 1.5 14.833 1.5 12.862V6.638c0-1.97 1.405-3.718 3.413-3.979Z"/><path d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 0 0 1.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0 0 15.75 7.5Z"/></svg>
+            {{ $pesanBelumDibaca ?? 3 }} Pesan Baru
+        </span>
+        <span class="db-hero__pill">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/></svg>
+            {{ $konselingBulanIni ?? 15 }} Konseling
+        </span>
+    </div>
+</div>
+
+{{-- ═══════════════════ STAT CARDS ═══════════════════ --}}
+@php
+    $totalS  = $totalSiswa ?? 36;
+    $hadirS  = $hadirHariIni ?? 18;
+    $pct     = $totalS > 0 ? round($hadirS / $totalS * 100) : 0;
+@endphp
+<div class="db-stat-row">
+
+    {{-- GREEN: Total Siswa + Hadir --}}
+    <div class="dbs-green">
+        <div class="dbs-green__top">
+            <div>
+                <div class="dbs-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2 7.5 4.019 7.5 6.5ZM20 21h1.5a.5.5 0 0 0 .5-.5C22 17.57 18.43 14 14.5 14h-5C5.57 14 2 17.57 2 20.5a.5.5 0 0 0 .5.5H20Z"/></svg>
+                    Total Siswa
+                </div>
             </div>
-            <div class="section-header__text">
-                <h2>Administrasi</h2>
-                <p>Kelola kehadiran, laporan, dan jadwal kegiatan</p>
+            <div>
+                <div class="dbs-label">Hadir</div>
             </div>
         </div>
-
-        <div class="stat-row-3">
-            <div class="stat-card stat-card--primary">
-                <div class="stat-card__header">
-                    <span class="stat-card__label">Hadir Hari Ini</span>
-                    <svg class="stat-card__icon stat-card__icon--green" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.49 4.49 0 0 1-3.498-1.306 4.491 4.491 0 0 1-1.307-3.498A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 0 1 1.307-3.497 4.49 4.49 0 0 1 3.497-1.307Zm7.007 6.387a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
-                </div>
-                <div class="stat-card__value">{{ $hadirHariIni ?? 18 }}</div>
-                <div class="stat-card__sub">dari {{ $totalSiswa ?? 22 }} siswa</div>
+        <div class="dbs-green__values">
+            <div>
+                <div class="dbs-val">{{ $totalS }}</div>
+                <div class="dbs-sub">Siswa aktif</div>
             </div>
-            <div class="stat-card stat-card--secondary">
-                <div class="stat-card__header">
-                    <span class="stat-card__label">Laporan Bulan Ini</span>
-                    <svg class="stat-card__icon stat-card__icon--amber" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625ZM7.5 15a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 7.5 15Zm.75 2.25a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H8.25Z" clip-rule="evenodd"/><path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z"/></svg>
-                </div>
-                <div class="stat-card__value">{{ $laporanBulanIni ?? 10 }}</div>
-                <div class="stat-card__sub">Laporan dibuat</div>
-            </div>
-            <div class="stat-card stat-card--accent">
-                <div class="stat-card__header">
-                    <span class="stat-card__label">Jadwal Kegiatan</span>
-                    <svg class="stat-card__icon stat-card__icon--rose" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/></svg>
-                </div>
-                <div class="stat-card__value">{{ $jadwalMingguIni ?? 5 }}</div>
-                <div class="stat-card__sub">Minggu ini</div>
+            <div>
+                <div class="dbs-val">{{ $hadirS }}</div>
+                <div class="dbs-sub">Hari ini</div>
             </div>
         </div>
+        <div class="dbs-green__bar-wrap">
+            <div class="dbs-green__bar-fill" style="width:{{ $pct }}%"></div>
+        </div>
+        <div class="dbs-green__bar-label">{{ $hadirS }} dari {{ $totalS }} hadir ({{ $pct }}%)</div>
+    </div>
 
-        <div class="bottom-row">
-            {{-- Update Administrasi --}}
-            <div class="update-list">
-                <div class="update-list__header">
-                    <span class="update-list__title">Update Administrasi</span>
-                    <span class="update-list__count">{{ count($updateAdmin ?? [1,2,3]) }} baru</span>
-                </div>
-                @forelse ($updateAdmin ?? [
-                    ['title' => 'Laporan Ahmad Fauzi Dibuat', 'subtitle' => 'Laporan kehadiran', 'time' => '1 jam lalu', 'badge' => 'Laporan', 'badge_type' => 'done', 'initial' => 'L', 'link' => 'guru.laporan.index'],
-                    ['title' => 'Kehadiran Hari Ini Dicatat', 'subtitle' => '22 siswa tercatat', 'time' => '3 jam lalu', 'badge' => 'Kehadiran', 'badge_type' => 'new', 'initial' => 'K', 'link' => 'guru.kehadiran.index'],
-                    ['title' => 'Jadwal Upacara Ditambahkan', 'subtitle' => 'Senin, 10 Maret 2026', 'time' => 'Kemarin', 'badge' => 'Jadwal', 'badge_type' => 'info', 'initial' => 'J', 'link' => 'guru.jadwal.index'],
-                ] as $update)
-                    <a href="{{ route($update['link']) }}" class="update-item" style="text-decoration:none;display:flex;">
-                        <div class="update-item__avatar">{{ $update['initial'] ?? 'U' }}</div>
-                        <div class="update-item__body">
-                            <div class="update-item__title">{{ $update['title'] }}</div>
-                            <div class="update-item__subtitle">{{ $update['subtitle'] ?? '' }}</div>
-                        </div>
-                        <div class="update-item__meta">
-                            <span class="update-item__time">{{ $update['time'] }}</span>
-                            <span class="update-item__badge update-item__badge--{{ $update['badge_type'] ?? 'info' }}">{{ $update['badge'] ?? '' }}</span>
-                        </div>
-                        <svg class="update-item__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
-                    </a>
-                @empty
-                    <div style="padding:16px;font-size:13px;color:#5D4037;">Belum ada update.</div>
-                @endforelse
+    {{-- YELLOW: Konseling + Laporan --}}
+    <div class="dbs-yellow">
+        <div class="dbs-yellow__item">
+            <div class="dbs-label dbs-label--dark">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.49 4.49 0 0 1-3.498-1.306 4.491 4.491 0 0 1-1.307-3.498A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 0 1 1.307-3.497 4.49 4.49 0 0 1 3.497-1.307Zm7.007 6.387a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
+                Konseling Bulan Ini
             </div>
+            <div class="dbs-val dbs-val--dark">{{ $konselingBulanIni ?? 15 }}</div>
+            <div class="dbs-sub dbs-sub--dark">Sesi selesai &amp; terjadwal</div>
+        </div>
+        <div class="dbs-sep"></div>
+        <div class="dbs-yellow__item">
+            <div class="dbs-label dbs-label--dark">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625ZM7.5 15a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 7.5 15Zm.75 2.25a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H8.25Z" clip-rule="evenodd"/><path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z"/></svg>
+                Laporan Bulan Ini
+            </div>
+            <div class="dbs-val dbs-val--dark">{{ $laporanBulanIni ?? 10 }}</div>
+            <div class="dbs-sub dbs-sub--dark">Laporan dibuat</div>
+        </div>
+    </div>
 
-            {{-- Jadwal Kegiatan Mendatang --}}
-            <div class="card">
-                <div class="card__header">
-                    <span class="card__title">Jadwal Kegiatan Mendatang</span>
-                    <span class="card__badge">{{ count($jadwalKegiatan ?? [1,2]) }} kegiatan</span>
+    {{-- PINK: Jadwal + Pesan --}}
+    <div class="dbs-pink">
+        <div class="dbs-pink__item">
+            <div class="dbs-label">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/></svg>
+                Jadwal Kegiatan
+            </div>
+            <div class="dbs-val">{{ $jadwalMingguIni ?? 5 }}</div>
+            <div class="dbs-sub">Minggu ini</div>
+        </div>
+        <div class="dbs-sep dbs-sep--light"></div>
+        <div class="dbs-pink__item">
+            <div class="dbs-label">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4.913 2.658c2.075-.27 4.19-.408 6.337-.408 2.147 0 4.262.139 6.337.408 1.922.25 3.291 1.861 3.405 3.727a4.403 4.403 0 0 0-1.032-.211 50.89 50.89 0 0 0-8.42 0c-2.358.196-4.04 2.19-4.04 4.434v4.286a4.47 4.47 0 0 0 2.433 3.984L7.28 21.53A.75.75 0 0 1 6 21v-4.03a48.527 48.527 0 0 1-1.087-.128C2.905 16.58 1.5 14.833 1.5 12.862V6.638c0-1.97 1.405-3.718 3.413-3.979Z"/><path d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 0 0 1.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0 0 15.75 7.5Z"/></svg>
+                Pesan Belum Dibaca
+            </div>
+            <div class="dbs-val">{{ $pesanBelumDibaca ?? 3 }}</div>
+            <div class="dbs-sub">Dari orang tua</div>
+        </div>
+    </div>
+
+</div>
+
+{{-- ═══════════════════ BOTTOM: ACTIVITY FEED + JADWAL ═══════════════════ --}}
+<div class="db-bottom">
+
+    {{-- Combined Activity Feed --}}
+    <div class="update-list">
+        <div class="update-list__header">
+            <span class="update-list__title">Aktivitas Terbaru</span>
+            <span class="update-list__count">6 baru</span>
+        </div>
+
+        @foreach ($updateAdmin ?? [
+            ['title' => 'Laporan Ahmad Fauzi Dibuat', 'subtitle' => 'Laporan kehadiran', 'time' => '1 jam lalu', 'badge' => 'Laporan', 'badge_type' => 'done', 'initial' => 'L', 'link' => 'guru.laporan.index'],
+            ['title' => 'Kehadiran Hari Ini Dicatat', 'subtitle' => '22 siswa tercatat', 'time' => '3 jam lalu', 'badge' => 'Kehadiran', 'badge_type' => 'new', 'initial' => 'K', 'link' => 'guru.kehadiran.index'],
+            ['title' => 'Jadwal Upacara Ditambahkan', 'subtitle' => 'Senin, 10 Maret 2026', 'time' => 'Kemarin', 'badge' => 'Jadwal', 'badge_type' => 'info', 'initial' => 'J', 'link' => 'guru.jadwal.index'],
+        ] as $update)
+            <a href="{{ route($update['link']) }}" class="update-item" style="text-decoration:none;display:flex;">
+                <div class="update-item__avatar">{{ $update['initial'] ?? 'U' }}</div>
+                <div class="update-item__body">
+                    <div class="update-item__title">{{ $update['title'] }}</div>
+                    <div class="update-item__subtitle">{{ $update['subtitle'] ?? '' }}</div>
                 </div>
-                <div class="card__body">
+                <div class="update-item__meta">
+                    <span class="update-item__time">{{ $update['time'] }}</span>
+                    <span class="update-item__badge update-item__badge--{{ $update['badge_type'] ?? 'info' }}">{{ $update['badge'] ?? '' }}</span>
+                </div>
+                <svg class="update-item__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+            </a>
+        @endforeach
+
+        @foreach ($updateBK ?? [
+            ['title' => 'Konseling Selesai - Muhammad', 'subtitle' => 'Sesi konseling individual', 'time' => '2 jam lalu', 'badge' => 'Selesai', 'badge_type' => 'done', 'initial' => 'M', 'link' => 'guru.jadwal_konseling'],
+            ['title' => 'Input Perkembangan - Anisa', 'subtitle' => 'Data perkembangan baru', 'time' => '1 hari lalu', 'badge' => 'Baru', 'badge_type' => 'new', 'initial' => 'A', 'link' => 'guru.input_perkembangan'],
+            ['title' => 'Pesan dari Orang Tua Tika', 'subtitle' => 'Konsultasi jadwal', 'time' => '2 hari lalu', 'badge' => 'Pesan', 'badge_type' => 'info', 'initial' => 'T', 'link' => 'guru.chat'],
+        ] as $update)
+            <a href="{{ route($update['link']) }}" class="update-item" style="text-decoration:none;display:flex;">
+                <div class="update-item__avatar">{{ $update['initial'] ?? 'U' }}</div>
+                <div class="update-item__body">
+                    <div class="update-item__title">{{ $update['title'] }}</div>
+                    <div class="update-item__subtitle">{{ $update['subtitle'] ?? '' }}</div>
+                </div>
+                <div class="update-item__meta">
+                    <span class="update-item__time">{{ $update['time'] }}</span>
+                    <span class="update-item__badge update-item__badge--{{ $update['badge_type'] ?? 'info' }}">{{ $update['badge'] ?? '' }}</span>
+                </div>
+                <svg class="update-item__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+            </a>
+        @endforeach
+    </div>
+
+    {{-- Jadwal Cards Stacked --}}
+    <div class="db-jadwal-stack">
+
+        <div class="card">
+            <div class="card__header">
+                <span class="card__title">Jadwal Kegiatan</span>
+                <span class="card__badge">{{ count($jadwalKegiatan ?? [1,2]) }} kegiatan</span>
+            </div>
+            <div class="card__body">
                 @forelse ($jadwalKegiatan ?? [
                     ['tanggal' => 'Senin, 10 Maret 2026', 'waktu' => '07:00 - 08:00 WIB', 'topik' => 'Upacara Bendera'],
                     ['tanggal' => 'Minggu, 16 Maret 2026', 'waktu' => '08:00 - 12:00 WIB', 'topik' => 'Outing Class - Kebun Binatang'],
@@ -166,88 +339,15 @@
                 @empty
                     <p style="font-size:13px;color:#5D4037;">Belum ada jadwal mendatang.</p>
                 @endforelse
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- ═══════════════════════════════════════════════════════
-         SECTION: BIMBINGAN KONSELING 
-    ═══════════════════════════════════════════════════════ --}}
-    <div class="section-wrapper">
-        <div class="section-header">
-            <div class="section-header__icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM17.25 19.128l-.001.144a2.25 2.25 0 0 1-.233.96 10.088 10.088 0 0 0 5.06-1.01.75.75 0 0 0 .42-.643 4.875 4.875 0 0 0-6.957-4.611 8.586 8.586 0 0 1 1.71 5.157v.003Z"/></svg>
-            </div>
-            <div class="section-header__text">
-                <h2>Bimbingan Konseling</h2>
-                <p>Pantau perkembangan siswa dan kelola konseling</p>
             </div>
         </div>
 
-        <div class="stat-row-3">
-            <div class="stat-card stat-card--primary">
-                <div class="stat-card__header">
-                    <span class="stat-card__label">Total Siswa</span>
-                    <svg class="stat-card__icon stat-card__icon--green" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2 7.5 4.019 7.5 6.5ZM20 21h1.5a.5.5 0 0 0 .5-.5C22 17.57 18.43 14 14.5 14h-5C5.57 14 2 17.57 2 20.5a.5.5 0 0 0 .5.5H20Z"/></svg>
-                </div>
-                <div class="stat-card__value">{{ $totalSiswa ?? 22 }}</div>
-                <div class="stat-card__sub">Siswa aktif terdaftar</div>
+        <div class="card">
+            <div class="card__header">
+                <span class="card__title">Jadwal Konseling</span>
+                <span class="card__badge">{{ count($jadwalKonselingMendatang ?? [1]) }} jadwal</span>
             </div>
-            <div class="stat-card stat-card--secondary">
-                <div class="stat-card__header">
-                    <span class="stat-card__label">Konseling Bulan Ini</span>
-                    <svg class="stat-card__icon stat-card__icon--amber" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.49 4.49 0 0 1-3.498-1.306 4.491 4.491 0 0 1-1.307-3.498A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 0 1 1.307-3.497 4.49 4.49 0 0 1 3.497-1.307Zm7.007 6.387a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
-                </div>
-                <div class="stat-card__value">{{ $konselingBulanIni ?? 15 }}</div>
-                <div class="stat-card__sub">Sesi selesai & terjadwal</div>
-            </div>
-            <div class="stat-card stat-card--accent">
-                <div class="stat-card__header">
-                    <span class="stat-card__label">Pesan Belum Dibaca</span>
-                    <svg class="stat-card__icon stat-card__icon--rose" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4.913 2.658c2.075-.27 4.19-.408 6.337-.408 2.147 0 4.262.139 6.337.408 1.922.25 3.291 1.861 3.405 3.727a4.403 4.403 0 0 0-1.032-.211 50.89 50.89 0 0 0-8.42 0c-2.358.196-4.04 2.19-4.04 4.434v4.286a4.47 4.47 0 0 0 2.433 3.984L7.28 21.53A.75.75 0 0 1 6 21v-4.03a48.527 48.527 0 0 1-1.087-.128C2.905 16.58 1.5 14.833 1.5 12.862V6.638c0-1.97 1.405-3.718 3.413-3.979Z"/><path d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 0 0 1.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0 0 15.75 7.5Z"/></svg>
-                </div>
-                <div class="stat-card__value">{{ $pesanBelumDibaca ?? 3 }}</div>
-                <div class="stat-card__sub">Dari orang tua</div>
-            </div>
-        </div>
-
-        <div class="bottom-row">
-            {{-- Update BK --}}
-            <div class="update-list">
-                <div class="update-list__header">
-                    <span class="update-list__title">Update Bimbingan Konseling</span>
-                    <span class="update-list__count">{{ count($updateBK ?? [1,2,3]) }} baru</span>
-                </div>
-                @forelse ($updateBK ?? [
-                    ['title' => 'Konseling Selesai - Muhammad', 'subtitle' => 'Sesi konseling individual', 'time' => '2 jam lalu', 'badge' => 'Selesai', 'badge_type' => 'done', 'initial' => 'M', 'link' => 'guru.jadwal_konseling'],
-                    ['title' => 'Input Perkembangan - Anisa', 'subtitle' => 'Data perkembangan baru', 'time' => '1 hari lalu', 'badge' => 'Baru', 'badge_type' => 'new', 'initial' => 'A', 'link' => 'guru.input_perkembangan'],
-                    ['title' => 'Pesan dari Orang Tua Tika', 'subtitle' => 'Konsultasi jadwal', 'time' => '2 hari lalu', 'badge' => 'Pesan', 'badge_type' => 'info', 'initial' => 'T', 'link' => 'guru.chat'],
-                ] as $update)
-                    <a href="{{ route($update['link']) }}" class="update-item" style="text-decoration:none;display:flex;">
-                        <div class="update-item__avatar">{{ $update['initial'] ?? 'U' }}</div>
-                        <div class="update-item__body">
-                            <div class="update-item__title">{{ $update['title'] }}</div>
-                            <div class="update-item__subtitle">{{ $update['subtitle'] ?? '' }}</div>
-                        </div>
-                        <div class="update-item__meta">
-                            <span class="update-item__time">{{ $update['time'] }}</span>
-                            <span class="update-item__badge update-item__badge--{{ $update['badge_type'] ?? 'info' }}">{{ $update['badge'] ?? '' }}</span>
-                        </div>
-                        <svg class="update-item__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
-                    </a>
-                @empty
-                    <div style="padding:16px;font-size:13px;color:#5D4037;">Belum ada update.</div>
-                @endforelse
-            </div>
-
-            {{-- Jadwal Konseling Mendatang --}}
-            <div class="card">
-                <div class="card__header">
-                    <span class="card__title">Jadwal Konseling Mendatang</span>
-                    <span class="card__badge">{{ count($jadwalKonselingMendatang ?? [1]) }} jadwal</span>
-                </div>
-                <div class="card__body">
+            <div class="card__body">
                 @forelse ($jadwalKonselingMendatang ?? [
                     ['tanggal' => 'Jumat, 7 Maret 2026', 'waktu' => '10:00 - 11:00 WIB', 'topik' => 'Perkembangan Sosial Ahmad'],
                 ] as $jadwal)
@@ -272,9 +372,10 @@
                 @empty
                     <p style="font-size:13px;color:#5D4037;">Belum ada jadwal mendatang.</p>
                 @endforelse
-                </div>
             </div>
         </div>
-    </div>
+
+    </div>{{-- end db-jadwal-stack --}}
+</div>{{-- end db-bottom --}}
 
 @endsection
