@@ -189,6 +189,7 @@
                     <th>No</th>
                     <th>Tanggal</th>
                     <th>Waktu</th>
+                    <th>Dari</th>
                     <th>Orang Tua</th>
                     <th>Siswa</th>
                     <th>Topik</th>
@@ -202,6 +203,18 @@
                     <td>{{ $i + 1 }}</td>
                     <td>{{ $row['tanggal'] }}</td>
                     <td style="white-space:nowrap;">{{ $row['waktu'] }}</td>
+                    <td>
+                        @php $dari = $row['dari'] ?? 'guru'; @endphp
+                        @if ($dari === 'orang_tua')
+                            <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px;background:#FFF176;color:#5D4037;border:1px solid #e6db00;white-space:nowrap;">
+                                ORANG TUA
+                            </span>
+                        @else
+                            <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px;background:rgba(76,175,130,0.15);color:#2E8B60;border:1px solid rgba(76,175,130,0.4);white-space:nowrap;">
+                                GURU
+                            </span>
+                        @endif
+                    </td>
                     <td>{{ $row['orang_tua'] }}</td>
                     <td>{{ $row['siswa'] }}</td>
                     <td>{{ $row['topik'] }}</td>
@@ -236,7 +249,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="8">
+                    <td colspan="9">
                         <div class="empty-state">Belum ada jadwal konseling bulan ini.</div>
                     </td>
                 </tr>

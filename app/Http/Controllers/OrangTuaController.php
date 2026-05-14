@@ -520,7 +520,76 @@ class OrangTuaController extends Controller
 
     public function konseling()
     {
-        return view('orangtua.konseling');
+        // Dummy jadwal konseling yang dibuat oleh GURU untuk anak ini
+        $jadwalDariGuru = [
+            [
+                'id'      => 101,
+                'tanggal' => '05 Mar 2026',
+                'waktu'   => '09:00 - 10:00',
+                'guru'    => 'Bu Siti, S.Pd',
+                'topik'   => 'Perkembangan Sosial',
+                'status'  => 'disetujui',
+                'catatan' => 'Mohon hadir tepat waktu di ruang konseling lantai 2.',
+            ],
+            [
+                'id'      => 102,
+                'tanggal' => '20 Mar 2026',
+                'waktu'   => '13:00 - 14:00',
+                'guru'    => 'Bu Siti, S.Pd',
+                'topik'   => 'Tindak Lanjut Hasil Asesmen',
+                'status'  => 'disetujui',
+                'catatan' => 'Akan dibahas hasil asesmen mingguan terbaru.',
+            ],
+            [
+                'id'      => 103,
+                'tanggal' => '02 Feb 2026',
+                'waktu'   => '10:00 - 11:00',
+                'guru'    => 'Pak Ahmad',
+                'topik'   => 'Konsultasi Awal Semester',
+                'status'  => 'selesai',
+                'catatan' => 'Sudah selesai. Catatan: Anak menunjukkan perkembangan baik.',
+            ],
+        ];
+
+        // Dummy riwayat pengajuan yang diajukan ORANG TUA sendiri
+        $riwayatPengajuan = [
+            [
+                'id'      => 201,
+                'tanggal' => '15 Mar 2026',
+                'waktu'   => '11:00 - 12:00',
+                'guru'    => 'Bu Siti, S.Pd',
+                'topik'   => 'Diskusi Pola Belajar di Rumah',
+                'status'  => 'pending',
+            ],
+            [
+                'id'      => 202,
+                'tanggal' => '18 Mar 2026',
+                'waktu'   => '14:00 - 15:00',
+                'guru'    => 'Pak Ahmad',
+                'topik'   => 'Konsultasi Perilaku',
+                'status'  => 'disetujui',
+            ],
+            [
+                'id'      => 203,
+                'tanggal' => '25 Nov 2024',
+                'waktu'   => '09:00 - 10:00',
+                'guru'    => 'Pak Ahmad',
+                'topik'   => 'Perkembangan sosial-emosional',
+                'status'  => 'selesai',
+            ],
+        ];
+
+        // Daftar guru BK untuk dropdown form pengajuan
+        $guruBK = [
+            ['id' => 1, 'nama' => 'Pak Ahmad - Konselor'],
+            ['id' => 2, 'nama' => 'Bu Siti, S.Pd - Guru Kelas TK A'],
+        ];
+
+        $student = $this->getStudentData();
+
+        return view('orangtua.konseling', compact(
+            'jadwalDariGuru', 'riwayatPengajuan', 'guruBK', 'student'
+        ));
     }
 
     public function ajukanKonseling(Request $request)

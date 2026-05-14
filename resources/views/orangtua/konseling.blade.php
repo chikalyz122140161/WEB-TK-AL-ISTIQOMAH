@@ -302,9 +302,61 @@
     <div class="info-alert">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd"/></svg>
         <div class="info-alert__text">
-            Konseling dapat dijadwalkan pada hari kerja (Senin - Jumat) pukul 08:00 - 15:00. 
+            Konseling dapat dijadwalkan pada hari kerja (Senin - Jumat) pukul 08:00 - 15:00.
             Setelah pengajuan disetujui, Anda akan mendapat notifikasi melalui SMS dan email.
         </div>
+    </div>
+
+    {{-- Jadwal Konseling dari Guru --}}
+    <div class="history-card" style="margin-bottom:24px;">
+        <div class="history-card__header">
+            <h3 class="history-card__title" style="display:inline-flex;align-items:center;gap:8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#3D9B72" width="18" height="18"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
+                Jadwal Konseling dari Guru
+            </h3>
+            <span style="font-size:11px;color:#5D4037;background:rgba(76,175,130,0.12);padding:3px 10px;border-radius:99px;border:1px solid rgba(76,175,130,0.3);font-weight:600;">
+                {{ count($jadwalDariGuru ?? []) }} jadwal
+            </span>
+        </div>
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Waktu</th>
+                    <th>Guru</th>
+                    <th>Topik</th>
+                    <th>Status</th>
+                    <th>Catatan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($jadwalDariGuru ?? [] as $jadwal)
+                    @php
+                        $statusMap = [
+                            'pending'   => ['cls' => 'pending',   'label' => 'Menunggu'],
+                            'disetujui' => ['cls' => 'approved',  'label' => 'Disetujui'],
+                            'selesai'   => ['cls' => 'completed', 'label' => 'Selesai'],
+                            'ditolak'   => ['cls' => 'cancelled', 'label' => 'Ditolak'],
+                        ];
+                        $st = $statusMap[$jadwal['status']] ?? ['cls' => 'pending', 'label' => $jadwal['status']];
+                    @endphp
+                    <tr>
+                        <td>{{ $jadwal['tanggal'] }}</td>
+                        <td>{{ $jadwal['waktu'] }}</td>
+                        <td>{{ $jadwal['guru'] }}</td>
+                        <td>{{ $jadwal['topik'] }}</td>
+                        <td><span class="status-badge status-badge--{{ $st['cls'] }}">{{ $st['label'] }}</span></td>
+                        <td style="font-size:12px;color:#5D4037;">{{ $jadwal['catatan'] ?: '—' }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" style="text-align:center;padding:30px;color:#9ca3af;font-style:italic;">
+                            Belum ada jadwal konseling dari guru.
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 
     {{-- Form Pengajuan --}}
@@ -357,10 +409,16 @@
         </div>
     </form>
 
-    {{-- Riwayat Konseling --}}
+    {{-- Riwayat Pengajuan Sendiri --}}
     <div class="history-card">
         <div class="history-card__header">
-            <h3 class="history-card__title">Riwayat Pengajuan Konseling</h3>
+            <h3 class="history-card__title" style="display:inline-flex;align-items:center;gap:8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#3D9B72" width="18" height="18"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
+                Riwayat Pengajuan Konseling
+            </h3>
+            <span style="font-size:11px;color:#5D4037;background:#FFF176;padding:3px 10px;border-radius:99px;border:1px solid #e6db00;font-weight:600;">
+                {{ count($riwayatPengajuan ?? []) }} pengajuan
+            </span>
         </div>
         <table class="history-table">
             <thead>
@@ -373,27 +431,30 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>25 Nov 2024</td>
-                    <td>09:00 - 10:00</td>
-                    <td>Pak Ahmad</td>
-                    <td>Perkembangan sosial-emosional</td>
-                    <td><span class="status-badge status-badge--completed">Selesai</span></td>
-                </tr>
-                <tr>
-                    <td>28 Nov 2024</td>
-                    <td>14:00 - 15:00</td>
-                    <td>Bu Siti</td>
-                    <td>Konsultasi nilai kognitif</td>
-                    <td><span class="status-badge status-badge--approved">Disetujui</span></td>
-                </tr>
-                <tr>
-                    <td>02 Des 2024</td>
-                    <td>11:00 - 12:00</td>
-                    <td>Pak Ahmad</td>
-                    <td>Perilaku bermain dengan teman</td>
-                    <td><span class="status-badge status-badge--pending">Menunggu</span></td>
-                </tr>
+                @forelse ($riwayatPengajuan ?? [] as $rw)
+                    @php
+                        $statusMap = [
+                            'pending'   => ['cls' => 'pending',   'label' => 'Menunggu'],
+                            'disetujui' => ['cls' => 'approved',  'label' => 'Disetujui'],
+                            'selesai'   => ['cls' => 'completed', 'label' => 'Selesai'],
+                            'ditolak'   => ['cls' => 'cancelled', 'label' => 'Ditolak'],
+                        ];
+                        $st = $statusMap[$rw['status']] ?? ['cls' => 'pending', 'label' => $rw['status']];
+                    @endphp
+                    <tr>
+                        <td>{{ $rw['tanggal'] }}</td>
+                        <td>{{ $rw['waktu'] }}</td>
+                        <td>{{ $rw['guru'] }}</td>
+                        <td>{{ $rw['topik'] }}</td>
+                        <td><span class="status-badge status-badge--{{ $st['cls'] }}">{{ $st['label'] }}</span></td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" style="text-align:center;padding:30px;color:#9ca3af;font-style:italic;">
+                            Belum pernah mengajukan konseling.
+                        </td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </div>

@@ -111,15 +111,17 @@ class GuruController extends Controller
     private function getDummyJadwalKonseling(): array
     {
         return [
-            1 => ['id' => 1, 'tanggal' => '29 Nov 2024', 'waktu' => '10:00 - 11:00', 'orang_tua' => 'Ibu Siti',   'siswa' => 'Ahmad Fauzi',    'topik' => 'Perkembangan Sosial',   'status' => 'disetujui', 'bulan' => 11, 'catatan' => 'Anak menunjukkan perkembangan sosial yang baik.'],
-            2 => ['id' => 2, 'tanggal' => '28 Nov 2024', 'waktu' => '09:00 - 10:00', 'orang_tua' => 'Bapak Budi', 'siswa' => 'Siti Nurhaliza', 'topik' => 'Konsultasi Umum',       'status' => 'pending',   'bulan' => 11, 'catatan' => ''],
-            3 => ['id' => 3, 'tanggal' => '27 Nov 2024', 'waktu' => '13:00 - 14:00', 'orang_tua' => 'Ibu Dewi',   'siswa' => 'Eko Prasetyo',   'topik' => 'Perkembangan Kognitif', 'status' => 'disetujui', 'bulan' => 11, 'catatan' => ''],
-            4 => ['id' => 4, 'tanggal' => '22 Nov 2024', 'waktu' => '10:00 - 11:00', 'orang_tua' => 'Ibu Ani',    'siswa' => 'Rina Susanti',   'topik' => 'Perkembangan Bahasa',   'status' => 'selesai',   'bulan' => 11, 'catatan' => 'Sesi berjalan dengan baik.'],
-            5 => ['id' => 5, 'tanggal' => '20 Nov 2024', 'waktu' => '14:00 - 15:00', 'orang_tua' => 'Bapak Hadi', 'siswa' => 'Doni Saputra',   'topik' => 'Perkembangan Motorik',  'status' => 'selesai',   'bulan' => 11, 'catatan' => ''],
-            6 => ['id' => 6, 'tanggal' => '05 Mar 2026', 'waktu' => '09:00 - 10:00', 'orang_tua' => 'Ibu Siti',   'siswa' => 'Ahmad Fauzi',    'topik' => 'Perkembangan Sosial',   'status' => 'disetujui', 'bulan' => 3,  'catatan' => ''],
-            7 => ['id' => 7, 'tanggal' => '07 Mar 2026', 'waktu' => '10:00 - 11:00', 'orang_tua' => 'Bapak Budi', 'siswa' => 'Siti Nurhaliza', 'topik' => 'Konsultasi Umum',       'status' => 'pending',   'bulan' => 3,  'catatan' => ''],
-            8 => ['id' => 8, 'tanggal' => '10 Mar 2026', 'waktu' => '13:00 - 14:00', 'orang_tua' => 'Ibu Dewi',   'siswa' => 'Eko Prasetyo',   'topik' => 'Perkembangan Kognitif', 'status' => 'pending',   'bulan' => 3,  'catatan' => ''],
-            9 => ['id' => 9, 'tanggal' => '12 Mar 2026', 'waktu' => '08:00 - 09:00', 'orang_tua' => 'Ibu Ani',    'siswa' => 'Rina Susanti',   'topik' => 'Perkembangan Bahasa',   'status' => 'disetujui', 'bulan' => 3,  'catatan' => ''],
+            1 => ['id' => 1, 'tanggal' => '29 Nov 2024', 'waktu' => '10:00 - 11:00', 'orang_tua' => 'Ibu Siti',   'siswa' => 'Ahmad Fauzi',    'topik' => 'Perkembangan Sosial',   'status' => 'disetujui', 'bulan' => 11, 'catatan' => 'Anak menunjukkan perkembangan sosial yang baik.', 'dari' => 'guru'],
+            2 => ['id' => 2, 'tanggal' => '28 Nov 2024', 'waktu' => '09:00 - 10:00', 'orang_tua' => 'Bapak Budi', 'siswa' => 'Siti Nurhaliza', 'topik' => 'Konsultasi Umum',       'status' => 'pending',   'bulan' => 11, 'catatan' => '', 'dari' => 'orang_tua'],
+            3 => ['id' => 3, 'tanggal' => '27 Nov 2024', 'waktu' => '13:00 - 14:00', 'orang_tua' => 'Ibu Dewi',   'siswa' => 'Eko Prasetyo',   'topik' => 'Perkembangan Kognitif', 'status' => 'disetujui', 'bulan' => 11, 'catatan' => '', 'dari' => 'guru'],
+            4 => ['id' => 4, 'tanggal' => '22 Nov 2024', 'waktu' => '10:00 - 11:00', 'orang_tua' => 'Ibu Ani',    'siswa' => 'Rina Susanti',   'topik' => 'Perkembangan Bahasa',   'status' => 'selesai',   'bulan' => 11, 'catatan' => 'Sesi berjalan dengan baik.', 'dari' => 'orang_tua'],
+            5 => ['id' => 5, 'tanggal' => '20 Nov 2024', 'waktu' => '14:00 - 15:00', 'orang_tua' => 'Bapak Hadi', 'siswa' => 'Doni Saputra',   'topik' => 'Perkembangan Motorik',  'status' => 'selesai',   'bulan' => 11, 'catatan' => '', 'dari' => 'guru'],
+            6 => ['id' => 6, 'tanggal' => '05 Mar 2026', 'waktu' => '09:00 - 10:00', 'orang_tua' => 'Ibu Siti',   'siswa' => 'Ahmad Fauzi',    'topik' => 'Perkembangan Sosial',   'status' => 'disetujui', 'bulan' => 3,  'catatan' => '', 'dari' => 'guru'],
+            7 => ['id' => 7, 'tanggal' => '07 Mar 2026', 'waktu' => '10:00 - 11:00', 'orang_tua' => 'Bapak Budi', 'siswa' => 'Siti Nurhaliza', 'topik' => 'Konsultasi Umum',       'status' => 'pending',   'bulan' => 3,  'catatan' => '', 'dari' => 'orang_tua'],
+            8 => ['id' => 8, 'tanggal' => '10 Mar 2026', 'waktu' => '13:00 - 14:00', 'orang_tua' => 'Ibu Dewi',   'siswa' => 'Eko Prasetyo',   'topik' => 'Perkembangan Kognitif', 'status' => 'pending',   'bulan' => 3,  'catatan' => '', 'dari' => 'orang_tua'],
+            9 => ['id' => 9, 'tanggal' => '12 Mar 2026', 'waktu' => '08:00 - 09:00', 'orang_tua' => 'Ibu Ani',    'siswa' => 'Rina Susanti',   'topik' => 'Perkembangan Bahasa',   'status' => 'disetujui', 'bulan' => 3,  'catatan' => '', 'dari' => 'guru'],
+            10 => ['id' => 10, 'tanggal' => '15 Mar 2026', 'waktu' => '11:00 - 12:00', 'orang_tua' => 'Ibu Siti',  'siswa' => 'Ahmad Fauzi',    'topik' => 'Diskusi Pola Belajar di Rumah', 'status' => 'pending', 'bulan' => 3, 'catatan' => '', 'dari' => 'orang_tua'],
+            11 => ['id' => 11, 'tanggal' => '18 Mar 2026', 'waktu' => '14:00 - 15:00', 'orang_tua' => 'Ibu Siti',  'siswa' => 'Ahmad Fauzi',    'topik' => 'Konsultasi Perilaku',           'status' => 'disetujui', 'bulan' => 3, 'catatan' => '', 'dari' => 'orang_tua'],
         ];
     }
 
