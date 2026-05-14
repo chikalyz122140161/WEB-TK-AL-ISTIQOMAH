@@ -194,5 +194,8 @@ Route::middleware('dummy.auth')->group(function () {
     Route::get('/orangtua/konseling', [OrangTuaController::class, 'konseling'])->name('orangtua.konseling');
     Route::get('/orangtua/konseling/ajukan', [OrangTuaController::class, 'konselingAjukanForm'])->name('orangtua.konseling.ajukan_form');
     Route::post('/orangtua/konseling', [OrangTuaController::class, 'ajukanKonseling'])->name('orangtua.ajukan_konseling');
+    Route::get('/orangtua/konseling/{id}/edit', [OrangTuaController::class, 'konselingEditForm'])->name('orangtua.konseling.edit');
+    Route::put('/orangtua/konseling/{id}', [OrangTuaController::class, 'konselingUpdate'])->name('orangtua.konseling.update');
+    Route::delete('/orangtua/konseling/{id}', [OrangTuaController::class, 'konselingBatal'])->name('orangtua.konseling.batal');
 });
 

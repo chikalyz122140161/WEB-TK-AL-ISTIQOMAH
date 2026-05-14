@@ -106,34 +106,41 @@
     .aksi-links {
         display: flex;
         align-items: center;
-        gap: 5px;
+        gap: 4px;
         flex-wrap: nowrap;
     }
     .aksi-links a,
     .aksi-links button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
         font-family: inherit;
         border: none;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 600;
-        padding: 4px 9px;
-        border-radius: 5px;
+        width: 68px;
+        height: 28px;
+        padding: 0;
+        border-radius: 6px;
         text-decoration: none;
         white-space: nowrap;
-        transition: background .12s;
+        transition: background .12s, transform .12s;
     }
-    .aksi-lihat     { background: rgba(76,175,130,0.12); color: #2E8B60; }
-    .aksi-lihat:hover     { background: #4CAF8230; }
-    .aksi-edit      { background: #FFFBEB; color: #5D4037; }
-    .aksi-edit:hover      { background: #FFF176; }
-    .aksi-batalkan  { background: #F0629220; color: #d81b72; }
-    .aksi-batalkan:hover  { background: #F0629220; }
-    .aksi-setuju    { background: #ffedd5; color: #3E2723; }
-    .aksi-setuju:hover    { background: #fed7aa; }
-    .aksi-tolak     { background: #F0629220; color: #d81b72; }
-    .aksi-tolak:hover     { background: #F0629220; }
-    .aksi-catatan   { background: #FFFDE7; color: #3E2723; }
-    .aksi-catatan:hover   { background: #3E272320; }
+    .aksi-links a svg, .aksi-links button svg { flex-shrink: 0; }
+    .aksi-lihat     { background: rgba(76,175,130,0.12); color: #2E8B60; border: 1px solid rgba(76,175,130,0.25); }
+    .aksi-lihat:hover     { background: rgba(76,175,130,0.22); }
+    .aksi-edit      { background: #FFF176; color: #3E2723; border: 1.5px solid #e6db00; }
+    .aksi-edit:hover      { background: #f5e800; transform: translateY(-1px); }
+    .aksi-batalkan  { background: #F06292; color: #ffffff; border: none; }
+    .aksi-batalkan:hover  { background: #e91e8c; }
+    .aksi-setuju    { background: #4CAF82; color: #ffffff; border: none; }
+    .aksi-setuju:hover    { background: #3D9B72; }
+    .aksi-tolak     { background: #F06292; color: #ffffff; border: none; }
+    .aksi-tolak:hover     { background: #e91e8c; }
+    .aksi-catatan   { background: rgba(61,155,114,0.1); color: #2E8B60; border: 1px solid rgba(61,155,114,0.25); }
+    .aksi-catatan:hover   { background: rgba(61,155,114,0.2); }
 
     /* ── Empty state ──────────────────────────────────── */
     .empty-state {
@@ -189,12 +196,12 @@
                     <th>No</th>
                     <th>Tanggal</th>
                     <th>Waktu</th>
-                    <th>Dari</th>
+                    <th>Tipe</th>
                     <th>Orang Tua</th>
-                    <th>Siswa</th>
+                    <th>Siswa / Kelas</th>
                     <th>Topik</th>
                     <th>Status</th>
-                    <th>Aksi</th>
+                    <th style="min-width:220px; text-align:center;">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -204,19 +211,28 @@
                     <td>{{ $row['tanggal'] }}</td>
                     <td style="white-space:nowrap;">{{ $row['waktu'] }}</td>
                     <td>
-                        @php $dari = $row['dari'] ?? 'guru'; @endphp
-                        @if ($dari === 'orang_tua')
-                            <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px;background:#FFF176;color:#5D4037;border:1px solid #e6db00;white-space:nowrap;">
-                                ORANG TUA
+                        @php $tipe = $row['tipe'] ?? ($row['dari'] === 'orang_tua' ? 'pengajuan' : 'per_siswa'); @endphp
+                        @if ($tipe === 'per_kelas')
+                            <span style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;background:rgba(62,39,35,0.08);color:#5D4037;border:1px solid rgba(62,39,35,0.18);white-space:nowrap;">
+                                PER KELAS
+                            </span>
+                        @elseif ($tipe === 'pengajuan')
+                            <span style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;background:#FFF176;color:#5D4037;border:1px solid #e6db00;white-space:nowrap;">
+                                PENGAJUAN
                             </span>
                         @else
-                            <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px;background:rgba(76,175,130,0.15);color:#2E8B60;border:1px solid rgba(76,175,130,0.4);white-space:nowrap;">
-                                GURU
+                            <span style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;background:rgba(76,175,130,0.15);color:#2E8B60;border:1px solid rgba(76,175,130,0.4);white-space:nowrap;">
+                                PER SISWA
                             </span>
                         @endif
                     </td>
-                    <td>{{ $row['orang_tua'] }}</td>
-                    <td>{{ $row['siswa'] }}</td>
+                    <td>{{ $row['orang_tua'] === '-' ? '—' : ($row['orang_tua'] ?? '—') }}</td>
+                    <td>
+                        {{ $row['siswa'] }}
+                        @if (($row['tipe'] ?? '') === 'per_kelas')
+                            <span style="display:block;font-size:11px;color:#5D4037;opacity:.7;margin-top:1px;">Seluruh kelas</span>
+                        @endif
+                    </td>
                     <td>{{ $row['topik'] }}</td>
                     <td>
                         @if ($row['status'] === 'disetujui')
@@ -229,20 +245,52 @@
                             <span class="badge badge--tolak">Ditolak</span>
                         @endif
                     </td>
-                    <td>
-                        <div class="aksi-links">
-                            <a href="{{ route('guru.jadwal_konseling.show', $row['id']) }}" class="aksi-lihat">[LIHAT]</a>
+                    <td style="text-align:center;">
+                        <div class="aksi-links" style="justify-content:center;">
+                            <a href="{{ route('guru.jadwal_konseling.show', $row['id']) }}" class="aksi-lihat">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd"/></svg>
+                                Lihat
+                            </a>
                             @if ($row['status'] === 'disetujui')
-                                <a href="{{ route('guru.jadwal_konseling.edit', $row['id']) }}" class="aksi-edit">[EDIT]</a>
+                                <a href="{{ route('guru.jadwal_konseling.edit', $row['id']) }}" class="aksi-edit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
+                                    Edit
+                                </a>
                                 <button type="button" class="aksi-batalkan"
-                                    onclick="showBatalkanModal({{ $row['id'] }}, '{{ addslashes($row['siswa']) }}', '{{ addslashes($row['tanggal']) }}', '{{ addslashes($row['waktu']) }}')">[BATALKAN]</button>
+                                    onclick="showBatalkanModal({{ $row['id'] }}, '{{ addslashes($row['siswa']) }}', '{{ addslashes($row['tanggal']) }}', '{{ addslashes($row['waktu']) }}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+                                    Batal
+                                </button>
                             @elseif ($row['status'] === 'pending')
-                                <button type="button" class="aksi-setuju"
-                                    onclick="showSetujuModal({{ $row['id'] }}, '{{ addslashes($row['siswa']) }}', '{{ addslashes($row['tanggal']) }}', '{{ addslashes($row['waktu']) }}')">[SETUJU]</button>
-                                <button type="button" class="aksi-tolak"
-                                    onclick="showTolakModal({{ $row['id'] }}, '{{ addslashes($row['siswa']) }}', '{{ addslashes($row['tanggal']) }}', '{{ addslashes($row['waktu']) }}')">[TOLAK]</button>
+                                @if (($row['dari'] ?? '') === 'guru')
+                                    {{-- Jadwal dibuat guru: bisa edit dan batalkan --}}
+                                    <a href="{{ route('guru.jadwal_konseling.edit', $row['id']) }}" class="aksi-edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
+                                        Edit
+                                    </a>
+                                    <button type="button" class="aksi-batalkan"
+                                        onclick="showBatalkanModal({{ $row['id'] }}, '{{ addslashes($row['siswa']) }}', '{{ addslashes($row['tanggal']) }}', '{{ addslashes($row['waktu']) }}')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+                                        Batal
+                                    </button>
+                                @else
+                                    {{-- Pengajuan dari orang tua: guru bisa setuju atau tolak --}}
+                                    <button type="button" class="aksi-setuju"
+                                        onclick="showSetujuModal({{ $row['id'] }}, '{{ addslashes($row['siswa']) }}', '{{ addslashes($row['tanggal']) }}', '{{ addslashes($row['waktu']) }}')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd"/></svg>
+                                        Setuju
+                                    </button>
+                                    <button type="button" class="aksi-tolak"
+                                        onclick="showTolakModal({{ $row['id'] }}, '{{ addslashes($row['siswa']) }}', '{{ addslashes($row['tanggal']) }}', '{{ addslashes($row['waktu']) }}')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+                                        Tolak
+                                    </button>
+                                @endif
                             @elseif ($row['status'] === 'selesai')
-                                <a href="{{ route('guru.jadwal_konseling.show', $row['id']) }}" class="aksi-catatan">[CATATAN]</a>
+                                <a href="{{ route('guru.jadwal_konseling.show', $row['id']) }}" class="aksi-catatan">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path fill-rule="evenodd" d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625ZM7.5 15a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 7.5 15Zm.75-6.75a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H8.25Z" clip-rule="evenodd"/><path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z"/></svg>
+                                    Catatan
+                                </a>
                             @endif
                         </div>
                     </td>

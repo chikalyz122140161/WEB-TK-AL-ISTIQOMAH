@@ -255,8 +255,8 @@
 
 .btn--secondary {
     background: #FFF176;
-    color: #5D4037;
-    border: 1px solid #e6db00;
+    color: #3E2723;
+    border: 1.5px solid #e6db00;
 }
 
 .btn--secondary:hover {

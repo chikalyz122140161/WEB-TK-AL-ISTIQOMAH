@@ -345,29 +345,32 @@
         }
         .btn-primary svg { width: 16px; height: 16px; fill: currentColor; }
 
-        /* Secondary — yellow */
+        /* Secondary — yellow (Edit) */
         .btn--secondary {
             background: var(--yellow);
             color: var(--text);
-            border: 1px solid var(--yellow-border);
+            border: 1.5px solid var(--yellow-border);
         }
         .btn--secondary:hover {
-            background: #f9ed50;
+            background: #f5e800;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(230,219,0,0.30);
+            box-shadow: 0 4px 12px rgba(230,219,0,0.35);
         }
+        .btn--secondary svg { fill: var(--text); }
 
-        /* Danger — pink */
+        /* Danger — pink solid (Hapus) */
         .btn--danger {
-            background: linear-gradient(135deg, var(--pink) 0%, var(--pink-dark) 100%);
+            background: var(--pink);
             color: #ffffff;
-            box-shadow: var(--shadow-pink);
+            border: none;
+            box-shadow: none;
         }
         .btn--danger:hover {
-            background: linear-gradient(135deg, var(--pink-dark) 0%, #b5145d 100%);
-            box-shadow: 0 6px 18px rgba(240,98,146,0.42);
+            background: var(--pink-dark);
             transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(240,98,146,0.40);
         }
+        .btn--danger svg { fill: #ffffff; }
 
         /* Success — hijau solid */
         .btn--success {

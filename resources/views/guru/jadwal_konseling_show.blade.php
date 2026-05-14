@@ -94,20 +94,22 @@
     .btn-edit {
         height: 38px;
         padding: 0 20px;
-        background: #FFFBEB;
-        color: #5D4037;
+        background: #FFF176;
+        color: #3E2723;
         font-size: 13px;
         font-weight: 700;
-        border: 1px solid #FFF176;
+        border: 1.5px solid #e6db00;
         border-radius: 8px;
         cursor: pointer;
         text-decoration: none;
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        transition: background .15s;
+        transition: background .15s, transform .15s;
+        font-family: inherit;
     }
-    .btn-edit:hover { background: #FFF176; }
+    .btn-edit:hover { background: #f5e800; transform: translateY(-1px); }
+    .btn-edit svg { fill: #3E2723; }
     .btn-setuju {
         height: 38px;
         padding: 0 20px;
@@ -124,16 +126,16 @@
     .btn-tolak, .btn-batalkan {
         height: 38px;
         padding: 0 20px;
-        background: #F0629220;
-        color: #d81b72;
+        background: #F06292;
+        color: #ffffff;
         font-size: 13px;
         font-weight: 700;
-        border: 1px solid #F0629230;
+        border: none;
         border-radius: 8px;
         cursor: pointer;
         transition: background .15s;
     }
-    .btn-tolak:hover, .btn-batalkan:hover { background: #F0629220; }
+    .btn-tolak:hover, .btn-batalkan:hover { background: #e91e8c; }
 
     /* Modal */
     .modal-overlay {
@@ -182,8 +184,8 @@
     }
     .btn-modal-confirm.green { background: #ffedd5; color: #3E2723; }
     .btn-modal-confirm.green:hover { background: #fed7aa; }
-    .btn-modal-confirm.red { background: #F0629220; color: #d81b72; }
-    .btn-modal-confirm.red:hover { background: #F0629230; }
+    .btn-modal-confirm.red { background: #F06292; color: #ffffff; border: none; }
+    .btn-modal-confirm.red:hover { background: #e91e8c; }
     .btn-modal-cancel {
         height: 38px;
         padding: 0 20px;
@@ -227,11 +229,26 @@
 
         <div class="detail-card__body">
             <div class="info-row">
+                <div class="info-row__label">Tipe Jadwal</div>
+                <div class="info-row__value">
+                    @php $tipe = $jadwal['tipe'] ?? 'per_siswa'; @endphp
+                    @if ($tipe === 'per_kelas')
+                        <span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;background:rgba(62,39,35,0.08);color:#5D4037;border:1px solid rgba(62,39,35,0.18);">PER KELAS</span>
+                    @elseif ($tipe === 'pengajuan')
+                        <span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;background:#FFF176;color:#5D4037;border:1px solid #e6db00;">PENGAJUAN ORANG TUA</span>
+                    @else
+                        <span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;background:rgba(76,175,130,0.15);color:#2E8B60;border:1px solid rgba(76,175,130,0.4);">PER SISWA</span>
+                    @endif
+                </div>
+            </div>
+            @if (($jadwal['tipe'] ?? '') !== 'per_kelas')
+            <div class="info-row">
                 <div class="info-row__label">Orang Tua</div>
                 <div class="info-row__value">{{ $jadwal['orang_tua'] }}</div>
             </div>
+            @endif
             <div class="info-row">
-                <div class="info-row__label">Siswa</div>
+                <div class="info-row__label">{{ ($jadwal['tipe'] ?? '') === 'per_kelas' ? 'Kelas' : 'Siswa' }}</div>
                 <div class="info-row__value">{{ $jadwal['siswa'] }}</div>
             </div>
             <div class="info-row">

@@ -181,26 +181,24 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
-        color: white;
+        background: #FFF176;
+        color: #3E2723;
         padding: 6px 12px;
         font-size: 12px;
-        font-weight: 600;
-        border: none;
+        font-weight: 700;
+        border: 1.5px solid #e6db00;
         cursor: pointer;
-        border-radius: 6px;
+        border-radius: 8px;
         text-decoration: none;
-        transition: all 0.2s;
+        transition: background .15s, transform .15s;
+        font-family: inherit;
     }
     .btn-edit:hover {
+        background: #f5e800;
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(76, 175, 130, 0.35);
+        box-shadow: 0 4px 10px rgba(230,219,0,0.35);
     }
-    .btn-edit svg {
-        width: 14px;
-        height: 14px;
-        fill: currentColor;
-    }
+    .btn-edit svg { width: 14px; height: 14px; fill: #3E2723; }
     
     /* Filter Row */
     .filter-row {

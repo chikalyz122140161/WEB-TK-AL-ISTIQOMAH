@@ -333,12 +333,13 @@
 }
 
 .btn--secondary {
-    background: #f1f5f9;
-    color: #5D4037;
+    background: #FFF176;
+    color: #3E2723;
+    border: 1.5px solid #e6db00;
 }
 
 .btn--secondary:hover {
-    background: #e2e8f0;
+    background: #f9ed50;
 }
 
 .btn--success {
@@ -351,12 +352,13 @@
 }
 
 .btn--danger {
-    background: #d81b72;
-    color: white;
+    background: #F06292;
+    color: #ffffff;
+    border: none;
 }
 
 .btn--danger:hover {
-    background: #d81b72;
+    background: #e91e8c;
 }
 
 .btn--wawancara {

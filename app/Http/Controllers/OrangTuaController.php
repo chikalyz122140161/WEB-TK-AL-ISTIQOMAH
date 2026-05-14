@@ -520,73 +520,98 @@ class OrangTuaController extends Controller
 
     private function dummyJadwalKonselingOrangtua(): array
     {
-        // Gabungan jadwal — sumber = 'guru' (dibuat guru) atau 'pengajuan' (diajukan orang tua)
+        // Gabungan jadwal untuk Ahmad Fauzi (anak dari Ibu Siti)
+        // sumber = 'guru' (jadwal dari guru) atau 'pengajuan' (diajukan orang tua)
         return [
+            // ── Pending / Upcoming ────────────────────────────────────────────────
             [
-                'id'         => 101,
-                'tanggal'    => '20 Mar 2026',
-                'tanggal_sort' => '2026-03-20',
-                'waktu'      => '13:00 - 14:00',
-                'guru'       => 'Bu Siti, S.Pd',
-                'topik'      => 'Tindak Lanjut Hasil Asesmen',
-                'status'     => 'disetujui',
-                'sumber'     => 'guru',
-                'catatan'    => 'Hasil asesmen mingguan terbaru akan dibahas.',
+                'id'           => 501,
+                'tanggal'      => '19 Mei 2026',
+                'tanggal_sort' => '2026-05-19',
+                'waktu'        => '10:00 - 11:00',
+                'guru'         => 'Bu Siti, S.Pd',
+                'topik'        => 'Tindak Lanjut Asesmen April',
+                'status'       => 'pending',
+                'sumber'       => 'guru',
+                'catatan'      => 'Akan membahas hasil asesmen bulan April.',
             ],
             [
-                'id'         => 202,
-                'tanggal'    => '18 Mar 2026',
+                'id'           => 502,
+                'tanggal'      => '27 Mar 2026',
+                'tanggal_sort' => '2026-03-27',
+                'waktu'        => '09:00 - 10:00',
+                'guru'         => 'Bu Siti, S.Pd',
+                'topik'        => 'Perkembangan Sosial-Emosional',
+                'status'       => 'disetujui',
+                'sumber'       => 'guru',
+                'catatan'      => 'Hadir tepat waktu di ruang BK lantai 2.',
+            ],
+            [
+                'id'           => 503,
+                'tanggal'      => '18 Mar 2026',
                 'tanggal_sort' => '2026-03-18',
-                'waktu'      => '14:00 - 15:00',
-                'guru'       => 'Pak Ahmad',
-                'topik'      => 'Konsultasi Perilaku',
-                'status'     => 'disetujui',
-                'sumber'     => 'pengajuan',
-                'catatan'    => '-',
+                'waktu'        => '14:00 - 15:00',
+                'guru'         => 'Bu Siti, S.Pd',
+                'topik'        => 'Konsultasi Perilaku & Kebiasaan',
+                'status'       => 'disetujui',
+                'sumber'       => 'pengajuan',
+                'catatan'      => '-',
             ],
             [
-                'id'         => 201,
-                'tanggal'    => '15 Mar 2026',
+                'id'           => 504,
+                'tanggal'      => '15 Mar 2026',
                 'tanggal_sort' => '2026-03-15',
-                'waktu'      => '11:00 - 12:00',
-                'guru'       => 'Bu Siti, S.Pd',
-                'topik'      => 'Diskusi Pola Belajar di Rumah',
-                'status'     => 'pending',
-                'sumber'     => 'pengajuan',
-                'catatan'    => '-',
+                'waktu'        => '11:00 - 12:00',
+                'guru'         => 'Bu Siti, S.Pd',
+                'topik'        => 'Diskusi Pola Belajar di Rumah',
+                'status'       => 'pending',
+                'sumber'       => 'pengajuan',
+                'catatan'      => '-',
             ],
+            // ── Selesai ───────────────────────────────────────────────────────────
             [
-                'id'         => 102,
-                'tanggal'    => '05 Mar 2026',
+                'id'           => 505,
+                'tanggal'      => '05 Mar 2026',
                 'tanggal_sort' => '2026-03-05',
-                'waktu'      => '09:00 - 10:00',
-                'guru'       => 'Bu Siti, S.Pd',
-                'topik'      => 'Perkembangan Sosial',
-                'status'     => 'disetujui',
-                'sumber'     => 'guru',
-                'catatan'    => 'Hadir tepat waktu di ruang konseling lantai 2.',
+                'waktu'        => '09:00 - 10:00',
+                'guru'         => 'Bu Siti, S.Pd',
+                'topik'        => 'Perkembangan Sosial Semester Genap',
+                'status'       => 'selesai',
+                'sumber'       => 'guru',
+                'catatan'      => 'Ahmad menunjukkan perkembangan sosial yang sangat baik.',
             ],
             [
-                'id'         => 103,
-                'tanggal'    => '02 Feb 2026',
-                'tanggal_sort' => '2026-02-02',
-                'waktu'      => '10:00 - 11:00',
-                'guru'       => 'Pak Ahmad',
-                'topik'      => 'Konsultasi Awal Semester',
-                'status'     => 'selesai',
-                'sumber'     => 'guru',
-                'catatan'    => 'Anak menunjukkan perkembangan baik.',
+                'id'           => 506,
+                'tanggal'      => '20 Feb 2026',
+                'tanggal_sort' => '2026-02-20',
+                'waktu'        => '13:00 - 14:00',
+                'guru'         => 'Bu Siti, S.Pd',
+                'topik'        => 'Kesulitan Konsentrasi Belajar di Rumah',
+                'status'       => 'selesai',
+                'sumber'       => 'pengajuan',
+                'catatan'      => 'Guru memberikan tips kegiatan belajar yang menyenangkan.',
             ],
             [
-                'id'         => 203,
-                'tanggal'    => '25 Nov 2024',
-                'tanggal_sort' => '2024-11-25',
-                'waktu'      => '09:00 - 10:00',
-                'guru'       => 'Pak Ahmad',
-                'topik'      => 'Perkembangan sosial-emosional',
-                'status'     => 'selesai',
-                'sumber'     => 'pengajuan',
-                'catatan'    => '-',
+                'id'           => 507,
+                'tanggal'      => '22 Jan 2026',
+                'tanggal_sort' => '2026-01-22',
+                'waktu'        => '10:00 - 11:00',
+                'guru'         => 'Bu Siti, S.Pd',
+                'topik'        => 'Tindak Lanjut Asesmen Semester Ganjil',
+                'status'       => 'selesai',
+                'sumber'       => 'guru',
+                'catatan'      => 'Ahmad telah menunjukkan perkembangan signifikan. Program dilanjutkan.',
+            ],
+            [
+                'id'           => 508,
+                'tanggal'      => '29 Nov 2024',
+                'tanggal_sort' => '2024-11-29',
+                'waktu'        => '10:00 - 11:00',
+                'guru'         => 'Bu Siti, S.Pd',
+                'topik'        => 'Perkembangan Sosial-Emosional',
+                'status'       => 'selesai',
+                'sumber'       => 'guru',
+                'catatan'      => 'Anak menunjukkan kemajuan dalam interaksi dengan teman sebaya.',
             ],
         ];
     }
@@ -612,7 +637,33 @@ class OrangTuaController extends Controller
 
     public function ajukanKonseling(Request $request)
     {
-        // Hanya redirect dengan pesan sukses (dummy)
         return redirect()->route('orangtua.konseling')->with('success', 'Konseling berhasil diajukan!');
+    }
+
+    public function konselingEditForm($id)
+    {
+        $jadwal = collect($this->dummyJadwalKonselingOrangtua())->firstWhere('id', (int) $id);
+
+        if (!$jadwal || $jadwal['sumber'] !== 'pengajuan' || $jadwal['status'] !== 'pending') {
+            return redirect()->route('orangtua.konseling')->with('error', 'Jadwal tidak dapat diedit.');
+        }
+
+        $guruBK = [
+            ['id' => 1, 'nama' => 'Pak Ahmad - Konselor'],
+            ['id' => 2, 'nama' => 'Bu Siti, S.Pd - Guru Kelas TK A'],
+        ];
+        $student = $this->getStudentData();
+
+        return view('orangtua.konseling_edit', compact('jadwal', 'guruBK', 'student'));
+    }
+
+    public function konselingUpdate(Request $request, $id)
+    {
+        return redirect()->route('orangtua.konseling')->with('success', 'Pengajuan konseling berhasil diperbarui!');
+    }
+
+    public function konselingBatal($id)
+    {
+        return redirect()->route('orangtua.konseling')->with('success', 'Pengajuan konseling berhasil dibatalkan.');
     }
 }

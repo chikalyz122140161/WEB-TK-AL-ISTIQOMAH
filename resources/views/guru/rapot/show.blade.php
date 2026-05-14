@@ -100,13 +100,14 @@
 
     .btn-edit {
         display: inline-flex; align-items: center; gap: 5px;
-        background: #f3f4f6; color: #374151;
-        padding: 6px 13px; font-size: 12px; font-weight: 600;
-        border-radius: 7px; text-decoration: none; transition: background 0.2s;
-        white-space: nowrap;
+        background: #FFF176; color: #3E2723;
+        padding: 6px 13px; font-size: 12px; font-weight: 700;
+        border: 1.5px solid #e6db00; border-radius: 8px;
+        text-decoration: none; transition: background .15s, transform .15s;
+        white-space: nowrap; cursor: pointer; font-family: inherit;
     }
-    .btn-edit:hover { background: #e5e7eb; }
-    .btn-edit svg { width: 12px; height: 12px; fill: currentColor; }
+    .btn-edit:hover { background: #f5e800; transform: translateY(-1px); }
+    .btn-edit svg { width: 12px; height: 12px; fill: #3E2723; }
 </style>
 @endpush
 
