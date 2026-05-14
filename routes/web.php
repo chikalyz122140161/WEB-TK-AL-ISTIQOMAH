@@ -192,6 +192,7 @@ Route::middleware('dummy.auth')->group(function () {
     Route::get('/orangtua/chat', [OrangTuaController::class, 'chat'])->name('orangtua.chat');
     Route::post('/orangtua/chat', [OrangTuaController::class, 'kirimChat'])->name('orangtua.kirim_chat');
     Route::get('/orangtua/konseling', [OrangTuaController::class, 'konseling'])->name('orangtua.konseling');
+    Route::get('/orangtua/konseling/ajukan', [OrangTuaController::class, 'konselingAjukanForm'])->name('orangtua.konseling.ajukan_form');
     Route::post('/orangtua/konseling', [OrangTuaController::class, 'ajukanKonseling'])->name('orangtua.ajukan_konseling');
 });
 
