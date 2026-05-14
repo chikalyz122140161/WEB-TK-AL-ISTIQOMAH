@@ -15,7 +15,7 @@
 @push('styles')
 <style>
     .konseling-container {
-        max-width: 900px;
+        max-width: 100%;
     }
 
     /* Section Header */
@@ -205,34 +205,51 @@
         font-weight: 600;
         color: #3E2723;
     }
+    .history-card { overflow-x: auto; }
     .history-table {
         width: 100%;
         border-collapse: collapse;
+        min-width: 820px;
     }
     .history-table th,
     .history-table td {
-        padding: 14px 20px;
+        padding: 12px 16px;
         text-align: left;
         border-bottom: 1px solid #3E272308;
+        vertical-align: middle;
     }
     .history-table th {
         background: #f8f9fa;
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 600;
         color: #5D4037;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        white-space: nowrap;
     }
     .history-table td {
-        font-size: 14px;
+        font-size: 13px;
         color: #3E2723;
     }
-    .history-table tr:last-child td {
-        border-bottom: none;
-    }
-    .history-table tr:hover td {
-        background: #f8f9fa;
-    }
+    .history-table tr:last-child td { border-bottom: none; }
+    .history-table tr:hover td { background: #f8f9fa; }
+    /* Fixed column widths */
+    .history-table th:nth-child(1),
+    .history-table td:nth-child(1) { min-width: 90px; white-space: nowrap; }   /* Tanggal */
+    .history-table th:nth-child(2),
+    .history-table td:nth-child(2) { min-width: 100px; white-space: nowrap; }  /* Waktu */
+    .history-table th:nth-child(3),
+    .history-table td:nth-child(3) { min-width: 110px; white-space: nowrap; }  /* Guru BK */
+    .history-table th:nth-child(4),
+    .history-table td:nth-child(4) { min-width: 160px; }                       /* Topik */
+    .history-table th:nth-child(5),
+    .history-table td:nth-child(5) { min-width: 90px; white-space: nowrap; }   /* Status */
+    .history-table th:nth-child(6),
+    .history-table td:nth-child(6) { min-width: 80px; white-space: nowrap; }   /* Sumber */
+    .history-table th:nth-child(7),
+    .history-table td:nth-child(7) { min-width: 140px; }                       /* Catatan */
+    .history-table th:nth-child(8),
+    .history-table td:nth-child(8) { min-width: 130px; text-align: center; }   /* Aksi */
 
     /* Status Badge */
     .status-badge {
@@ -259,6 +276,30 @@
         background: #F0629220;
         color: #d81b72;
     }
+
+    /* Aksi buttons */
+    .aksi-btns {
+        display: flex; align-items: center; gap: 6px; flex-wrap: nowrap;
+    }
+    .aksi-btns .btn-edit,
+    .aksi-btns .btn-batal {
+        display: inline-flex; align-items: center; gap: 4px;
+        padding: 5px 10px; font-size: 11px; font-weight: 600;
+        border-radius: 6px; border: none; cursor: pointer;
+        text-decoration: none; white-space: nowrap;
+        font-family: inherit; transition: all .15s;
+        line-height: 1;
+    }
+    .aksi-btns .btn-edit {
+        background: #FFF176; color: #3E2723;
+        border: 1.5px solid #e6db00;
+    }
+    .aksi-btns .btn-edit:hover { background: #ffe500; }
+    .aksi-btns .btn-batal {
+        background: #F06292; color: #fff;
+    }
+    .aksi-btns .btn-batal:hover { background: #e91e8c; }
+    .aksi-btns svg { width: 12px; height: 12px; fill: currentColor; flex-shrink: 0; }
 
     /* Info Alert */
     .info-alert {
@@ -329,6 +370,7 @@
                     <th>Status</th>
                     <th>Sumber</th>
                     <th>Catatan</th>
+                    <th style="text-align:center;">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -351,10 +393,29 @@
                         <td><span class="status-badge status-badge--{{ $st['cls'] }}">{{ $st['label'] }}</span></td>
                         <td style="font-size:12px;color:#5D4037;">{{ $sumberLabel }}</td>
                         <td style="font-size:12px;color:#5D4037;">{{ $jadwal['catatan'] ?: '—' }}</td>
+                        <td style="text-align:center;">
+                            @if ($jadwal['sumber'] === 'pengajuan' && $jadwal['status'] === 'pending')
+                            <div class="aksi-btns" style="justify-content:center;">
+                                <a href="{{ route('orangtua.konseling.edit', $jadwal['id']) }}" class="btn-edit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z"/></svg>
+                                    Edit
+                                </a>
+                                <form method="POST" action="{{ route('orangtua.konseling.batal', $jadwal['id']) }}" style="margin:0;" onsubmit="return confirm('Batalkan pengajuan konseling ini?')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="btn-batal">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+                                        Batal
+                                    </button>
+                                </form>
+                            </div>
+                            @else
+                            <span style="color:#9ca3af;font-size:12px;">—</span>
+                            @endif
+                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" style="text-align:center;padding:30px;color:#9ca3af;font-style:italic;">
+                        <td colspan="8" style="text-align:center;padding:30px;color:#9ca3af;font-style:italic;">
                             Belum ada jadwal konseling.
                         </td>
                     </tr>
