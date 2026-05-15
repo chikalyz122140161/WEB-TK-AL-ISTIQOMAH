@@ -130,10 +130,6 @@
 @endsection
 
 @section('content')
-    <h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#3E2723;">
-        Laporan Perkembangan Siswa
-    </h2>
-
     {{-- Filter --}}
     <form method="GET" action="{{ route('guru.laporan_bk') }}" class="lp-filter">
         <div class="lp-field">

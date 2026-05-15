@@ -162,9 +162,7 @@
 {{-- CONTENT --}}
 @section('content')
 
-    <h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#3E2723;text-transform:uppercase;letter-spacing:.5px;">
-        Jadwal Konseling
-    </h2>
+
 
     {{-- Toolbar --}}
     <div class="toolbar">
