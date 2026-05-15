@@ -1,6 +1,7 @@
 ﻿@extends('layouts.app')
 
 @section('title', 'Rekap Data DAPODIK')
+@section('page_title', 'Rekap Data DAPODIK')
 
 @section('sidebar')
     @include('admin.partials.sidebar')
@@ -9,8 +10,6 @@
 @section('content')
 <div class="page-header">
     <div class="page-header__left">
-        <h1 class="page-header__title">Rekap Data DAPODIK</h1>
-        <p class="page-header__subtitle">Data Pokok Pendidikan - Export data siswa untuk sistem DAPODIK</p>
     </div>
     <div class="page-header__actions">
         <div class="dropdown">

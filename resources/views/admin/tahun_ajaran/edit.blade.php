@@ -1,6 +1,7 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Edit Tahun Ajaran')
+@section('page_title', 'Edit Tahun Ajaran')
 
 @section('sidebar')
     @include('admin.partials.sidebar')
@@ -9,8 +10,6 @@
 @section('content')
 <div class="page-header">
     <div class="page-header__left">
-        <h1 class="page-header__title">Edit Tahun Ajaran</h1>
-        <p class="page-header__subtitle">Perbarui data tahun ajaran dan semester</p>
     </div>
     <div class="page-header__actions">
         <a href="{{ route('admin.tahun_ajaran.index') }}" class="btn btn--secondary">

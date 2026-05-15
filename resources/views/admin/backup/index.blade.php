@@ -1,6 +1,7 @@
 ﻿@extends('layouts.app')
 
 @section('title', 'Backup Database')
+@section('page_title', 'Backup Database')
 
 @section('sidebar')
     @include('admin.partials.sidebar')
@@ -8,8 +9,6 @@
 
 @section('content')
 <div class="page-header">
-    <h1 class="page-header__title">Backup Database</h1>
-    <p class="page-header__subtitle">Kelola backup dan restore database sistem</p>
 </div>
 
 @if(session('success'))

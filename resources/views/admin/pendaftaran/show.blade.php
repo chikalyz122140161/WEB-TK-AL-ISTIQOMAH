@@ -1,6 +1,7 @@
 ﻿@extends('layouts.app')
 
 @section('title', 'Detail Pendaftaran')
+@section('page_title', 'Detail Pendaftaran')
 
 @section('sidebar')
     @include('admin.partials.sidebar')
@@ -9,8 +10,6 @@
 @section('content')
 <div class="page-header">
     <div class="page-header__left">
-        <h1 class="page-header__title">Detail Pendaftaran</h1>
-        <p class="page-header__subtitle">Informasi lengkap data pendaftaran siswa</p>
     </div>
     <div class="page-header__actions">
         <a href="{{ route('admin.pendaftaran.index') }}" class="btn btn--secondary">

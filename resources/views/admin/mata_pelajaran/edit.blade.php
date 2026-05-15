@@ -1,6 +1,7 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Edit Mata Pelajaran')
+@section('page_title', 'Edit Mata Pelajaran')
 
 @section('sidebar')
     @include('admin.partials.sidebar')
@@ -9,8 +10,6 @@
 @section('content')
 <div class="page-header">
     <div class="page-header__left">
-        <h1 class="page-header__title">Edit Mata Pelajaran</h1>
-        <p class="page-header__subtitle">Perbarui data mata pelajaran</p>
     </div>
     <div class="page-header__actions">
         <a href="{{ route('admin.mata_pelajaran.index') }}" class="btn btn--secondary">

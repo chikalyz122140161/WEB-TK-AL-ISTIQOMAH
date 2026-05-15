@@ -1,6 +1,7 @@
 ﻿@extends('layouts.app')
 
 @section('title', 'Kelola Pengguna')
+@section('page_title', 'Kelola Pengguna')
 
 @section('sidebar')
     @include('admin.partials.sidebar')
@@ -9,8 +10,6 @@
 @section('content')
 <div class="page-header">
     <div class="page-header__left">
-        <h1 class="page-header__title">Kelola Pengguna</h1>
-        <p class="page-header__subtitle">Manajemen data pengguna sistem</p>
     </div>
     <div class="page-header__actions">
         <a href="{{ route('admin.pengguna.create') }}" class="btn btn--primary">

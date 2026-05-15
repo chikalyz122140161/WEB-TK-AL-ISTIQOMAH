@@ -1,6 +1,7 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Atur Aktivitas Tahun Ajaran')
+@section('page_title', 'Atur Aktivitas Tahun Ajaran')
 
 @section('sidebar')
     @include('admin.partials.sidebar')
@@ -131,8 +132,6 @@
 @section('content')
 <div class="page-header">
     <div class="page-header__left">
-        <h1 class="page-header__title">Atur Aktivitas Tahun Ajaran</h1>
-        <p class="page-header__subtitle">Pilih mata pelajaran, ekstrakurikuler, dan konseling untuk tahun ajaran ini</p>
     </div>
     <div class="page-header__actions">
         <a href="{{ route('admin.aktivitas_tahun_ajaran.index') }}" class="btn btn--secondary">

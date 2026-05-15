@@ -1,6 +1,7 @@
 ﻿@extends('layouts.app')
 
 @section('title', 'Edit Pengguna')
+@section('page_title', 'Edit Pengguna')
 
 @section('sidebar')
     @include('admin.partials.sidebar')
@@ -9,8 +10,6 @@
 @section('content')
 <div class="page-header">
     <div class="page-header__left">
-        <h1 class="page-header__title">Edit Pengguna</h1>
-        <p class="page-header__subtitle">Perbarui data pengguna</p>
     </div>
     <div class="page-header__actions">
         <a href="{{ route('admin.pengguna.index') }}" class="btn btn--secondary">

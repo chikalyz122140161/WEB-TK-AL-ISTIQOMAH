@@ -1,6 +1,7 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Tambah Kelas')
+@section('page_title', 'Tambah Kelas')
 
 @section('sidebar')
     @include('admin.partials.sidebar')
@@ -20,8 +21,6 @@
 @section('content')
 <div class="page-header">
     <div class="page-header__left">
-        <h1 class="page-header__title">Tambah Kelas</h1>
-        <p class="page-header__subtitle">Tambah data kelas baru</p>
     </div>
     <div class="page-header__actions">
         <a href="{{ route('admin.kelas.index') }}" class="btn btn--secondary">

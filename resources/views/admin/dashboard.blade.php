@@ -1,6 +1,7 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Dashboard Admin')
+@section('page_title', 'Dashboard Admin')
 
 @section('sidebar')
     @include('admin.partials.sidebar')
@@ -8,8 +9,6 @@
 
 @section('content')
 <div class="page-header">
-    <h1 class="page-header__title">Dashboard Admin</h1>
-    <p class="page-header__subtitle">Selamat datang, {{ Auth::user()->name ?? 'Admin' }}!</p>
 </div>
 
 <!-- Stats Cards -->

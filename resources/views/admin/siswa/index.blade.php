@@ -1,6 +1,7 @@
 ﻿@extends('layouts.app')
 
 @section('title', 'Kelola Siswa')
+@section('page_title', 'Kelola Siswa')
 
 @section('sidebar')
     @include('admin.partials.sidebar')
@@ -9,8 +10,6 @@
 @section('content')
 <div class="page-header">
     <div class="page-header__left">
-        <h1 class="page-header__title">Kelola Siswa</h1>
-        <p class="page-header__subtitle">Manajemen data siswa TK Al-Istiqomah</p>
     </div>
     <div class="page-header__actions">
         <a href="{{ route('admin.siswa.create') }}" class="btn btn--primary">

@@ -1,6 +1,7 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Edit Konseling')
+@section('page_title', 'Edit Konseling')
 
 @section('sidebar')
     @include('admin.partials.sidebar')
@@ -83,8 +84,6 @@
 @section('content')
 <div class="page-header">
     <div class="page-header__left">
-        <h1 class="page-header__title">Edit Konseling {{ $konseling->nama }}</h1>
-        <p class="page-header__subtitle">Perbarui konseling dan poin penilaiannya</p>
     </div>
     <div class="page-header__actions">
         <a href="{{ route('admin.konseling.index') }}" class="btn btn--secondary">

@@ -1,6 +1,7 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Edit Ekstrakurikuler')
+@section('page_title', 'Edit Ekstrakurikuler')
 
 @section('sidebar')
     @include('admin.partials.sidebar')
@@ -83,8 +84,6 @@
 @section('content')
 <div class="page-header">
     <div class="page-header__left">
-        <h1 class="page-header__title">Edit Ekstrakurikuler {{ $ekstrakurikuler->nama }}</h1>
-        <p class="page-header__subtitle">Perbarui ekstrakurikuler dan poin penilaiannya</p>
     </div>
     <div class="page-header__actions">
         <a href="{{ route('admin.ekstrakurikuler.index') }}" class="btn btn--secondary">

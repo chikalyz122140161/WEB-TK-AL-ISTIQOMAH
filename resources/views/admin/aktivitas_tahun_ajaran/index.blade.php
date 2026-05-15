@@ -1,6 +1,7 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Aktivitas Tahun Ajaran')
+@section('page_title', 'Aktivitas Tahun Ajaran')
 
 @section('sidebar')
     @include('admin.partials.sidebar')
@@ -131,8 +132,6 @@
 @section('content')
 <div class="page-header">
     <div class="page-header__left">
-        <h1 class="page-header__title">Aktivitas Tahun Ajaran</h1>
-        <p class="page-header__subtitle">Kaitkan mata pelajaran, ekstrakurikuler, dan konseling ke setiap tahun ajaran</p>
     </div>
 </div>
 

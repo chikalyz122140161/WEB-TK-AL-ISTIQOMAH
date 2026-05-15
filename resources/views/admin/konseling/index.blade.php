@@ -1,6 +1,7 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Kelola Konseling')
+@section('page_title', 'Kelola Konseling')
 
 @section('sidebar')
     @include('admin.partials.sidebar')
@@ -149,8 +150,6 @@
 @section('content')
 <div class="page-header">
     <div class="page-header__left">
-        <h1 class="page-header__title">Kelola Konseling</h1>
-        <p class="page-header__subtitle">Manajemen jenis konseling dan poin penilaiannya</p>
     </div>
     <div class="page-header__actions">
         <a href="{{ route('admin.konseling.create') }}" class="btn btn--primary">
