@@ -1,24 +1,38 @@
 <?php
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Report extends Model
 {
-    use HasFactory;
+    use HasUuids, SoftDeletes;
 
-    protected $fillable = [
-        'student_id', 'teacher_id', 'week_start', 'cognitive', 'motoric', 'social', 'language', 'note',
-    ];
+    protected $table = 'report';
+    protected $keyType = 'string';
+    public $incrementing = false;
 
-    public function student()
+    protected $fillable = ['student_enrollment_id'];
+
+    public function studentEnrollment()
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(StudentEnrollment::class, 'student_enrollment_id');
     }
 
-    public function teacher()
+    public function subjects()
     {
-        return $this->belongsTo(User::class, 'teacher_id');
+        return $this->hasMany(ReportSubject::class, 'report_id');
+    }
+
+    public function extracurriculars()
+    {
+        return $this->hasMany(ReportExtracurricular::class, 'report_id');
+    }
+
+    public function counselings()
+    {
+        return $this->hasMany(ReportCounseling::class, 'report_id');
     }
 }

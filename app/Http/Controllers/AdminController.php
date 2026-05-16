@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Classroom;
+use App\Models\StudentEnrollment;
 use App\Models\User;
 use App\Models\Student;
 use Illuminate\Support\Facades\Hash;
@@ -15,7 +17,7 @@ class AdminController extends Controller
         $totalSiswa      = Student::count();
         $totalGuru       = User::where('role', 'guru')->count();
         $orangTerdaftar  = User::where('role', 'orangtua')->count();
-        $totalKelas      = Student::distinct('kelas')->whereNotNull('kelas')->count('kelas');
+        $totalKelas      = Classroom::count();
 
         $aktivitas = [
             ['title' => 'Data Siswa Baru Ditambahkan', 'time' => '2 jam yang lalu'],
@@ -23,12 +25,17 @@ class AdminController extends Controller
             ['title' => 'Backup Database Berhasil', 'time' => 'Kemarin'],
         ];
 
-        $statistik = [
-            ['label' => 'TK A',  'value' => Student::where('kelas', 'A')->count() . ' Siswa'],
-            ['label' => 'TK B1', 'value' => Student::where('kelas', 'B1')->count() . ' Siswa'],
-            ['label' => 'TK B2', 'value' => Student::where('kelas', 'B2')->count() . ' Siswa'],
-            ['label' => 'Total Siswa', 'value' => $totalSiswa . ' Siswa'],
-        ];
+        // Statistik siswa per kelas — via student_enrollment → class_term → class
+        $statistik = Classroom::with('classTerms')->get()->map(function ($k) {
+            $classTermIds = $k->classTerms->pluck('id');
+            $jumlah = StudentEnrollment::whereIn('class_term_id', $classTermIds)
+                ->where('status', 'aktif')
+                ->distinct('student_id')
+                ->count('student_id');
+            return ['label' => 'TK ' . $k->name, 'value' => $jumlah . ' Siswa'];
+        })->all();
+
+        $statistik[] = ['label' => 'Total Siswa', 'value' => $totalSiswa . ' Siswa'];
 
         return view('admin.dashboard', compact('totalSiswa', 'totalGuru', 'orangTerdaftar', 'totalKelas', 'aktivitas', 'statistik'));
     }
