@@ -43,17 +43,42 @@ class AdminController extends Controller
     // KELOLA PENGGUNA
     public function penggunaIndex(Request $request)
     {
-        // Dummy data - replace with actual database query
-        $pengguna = [
-            ['id' => 1, 'nama' => 'Baiq, S.Pd', 'email' => 'admin@tkalistiqomah.sch.id', 'role' => 'Admin', 'status' => 'Aktif', 'tgl_daftar' => '01 Jan 2024'],
-            ['id' => 2, 'nama' => 'Rista Wijianti, S.Pd', 'email' => 'rista@tkalistiqomah.sch.id', 'role' => 'Guru', 'status' => 'Aktif', 'tgl_daftar' => '01 Jan 2024'],
-            ['id' => 3, 'nama' => 'Ibu Siti', 'email' => 'ibu.siti@gmail.com', 'role' => 'Orang Tua', 'status' => 'Aktif', 'tgl_daftar' => '05 Jan 2024'],
-            ['id' => 4, 'nama' => 'Bapak Budi', 'email' => 'budi@gmail.com', 'role' => 'Orang Tua', 'status' => 'Aktif', 'tgl_daftar' => '06 Jan 2024'],
-            ['id' => 5, 'nama' => 'Ibu Dewi', 'email' => 'dewi@gmail.com', 'role' => 'Orang Tua', 'status' => 'Aktif', 'tgl_daftar' => '07 Jan 2024'],
-            ['id' => 6, 'nama' => 'Julia Sari', 'email' => 'julia.sari@email.com', 'role' => 'Orang Tua', 'status' => 'Pending', 'tgl_daftar' => '05 Mar 2026'],
-            ['id' => 7, 'nama' => 'Ratna Sari', 'email' => 'ratna@gmail.com', 'role' => 'Orang Tua', 'status' => 'Pending', 'tgl_daftar' => '06 Mar 2026'],
+        $roleMap = [
+            'admin'    => 'Admin',
+            'guru'     => 'Guru',
+            'orangtua' => 'Orang Tua',
         ];
-        
+        $statusMap = [
+            'aktif'    => 'Aktif',
+            'pending'  => 'Pending',
+            'nonaktif' => 'Nonaktif',
+        ];
+
+        $query = User::query()->orderByRaw("FIELD(role, 'admin', 'guru', 'orangtua')")
+            ->orderBy('name');
+
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('search')) {
+            $q = $request->search;
+            $query->where(function ($w) use ($q) {
+                $w->where('name', 'like', "%{$q}%")->orWhere('email', 'like', "%{$q}%");
+            });
+        }
+
+        $pengguna = $query->get()->map(fn($u) => [
+            'id'         => $u->id,
+            'nama'       => $u->name,
+            'email'      => $u->email,
+            'role'       => $roleMap[$u->role] ?? ucfirst($u->role),
+            'status'     => $statusMap[$u->status] ?? ucfirst($u->status),
+            'tgl_daftar' => $u->created_at?->translatedFormat('d M Y') ?? '-',
+        ])->all();
+
         return view('admin.pengguna.index', compact('pengguna'));
     }
     
@@ -96,29 +121,50 @@ class AdminController extends Controller
     
     public function penggunaEdit($id)
     {
-        // Get user by id
+        $user = User::findOrFail($id);
         $pengguna = [
-            'id' => $id,
-            'nama' => 'User Name',
-            'email' => 'user@example.com',
-            'role' => 'orangtua',
-            'status' => 'Pending',
-            'nomor_telepon' => '08123456789',
+            'id'            => $user->id,
+            'nama'          => $user->name,
+            'email'         => $user->email,
+            'role'          => $user->role,
+            'status'        => ucfirst($user->status),
+            'nomor_telepon' => $user->phone,
         ];
-        
+
         return view('admin.pengguna.edit', compact('pengguna'));
     }
-    
+
     public function penggunaUpdate(Request $request, $id)
     {
-        // Dummy - redirect with success
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'nama'   => 'required|string|max:255',
+            'email'  => 'required|email|unique:user,email,' . $id,
+            'role'   => 'required|in:admin,guru,orangtua',
+            'status' => 'nullable|in:aktif,pending,nonaktif',
+        ]);
+
+        $user->update([
+            'name'   => $request->input('nama'),
+            'email'  => $request->input('email'),
+            'role'   => $request->input('role'),
+            'status' => $request->input('status', $user->status),
+            'phone'  => $request->input('nomor_telepon', $user->phone),
+        ]);
+
+        if ($request->filled('password')) {
+            $user->update(['password' => Hash::make($request->input('password'))]);
+        }
+
         return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil diupdate!');
     }
-    
+
     public function penggunaDestroy($id)
     {
-        // Delete user logic here
-        
+        $user = User::findOrFail($id);
+        $user->delete();
+
         return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil dihapus!');
     }
     

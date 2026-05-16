@@ -27,10 +27,11 @@ class ErdSeeder extends Seeder
 {
     public function run(): void
     {
-        /* ── 1. USER (admin, guru, orangtua) ─────────────────── */
+        /* ── 1. USER ─────────────────── */
+        // Kepala Sekolah (sekaligus admin sistem)
         $admin = User::create([
-            'name'       => 'Admin TK',
-            'email'      => 'admin@tk.test',
+            'name'       => 'Baini, S.Pd',
+            'email'      => 'baini.kepsek@tkalistiqomah.sch.id',
             'password'   => Hash::make('password'),
             'phone'      => '081200000000',
             'role'       => 'admin',
@@ -38,9 +39,10 @@ class ErdSeeder extends Seeder
             'isGraduate' => false,
         ]);
 
-        $guru1 = User::create([
-            'name'       => 'Bu Siti, S.Pd',
-            'email'      => 'siti@tk.test',
+        // Guru Kelas A — Reita Wigianti, S.Si, S.Pd., Gr (NUPTK. 7760760661130212)
+        $guruA = User::create([
+            'name'       => 'Reita Wigianti, S.Si, S.Pd., Gr',
+            'email'      => 'reita.wigianti@tkalistiqomah.sch.id',
             'password'   => Hash::make('password'),
             'phone'      => '081211111111',
             'role'       => 'guru',
@@ -48,9 +50,10 @@ class ErdSeeder extends Seeder
             'isGraduate' => false,
         ]);
 
-        $guru2 = User::create([
-            'name'       => 'Pak Ahmad',
-            'email'      => 'ahmad@tk.test',
+        // Guru Kelas B1 — Lucia Untari, S.Pd (NIP. 196501131986052003)
+        $guruB1 = User::create([
+            'name'       => 'Lucia Untari, S.Pd',
+            'email'      => 'lucia.untari@tkalistiqomah.sch.id',
             'password'   => Hash::make('password'),
             'phone'      => '081222222222',
             'role'       => 'guru',
@@ -58,11 +61,27 @@ class ErdSeeder extends Seeder
             'isGraduate' => false,
         ]);
 
+        // Guru Kelas B2 — Fitriyah Hariani, S.Pd (NUPTK. 6344752654300063)
+        $guruB2 = User::create([
+            'name'       => 'Fitriyah Hariani, S.Pd',
+            'email'      => 'fitriyah.hariani@tkalistiqomah.sch.id',
+            'password'   => Hash::make('password'),
+            'phone'      => '081233333333',
+            'role'       => 'guru',
+            'status'     => 'aktif',
+            'isGraduate' => false,
+        ]);
+
+        // Alias kompatibilitas untuk kode lama
+        $guru1 = $guruA;
+        $guru2 = $guruB1;
+
+        // Orang tua dummy (sample)
         $ortu1 = User::create([
             'name'       => 'Ibu Siti Aminah',
             'email'      => 'ibu.siti@example.com',
             'password'   => Hash::make('password'),
-            'phone'      => '081233333333',
+            'phone'      => '081244444444',
             'role'       => 'orangtua',
             'status'     => 'aktif',
             'isGraduate' => false,
@@ -72,7 +91,7 @@ class ErdSeeder extends Seeder
             'name'       => 'Bapak Budi',
             'email'      => 'bapak.budi@example.com',
             'password'   => Hash::make('password'),
-            'phone'      => '081244444444',
+            'phone'      => '081255555555',
             'role'       => 'orangtua',
             'status'     => 'aktif',
             'isGraduate' => false,
