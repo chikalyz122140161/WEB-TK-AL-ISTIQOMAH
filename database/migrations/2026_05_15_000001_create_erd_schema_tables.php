@@ -72,9 +72,11 @@ return new class extends Migration {
     private function dropOldTables(): void
     {
         // Hanya drop tabel dari skema lama yang konflik / tidak terpakai lagi.
-        // JANGAN drop sessions/cache/jobs (dipakai framework).
+        // JANGAN drop:
+        // - sessions/cache/jobs (dipakai framework)
+        // - registrations & dokumen_pendaftaran (masih dipakai flow pendaftaran publik)
         foreach ([
-            'dokumen_pendaftaran', 'registrations', 'semester_reports',
+            'semester_reports',
             'notifications', 'chats', 'schedules', 'reports',
             'attendances', 'students', 'users',
         ] as $table) {

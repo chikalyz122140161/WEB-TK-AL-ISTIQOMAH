@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Classroom;
+use App\Models\Registration;
 use App\Models\StudentEnrollment;
 use App\Models\User;
 use App\Models\Student;
@@ -171,19 +172,25 @@ class AdminController extends Controller
     // KELOLA SISWA
     public function siswaIndex(Request $request)
     {
-        $siswa = Student::with('parent')->orderBy('kelas')->orderBy('name')->get()->map(function ($s) {
-            $namaOrtu = collect([$s->nama_ayah, $s->nama_ibu])->filter()->implode(' / ');
-            return [
-                'id'         => $s->id,
-                'nis'        => $s->nomor_induk ?? '-',
-                'nama'       => $s->name,
-                'kelas'      => $s->kelas ? 'TK ' . $s->kelas : '-',
-                'jk'         => $s->gender,
-                'status'     => 'Aktif',
-                'nama_ortu'  => $namaOrtu ?: '-',
-                'email_ortu' => $s->parent?->email ?? '-',
-            ];
-        })->toArray();
+        $siswa = Student::with('parents')
+            ->orderBy('kelas')->orderBy('name')->get()
+            ->map(function ($s) {
+                // Ambil nama ortu dari relasi `parents` (ERD baru); fallback ke legacy field
+                $ayah = optional($s->parents->firstWhere('category', 'ayah'))->name ?? $s->nama_ayah;
+                $ibu  = optional($s->parents->firstWhere('category', 'ibu'))->name  ?? $s->nama_ibu;
+                $namaOrtu = collect([$ayah, $ibu])->filter()->implode(' / ');
+
+                return [
+                    'id'         => $s->id,
+                    'nis'        => $s->nis ?? $s->nomor_induk ?? '-',
+                    'nama'       => $s->name,
+                    'kelas'      => $s->kelas ? 'TK ' . $s->kelas : '-',
+                    'jk'         => $s->gender,
+                    'status'     => 'Aktif',
+                    'nama_ortu'  => $namaOrtu ?: '-',
+                    'email_ortu' => '-',
+                ];
+            })->toArray();
 
         return view('admin.siswa.index', compact('siswa'));
     }
@@ -298,203 +305,165 @@ class AdminController extends Controller
         return redirect()->route('admin.backup.index')->with('success', 'File backup berhasil dihapus!');
     }
     
-    // ═══════════════════════════════════════════════════════
     // KELOLA PENDAFTARAN
-    // ═══════════════════════════════════════════════════════
     public function pendaftaranIndex()
     {
-        // Dummy data - replace with actual database query
-        $pendaftaran = [
-            [
-                'id' => 1,
-                'tanggal_daftar' => '05 Mar 2026',
-                'nama_siswa' => 'Erlangga Pradipa Bimantara',
-                'nama_panggilan' => 'Angga',
-                'jenis_kelamin' => 'Laki-laki',
-                'tempat_lahir' => 'Bandar Lampung',
-                'tanggal_lahir' => '25 Sep 2021',
-                'agama' => 'Islam',
-                'anak_ke' => 2,
-                'jumlah_saudara' => 1,
-                'alamat_siswa' => 'Jl. Harum Bunga Perumahan Panca Bakti Bandar Lampung',
-                'nama_ayah' => 'Sudir',
-                'pekerjaan_ayah' => 'Buruh',
-                'nama_ibu' => 'Julia Sari',
-                'pekerjaan_ibu' => 'Pengurus Rumah Tangga',
-                'telepon' => '0822 8965 2973',
-                'email' => 'julia.sari@email.com',
-                'status' => 'Pending',
-                'dokumen' => [
-                    ['id' => 1, 'nama' => 'Akta Kelahiran', 'file' => 'akta_kelahiran_001.pdf'],
-                    ['id' => 2, 'nama' => 'Kartu Keluarga', 'file' => 'kk_001.pdf'],
-                    ['id' => 3, 'nama' => 'Pas Foto', 'file' => 'foto_001.jpg'],
-                ],
-            ],
-            [
-                'id' => 2,
-                'tanggal_daftar' => '06 Mar 2026',
-                'nama_siswa' => 'Putri Amelia',
-                'nama_panggilan' => 'Amel',
-                'jenis_kelamin' => 'Perempuan',
-                'tempat_lahir' => 'Bandar Lampung',
-                'tanggal_lahir' => '15 Jan 2021',
-                'agama' => 'Islam',
-                'anak_ke' => 1,
-                'jumlah_saudara' => 0,
-                'alamat_siswa' => 'Jl. Kenanga No. 45 Bandar Lampung',
-                'nama_ayah' => 'Rudi Hartono',
-                'pekerjaan_ayah' => 'Wiraswasta',
-                'nama_ibu' => 'Ratna Sari',
-                'pekerjaan_ibu' => 'Guru',
-                'telepon' => '0813 9876 5432',
-                'email' => 'ratna@gmail.com',
-                'status' => 'Pending',
-                'dokumen' => [
-                    ['id' => 1, 'nama' => 'Akta Kelahiran', 'file' => 'akta_kelahiran_002.pdf'],
-                    ['id' => 2, 'nama' => 'Kartu Keluarga', 'file' => 'kk_002.pdf'],
-                ],
-            ],
-            [
-                'id' => 3,
-                'tanggal_daftar' => '01 Feb 2026',
-                'nama_siswa' => 'Muhammad Rizky',
-                'nama_panggilan' => 'Rizky',
-                'jenis_kelamin' => 'Laki-laki',
-                'tempat_lahir' => 'Metro',
-                'tanggal_lahir' => '20 Agu 2021',
-                'agama' => 'Islam',
-                'anak_ke' => 1,
-                'jumlah_saudara' => 1,
-                'alamat_siswa' => 'Jl. Melati No. 10 Metro',
-                'nama_ayah' => 'Ahmad Fauzi',
-                'pekerjaan_ayah' => 'PNS',
-                'nama_ibu' => 'Siti Fatimah',
-                'pekerjaan_ibu' => 'Ibu Rumah Tangga',
-                'telepon' => '0812 3456 7890',
-                'email' => 'ahmad.fauzi@email.com',
-                'status' => 'Diterima',
-                'dokumen' => [],
-            ],
-            [
-                'id' => 4,
-                'tanggal_daftar' => '25 Jan 2026',
-                'nama_siswa' => 'Dina Rahmawati',
-                'nama_panggilan' => 'Dina',
-                'jenis_kelamin' => 'Perempuan',
-                'tempat_lahir' => 'Bandar Lampung',
-                'tanggal_lahir' => '05 Des 2020',
-                'agama' => 'Islam',
-                'anak_ke' => 2,
-                'jumlah_saudara' => 1,
-                'alamat_siswa' => 'Jl. Anggrek No. 5 Bandar Lampung',
-                'nama_ayah' => 'Budi Santoso',
-                'pekerjaan_ayah' => 'Pedagang',
-                'nama_ibu' => 'Dewi Lestari',
-                'pekerjaan_ibu' => 'Ibu Rumah Tangga',
-                'telepon' => '0856 1234 5678',
-                'email' => 'budi.s@email.com',
-                'status' => 'Ditolak',
-                'dokumen' => [],
-            ],
+        // Status di DB lowercase ('pending', 'diterima', 'ditolak'). Mapping ke label tampil.
+        $statusLabel = [
+            'pending'  => 'Pending',
+            'diterima' => 'Diterima',
+            'ditolak'  => 'Ditolak',
         ];
-        
-        $totalPending = count(array_filter($pendaftaran, fn($p) => $p['status'] == 'Pending'));
-        $totalDiterima = count(array_filter($pendaftaran, fn($p) => $p['status'] == 'Diterima'));
-        $totalDitolak = count(array_filter($pendaftaran, fn($p) => $p['status'] == 'Ditolak'));
-        $totalSemua = count($pendaftaran);
-        
+
+        $pendaftaran = Registration::with('dokumen')
+            ->orderByDesc('created_at')
+            ->get()
+            ->map(function ($r) use ($statusLabel) {
+                $st = strtolower($r->status ?? 'pending');
+                return [
+                    'id'              => $r->id,
+                    'tanggal_daftar'  => optional($r->created_at)->translatedFormat('d M Y') ?? '-',
+                    'nama_siswa'      => $r->nama_lengkap,
+                    'nama_panggilan'  => $r->nama_panggilan ?? '-',
+                    'jenis_kelamin'   => $r->jenis_kelamin ?? '-',
+                    'tempat_lahir'    => $r->tempat_lahir ?? '-',
+                    'tanggal_lahir'   => optional($r->tanggal_lahir)->translatedFormat('d M Y') ?? '-',
+                    'agama'           => $r->agama ?? '-',
+                    'anak_ke'         => $r->anak_ke ?? '-',
+                    'jumlah_saudara'  => $r->jumlah_saudara ?? '-',
+                    'alamat_siswa'    => $r->alamat_siswa ?? '-',
+                    'nama_ayah'       => $r->nama_ayah ?? '-',
+                    'pekerjaan_ayah'  => $r->pekerjaan_ayah ?? '-',
+                    'nama_ibu'        => $r->nama_ibu ?? '-',
+                    'pekerjaan_ibu'   => $r->pekerjaan_ibu ?? '-',
+                    'telepon'         => $r->telepon ?? '-',
+                    'email'           => $r->email ?? '-',
+                    'status'          => $statusLabel[$st] ?? ucfirst($st),
+                    'dokumen'         => $r->dokumen->map(fn($d) => [
+                        'id'   => $d->id,
+                        'nama' => $d->nama ?? $d->jenis ?? 'Dokumen',
+                        'file' => $d->file ?? $d->path ?? null,
+                    ])->all(),
+                ];
+            })->all();
+
+        $totalPending  = Registration::where('status', 'pending')->count();
+        $totalDiterima = Registration::where('status', 'diterima')->count();
+        $totalDitolak  = Registration::where('status', 'ditolak')->count();
+        $totalSemua    = Registration::count();
+
         return view('admin.pendaftaran.index', compact('pendaftaran', 'totalPending', 'totalDiterima', 'totalDitolak', 'totalSemua'));
     }
     
     public function pendaftaranShow($id)
     {
-        // Dummy data - replace with actual database query
+        $r = Registration::with('dokumen')->findOrFail($id);
+
+        $statusLabel = [
+            'pending'  => 'Pending',
+            'diterima' => 'Diterima',
+            'ditolak'  => 'Ditolak',
+        ];
+        $st = strtolower($r->status ?? 'pending');
+
         $pendaftaran = [
-            'id'                  => $id,
-            'tanggal_daftar'      => '05 Mar 2026',
-            'status'              => 'Pending',
+            'id'                  => $r->id,
+            'tanggal_daftar'      => optional($r->created_at)->translatedFormat('d M Y') ?? '-',
+            'status'              => $statusLabel[$st] ?? ucfirst($st),
 
             // Identitas Anak
-            'nama_siswa'          => 'Erlangga Pradipa Bimantara',
-            'nama_panggilan'      => 'Angga',
-            'nik'                 => '1871020509210001',
-            'jenis_kelamin'       => 'Laki-laki',
-            'agama'               => 'Islam',
-            'tempat_lahir'        => 'Bandar Lampung',
-            'tanggal_lahir'       => '25 September 2021',
-            'anak_ke'             => 2,
-            'jumlah_saudara'      => 1,
-            'suku_bangsa'         => 'Jawa',
-            'riwayat_penyakit'    => '-',
-            'berat_badan'         => '13 kg',
-            'tinggi_badan'        => '95 cm',
-            'alamat_siswa'        => 'Jl. Harum Bunga Perumahan Panca Bakti Bandar Lampung',
+            'nama_siswa'          => $r->nama_lengkap ?? '-',
+            'nama_panggilan'      => $r->nama_panggilan ?? '-',
+            'nik'                 => $r->nik ?? '-',
+            'jenis_kelamin'       => $r->jenis_kelamin ?? '-',
+            'agama'               => $r->agama ?? '-',
+            'tempat_lahir'        => $r->tempat_lahir ?? '-',
+            'tanggal_lahir'       => optional($r->tanggal_lahir)->translatedFormat('d F Y') ?? '-',
+            'anak_ke'             => $r->anak_ke ?? '-',
+            'jumlah_saudara'      => $r->jumlah_saudara ?? '-',
+            'suku_bangsa'         => $r->suku_bangsa ?? '-',
+            'riwayat_penyakit'    => $r->riwayat_penyakit ?? '-',
+            'berat_badan'         => $r->berat_badan ? $r->berat_badan . ' kg' : '-',
+            'tinggi_badan'        => $r->tinggi_badan ? $r->tinggi_badan . ' cm' : '-',
+            'alamat_siswa'        => $r->alamat_siswa ?? '-',
 
             // Data Ayah
-            'nama_ayah'           => 'Sudir',
-            'pekerjaan_ayah'      => 'Buruh',
-            'pendidikan_ayah'     => 'SMA/SMK',
-            'tempat_lahir_ayah'   => 'Pemalang',
-            'tanggal_lahir_ayah'  => '12 Maret 1985',
-            'no_telp_ayah'        => '0822 8965 2973',
+            'nama_ayah'           => $r->nama_ayah ?? '-',
+            'pekerjaan_ayah'      => $r->pekerjaan_ayah ?? '-',
+            'pendidikan_ayah'     => $r->pendidikan_ayah ?? '-',
+            'tempat_lahir_ayah'   => $r->tempat_lahir_ayah ?? '-',
+            'tanggal_lahir_ayah'  => $r->tanggal_lahir_ayah
+                ? \Carbon\Carbon::parse($r->tanggal_lahir_ayah)->translatedFormat('d F Y')
+                : '-',
+            'no_telp_ayah'        => $r->no_telp_ayah ?? $r->telepon ?? '-',
 
             // Data Ibu
-            'nama_ibu'            => 'Julia Sari',
-            'pekerjaan_ibu'       => 'Pengurus Rumah Tangga',
-            'pendidikan_ibu'      => 'SMA/SMK',
-            'tempat_lahir_ibu'    => 'Bandar Lampung',
-            'tanggal_lahir_ibu'   => '20 Juli 1988',
-            'no_telp_ibu'         => '0813 5678 9012',
+            'nama_ibu'            => $r->nama_ibu ?? '-',
+            'pekerjaan_ibu'       => $r->pekerjaan_ibu ?? '-',
+            'pendidikan_ibu'      => $r->pendidikan_ibu ?? '-',
+            'tempat_lahir_ibu'    => $r->tempat_lahir_ibu ?? '-',
+            'tanggal_lahir_ibu'   => $r->tanggal_lahir_ibu
+                ? \Carbon\Carbon::parse($r->tanggal_lahir_ibu)->translatedFormat('d F Y')
+                : '-',
+            'no_telp_ibu'         => $r->no_telp_ibu ?? '-',
 
             // Data Wali
-            'nama_wali'           => '-',
-            'pekerjaan_wali'      => '-',
-            'pendidikan_wali'     => '-',
-            'tempat_lahir_wali'   => '-',
-            'tanggal_lahir_wali'  => '-',
-            'no_telp_wali'        => '-',
+            'nama_wali'           => $r->nama_wali ?? '-',
+            'pekerjaan_wali'      => $r->pekerjaan_wali ?? '-',
+            'pendidikan_wali'     => $r->pendidikan_wali ?? '-',
+            'tempat_lahir_wali'   => $r->tempat_lahir_wali ?? '-',
+            'tanggal_lahir_wali'  => $r->tanggal_lahir_wali
+                ? \Carbon\Carbon::parse($r->tanggal_lahir_wali)->translatedFormat('d F Y')
+                : '-',
+            'no_telp_wali'        => $r->no_telp_wali ?? '-',
 
             // Kontak
-            'telepon'             => '0822 8965 2973',
-            'email'               => 'julia.sari@email.com',
-            'alamat_ortu'         => 'Jl. Harum Bunga Perumahan Panca Bakti Bandar Lampung',
+            'telepon'             => $r->telepon ?? '-',
+            'email'               => $r->email ?? '-',
+            'alamat_ortu'         => $r->alamat_ortu ?? $r->alamat_siswa ?? '-',
 
             // Dokumen
-            'dokumen' => [
-                ['id' => 1, 'nama' => 'Akta Kelahiran', 'file' => 'akta_kelahiran_001.pdf'],
-                ['id' => 2, 'nama' => 'Kartu Keluarga',  'file' => 'kk_001.pdf'],
-                ['id' => 3, 'nama' => 'Pas Foto',         'file' => 'foto_001.jpg'],
-            ],
+            'dokumen' => $r->dokumen->map(fn($d) => [
+                'id'   => $d->id,
+                'nama' => $d->nama ?? $d->jenis ?? 'Dokumen',
+                'file' => $d->file ?? $d->path ?? null,
+            ])->all(),
         ];
-        
+
         return view('admin.pendaftaran.show', compact('pendaftaran'));
     }
     
     public function pendaftaranTerima(Request $request, $id)
     {
+        $r = Registration::findOrFail($id);
+
         $kelas       = $request->input('kelas', '-');
         $tahunAjaran = $request->input('tahun_ajaran', '-');
         $semester    = $request->input('semester', '-');
 
+        $r->update([
+            'status'        => 'diterima',
+            'catatan_admin' => "Diterima di Kelas {$kelas}, TA {$tahunAjaran} Semester " . ucfirst($semester),
+        ]);
+
         return redirect()->route('admin.pendaftaran.index')
             ->with('success', "Pendaftaran berhasil diterima! Siswa ditempatkan di Kelas {$kelas}, TA {$tahunAjaran} Semester " . ucfirst($semester) . ".");
     }
-    
+
     public function pendaftaranTolak(Request $request, $id)
     {
-        // Logic to reject registration:
-        // 1. Update registration status to 'Ditolak'
-        // 2. Store rejection reason
-        // 3. Send notification email with reason
-        
+        $r = Registration::findOrFail($id);
         $alasan = $request->input('alasan_penolakan', 'Tidak memenuhi persyaratan');
-        
+
+        $r->update([
+            'status'        => 'ditolak',
+            'catatan_admin' => $alasan,
+        ]);
+
         return redirect()->route('admin.pendaftaran.index')->with('success', 'Pendaftaran telah ditolak.');
     }
     
-    // ═══════════════════════════════════════════════════════
     // KELOLA TAHUN AJARAN
-    // ═══════════════════════════════════════════════════════
     private function dummyTahunAjaran()
     {
         return [
