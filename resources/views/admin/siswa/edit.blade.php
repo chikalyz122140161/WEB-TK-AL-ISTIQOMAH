@@ -55,18 +55,10 @@
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="nama_panggilan" class="form-label required">Nama Panggilan</label>
-                        <input type="text" id="nama_panggilan" name="nama_panggilan" class="form-input" value="{{ old('nama_panggilan', $siswa['nama_panggilan'] ?? '') }}" required>
+                        <label for="nama_panggilan" class="form-label">Nama Panggilan</label>
+                        <input type="text" id="nama_panggilan" name="nama_panggilan" class="form-input" value="{{ old('nama_panggilan', $siswa['nama_panggilan'] ?? '') }}">
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="kelas" class="form-label required">Kelas</label>
-                        <select id="kelas" name="kelas" class="form-select" required>
-                            <option value="">Pilih Kelas</option>
-                            <option value="TK A" {{ old('kelas', $siswa['kelas']) == 'TK A' ? 'selected' : '' }}>TK A</option>
-                            <option value="TK B" {{ old('kelas', $siswa['kelas']) == 'TK B' ? 'selected' : '' }}>TK B</option>
-                        </select>
-                    </div>
+                    <div class="form-group"></div>
                 </div>
                 
                 <div class="form-row">
@@ -74,8 +66,8 @@
                         <label for="jenis_kelamin" class="form-label required">Jenis Kelamin</label>
                         <select id="jenis_kelamin" name="jenis_kelamin" class="form-select" required>
                             <option value="">Pilih</option>
-                            <option value="Laki-laki" {{ old('jenis_kelamin', $siswa['jenis_kelamin']) == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                            <option value="Perempuan" {{ old('jenis_kelamin', $siswa['jenis_kelamin']) == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                            <option value="L" {{ old('jenis_kelamin', $siswa['jenis_kelamin']) == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="P" {{ old('jenis_kelamin', $siswa['jenis_kelamin']) == 'P' ? 'selected' : '' }}>Perempuan</option>
                         </select>
                     </div>
                     
@@ -83,12 +75,12 @@
                         <label for="agama" class="form-label required">Agama</label>
                         <select id="agama" name="agama" class="form-select" required>
                             <option value="">Pilih Agama</option>
-                            <option value="Islam" {{ old('agama', $siswa['agama'] ?? '') == 'Islam' ? 'selected' : '' }}>Islam</option>
-                            <option value="Kristen" {{ old('agama', $siswa['agama'] ?? '') == 'Kristen' ? 'selected' : '' }}>Kristen</option>
-                            <option value="Katolik" {{ old('agama', $siswa['agama'] ?? '') == 'Katolik' ? 'selected' : '' }}>Katolik</option>
-                            <option value="Hindu" {{ old('agama', $siswa['agama'] ?? '') == 'Hindu' ? 'selected' : '' }}>Hindu</option>
-                            <option value="Buddha" {{ old('agama', $siswa['agama'] ?? '') == 'Buddha' ? 'selected' : '' }}>Buddha</option>
-                            <option value="Konghucu" {{ old('agama', $siswa['agama'] ?? '') == 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
+                            <option value="islam"    {{ old('agama', $siswa['agama'] ?? '') == 'islam'    ? 'selected' : '' }}>Islam</option>
+                            <option value="kristen"  {{ old('agama', $siswa['agama'] ?? '') == 'kristen'  ? 'selected' : '' }}>Kristen</option>
+                            <option value="katolik"  {{ old('agama', $siswa['agama'] ?? '') == 'katolik'  ? 'selected' : '' }}>Katolik</option>
+                            <option value="hindu"    {{ old('agama', $siswa['agama'] ?? '') == 'hindu'    ? 'selected' : '' }}>Hindu</option>
+                            <option value="budha"    {{ old('agama', $siswa['agama'] ?? '') == 'budha'    ? 'selected' : '' }}>Buddha</option>
+                            <option value="konghucu" {{ old('agama', $siswa['agama'] ?? '') == 'konghucu' ? 'selected' : '' }}>Konghucu</option>
                         </select>
                     </div>
                 </div>
@@ -151,17 +143,7 @@
                         <label for="no_telp" class="form-label required">No. Telp / HP</label>
                         <input type="text" id="no_telp" name="no_telp" class="form-input" value="{{ old('no_telp', $siswa['no_telp'] ?? '') }}" required>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="status" class="form-label required">Status</label>
-                        <select id="status" name="status" class="form-select status-select" required>
-                            <option value="Pending" {{ old('status', $siswa['status']) == 'Pending' ? 'selected' : '' }}>Pending</option>
-                            <option value="Aktif" {{ old('status', $siswa['status']) == 'Aktif' ? 'selected' : '' }}>Aktif</option>
-                            <option value="Lulus" {{ old('status', $siswa['status']) == 'Lulus' ? 'selected' : '' }}>Lulus</option>
-                            <option value="Pindah" {{ old('status', $siswa['status']) == 'Pindah' ? 'selected' : '' }}>Pindah</option>
-                        </select>
-                        <small class="form-hint">Status "Pending" untuk akun yang belum diaktivasi</small>
-                    </div>
+                    <div class="form-group"></div>
                 </div>
             </div>
             
@@ -280,9 +262,9 @@
                     <div class="form-group">
                         <label for="status_akun_ortu" class="form-label required">Status Akun Orang Tua</label>
                         <select id="status_akun_ortu" name="status_akun_ortu" class="form-select status-select" required>
-                            <option value="Pending" {{ old('status_akun_ortu', $siswa['status_akun_ortu'] ?? 'Aktif') == 'Pending' ? 'selected' : '' }}>Pending</option>
-                            <option value="Aktif" {{ old('status_akun_ortu', $siswa['status_akun_ortu'] ?? 'Aktif') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
-                            <option value="Nonaktif" {{ old('status_akun_ortu', $siswa['status_akun_ortu'] ?? 'Aktif') == 'Nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                            <option value="pending"  {{ old('status_akun_ortu', $siswa['status_akun_ortu'] ?? 'active') == 'pending'  ? 'selected' : '' }}>Pending</option>
+                            <option value="active"   {{ old('status_akun_ortu', $siswa['status_akun_ortu'] ?? 'active') == 'active'   ? 'selected' : '' }}>Aktif</option>
+                            <option value="inactive" {{ old('status_akun_ortu', $siswa['status_akun_ortu'] ?? 'active') == 'inactive' ? 'selected' : '' }}>Nonaktif</option>
                         </select>
                         <small class="form-hint">Aktifkan akun agar orang tua dapat login ke sistem</small>
                     </div>
@@ -296,13 +278,7 @@
                 
                 <!-- Existing Documents -->
                 <div class="documents-list">
-                    @php
-                        $dokumen = $siswa['dokumen'] ?? [
-                            ['id' => 1, 'nama' => 'Akta Kelahiran', 'file' => 'akta_kelahiran_001.pdf', 'type' => 'akta_kelahiran'],
-                            ['id' => 2, 'nama' => 'Kartu Keluarga', 'file' => 'kk_001.pdf', 'type' => 'kartu_keluarga'],
-                            ['id' => 3, 'nama' => 'Pas Foto', 'file' => 'foto_001.jpg', 'type' => 'foto'],
-                        ];
-                    @endphp
+                    @php $dokumen = $siswa['dokumen'] ?? []; @endphp
                     
                     @foreach($dokumen as $doc)
                     <div class="document-item" id="doc-{{ $doc['id'] }}">
@@ -320,7 +296,7 @@
                             </div>
                         </div>
                         <div class="document-actions">
-                            <a href="#" class="btn-doc btn-doc--view" title="Lihat">
+                            <a href="{{ $doc['path'] ? Storage::url($doc['path']) : '#' }}" target="_blank" class="btn-doc btn-doc--view" title="Lihat">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd"/></svg>
                             </a>
                             <button type="button" class="btn-doc btn-doc--delete" onclick="deleteDocument({{ $doc['id'] }})" title="Hapus">

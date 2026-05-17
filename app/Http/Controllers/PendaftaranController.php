@@ -70,18 +70,13 @@ class PendaftaranController extends Controller
                 'status'   => 'pending',
             ]);
 
-            // Generate NIS
-            $year   = now()->year;
-            $lastNo = Student::whereYear('created_at', $year)->count() + 1;
-            $nis    = $year . str_pad($lastNo, 3, '0', STR_PAD_LEFT);
-
             // Create student
             $student = Student::create([
                 'user_id'         => $user->id,
                 'name'            => $request->nama,
                 'nickname'        => $request->nama_panggilan,
                 'gender'          => $request->jenis_kelamin,
-                'nis'             => $nis,
+                'nis'             => null,
                 'nik'             => $request->nik,
                 'pob'             => $request->tempat_lahir,
                 'dob'             => $request->tanggal_lahir,

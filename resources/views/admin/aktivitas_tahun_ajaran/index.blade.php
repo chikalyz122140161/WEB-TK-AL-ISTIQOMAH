@@ -142,10 +142,10 @@
 <div class="card">
     <div class="card__header">
         <h3 class="card__title">Daftar Tahun Ajaran</h3>
-        <span class="badge badge--primary">{{ count($rows) }} Tahun Ajaran</span>
+        <span class="badge badge--primary">{{ $academicTerms->count() }} Tahun Ajaran</span>
     </div>
     <div class="card__body p-0">
-        @if(count($rows) === 0)
+        @if($academicTerms->isEmpty())
         <div style="padding:3rem;text-align:center;">
             <p style="color:#6b7280;">Belum ada tahun ajaran. Tambahkan dulu di menu <strong>Kelola Tahun Ajaran</strong>.</p>
         </div>
@@ -154,73 +154,29 @@
             <thead>
                 <tr>
                     <th style="width:60px;">No</th>
-                    <th style="width:200px;">Tahun Ajaran</th>
-                    <th>Aktivitas Terkait</th>
+                    <th>Tahun Ajaran</th>
+                    <th style="width:140px;">Jumlah Kelas</th>
                     <th style="width:140px;">Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($rows as $i => $row)
+                @foreach($academicTerms as $i => $ta)
                 <tr>
                     <td class="row-no">{{ $i + 1 }}</td>
                     <td>
-                        <div class="tahun-text">{{ $row['tahun_ajaran'] }}</div>
-                        <span class="semester-pill semester-pill--{{ $row['semester'] }}">
-                            Semester {{ ucfirst($row['semester']) }}
+                        <div class="tahun-text">{{ $ta->academic_year }}</div>
+                        <span class="semester-pill semester-pill--{{ $ta->semester }}">
+                            Semester {{ ucfirst($ta->semester) }}
                         </span>
                     </td>
                     <td>
-                        <div class="assign-block">
-                            <div class="assign-label">
-                                Mata Pelajaran
-                                <span class="assign-count">{{ count($row['mata_pelajaran']) }}</span>
-                            </div>
-                            @if(count($row['mata_pelajaran']) === 0)
-                                <span class="chip-empty">Belum ada</span>
-                            @else
-                                <div class="chip-row">
-                                    @foreach($row['mata_pelajaran'] as $name)
-                                        <span class="chip chip--mapel">{{ $name }}</span>
-                                    @endforeach
-                                </div>
-                            @endif
-                        </div>
-                        <div class="assign-block">
-                            <div class="assign-label">
-                                Ekstrakurikuler
-                                <span class="assign-count">{{ count($row['ekstrakurikuler']) }}</span>
-                            </div>
-                            @if(count($row['ekstrakurikuler']) === 0)
-                                <span class="chip-empty">Belum ada</span>
-                            @else
-                                <div class="chip-row">
-                                    @foreach($row['ekstrakurikuler'] as $name)
-                                        <span class="chip chip--ekskul">{{ $name }}</span>
-                                    @endforeach
-                                </div>
-                            @endif
-                        </div>
-                        <div class="assign-block">
-                            <div class="assign-label">
-                                Konseling
-                                <span class="assign-count">{{ count($row['konseling']) }}</span>
-                            </div>
-                            @if(count($row['konseling']) === 0)
-                                <span class="chip-empty">Belum ada</span>
-                            @else
-                                <div class="chip-row">
-                                    @foreach($row['konseling'] as $name)
-                                        <span class="chip chip--konseling">{{ $name }}</span>
-                                    @endforeach
-                                </div>
-                            @endif
-                        </div>
+                        <span class="assign-count" style="font-size:.9rem;">{{ $ta->class_terms_count }} kelas</span>
                     </td>
                     <td>
                         <div class="btn-row">
-                            <a href="{{ route('admin.aktivitas_tahun_ajaran.edit', $row['id']) }}" class="btn btn--secondary btn--sm">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
-                                Atur
+                            <a href="{{ route('admin.aktivitas_tahun_ajaran.show', $ta->id) }}" class="btn btn--secondary btn--sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd"/></svg>
+                                Pilih Kelas
                             </a>
                         </div>
                     </td>

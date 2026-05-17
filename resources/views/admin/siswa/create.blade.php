@@ -58,14 +58,7 @@
                         <input type="text" id="nama_panggilan" name="nama_panggilan" class="form-input" value="{{ old('nama_panggilan') }}" required placeholder="Nama panggilan sehari-hari">
                     </div>
                     
-                    <div class="form-group">
-                        <label for="kelas" class="form-label required">Kelas</label>
-                        <select id="kelas" name="kelas" class="form-select" required>
-                            <option value="">Pilih Kelas</option>
-                            <option value="TK A" {{ old('kelas') == 'TK A' ? 'selected' : '' }}>TK A</option>
-                            <option value="TK B" {{ old('kelas') == 'TK B' ? 'selected' : '' }}>TK B</option>
-                        </select>
-                    </div>
+                    <div class="form-group"></div>
                 </div>
                 
                 <div class="form-row">
@@ -73,8 +66,8 @@
                         <label for="jenis_kelamin" class="form-label required">Jenis Kelamin</label>
                         <select id="jenis_kelamin" name="jenis_kelamin" class="form-select" required>
                             <option value="">Pilih</option>
-                            <option value="Laki-laki" {{ old('jenis_kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                            <option value="Perempuan" {{ old('jenis_kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                            <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan</option>
                         </select>
                     </div>
                     
@@ -82,12 +75,12 @@
                         <label for="agama" class="form-label required">Agama</label>
                         <select id="agama" name="agama" class="form-select" required>
                             <option value="">Pilih Agama</option>
-                            <option value="Islam" {{ old('agama') == 'Islam' ? 'selected' : '' }}>Islam</option>
-                            <option value="Kristen" {{ old('agama') == 'Kristen' ? 'selected' : '' }}>Kristen</option>
-                            <option value="Katolik" {{ old('agama') == 'Katolik' ? 'selected' : '' }}>Katolik</option>
-                            <option value="Hindu" {{ old('agama') == 'Hindu' ? 'selected' : '' }}>Hindu</option>
-                            <option value="Buddha" {{ old('agama') == 'Buddha' ? 'selected' : '' }}>Buddha</option>
-                            <option value="Konghucu" {{ old('agama') == 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
+                            <option value="islam"    {{ old('agama') == 'islam'    ? 'selected' : '' }}>Islam</option>
+                            <option value="kristen"  {{ old('agama') == 'kristen'  ? 'selected' : '' }}>Kristen</option>
+                            <option value="katolik"  {{ old('agama') == 'katolik'  ? 'selected' : '' }}>Katolik</option>
+                            <option value="hindu"    {{ old('agama') == 'hindu'    ? 'selected' : '' }}>Hindu</option>
+                            <option value="budha"    {{ old('agama') == 'budha'    ? 'selected' : '' }}>Buddha</option>
+                            <option value="konghucu" {{ old('agama') == 'konghucu' ? 'selected' : '' }}>Konghucu</option>
                         </select>
                     </div>
                 </div>

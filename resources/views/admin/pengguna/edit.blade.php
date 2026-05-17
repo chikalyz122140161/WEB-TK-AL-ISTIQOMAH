@@ -64,9 +64,9 @@
                 <div class="form-group">
                     <label for="status" class="form-label required">Status Akun</label>
                     <select id="status" name="status" class="form-select status-select" required>
-                        <option value="Pending" {{ old('status', $pengguna['status'] ?? 'Aktif') == 'Pending' ? 'selected' : '' }}>Pending</option>
-                        <option value="Aktif" {{ old('status', $pengguna['status'] ?? 'Aktif') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
-                        <option value="Nonaktif" {{ old('status', $pengguna['status'] ?? 'Aktif') == 'Nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                        <option value="pending"  {{ old('status', $pengguna['status']) == 'pending'  ? 'selected' : '' }}>Pending</option>
+                        <option value="active"   {{ old('status', $pengguna['status']) == 'active'   ? 'selected' : '' }}>Aktif</option>
+                        <option value="inactive" {{ old('status', $pengguna['status']) == 'inactive' ? 'selected' : '' }}>Nonaktif</option>
                     </select>
                     <small class="form-hint">Status "Pending" untuk akun dari pendaftaran online yang belum diaktivasi</small>
                 </div>
@@ -212,17 +212,17 @@
 .mb-0 { margin-bottom: 0; }
 
 /* Status Select Styling */
-.status-select option[value="Pending"] {
+.status-select option[value="pending"] {
     background: #FFF176;
     color: #3E2723;
 }
 
-.status-select option[value="Aktif"] {
+.status-select option[value="active"] {
     background: rgba(76,175,130,0.15);
     color: #2E8B60;
 }
 
-.status-select option[value="Nonaktif"] {
+.status-select option[value="inactive"] {
     background: #f1f5f9;
     color: #5D4037;
 }

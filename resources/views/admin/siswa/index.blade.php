@@ -53,10 +53,7 @@
                 <label for="status">Status</label>
                 <select id="status" class="form-select">
                     <option value="">Semua Status</option>
-                    <option value="pending">Pending</option>
                     <option value="aktif">Aktif</option>
-                    <option value="lulus">Lulus</option>
-                    <option value="pindah">Pindah</option>
                 </select>
             </div>
         </div>
@@ -81,7 +78,10 @@
                 </thead>
                 <tbody>
                     @forelse($siswa as $index => $s)
-                    <tr>
+                    <tr data-kelas="{{ $s['kelas'] }}"
+                        data-jk="{{ $s['jk_raw'] }}"
+                        data-status="{{ $s['status_raw'] }}"
+                        data-search="{{ strtolower($s['nis'] . ' ' . $s['nama'] . ' ' . $s['nama_ortu']) }}">
                         <td>{{ $index + 1 }}</td>
                         <td><span class="badge badge--outline">{{ $s['nis'] }}</span></td>
                         <td>
@@ -447,6 +447,26 @@
 </div>
 
 <script>
+function applyFilters() {
+    const search = document.getElementById('search').value.toLowerCase().trim();
+    const kelas  = document.getElementById('kelas').value;
+    const jk     = document.getElementById('jk').value;
+    const status = document.getElementById('status').value;
+
+    document.querySelectorAll('.data-table tbody tr[data-kelas]').forEach(row => {
+        const matchSearch = !search || row.dataset.search.includes(search);
+        const matchKelas  = !kelas  || row.dataset.kelas  === kelas;
+        const matchJk     = !jk     || row.dataset.jk     === jk;
+        const matchStatus = !status || row.dataset.status === status;
+        row.style.display = (matchSearch && matchKelas && matchJk && matchStatus) ? '' : 'none';
+    });
+}
+
+document.getElementById('search').addEventListener('input', applyFilters);
+document.getElementById('kelas').addEventListener('change', applyFilters);
+document.getElementById('jk').addEventListener('change', applyFilters);
+document.getElementById('status').addEventListener('change', applyFilters);
+
 function showDeleteModal(id, name) {
     document.getElementById('deleteSiswaName').textContent = name;
     document.getElementById('deleteForm').action = "{{ url('admin/siswa') }}/" + id;
@@ -457,11 +477,8 @@ function closeDeleteModal() {
     document.getElementById('deleteModal').classList.remove('active');
 }
 
-// Close modal when clicking outside
 document.getElementById('deleteModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeDeleteModal();
-    }
+    if (e.target === this) closeDeleteModal();
 });
 </script>
 @endsection

@@ -89,7 +89,9 @@ class AdminController extends Controller
             'nama'       => $u->name,
             'email'      => $u->email,
             'role'       => $roleMap[$u->role] ?? ucfirst($u->role),
+            'role_raw'   => $u->role,
             'status'     => $statusMap[$u->status] ?? ucfirst($u->status),
+            'status_raw' => $u->status,
             'tgl_daftar' => $u->created_at?->translatedFormat('d M Y') ?? '-',
         ])->all();
 
@@ -141,7 +143,7 @@ class AdminController extends Controller
             'nama'          => $user->name,
             'email'         => $user->email,
             'role'          => $user->role,
-            'status'        => ucfirst($user->status),
+            'status'        => $user->status,
             'nomor_telepon' => $user->phone,
         ];
 
@@ -185,104 +187,249 @@ class AdminController extends Controller
     // KELOLA SISWA
     public function siswaIndex(Request $request)
     {
-        $siswa = Student::with('parents')
-            ->orderBy('kelas')->orderBy('name')->get()
+        $siswa = Student::with(['parents', 'user', 'enrollments.classTerm.class'])
+            ->orderBy('name')->get()
             ->map(function ($s) {
-                // Ambil nama ortu dari relasi `parents` (ERD baru); fallback ke legacy field
-                $ayah = optional($s->parents->firstWhere('category', 'ayah'))->name ?? $s->nama_ayah;
-                $ibu  = optional($s->parents->firstWhere('category', 'ibu'))->name  ?? $s->nama_ibu;
-                $namaOrtu = collect([$ayah, $ibu])->filter()->implode(' / ');
+                $ayah = $s->parents->firstWhere('category', 'ayah');
+                $ibu  = $s->parents->firstWhere('category', 'ibu');
+                $namaOrtu = collect([optional($ayah)->name, optional($ibu)->name])->filter()->implode(' / ');
+
+                $latestEnrollment = $s->enrollments->sortByDesc('created_at')->first();
+                $kelas = $latestEnrollment?->classTerm?->class?->name ?? '-';
 
                 return [
                     'id'         => $s->id,
-                    'nis'        => $s->nis ?? $s->nomor_induk ?? '-',
+                    'nis'        => $s->nis ?? '-',
                     'nama'       => $s->name,
-                    'kelas'      => $s->kelas ? 'TK ' . $s->kelas : '-',
+                    'kelas'      => $kelas,
                     'jk'         => $s->gender,
+                    'jk_raw'     => $s->gender,
                     'status'     => 'Aktif',
+                    'status_raw' => 'aktif',
                     'nama_ortu'  => $namaOrtu ?: '-',
-                    'email_ortu' => '-',
+                    'email_ortu' => $s->user?->email ?? '-',
                 ];
             })->toArray();
 
         return view('admin.siswa.index', compact('siswa'));
     }
-    
+
     public function siswaCreate()
     {
         return view('admin.siswa.create');
     }
-    
+
     public function siswaStore(Request $request)
     {
-        // Dummy - redirect with success
+        $request->validate([
+            'nis'            => 'required|string|max:20|unique:student,nis',
+            'nama'           => 'required|string|max:255',
+            'jenis_kelamin'  => 'required|in:L,P',
+            'agama'          => 'required|in:islam,kristen,katolik,hindu,budha,konghucu',
+            'tempat_lahir'   => 'required|string|max:100',
+            'tanggal_lahir'  => 'required|date',
+            'anak_ke'        => 'required|integer|min:1',
+            'jumlah_saudara' => 'required|integer|min:0',
+            'alamat'         => 'required|string',
+            'no_telp'        => 'required|string|max:20',
+            'nama_ayah'      => 'required|string|max:255',
+            'nama_ibu'       => 'required|string|max:255',
+        ]);
+
+        DB::transaction(function () use ($request) {
+            $student = Student::create([
+                'name'            => $request->nama,
+                'nickname'        => $request->nama_panggilan,
+                'gender'          => $request->jenis_kelamin,
+                'nis'             => $request->nis,
+                'pob'             => $request->tempat_lahir,
+                'dob'             => $request->tanggal_lahir,
+                'religion'        => $request->agama,
+                'birth_order'     => $request->anak_ke,
+                'siblings_count'  => $request->jumlah_saudara,
+                'ethnicity'       => $request->suku_bangsa,
+                'illness_history' => $request->riwayat_penyakit,
+                'weight'          => $request->berat_badan ?: null,
+                'height'          => $request->tinggi_badan ?: null,
+                'address'         => $request->alamat,
+                'phone'           => $request->no_telp,
+            ]);
+
+            Parents::create([
+                'student_id' => $student->id, 'category' => 'ayah',
+                'name' => $request->nama_ayah, 'work' => $request->pekerjaan_ayah,
+                'pob'  => $request->tempat_lahir_ayah, 'dob' => $request->tanggal_lahir_ayah ?: null,
+            ]);
+
+            Parents::create([
+                'student_id' => $student->id, 'category' => 'ibu',
+                'name' => $request->nama_ibu, 'work' => $request->pekerjaan_ibu,
+                'pob'  => $request->tempat_lahir_ibu, 'dob' => $request->tanggal_lahir_ibu ?: null,
+            ]);
+
+            if ($request->filled('nama_wali')) {
+                Parents::create([
+                    'student_id' => $student->id, 'category' => 'wali',
+                    'name' => $request->nama_wali, 'work' => $request->pekerjaan_wali,
+                    'pob'  => $request->tempat_lahir_wali, 'dob' => $request->tanggal_lahir_wali ?: null,
+                ]);
+            }
+        });
+
         return redirect()->route('admin.siswa.index')->with('success', 'Data siswa berhasil ditambahkan!');
     }
-    
+
     public function siswaEdit($id)
     {
-        // Get siswa by id with related orangtua data - sesuai form pendaftaran fisik
+        $student = Student::with(['parents', 'user', 'files'])->findOrFail($id);
+
+        $ayah = $student->parents->firstWhere('category', 'ayah');
+        $ibu  = $student->parents->firstWhere('category', 'ibu');
+        $wali = $student->parents->firstWhere('category', 'wali');
+
         $siswa = [
-            'id' => $id,
-            'nis' => '2024001',
-            // I. Identitas Anak
-            'nama' => 'Erlangga Pradipa Bimantara',
-            'nama_panggilan' => 'Angga',
-            'jenis_kelamin' => 'Laki-laki',
-            'tempat_lahir' => 'Bandar Lampung',
-            'tanggal_lahir' => '2021-09-25',
-            'anak_ke' => 2,
-            'jumlah_saudara' => 1,
-            'agama' => 'Islam',
-            'suku_bangsa' => '',
-            'berat_badan' => '13',
-            'tinggi_badan' => '',
-            'riwayat_penyakit' => '',
-            'alamat' => 'Jl. Harum Bunga Perumahan Panca Bakti Bandar Lampung',
-            'no_telp' => '0822 8965 2973',
-            'kelas' => 'TK A',
-            'status' => 'Pending',
-            // II. Identitas Orang Tua / Wali Murid
-            // 1. Ayah
-            'nama_ayah' => 'Sudir',
-            'tempat_lahir_ayah' => 'Pemalang',
-            'tanggal_lahir_ayah' => '1982-09-01',
-            'pekerjaan_ayah' => 'Buruh',
-            // 2. Ibu
-            'nama_ibu' => 'Julia Sari',
-            'tempat_lahir_ibu' => 'Teratkulon',
-            'tanggal_lahir_ibu' => '1994-07-04',
-            'pekerjaan_ibu' => 'Pengurus Rumah Tangga',
-            // 3. Wali
-            'nama_wali' => '',
-            'tempat_lahir_wali' => '',
-            'tanggal_lahir_wali' => '',
-            'pekerjaan_wali' => '',
-            // Akun Orang Tua
-            'email_ortu' => 'julia.sari@email.com',
-            'status_akun_ortu' => 'Pending',
-            // Dokumen siswa
-            'dokumen' => [
-                ['id' => 1, 'nama' => 'Akta Kelahiran', 'file' => 'akta_kelahiran_001.pdf', 'type' => 'akta_kelahiran'],
-                ['id' => 2, 'nama' => 'Kartu Keluarga', 'file' => 'kk_001.pdf', 'type' => 'kartu_keluarga'],
-                ['id' => 3, 'nama' => 'Pas Foto', 'file' => 'foto_001.jpg', 'type' => 'foto'],
-            ],
+            'id'               => $student->id,
+            'nis'              => $student->nis ?? '',
+            'nama'             => $student->name,
+            'nama_panggilan'   => $student->nickname ?? '',
+            'jenis_kelamin'    => $student->gender,
+            'agama'            => $student->religion ?? '',
+            'tempat_lahir'     => $student->pob ?? '',
+            'tanggal_lahir'    => $student->dob?->format('Y-m-d') ?? '',
+            'anak_ke'          => $student->birth_order ?? '',
+            'jumlah_saudara'   => $student->siblings_count ?? '',
+            'suku_bangsa'      => $student->ethnicity ?? '',
+            'riwayat_penyakit' => $student->illness_history ?? '',
+            'berat_badan'      => $student->weight ?? '',
+            'tinggi_badan'     => $student->height ?? '',
+            'alamat'           => $student->address ?? '',
+            'no_telp'          => $student->phone ?? '',
+            // Ayah
+            'nama_ayah'          => optional($ayah)->name ?? '',
+            'pekerjaan_ayah'     => optional($ayah)->work ?? '',
+            'tempat_lahir_ayah'  => optional($ayah)->pob ?? '',
+            'tanggal_lahir_ayah' => optional($ayah)->dob?->format('Y-m-d') ?? '',
+            // Ibu
+            'nama_ibu'          => optional($ibu)->name ?? '',
+            'pekerjaan_ibu'     => optional($ibu)->work ?? '',
+            'tempat_lahir_ibu'  => optional($ibu)->pob ?? '',
+            'tanggal_lahir_ibu' => optional($ibu)->dob?->format('Y-m-d') ?? '',
+            // Wali
+            'nama_wali'          => optional($wali)->name ?? '',
+            'pekerjaan_wali'     => optional($wali)->work ?? '',
+            'tempat_lahir_wali'  => optional($wali)->pob ?? '',
+            'tanggal_lahir_wali' => optional($wali)->dob?->format('Y-m-d') ?? '',
+            // Akun orang tua
+            'email_ortu'       => $student->user?->email ?? '',
+            'status_akun_ortu' => $student->user?->status ?? 'active',
+            // Dokumen
+            'dokumen' => $student->files->map(fn($f) => [
+                'id'   => $f->id,
+                'type' => $f->type,
+                'nama' => ucwords(str_replace('_', ' ', $f->type)),
+                'file' => basename($f->path),
+                'path' => $f->path,
+            ])->all(),
         ];
-        
+
         return view('admin.siswa.edit', compact('siswa'));
     }
-    
+
     public function siswaUpdate(Request $request, $id)
     {
-        // Dummy - redirect with success
-        return redirect()->route('admin.siswa.index')->with('success', 'Data siswa berhasil diupdate!');
+        $student = Student::with(['parents', 'user'])->findOrFail($id);
+
+        $request->validate([
+            'nis'            => 'required|string|max:20|unique:student,nis,' . $id,
+            'nama'           => 'required|string|max:255',
+            'jenis_kelamin'  => 'required|in:L,P',
+            'agama'          => 'required|in:islam,kristen,katolik,hindu,budha,konghucu',
+            'tempat_lahir'   => 'required|string|max:100',
+            'tanggal_lahir'  => 'required|date',
+            'anak_ke'        => 'required|integer|min:1',
+            'jumlah_saudara' => 'required|integer|min:0',
+            'alamat'         => 'required|string',
+            'no_telp'        => 'required|string|max:20',
+            'nama_ayah'      => 'required|string|max:255',
+            'nama_ibu'       => 'required|string|max:255',
+            'status_akun_ortu' => 'nullable|in:active,pending,inactive',
+        ]);
+
+        DB::transaction(function () use ($request, $student) {
+            $student->update([
+                'name'            => $request->nama,
+                'nickname'        => $request->nama_panggilan,
+                'gender'          => $request->jenis_kelamin,
+                'nis'             => $request->nis,
+                'pob'             => $request->tempat_lahir,
+                'dob'             => $request->tanggal_lahir,
+                'religion'        => $request->agama,
+                'birth_order'     => $request->anak_ke,
+                'siblings_count'  => $request->jumlah_saudara,
+                'ethnicity'       => $request->suku_bangsa,
+                'illness_history' => $request->riwayat_penyakit,
+                'weight'          => $request->berat_badan ?: null,
+                'height'          => $request->tinggi_badan ?: null,
+                'address'         => $request->alamat,
+                'phone'           => $request->no_telp,
+            ]);
+
+            // Replace parents
+            $student->parents()->delete();
+            Parents::create([
+                'student_id' => $student->id, 'category' => 'ayah',
+                'name' => $request->nama_ayah, 'work' => $request->pekerjaan_ayah,
+                'pob'  => $request->tempat_lahir_ayah, 'dob' => $request->tanggal_lahir_ayah ?: null,
+            ]);
+            Parents::create([
+                'student_id' => $student->id, 'category' => 'ibu',
+                'name' => $request->nama_ibu, 'work' => $request->pekerjaan_ibu,
+                'pob'  => $request->tempat_lahir_ibu, 'dob' => $request->tanggal_lahir_ibu ?: null,
+            ]);
+            if ($request->filled('nama_wali')) {
+                Parents::create([
+                    'student_id' => $student->id, 'category' => 'wali',
+                    'name' => $request->nama_wali, 'work' => $request->pekerjaan_wali,
+                    'pob'  => $request->tempat_lahir_wali, 'dob' => $request->tanggal_lahir_wali ?: null,
+                ]);
+            }
+
+            // Update parent user account if linked
+            if ($student->user) {
+                $userData = [];
+                if ($request->filled('email_ortu')) {
+                    $userData['email'] = $request->email_ortu;
+                }
+                if ($request->filled('status_akun_ortu')) {
+                    $userData['status'] = $request->status_akun_ortu;
+                }
+                if ($request->filled('password_ortu')) {
+                    $userData['password'] = Hash::make($request->password_ortu);
+                }
+                if (!empty($userData)) {
+                    $student->user->update($userData);
+                }
+            }
+        });
+
+        return redirect()->route('admin.siswa.index')
+            ->with('success', "Data siswa {$student->name} berhasil diperbarui!");
     }
-    
+
     public function siswaDestroy($id)
     {
-        // Delete siswa logic here
-        
-        return redirect()->route('admin.siswa.index')->with('success', 'Data siswa berhasil dihapus!');
+        $student = Student::findOrFail($id);
+        $nama = $student->name;
+
+        DB::transaction(function () use ($student) {
+            $student->parents()->delete();
+            $student->files()->delete();
+            $student->enrollments()->delete();
+            $student->delete();
+        });
+
+        return redirect()->route('admin.siswa.index')
+            ->with('success', "Data siswa {$nama} berhasil dihapus!");
     }
     
     // BACKUP DATABASE
@@ -413,39 +560,48 @@ class AdminController extends Controller
         $totalDitolak  = $users->where('status', 'inactive')->count();
         $totalSemua    = $users->count();
 
-        return view('admin.pendaftaran.index', compact('pendaftaran', 'totalPending', 'totalDiterima', 'totalDitolak', 'totalSemua'));
+        $kelasList       = Classroom::orderBy('name')->get();
+        $academicTermList = AcademicTerm::orderBy('academic_year')->orderBy('semester')->get();
+
+        return view('admin.pendaftaran.index', compact(
+            'pendaftaran', 'totalPending', 'totalDiterima', 'totalDitolak', 'totalSemua',
+            'kelasList', 'academicTermList'
+        ));
     }
 
     public function pendaftaranShow($id)
     {
         $user = User::with(['student.parents', 'student.files'])->findOrFail($id);
 
-        $pendaftaran = $this->buildPendaftaranRow($user);
+        $pendaftaran      = $this->buildPendaftaranRow($user);
+        $kelasList        = Classroom::orderBy('name')->get();
+        $academicTermList = AcademicTerm::orderBy('academic_year')->orderBy('semester')->get();
 
-        return view('admin.pendaftaran.show', compact('pendaftaran'));
+        return view('admin.pendaftaran.show', compact('pendaftaran', 'kelasList', 'academicTermList'));
     }
 
     public function pendaftaranTerima(Request $request, $id)
     {
-        $user = User::findOrFail($id);
+        $request->validate([
+            'class_id'         => 'required|exists:class,id',
+            'academic_term_id' => 'required|exists:academic_term,id',
+        ]);
 
-        $kelas       = $request->input('kelas', '');
-        $tahunAjaran = $request->input('tahun_ajaran', '');
+        $user = User::with('student')->findOrFail($id);
 
-        DB::transaction(function () use ($user, $kelas, $tahunAjaran) {
+        DB::transaction(function () use ($user, $request) {
             $user->update(['status' => 'active']);
 
-            if ($kelas && $tahunAjaran && $user->student) {
-                $classTerm = ClassTerm::whereHas('class', fn($q) => $q->where('name', $kelas))
-                    ->whereHas('academicTerm', fn($q) => $q->where('academic_year', $tahunAjaran))
-                    ->first();
+            if ($user->student) {
+                $classTerm = ClassTerm::firstOrCreate([
+                    'class_id'         => $request->class_id,
+                    'academic_term_id' => $request->academic_term_id,
+                ]);
 
-                if ($classTerm) {
-                    StudentEnrollment::firstOrCreate(
-                        ['student_id' => $user->student->id, 'class_term_id' => $classTerm->id],
-                        ['status' => 'aktif']
-                    );
-                }
+                StudentEnrollment::firstOrCreate(
+                    ['student_id' => $user->student->id, 'class_term_id' => $classTerm->id],
+                    ['status' => 'aktif']
+                );
             }
         });
 
@@ -866,36 +1022,27 @@ class AdminController extends Controller
     // ═══════════════════════════════════════════════════════
     public function aktivitasTahunAjaranIndex()
     {
-        $academicTerms = AcademicTerm::with([
+        $academicTerms = AcademicTerm::withCount('classTerms')
+            ->orderBy('academic_year')->orderBy('semester')->get();
+        return view('admin.aktivitas_tahun_ajaran.index', compact('academicTerms'));
+    }
+
+    public function aktivitasTahunAjaranShow($id)
+    {
+        $academicTerm = AcademicTerm::with([
+            'classTerms.class',
             'classTerms.subjects.subject',
             'classTerms.extracurriculars.extracurricular',
             'classTerms.counselings.counseling',
-        ])->orderBy('academic_year')->orderBy('semester')->get();
-
-        $rows = $academicTerms->map(function ($ta) {
-            $mataPelajaran   = $ta->classTerms->flatMap(fn($ct) => $ct->subjects->map(fn($s) => $s->subject?->name))->filter()->unique()->values();
-            $ekstrakurikuler = $ta->classTerms->flatMap(fn($ct) => $ct->extracurriculars->map(fn($e) => $e->extracurricular?->name))->filter()->unique()->values();
-            $konseling       = $ta->classTerms->flatMap(fn($ct) => $ct->counselings->map(fn($k) => $k->counseling?->name))->filter()->unique()->values();
-
-            return [
-                'id'              => $ta->id,
-                'tahun_ajaran'    => $ta->academic_year,
-                'semester'        => $ta->semester,
-                'mata_pelajaran'  => $mataPelajaran->all(),
-                'ekstrakurikuler' => $ekstrakurikuler->all(),
-                'konseling'       => $konseling->all(),
-            ];
-        });
-
-        return view('admin.aktivitas_tahun_ajaran.index', compact('rows'));
+        ])->findOrFail($id);
+        return view('admin.aktivitas_tahun_ajaran.show', compact('academicTerm'));
     }
 
     public function aktivitasTahunAjaranEdit($id)
     {
-        $tahunAjaran = AcademicTerm::with([
-            'classTerms.subjects',
-            'classTerms.extracurriculars',
-            'classTerms.counselings',
+        $classTerm = ClassTerm::with([
+            'academicTerm', 'class',
+            'subjects', 'extracurriculars', 'counselings',
         ])->findOrFail($id);
 
         $mataPelajaran   = Subject::orderBy('name')->get();
@@ -903,18 +1050,20 @@ class AdminController extends Controller
         $konseling       = Counseling::orderBy('name')->get();
 
         $assigned = [
-            'mata_pelajaran_ids'  => $tahunAjaran->classTerms->flatMap(fn($ct) => $ct->subjects->pluck('subject_id'))->unique()->values()->all(),
-            'ekstrakurikuler_ids' => $tahunAjaran->classTerms->flatMap(fn($ct) => $ct->extracurriculars->pluck('extracurricular_id'))->unique()->values()->all(),
-            'konseling_ids'       => $tahunAjaran->classTerms->flatMap(fn($ct) => $ct->counselings->pluck('counseling_id'))->unique()->values()->all(),
+            'mata_pelajaran_ids'  => $classTerm->subjects->pluck('subject_id')->all(),
+            'ekstrakurikuler_ids' => $classTerm->extracurriculars->pluck('extracurricular_id')->all(),
+            'konseling_ids'       => $classTerm->counselings->pluck('counseling_id')->all(),
         ];
 
         return view('admin.aktivitas_tahun_ajaran.edit', compact(
-            'tahunAjaran', 'mataPelajaran', 'ekstrakurikuler', 'konseling', 'assigned'
+            'classTerm', 'mataPelajaran', 'ekstrakurikuler', 'konseling', 'assigned'
         ));
     }
 
     public function aktivitasTahunAjaranUpdate(Request $request, $id)
     {
+        $classTerm = ClassTerm::with('academicTerm', 'class')->findOrFail($id);
+
         $request->validate([
             'mata_pelajaran_ids'    => 'nullable|array',
             'mata_pelajaran_ids.*'  => 'string|exists:subject,id',
@@ -924,30 +1073,27 @@ class AdminController extends Controller
             'konseling_ids.*'       => 'string|exists:counseling,id',
         ]);
 
-        $academicTerm  = AcademicTerm::with('classTerms')->findOrFail($id);
-        $subjectIds    = $request->mata_pelajaran_ids ?? [];
-        $ekskuIds      = $request->ekstrakurikuler_ids ?? [];
-        $konselingIds  = $request->konseling_ids ?? [];
+        $subjectIds   = $request->mata_pelajaran_ids ?? [];
+        $ekskuIds     = $request->ekstrakurikuler_ids ?? [];
+        $konselingIds = $request->konseling_ids ?? [];
 
-        DB::transaction(function () use ($academicTerm, $subjectIds, $ekskuIds, $konselingIds) {
-            foreach ($academicTerm->classTerms as $ct) {
-                $ct->subjects()->delete();
-                foreach ($subjectIds as $sid) {
-                    ClassTermSubject::create(['class_term_id' => $ct->id, 'subject_id' => $sid]);
-                }
-                $ct->extracurriculars()->delete();
-                foreach ($ekskuIds as $eid) {
-                    ClassTermExtracurricular::create(['class_term_id' => $ct->id, 'extracurricular_id' => $eid]);
-                }
-                $ct->counselings()->delete();
-                foreach ($konselingIds as $kid) {
-                    ClassTermCounseling::create(['class_term_id' => $ct->id, 'counseling_id' => $kid]);
-                }
+        DB::transaction(function () use ($classTerm, $subjectIds, $ekskuIds, $konselingIds) {
+            $classTerm->subjects()->delete();
+            foreach ($subjectIds as $sid) {
+                ClassTermSubject::create(['class_term_id' => $classTerm->id, 'subject_id' => $sid]);
+            }
+            $classTerm->extracurriculars()->delete();
+            foreach ($ekskuIds as $eid) {
+                ClassTermExtracurricular::create(['class_term_id' => $classTerm->id, 'extracurricular_id' => $eid]);
+            }
+            $classTerm->counselings()->delete();
+            foreach ($konselingIds as $kid) {
+                ClassTermCounseling::create(['class_term_id' => $classTerm->id, 'counseling_id' => $kid]);
             }
         });
 
-        return redirect()->route('admin.aktivitas_tahun_ajaran.index')
-            ->with('success', "Aktivitas Tahun Ajaran {$academicTerm->academic_year} berhasil diperbarui.");
+        return redirect()->route('admin.aktivitas_tahun_ajaran.show', $classTerm->academic_term_id)
+            ->with('success', "Aktivitas kelas {$classTerm->class?->name} berhasil diperbarui.");
     }
 
     // ═══════════════════════════════════════════════════════

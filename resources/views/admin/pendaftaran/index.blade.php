@@ -344,21 +344,20 @@
             @csrf
             <div class="form-group" style="margin-top:1.25rem;text-align:left;">
                 <label class="form-label required" style="display:block;margin-bottom:.4rem;">Kelas</label>
-                <select name="kelas" class="form-select" required>
+                <select name="class_id" class="form-select" required>
                     <option value="">-- Pilih Kelas --</option>
-                    <option value="A1">A1</option>
-                    <option value="B1">B1</option>
-                    <option value="B2">B2</option>
+                    @foreach($kelasList as $k)
+                        <option value="{{ $k->id }}">{{ $k->name }}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="form-group" style="margin-top:1rem;text-align:left;">
                 <label class="form-label required" style="display:block;margin-bottom:.4rem;">Tahun Ajaran</label>
-                <select name="tahun_ajaran" class="form-select" required>
+                <select name="academic_term_id" class="form-select" required>
                     <option value="">-- Pilih Tahun Ajaran --</option>
-                    @php $currentYear = date('Y'); @endphp
-                    @for($y = $currentYear - 1; $y <= $currentYear + 1; $y++)
-                        <option value="{{ $y }}/{{ $y + 1 }}">{{ $y }}/{{ $y + 1 }}</option>
-                    @endfor
+                    @foreach($academicTermList as $at)
+                        <option value="{{ $at->id }}">{{ $at->academic_year }} — Semester {{ ucfirst($at->semester) }}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="modal-actions" style="margin-top: 24px;">
@@ -431,7 +430,8 @@ function showAcceptModal(id, name) {
 
 function closeAcceptModal() {
     document.getElementById('acceptModal').classList.remove('active');
-    document.querySelectorAll('#acceptForm select').forEach(s => s.value = '');
+    document.querySelector('#acceptForm select[name="class_id"]').value = '';
+    document.querySelector('#acceptForm select[name="academic_term_id"]').value = '';
 }
 
 // Reject Modal

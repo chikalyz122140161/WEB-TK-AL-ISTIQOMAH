@@ -134,7 +134,7 @@
     <div class="page-header__left">
     </div>
     <div class="page-header__actions">
-        <a href="{{ route('admin.aktivitas_tahun_ajaran.index') }}" class="btn btn--secondary">
+        <a href="{{ route('admin.aktivitas_tahun_ajaran.show', $classTerm->academic_term_id) }}" class="btn btn--secondary">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path fill-rule="evenodd" d="M7.28 7.72a.75.75 0 0 1 0 1.06l-2.47 2.47H21a.75.75 0 0 1 0 1.5H4.81l2.47 2.47a.75.75 0 1 1-1.06 1.06l-3.75-3.75a.75.75 0 0 1 0-1.06l3.75-3.75a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"/></svg>
             Kembali
         </a>
@@ -158,12 +158,12 @@
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3A.75.75 0 0 1 18 3v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/></svg>
             </div>
             <div>
-                <div class="ta-info__title">Tahun Ajaran {{ $tahunAjaran->academic_year }}</div>
-                <div class="ta-info__sub">Semester {{ ucfirst($tahunAjaran->semester) }}</div>
+                <div class="ta-info__title">Kelas {{ $classTerm->class?->name }} — {{ $classTerm->academicTerm->academic_year }}</div>
+                <div class="ta-info__sub">Semester {{ ucfirst($classTerm->academicTerm->semester) }}</div>
             </div>
         </div>
 
-        <form action="{{ route('admin.aktivitas_tahun_ajaran.update', $tahunAjaran->id) }}" method="POST" id="assign-form">
+        <form action="{{ route('admin.aktivitas_tahun_ajaran.update', $classTerm->id) }}" method="POST" id="assign-form">
             @csrf
             @method('PUT')
 
@@ -249,7 +249,7 @@
             </div>
 
             <div class="form-actions">
-                <a href="{{ route('admin.aktivitas_tahun_ajaran.index') }}" class="btn btn--secondary">Batal</a>
+                <a href="{{ route('admin.aktivitas_tahun_ajaran.show', $classTerm->academic_term_id) }}" class="btn btn--secondary">Batal</a>
                 <button type="submit" class="btn btn--primary">Simpan Perubahan</button>
             </div>
         </form>

@@ -47,8 +47,8 @@
                 <select id="status" class="form-select">
                     <option value="">Semua Status</option>
                     <option value="pending">Pending</option>
-                    <option value="aktif">Aktif</option>
-                    <option value="nonaktif">Nonaktif</option>
+                    <option value="active">Aktif</option>
+                    <option value="inactive">Nonaktif</option>
                 </select>
             </div>
         </div>
@@ -73,7 +73,9 @@
                 </thead>
                 <tbody>
                     @forelse($pengguna as $index => $user)
-                    <tr>
+                    <tr data-role="{{ $user['role_raw'] }}"
+                        data-status="{{ $user['status_raw'] }}"
+                        data-search="{{ strtolower($user['nama'] . ' ' . $user['email']) }}">
                         <td>{{ $index + 1 }}</td>
                         <td>
                             <div class="user-cell">
@@ -416,6 +418,23 @@
 </div>
 
 <script>
+function applyFilters() {
+    const search = document.getElementById('search').value.toLowerCase().trim();
+    const role   = document.getElementById('role').value;
+    const status = document.getElementById('status').value;
+
+    document.querySelectorAll('.data-table tbody tr[data-role]').forEach(row => {
+        const matchSearch = !search || row.dataset.search.includes(search);
+        const matchRole   = !role   || row.dataset.role   === role;
+        const matchStatus = !status || row.dataset.status === status;
+        row.style.display = (matchSearch && matchRole && matchStatus) ? '' : 'none';
+    });
+}
+
+document.getElementById('search').addEventListener('input', applyFilters);
+document.getElementById('role').addEventListener('change', applyFilters);
+document.getElementById('status').addEventListener('change', applyFilters);
+
 function showDeleteModal(id, name) {
     document.getElementById('deleteUserName').textContent = name;
     document.getElementById('deleteForm').action = "{{ url('admin/pengguna') }}/" + id;
@@ -426,11 +445,8 @@ function closeDeleteModal() {
     document.getElementById('deleteModal').classList.remove('active');
 }
 
-// Close modal when clicking outside
 document.getElementById('deleteModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeDeleteModal();
-    }
+    if (e.target === this) closeDeleteModal();
 });
 </script>
 @endsection

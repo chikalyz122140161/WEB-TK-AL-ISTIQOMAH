@@ -94,8 +94,9 @@ Route::middleware('dummy.auth')->group(function () {
 
     // Admin - Kelola Aktivitas Tahun Ajaran (assign mapel/ekskul/konseling ke class term)
     Route::get('/admin/aktivitas-tahun-ajaran', [AdminController::class, 'aktivitasTahunAjaranIndex'])->name('admin.aktivitas_tahun_ajaran.index');
-    Route::get('/admin/aktivitas-tahun-ajaran/{id}/edit', [AdminController::class, 'aktivitasTahunAjaranEdit'])->name('admin.aktivitas_tahun_ajaran.edit');
-    Route::put('/admin/aktivitas-tahun-ajaran/{id}', [AdminController::class, 'aktivitasTahunAjaranUpdate'])->name('admin.aktivitas_tahun_ajaran.update');
+    Route::get('/admin/aktivitas-tahun-ajaran/class-term/{id}/edit', [AdminController::class, 'aktivitasTahunAjaranEdit'])->name('admin.aktivitas_tahun_ajaran.edit');
+    Route::put('/admin/aktivitas-tahun-ajaran/class-term/{id}', [AdminController::class, 'aktivitasTahunAjaranUpdate'])->name('admin.aktivitas_tahun_ajaran.update');
+    Route::get('/admin/aktivitas-tahun-ajaran/{id}', [AdminController::class, 'aktivitasTahunAjaranShow'])->name('admin.aktivitas_tahun_ajaran.show');
 
     // Admin - Kenaikan Siswa
     Route::get('/admin/kenaikan', [AdminController::class, 'kenaikanIndex'])->name('admin.kenaikan.index');
