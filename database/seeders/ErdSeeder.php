@@ -22,20 +22,21 @@ use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class ErdSeeder extends Seeder
 {
     public function run(): void
     {
-        /* ── 1. USER (Kepala Sekolah + Guru) ─────────────────── */
+        /* ══════════════════════════════════════════════════
+         *  1. USERS — Admin + 3 Guru
+         * ══════════════════════════════════════════════════ */
         $admin = User::create([
             'name'       => 'Baini, S.Pd',
-            'email'      => 'baini.kepsek@tkalistiqomah.sch.id',
+            'email'      => 'admin@tkalistiqomah.sch.id',
             'password'   => Hash::make('password'),
             'phone'      => '081200000000',
             'role'       => 'admin',
-            'status'     => 'aktif',
+            'status'     => 'active',
             'isGraduate' => false,
         ]);
 
@@ -45,7 +46,7 @@ class ErdSeeder extends Seeder
             'password'   => Hash::make('password'),
             'phone'      => '081211111111',
             'role'       => 'guru',
-            'status'     => 'aktif',
+            'status'     => 'active',
             'isGraduate' => false,
         ]);
 
@@ -55,7 +56,7 @@ class ErdSeeder extends Seeder
             'password'   => Hash::make('password'),
             'phone'      => '081222222222',
             'role'       => 'guru',
-            'status'     => 'aktif',
+            'status'     => 'active',
             'isGraduate' => false,
         ]);
 
@@ -65,64 +66,317 @@ class ErdSeeder extends Seeder
             'password'   => Hash::make('password'),
             'phone'      => '081233333333',
             'role'       => 'guru',
-            'status'     => 'aktif',
+            'status'     => 'active',
             'isGraduate' => false,
         ]);
 
-        /* ── 2. CLASS ─────────────────── */
+        $guruByKelas = ['A' => $guruA, 'B1' => $guruB1, 'B2' => $guruB2];
+
+        /* ══════════════════════════════════════════════════
+         *  2. KELAS
+         * ══════════════════════════════════════════════════ */
         $kelasA  = Classroom::create(['name' => 'A',  'maximum' => 20]);
         $kelasB1 = Classroom::create(['name' => 'B1', 'maximum' => 20]);
         $kelasB2 = Classroom::create(['name' => 'B2', 'maximum' => 20]);
 
-        /* ── 3. ACADEMIC TERM ─────────────────── */
-        $taGanjil = AcademicTerm::create(['academic_year' => '2025/2026', 'semester' => 'ganjil']);
-        $taGenap  = AcademicTerm::create(['academic_year' => '2024/2025', 'semester' => 'genap']);
+        /* ══════════════════════════════════════════════════
+         *  3. ACADEMIC TERM  —  2025/2026 Ganjil (selesai) + Genap (aktif)
+         * ══════════════════════════════════════════════════ */
+        $taGanjil = AcademicTerm::create([
+            'academic_year' => '2025/2026',
+            'semester'      => 'ganjil',
+            'status'        => 'selesai',
+        ]);
+        $taGenap = AcademicTerm::create([
+            'academic_year' => '2025/2026',
+            'semester'      => 'genap',
+            'status'        => 'aktif',
+        ]);
 
-        /* ── 4. CLASS TERM ─────────────────── */
-        $ctA  = ClassTerm::create(['class_id' => $kelasA->id,  'academic_term_id' => $taGanjil->id, 'isPass' => false]);
-        $ctB1 = ClassTerm::create(['class_id' => $kelasB1->id, 'academic_term_id' => $taGanjil->id, 'isPass' => false]);
-        $ctB2 = ClassTerm::create(['class_id' => $kelasB2->id, 'academic_term_id' => $taGanjil->id, 'isPass' => false]);
+        /* ══════════════════════════════════════════════════
+         *  4. CLASS TERM
+         *     Ganjil → isPass true (sudah selesai proses kenaikan)
+         *     Genap  → isPass false (sedang berjalan)
+         * ══════════════════════════════════════════════════ */
+        $ctAGanjil  = ClassTerm::create(['class_id' => $kelasA->id,  'academic_term_id' => $taGanjil->id, 'isPass' => true]);
+        $ctB1Ganjil = ClassTerm::create(['class_id' => $kelasB1->id, 'academic_term_id' => $taGanjil->id, 'isPass' => true]);
+        $ctB2Ganjil = ClassTerm::create(['class_id' => $kelasB2->id, 'academic_term_id' => $taGanjil->id, 'isPass' => true]);
 
-        $kelasMap = [
-            'A'  => ['classroom' => $kelasA,  'class_term' => $ctA],
-            'B1' => ['classroom' => $kelasB1, 'class_term' => $ctB1],
-            'B2' => ['classroom' => $kelasB2, 'class_term' => $ctB2],
+        $ctAGenap  = ClassTerm::create(['class_id' => $kelasA->id,  'academic_term_id' => $taGenap->id, 'isPass' => false]);
+        $ctB1Genap = ClassTerm::create(['class_id' => $kelasB1->id, 'academic_term_id' => $taGenap->id, 'isPass' => false]);
+        $ctB2Genap = ClassTerm::create(['class_id' => $kelasB2->id, 'academic_term_id' => $taGenap->id, 'isPass' => false]);
+
+        $ganjilMap = ['A' => $ctAGanjil,  'B1' => $ctB1Ganjil, 'B2' => $ctB2Ganjil];
+        $genapMap  = ['A' => $ctAGenap,   'B1' => $ctB1Genap,  'B2' => $ctB2Genap];
+        $allCTs    = [$ctAGanjil, $ctB1Ganjil, $ctB2Ganjil, $ctAGenap, $ctB1Genap, $ctB2Genap];
+
+        /* ══════════════════════════════════════════════════
+         *  5. MATA PELAJARAN
+         * ══════════════════════════════════════════════════ */
+        $subjects = [];
+        foreach ([
+            'Nilai Agama & Moral',
+            'Fisik Motorik',
+            'Kognitif',
+            'Bahasa',
+            'Sosial Emosional',
+            'Seni',
+        ] as $name) {
+            $subjects[] = Subject::create(['name' => $name]);
+        }
+
+        /* ══════════════════════════════════════════════════
+         *  6. EKSTRAKURIKULER + ASPEK PENILAIAN
+         * ══════════════════════════════════════════════════ */
+        $ekMenari = Extracurricular::create(['name' => 'Menari']);
+        foreach (['Kelenturan Tubuh', 'Ekspresi & Penghayatan', 'Hafalan Gerakan'] as $a) {
+            ExtracurricularAssessment::create(['extracurricular_id' => $ekMenari->id, 'name' => $a]);
+        }
+
+        $ekMewarnai = Extracurricular::create(['name' => 'Mewarnai']);
+        foreach (['Kerapian', 'Kreativitas Warna', 'Ketepatan Bidang Warna'] as $a) {
+            ExtracurricularAssessment::create(['extracurricular_id' => $ekMewarnai->id, 'name' => $a]);
+        }
+
+        $ekDrumband = Extracurricular::create(['name' => 'Drumband']);
+        foreach (['Koordinasi Gerak', 'Kedisiplinan', 'Kekompakan Tim'] as $a) {
+            ExtracurricularAssessment::create(['extracurricular_id' => $ekDrumband->id, 'name' => $a]);
+        }
+
+        $allExtras = [$ekMenari, $ekMewarnai, $ekDrumband];
+
+        /* ══════════════════════════════════════════════════
+         *  7. KONSELING + ASPEK PENILAIAN
+         * ══════════════════════════════════════════════════ */
+        $konSosial = Counseling::create(['name' => 'Perkembangan Sosial']);
+        foreach (['Interaksi dengan Teman', 'Kemampuan Berbagi', 'Kepatuhan Aturan Kelas'] as $a) {
+            CounselingAssessment::create(['counseling_id' => $konSosial->id, 'name' => $a]);
+        }
+
+        $konEmosi = Counseling::create(['name' => 'Perkembangan Emosi']);
+        foreach (['Mengelola Emosi', 'Empati terhadap Teman', 'Kemampuan Mengungkapkan Perasaan'] as $a) {
+            CounselingAssessment::create(['counseling_id' => $konEmosi->id, 'name' => $a]);
+        }
+
+        $konKognitif = Counseling::create(['name' => 'Perkembangan Kognitif']);
+        foreach (['Daya Tangkap', 'Kreativitas Berpikir', 'Kemampuan Memecahkan Masalah'] as $a) {
+            CounselingAssessment::create(['counseling_id' => $konKognitif->id, 'name' => $a]);
+        }
+
+        $konBahasa = Counseling::create(['name' => 'Perkembangan Bahasa']);
+        foreach (['Kemampuan Bercerita', 'Penguasaan Kosakata', 'Kemampuan Mendengarkan'] as $a) {
+            CounselingAssessment::create(['counseling_id' => $konBahasa->id, 'name' => $a]);
+        }
+
+        $konFisik = Counseling::create(['name' => 'Perkembangan Fisik Motorik']);
+        foreach (['Motorik Kasar', 'Motorik Halus', 'Koordinasi Mata-Tangan'] as $a) {
+            CounselingAssessment::create(['counseling_id' => $konFisik->id, 'name' => $a]);
+        }
+
+        $allCounselings = [$konSosial, $konEmosi, $konKognitif, $konBahasa, $konFisik];
+
+        /* ══════════════════════════════════════════════════
+         *  8. LINK Class Term × Mapel × Ekskul × Konseling
+         *     (berlaku untuk semua class term ganjil & genap)
+         * ══════════════════════════════════════════════════ */
+        foreach ($allCTs as $ct) {
+            foreach ($subjects as $s) {
+                ClassTermSubject::create(['class_term_id' => $ct->id, 'subject_id' => $s->id]);
+            }
+            foreach ($allExtras as $e) {
+                ClassTermExtracurricular::create(['class_term_id' => $ct->id, 'extracurricular_id' => $e->id]);
+            }
+            foreach ($allCounselings as $k) {
+                ClassTermCounseling::create(['class_term_id' => $ct->id, 'counseling_id' => $k->id]);
+            }
+        }
+
+        /* ══════════════════════════════════════════════════
+         *  9. JADWAL KELAS (Senin–Jumat) — untuk semua class term
+         * ══════════════════════════════════════════════════ */
+        $jadwalHarian = [
+            // Senin
+            ['day' => 1, 'name' => 'Upacara & Doa Pagi',         'hour' => '07:30-07:45'],
+            ['day' => 1, 'name' => 'Kegiatan Motorik Kasar',     'hour' => '07:45-08:15'],
+            ['day' => 1, 'name' => 'Pembelajaran Tema',           'hour' => '08:15-09:15'],
+            ['day' => 1, 'name' => 'Istirahat & Makan',          'hour' => '09:15-09:45'],
+            ['day' => 1, 'name' => 'Kegiatan Inti / Sentra',     'hour' => '09:45-10:30'],
+            ['day' => 1, 'name' => 'Penutup & Doa Pulang',       'hour' => '10:30-10:45'],
+            // Selasa
+            ['day' => 2, 'name' => 'Doa Pagi & Hafalan Surat',   'hour' => '07:30-07:45'],
+            ['day' => 2, 'name' => 'Senam Pagi',                  'hour' => '07:45-08:15'],
+            ['day' => 2, 'name' => 'Pembelajaran Bahasa',         'hour' => '08:15-09:15'],
+            ['day' => 2, 'name' => 'Istirahat & Makan',          'hour' => '09:15-09:45'],
+            ['day' => 2, 'name' => 'Kegiatan Seni & Kreasi',     'hour' => '09:45-10:30'],
+            ['day' => 2, 'name' => 'Penutup & Doa Pulang',       'hour' => '10:30-10:45'],
+            // Rabu
+            ['day' => 3, 'name' => 'Doa Pagi & Hadits',          'hour' => '07:30-07:45'],
+            ['day' => 3, 'name' => 'Senam Ceria',                 'hour' => '07:45-08:15'],
+            ['day' => 3, 'name' => 'Pembelajaran Matematika',     'hour' => '08:15-09:15'],
+            ['day' => 3, 'name' => 'Istirahat & Makan',          'hour' => '09:15-09:45'],
+            ['day' => 3, 'name' => 'Mewarnai / Melukis',         'hour' => '09:45-10:30'],
+            ['day' => 3, 'name' => 'Penutup & Doa Pulang',       'hour' => '10:30-10:45'],
+            // Kamis
+            ['day' => 4, 'name' => 'Doa Pagi & Asmaul Husna',    'hour' => '07:30-07:45'],
+            ['day' => 4, 'name' => 'Menari',                      'hour' => '07:45-08:30'],
+            ['day' => 4, 'name' => 'Pembelajaran Sains Sederhana','hour' => '08:30-09:15'],
+            ['day' => 4, 'name' => 'Istirahat & Makan',          'hour' => '09:15-09:45'],
+            ['day' => 4, 'name' => 'Bermain Peran / Sentra Drama','hour' => '09:45-10:30'],
+            ['day' => 4, 'name' => 'Penutup & Doa Pulang',       'hour' => '10:30-10:45'],
+            // Jumat
+            ['day' => 5, 'name' => 'Doa Pagi & Surat Pendek',    'hour' => '07:30-07:45'],
+            ['day' => 5, 'name' => 'Drumband',                    'hour' => '07:45-08:30'],
+            ['day' => 5, 'name' => 'Bermain Bebas Terbimbing',    'hour' => '08:30-09:15'],
+            ['day' => 5, 'name' => 'Istirahat & Makan',          'hour' => '09:15-09:45'],
+            ['day' => 5, 'name' => 'Review Mingguan & Penutup',  'hour' => '09:45-10:30'],
         ];
 
-        /* ── 5. SISWA ─────────────────── */
-        $siswaData = $this->getSiswaData();
+        foreach ($allCTs as $ct) {
+            foreach ($jadwalHarian as $j) {
+                ClassSchedule::create([
+                    'class_term_id' => $ct->id,
+                    'name'          => $j['name'],
+                    'day'           => $j['day'],
+                    'hour'          => $j['hour'],
+                ]);
+            }
+        }
 
-        foreach ($siswaData as $row) {
-            $student = Student::create([
-                'name'           => $row['name'],
-                'gender'         => $row['gender'],
-                'nis'            => $row['nis'],
-                'nisn'           => $row['nisn'],
-                'pob'            => $row['pob'],
-                'dob'            => $row['dob'],
-                'nik'            => $row['nik'],
-                'address'        => $row['address'],
-                'phone'          => $row['phone'] ?? null,
-                'religion'       => 'islam',
-                'kelas'          => $row['kelas'],
-                'nomor_induk'    => $row['nis'],
-                'tempat_lahir'   => $row['pob'],
-                'birth_date'     => $row['dob'],
-                'telepon'        => $row['phone'] ?? null,
-                'nama_ayah'      => $row['ayah_nama'] ?? null,
-                'pekerjaan_ayah' => $row['ayah_kerja'] ?? null,
-                'nama_ibu'       => $row['ibu_nama'] ?? null,
-                'pekerjaan_ibu'  => $row['ibu_kerja'] ?? null,
+        /* ══════════════════════════════════════════════════
+         *  10. JADWAL KEGIATAN (Activity Schedule) — semester genap
+         * ══════════════════════════════════════════════════ */
+        $activities = [
+            [
+                'name'        => 'Kunjungan Belajar ke Kebun Binatang',
+                'date'        => '2026-02-14',
+                'hour'        => '08:00-13:00',
+                'location'    => 'Taman Kupu-Kupu Gita Persada, Bandar Lampung',
+                'description' => 'Mengenal berbagai jenis hewan dan lingkungan alam secara langsung',
+            ],
+            [
+                'name'        => 'Peringatan Hari Kartini',
+                'date'        => '2026-04-21',
+                'hour'        => '07:30-11:00',
+                'location'    => 'Halaman Sekolah',
+                'description' => 'Pentas seni budaya dan parade busana daerah',
+            ],
+            [
+                'name'        => 'Outbond & Fun Games',
+                'date'        => '2026-03-15',
+                'hour'        => '08:00-12:00',
+                'location'    => 'Taman Bermain Kota',
+                'description' => 'Kegiatan permainan dan olah raga bersama untuk meningkatkan kerjasama',
+            ],
+            [
+                'name'        => 'Pentas Seni Akhir Semester Genap',
+                'date'        => '2026-05-30',
+                'hour'        => '08:00-12:00',
+                'location'    => 'Aula TK Al-Istiqomah',
+                'description' => 'Penampilan seni siswa: menari, menyanyi, dan drumband',
+            ],
+        ];
+
+        foreach ([$ctAGenap, $ctB1Genap, $ctB2Genap] as $ct) {
+            foreach ($activities as $act) {
+                ActivitySchedule::create([
+                    'class_term_id' => $ct->id,
+                    'name'          => $act['name'],
+                    'date'          => $act['date'],
+                    'hour'          => $act['hour'],
+                    'location'      => $act['location'],
+                    'description'   => $act['description'],
+                ]);
+            }
+        }
+
+        // Aktivitas ganjil (sudah terlaksana, diisi sebagai histori)
+        $activitiesGanjil = [
+            [
+                'name'        => 'Masa Pengenalan Lingkungan Sekolah (MPLS)',
+                'date'        => '2025-07-14',
+                'hour'        => '07:30-10:30',
+                'location'    => 'Sekolah',
+                'description' => 'Pengenalan lingkungan sekolah bagi siswa baru',
+            ],
+            [
+                'name'        => 'Peringatan Maulid Nabi Muhammad SAW',
+                'date'        => '2025-09-15',
+                'hour'        => '08:00-10:00',
+                'location'    => 'Aula TK Al-Istiqomah',
+                'description' => 'Ceramah dan kegiatan islami',
+            ],
+            [
+                'name'        => 'Lomba Antar Kelas HUT RI',
+                'date'        => '2025-08-16',
+                'hour'        => '08:00-11:00',
+                'location'    => 'Halaman Sekolah',
+                'description' => 'Berbagai perlombaan dalam rangka HUT Kemerdekaan RI ke-80',
+            ],
+        ];
+
+        foreach ([$ctAGanjil, $ctB1Ganjil, $ctB2Ganjil] as $ct) {
+            foreach ($activitiesGanjil as $act) {
+                ActivitySchedule::create([
+                    'class_term_id' => $ct->id,
+                    'name'          => $act['name'],
+                    'date'          => $act['date'],
+                    'hour'          => $act['hour'],
+                    'location'      => $act['location'],
+                    'description'   => $act['description'],
+                ]);
+            }
+        }
+
+        /* ══════════════════════════════════════════════════
+         *  11. SISWA, ORANG TUA, & ENROLLMENT
+         *      - Ganjil : status naik, aksi ganti_semester → ke Genap
+         *      - Genap  : status aktif
+         * ══════════════════════════════════════════════════ */
+        $siswaData = $this->getSiswaData();
+        $createdStudents = [];  // untuk sample konseling jadwal
+
+        foreach ($siswaData as $idx => $row) {
+            // Buat user akun orang tua
+            $parentUser = User::create([
+                'name'     => $row['ayah_nama'] ?? ('Orang Tua ' . $row['name']),
+                'email'    => 'ortu' . ($idx + 1) . '@tkalistiqomah.sch.id',
+                'password' => Hash::make('password'),
+                'phone'    => $row['phone'] ?? null,
+                'role'     => 'orangtua',
+                'status'   => 'active',
             ]);
 
-            // Enrollment ke class_term sesuai kelas
+            $student = Student::create([
+                'user_id'   => $parentUser->id,
+                'name'      => $row['name'],
+                'gender'    => $row['gender'],
+                'nis'       => $row['nis'],
+                'nisn'      => $row['nisn'],
+                'pob'       => $row['pob'],
+                'dob'       => $row['dob'],
+                'nik'       => $row['nik'],
+                'address'   => $row['address'],
+                'phone'     => $row['phone'] ?? null,
+                'religion'  => 'islam',
+            ]);
+
+            // Enrollment Ganjil → naik (proses kenaikan sudah dilakukan)
+            StudentEnrollment::create([
+                'student_id'           => $student->id,
+                'class_term_id'        => $ganjilMap[$row['kelas']]->id,
+                'status'               => 'naik',
+                'aksi'                 => 'ganti_semester',
+                'class_term_tujuan_id' => $genapMap[$row['kelas']]->id,
+            ]);
+
+            // Enrollment Genap → aktif (semester yang sedang berjalan)
             StudentEnrollment::create([
                 'student_id'    => $student->id,
-                'class_term_id' => $kelasMap[$row['kelas']]['class_term']->id,
+                'class_term_id' => $genapMap[$row['kelas']]->id,
                 'status'        => 'aktif',
             ]);
 
-            // Parent records
+            // Data orang tua
             if (!empty($row['ayah_nama'])) {
                 Parents::create([
                     'student_id' => $student->id,
@@ -139,65 +393,63 @@ class ErdSeeder extends Seeder
                     'work'       => $row['ibu_kerja'] ?? null,
                 ]);
             }
+
+            $createdStudents[] = ['student' => $student, 'kelas' => $row['kelas']];
         }
 
-        /* ── 6. SUBJECT ─────────────────── */
-        $subjects = [];
-        foreach ([
-            'Nilai Agama & Moral', 'Fisik Motorik', 'Kognitif',
-            'Bahasa', 'Sosial Emosional', 'Seni',
-        ] as $name) {
-            $subjects[] = Subject::create(['name' => $name]);
-        }
+        /* ══════════════════════════════════════════════════
+         *  12. JADWAL KONSELING PRIVAT (sample)
+         *      Beberapa sesi konseling antara guru dan siswa
+         * ══════════════════════════════════════════════════ */
+        $sampleSessions = [
+            // [student_index, status, date, start, end, topic]
+            [0,  'disetujui', '2026-02-10', '09:00:00', '09:30:00', 'Penyesuaian diri di semester baru'],
+            [1,  'disetujui', '2026-02-12', '09:00:00', '09:30:00', 'Perkembangan sosial dan bermain bersama'],
+            [11, 'selesai',   '2026-02-05', '10:00:00', '10:30:00', 'Kemampuan berkomunikasi dan berinteraksi'],
+            [12, 'selesai',   '2026-02-07', '10:00:00', '10:30:00', 'Pengelolaan emosi saat bermain'],
+            [25, 'pending',   '2026-02-20', '09:00:00', '09:30:00', 'Perkembangan motorik halus'],
+            [26, 'pending',   '2026-02-21', '09:00:00', '09:30:00', 'Kesulitan konsentrasi saat belajar'],
+        ];
 
-        /* ── 7. EKSTRAKURIKULER ─────────────────── */
-        $ekMenari = Extracurricular::create(['name' => 'Menari']);
-        foreach (['Kelenturan', 'Ekspresi', 'Hafalan Gerakan'] as $a) {
-            ExtracurricularAssessment::create(['extracurricular_id' => $ekMenari->id, 'name' => $a]);
-        }
-        $ekMewarnai = Extracurricular::create(['name' => 'Mewarnai']);
-        foreach (['Kerapian', 'Kreativitas Warna', 'Ketepatan Bidang'] as $a) {
-            ExtracurricularAssessment::create(['extracurricular_id' => $ekMewarnai->id, 'name' => $a]);
-        }
-
-        /* ── 8. KONSELING ─────────────────── */
-        $konSosial = Counseling::create(['name' => 'Perkembangan Sosial']);
-        foreach (['Interaksi dengan teman', 'Kemampuan berbagi', 'Kepatuhan aturan'] as $a) {
-            CounselingAssessment::create(['counseling_id' => $konSosial->id, 'name' => $a]);
-        }
-        $konEmosi = Counseling::create(['name' => 'Perkembangan Emosi']);
-        foreach (['Mengelola emosi', 'Empati terhadap teman'] as $a) {
-            CounselingAssessment::create(['counseling_id' => $konEmosi->id, 'name' => $a]);
-        }
-        $konKognitif = Counseling::create(['name' => 'Perkembangan Kognitif']);
-        foreach (['Daya tangkap', 'Kreativitas berpikir'] as $a) {
-            CounselingAssessment::create(['counseling_id' => $konKognitif->id, 'name' => $a]);
-        }
-
-        /* ── 9. CLASS TERM × ACTIVITIES ─────────────────── */
-        foreach ([$ctA, $ctB1, $ctB2] as $ct) {
-            foreach ($subjects as $s) {
-                ClassTermSubject::create(['class_term_id' => $ct->id, 'subject_id' => $s->id]);
+        foreach ($sampleSessions as [$sidx, $status, $date, $start, $end, $topic]) {
+            if (!isset($createdStudents[$sidx])) {
+                continue;
             }
-            foreach ([$ekMenari, $ekMewarnai] as $e) {
-                ClassTermExtracurricular::create(['class_term_id' => $ct->id, 'extracurricular_id' => $e->id]);
-            }
-            foreach ([$konSosial, $konEmosi, $konKognitif] as $k) {
-                ClassTermCounseling::create(['class_term_id' => $ct->id, 'counseling_id' => $k->id]);
-            }
+            $info  = $createdStudents[$sidx];
+            $guru  = $guruByKelas[$info['kelas']];
+            $ctGen = $genapMap[$info['kelas']];
+
+            PrivateCounselingSchedule::create([
+                'student_id'    => $info['student']->id,
+                'teacher_id'    => $guru->id,
+                'class_term_id' => $ctGen->id,
+                'status'        => $status,
+                'date'          => $date,
+                'start_hour'    => $start,
+                'end_hour'      => $end,
+                'topic'         => $topic,
+            ]);
         }
 
-        $this->command->info('✓ Seeder selesai: 4 user (Kepsek + 3 Guru), 3 kelas, 3 class_term, '
-            . count($siswaData) . ' siswa dengan data orang tua.');
+        $this->command->info('✓ Seeder selesai:');
+        $this->command->info('  • 4 user (Admin + 3 Guru)');
+        $this->command->info('  • ' . count($siswaData) . ' user orangtua + ' . count($siswaData) . ' siswa dengan data orang tua');
+        $this->command->info('  • 3 kelas (A, B1, B2)');
+        $this->command->info('  • 2 tahun ajaran (2025/2026 Ganjil selesai, Genap aktif)');
+        $this->command->info('  • 6 class term (3 ganjil + 3 genap)');
+        $this->command->info('  • 6 mata pelajaran, 3 ekstrakurikuler, 5 konseling');
+        $this->command->info('  • Jadwal kelas (Senin-Jumat) untuk semua class term');
+        $this->command->info('  • Jadwal kegiatan (3 ganjil + 4 genap) per kelas');
+        $this->command->info('  • 6 sample jadwal konseling privat');
     }
 
-    /**
-     * Data siswa lengkap dari PDF resmi sekolah.
-     */
+    /* ══════════════════════════════════════════════════════════════
+     *  DATA SISWA — dari dokumen resmi sekolah
+     * ══════════════════════════════════════════════════════════════ */
     private function getSiswaData(): array
     {
         return [
-            // ── KELAS A (11 siswa) ──────────────────────────────
+            // ── KELAS A (11 siswa) ──────────────────────────────────
             ['kelas' => 'A', 'nis' => '121', 'nisn' => '3202858632', 'name' => 'ALVARO ATHAYA ARIYUN', 'gender' => 'L',
              'pob' => 'Bandar Lampung', 'dob' => '2020-11-07', 'nik' => '1871140711200001',
              'address' => 'Jl Untung Suropati LK II', 'phone' => '081271459987',
@@ -264,7 +516,7 @@ class ErdSeeder extends Seeder
              'ayah_nama' => 'Radi Aditama Sanjaya', 'ayah_kerja' => 'Karyawan Swasta',
              'ibu_nama' => 'Nuraini', 'ibu_kerja' => 'Guru'],
 
-            // ── KELAS B1 (14 siswa) ─────────────────────────────
+            // ── KELAS B1 (14 siswa) ─────────────────────────────────
             ['kelas' => 'B1', 'nis' => '119', 'nisn' => '3193713608', 'name' => 'ABIL ALTAIR ERDHAFEN', 'gender' => 'L',
              'pob' => 'Bandar Lampung', 'dob' => '2019-12-03', 'nik' => '1871140312190001',
              'address' => 'JL. UNTUNG SUROPATI PANCA BAKTI NO 61 LK I', 'phone' => '082282746766',
@@ -309,7 +561,7 @@ class ErdSeeder extends Seeder
 
             ['kelas' => 'B1', 'nis' => '130', 'nisn' => '3192155289', 'name' => 'DEWI HAFIZAH IRWANA', 'gender' => 'P',
              'pob' => 'Bandar Lampung', 'dob' => '2019-06-30', 'nik' => '1871027006190002',
-             'address' => 'JL WIJAYA KUSUMA PERUM PANCABAKTI LK II', 'phone' => '08133132380661',
+             'address' => 'JL WIJAYA KUSUMA PERUM PANCABAKTI LK II', 'phone' => '081331323806',
              'ayah_nama' => 'Irawan Suki', 'ayah_kerja' => 'Karyawan Swasta',
              'ibu_nama' => 'Irna Wati', 'ibu_kerja' => 'Karyawan Swasta'],
 
@@ -339,7 +591,7 @@ class ErdSeeder extends Seeder
 
             ['kelas' => 'B1', 'nis' => '142', 'nisn' => '3207434745', 'name' => 'TEGUH SATRIA', 'gender' => 'L',
              'pob' => 'Bandar Lampung', 'dob' => '2020-01-31', 'nik' => '1871143101200001',
-             'address' => 'JL UNTUNG SUROPATI GG RUKUN I LK I', 'phone' => '0895323160753',
+             'address' => 'JL UNTUNG SUROPATI GG RUKUN I LK I', 'phone' => '089532316075',
              'ayah_nama' => 'Endi Hermawan', 'ayah_kerja' => 'Buruh',
              'ibu_nama' => 'Umiga Utami', 'ibu_kerja' => 'Karyawan Swasta'],
 
@@ -349,7 +601,7 @@ class ErdSeeder extends Seeder
              'ayah_nama' => 'Yana Rodiana', 'ayah_kerja' => 'Buruh',
              'ibu_nama' => 'Usniawati', 'ibu_kerja' => 'Tidak bekerja'],
 
-            // ── KELAS B2 (11 siswa) ─────────────────────────────
+            // ── KELAS B2 (11 siswa) ─────────────────────────────────
             ['kelas' => 'B2', 'nis' => null, 'nisn' => '3200671971', 'name' => 'ANDHANU RHADITYA', 'gender' => 'L',
              'pob' => 'Bandar Lampung', 'dob' => '2020-03-01', 'nik' => '1871140103200002',
              'address' => 'Jl Wijaya Kusuma Komp Pancabakti Gg Matahari LK II',
@@ -401,13 +653,13 @@ class ErdSeeder extends Seeder
             ['kelas' => 'B2', 'nis' => '139', 'nisn' => '3206861787', 'name' => 'RENATA ARSY SUSILO', 'gender' => 'P',
              'pob' => 'Bandar Lampung', 'dob' => '2020-04-30', 'nik' => '1871147004200001',
              'address' => 'Jl Untung Suropati Gg Tanjung No 20', 'phone' => '081231087001',
-             'ayah_nama' => 'Ari Susilo, S.Kom', 'ayah_kerja' => 'Karyawan Swasta',
-             'ibu_nama' => 'Faradillah Chairunnisa, S.P', 'ibu_kerja' => 'Tidak bekerja'],
+             'ayah_nama' => 'Ari Susilo', 'ayah_kerja' => 'Karyawan Swasta',
+             'ibu_nama' => 'Faradillah Chairunnisa', 'ibu_kerja' => 'Tidak bekerja'],
 
             ['kelas' => 'B2', 'nis' => '140', 'nisn' => '3208144690', 'name' => 'SALAHUDDIN KAHFI PRAWIRANEGARA', 'gender' => 'L',
              'pob' => 'Bandar Lampung', 'dob' => '2020-01-02', 'nik' => '1871140201200001',
              'address' => 'Jl Wijaya Kusuma Gg Mawar Perum Golden Green Estate LK II', 'phone' => '081379014810',
-             'ayah_nama' => 'Agung Setiawan, SH. MH', 'ayah_kerja' => 'Karyawan Swasta',
+             'ayah_nama' => 'Agung Setiawan', 'ayah_kerja' => 'Karyawan Swasta',
              'ibu_nama' => 'Ika Kusumawardani', 'ibu_kerja' => 'Karyawan Swasta'],
 
             ['kelas' => 'B2', 'nis' => '136', 'nisn' => '3192524958', 'name' => 'SHEZAN NAILA SALSABILA', 'gender' => 'P',
