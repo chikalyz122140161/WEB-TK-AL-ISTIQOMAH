@@ -1179,33 +1179,118 @@ class AdminController extends Controller
     // ═══════════════════════════════════════════════════════
     // REKAP DATA DAPODIK
     // ═══════════════════════════════════════════════════════
-    public function dapodikIndex()
+    public function dapodikIndex(Request $request)
     {
-        $siswa = Student::orderBy('kelas')->orderBy('name')->get()->map(function ($s) {
-            return [
-                'id'            => $s->id,
-                'nisn'          => $s->nisn ?? '-',
-                'nik'           => $s->nik ?? '-',
-                'nama'          => $s->name,
-                'jenis_kelamin' => $s->gender == 'L' ? 'Laki-laki' : 'Perempuan',
-                'tempat_lahir'  => $s->tempat_lahir ?? '-',
-                'tanggal_lahir' => $s->birth_date ? \Carbon\Carbon::parse($s->birth_date)->format('d-m-Y') : '-',
-                'agama'         => 'Islam',
-                'alamat'        => $s->address ?? '-',
-                'nama_ayah'     => $s->nama_ayah ?? '-',
-                'nama_ibu'      => $s->nama_ibu ?? '-',
-                'kelas'         => $s->kelas ? 'TK ' . $s->kelas : '-',
-                'status'        => 'Aktif',
-            ];
-        })->toArray();
+        // Daftar academic term untuk dropdown
+        $academicTerms = AcademicTerm::orderByDesc('academic_year')
+            ->orderBy('semester')
+            ->get()
+            ->map(fn($t) => [
+                'id'    => $t->id,
+                'label' => $t->academic_year . ' — ' . ucfirst($t->semester),
+                'year'  => $t->academic_year,
+                'sem'   => $t->semester,
+            ]);
+
+        $selectedTermId = $request->input('academic_term_id');
+
+        // Default: belum pilih → siapkan default ke yang aktif (atau term pertama)
+        if (!$selectedTermId && $academicTerms->isNotEmpty()) {
+            $activeTerm = AcademicTerm::where('status', 'aktif')->first()
+                ?? AcademicTerm::orderByDesc('academic_year')->orderBy('semester')->first();
+            $selectedTermId = $activeTerm?->id;
+        }
+
+        $siswa = [];
+        $selectedTerm = null;
+
+        if ($selectedTermId) {
+            $selectedTerm = AcademicTerm::find($selectedTermId);
+
+            // Ambil semua enrollment di semua class_term yang relasi ke academic_term ini
+            $enrollments = StudentEnrollment::whereHas('classTerm', fn($q) =>
+                    $q->where('academic_term_id', $selectedTermId))
+                ->with(['student.parents', 'classTerm.class'])
+                ->get();
+
+            // Group by siswa (jaga unique) lalu map
+            $uniqueByStudent = $enrollments->unique('student_id');
+
+            $siswa = $uniqueByStudent->map(function ($e) {
+                $s = $e->student;
+                $kelas = $e->classTerm?->class?->name;
+                $ayah = $s->parents->firstWhere('category', 'ayah');
+                $ibu  = $s->parents->firstWhere('category', 'ibu');
+
+                return [
+                    'id'             => $s->id,
+                    'nisn'           => $s->nisn ?? '-',
+                    'nik'            => $s->nik ?? '-',
+                    'nama'           => $s->name,
+                    'jenis_kelamin'  => $s->gender === 'L' ? 'Laki-laki' : 'Perempuan',
+                    'tempat_lahir'   => $s->pob ?? $s->tempat_lahir ?? '-',
+                    'tanggal_lahir'  => $s->dob ? \Carbon\Carbon::parse($s->dob)->translatedFormat('d M Y') : '-',
+                    'agama'          => ucfirst($s->religion ?? 'islam'),
+                    'alamat'         => $s->address ?? '-',
+                    'hp'             => $s->phone ?? $s->telepon ?? '-',
+                    'nama_ayah'      => optional($ayah)->name ?? $s->nama_ayah ?? '-',
+                    'pekerjaan_ayah' => optional($ayah)->work ?? $s->pekerjaan_ayah ?? '-',
+                    'nama_ibu'       => optional($ibu)->name ?? $s->nama_ibu ?? '-',
+                    'pekerjaan_ibu'  => optional($ibu)->work ?? $s->pekerjaan_ibu ?? '-',
+                    'kelas'          => $kelas ?? '-',
+                    'rombel'         => $kelas ?? '-',
+                    'nomor_induk'    => $s->nis ?? $s->nomor_induk ?? '-',
+                    'status'         => 'Aktif',
+                ];
+            })->sortBy(fn($s) => [$s['kelas'], $s['nama']])->values()->all();
+        }
+
+        // Apply filter di view (search/kelas/jenis_kelamin)
+        if ($request->filled('search')) {
+            $q = strtolower($request->input('search'));
+            $siswa = array_values(array_filter($siswa, fn($s) =>
+                str_contains(strtolower($s['nama']), $q) ||
+                str_contains(strtolower($s['nisn']), $q) ||
+                str_contains(strtolower($s['nik']), $q)
+            ));
+        }
+        if ($request->filled('kelas') && $request->input('kelas') !== 'semua') {
+            $kFilter = $request->input('kelas');
+            $siswa = array_values(array_filter($siswa, fn($s) => $s['kelas'] === $kFilter));
+        }
+        if ($request->filled('jenis_kelamin') && $request->input('jenis_kelamin') !== 'semua') {
+            $jkFilter = $request->input('jenis_kelamin');
+            $siswa = array_values(array_filter($siswa, fn($s) => $s['jenis_kelamin'] === $jkFilter));
+        }
 
         $totalSiswa     = count($siswa);
         $totalLaki      = collect($siswa)->where('jenis_kelamin', 'Laki-laki')->count();
         $totalPerempuan = collect($siswa)->where('jenis_kelamin', 'Perempuan')->count();
-        $totalTKA       = collect($siswa)->where('kelas', 'TK A')->count();
-        $totalTKB       = collect($siswa)->filter(fn($s) => in_array($s['kelas'], ['TK B1', 'TK B2']))->count();
+        $totalTKA       = collect($siswa)->where('kelas', 'A')->count();
+        $totalTKB       = collect($siswa)->filter(fn($s) => in_array($s['kelas'], ['B1', 'B2']))->count();
 
-        return view('admin.dapodik.index', compact('siswa', 'totalSiswa', 'totalLaki', 'totalPerempuan', 'totalTKA', 'totalTKB'));
+        return view('admin.dapodik.index', compact(
+            'siswa', 'totalSiswa', 'totalLaki', 'totalPerempuan', 'totalTKA', 'totalTKB',
+            'academicTerms', 'selectedTermId', 'selectedTerm'
+        ));
+    }
+
+    public function dapodikExport(Request $request)
+    {
+        $termId = $request->input('academic_term_id');
+        if (!$termId) {
+            return redirect()->route('admin.dapodik.index')
+                ->with('error', 'Pilih tahun ajaran terlebih dahulu.');
+        }
+
+        $term = AcademicTerm::findOrFail($termId);
+        $filename = 'DAPODIK_TK_AL-ISTIQOMAH_' . str_replace('/', '-', $term->academic_year)
+            . '_' . ucfirst($term->semester) . '.xlsx';
+
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\DapodikExport($termId),
+            $filename
+        );
     }
 
     // ═══════════════════════════════════════════════════════

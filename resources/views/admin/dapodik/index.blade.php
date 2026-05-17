@@ -12,36 +12,48 @@
     <div class="page-header__left">
     </div>
     <div class="page-header__actions">
-        <div class="dropdown">
-            <button type="button" class="btn btn--secondary dropdown-toggle" onclick="toggleDropdown('exportDropdown')">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path fill-rule="evenodd" d="M12 2.25a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V3a.75.75 0 0 1 .75-.75Zm-9 13.5a.75.75 0 0 1 .75.75v2.25a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5V16.5a.75.75 0 0 1 1.5 0v2.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V16.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
-                Export Data
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
-            </button>
-            <div id="exportDropdown" class="dropdown-menu">
-                <button type="button" class="dropdown-item" onclick="exportToPDF()">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path fill-rule="evenodd" d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625Z" clip-rule="evenodd"/><path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z"/></svg>
-                    <span>Export PDF</span>
-                    <small>Dokumen siap cetak</small>
-                </button>
-                <button type="button" class="dropdown-item" onclick="exportToExcel()">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path fill-rule="evenodd" d="M1.5 5.625c0-1.036.84-1.875 1.875-1.875h17.25c1.035 0 1.875.84 1.875 1.875v12.75c0 1.035-.84 1.875-1.875 1.875H3.375A1.875 1.875 0 0 1 1.5 18.375V5.625ZM21 9.375A.375.375 0 0 0 20.625 9h-7.5a.375.375 0 0 0-.375.375v1.5c0 .207.168.375.375.375h7.5a.375.375 0 0 0 .375-.375v-1.5Zm-16.5 0A.375.375 0 0 0 4.125 9h7.5c.207 0 .375.168.375.375v1.5a.375.375 0 0 1-.375.375h-7.5a.375.375 0 0 1-.375-.375v-1.5Z" clip-rule="evenodd"/></svg>
-                    <span>Export Excel (.xlsx)</span>
-                    <small>Spreadsheet untuk edit</small>
-                </button>
-                <button type="button" class="dropdown-item" onclick="exportToCSV()">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path fill-rule="evenodd" d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875Z" clip-rule="evenodd"/><path d="M14.25 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Z"/></svg>
-                    <span>Export CSV</span>
-                    <small>Untuk import DAPODIK</small>
-                </button>
-                <div class="dropdown-divider"></div>
-                <button type="button" class="dropdown-item" onclick="previewPDF()">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd"/></svg>
-                    <span>Preview & Cetak</span>
-                    <small>Lihat sebelum cetak</small>
-                </button>
+        @if (!empty($selectedTermId))
+            <a href="{{ route('admin.dapodik.export', ['academic_term_id' => $selectedTermId]) }}"
+               class="btn btn--primary"
+               style="display:inline-flex;align-items:center;gap:8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path fill-rule="evenodd" d="M1.5 5.625c0-1.036.84-1.875 1.875-1.875h17.25c1.035 0 1.875.84 1.875 1.875v12.75c0 1.035-.84 1.875-1.875 1.875H3.375A1.875 1.875 0 0 1 1.5 18.375V5.625Z" clip-rule="evenodd"/></svg>
+                Export Excel (.xlsx)
+            </a>
+        @endif
+    </div>
+</div>
+
+{{-- Pilih Academic Term --}}
+<div class="card mb-4">
+    <div class="card__header">
+        <h3 class="card__title" style="display:inline-flex;align-items:center;gap:8px;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
+            Pilih Tahun Ajaran
+        </h3>
+    </div>
+    <div class="card__body">
+        <form method="GET" action="{{ route('admin.dapodik.index') }}" style="display:flex;gap:12px;align-items:end;flex-wrap:wrap;">
+            <div class="filter-group" style="min-width:280px;flex:1;">
+                <label for="academic_term_id">Tahun Ajaran & Semester</label>
+                <select id="academic_term_id" name="academic_term_id" class="form-select" required>
+                    @foreach ($academicTerms as $t)
+                        <option value="{{ $t['id'] }}" {{ ($selectedTermId ?? '') === $t['id'] ? 'selected' : '' }}>
+                            {{ $t['label'] }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
-        </div>
+            <button type="submit" class="btn btn--primary">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
+                Tampilkan Data
+            </button>
+        </form>
+        @if ($selectedTerm)
+            <p style="margin-top:10px;font-size:13px;color:#5D4037;">
+                Menampilkan data siswa untuk
+                <strong>Tahun Ajaran {{ $selectedTerm->academic_year }} — Semester {{ ucfirst($selectedTerm->semester) }}</strong>
+            </p>
+        @endif
     </div>
 </div>
 
@@ -62,14 +74,15 @@
         <div class="filter-row">
             <div class="filter-group">
                 <label for="search">Cari Siswa</label>
-                <input type="text" id="search" placeholder="Nama atau NISN..." class="form-input" onkeyup="filterTable()">
+                <input type="text" id="search" placeholder="Nama, NISN, atau NIK..." class="form-input" onkeyup="filterTable()">
             </div>
             <div class="filter-group">
                 <label for="kelas">Kelas</label>
                 <select id="kelas" class="form-select" onchange="filterTable()">
                     <option value="">Semua Kelas</option>
-                    <option value="TK A">TK A</option>
-                    <option value="TK B">TK B</option>
+                    <option value="A">Kelas A</option>
+                    <option value="B1">Kelas B1</option>
+                    <option value="B2">Kelas B2</option>
                 </select>
             </div>
             <div class="filter-group">
@@ -78,14 +91,6 @@
                     <option value="">Semua</option>
                     <option value="L">Laki-laki</option>
                     <option value="P">Perempuan</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label for="status">Status</label>
-                <select id="status" class="form-select" onchange="filterTable()">
-                    <option value="">Semua Status</option>
-                    <option value="Aktif" selected>Aktif</option>
-                    <option value="Lulus">Lulus</option>
                 </select>
             </div>
         </div>
@@ -142,38 +147,50 @@
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>Nama</th>
+                        <th>JK</th>
+                        <th>Rombel</th>
+                        <th>Nomor Induk</th>
                         <th>NISN</th>
-                        <th>NIK</th>
-                        <th>Nama Lengkap</th>
-                        <th>Jenis Kelamin</th>
                         <th>Tempat Lahir</th>
                         <th>Tanggal Lahir</th>
-                        <th>Agama</th>
+                        <th>NIK</th>
                         <th>Alamat</th>
+                        <th>HP</th>
                         <th>Nama Ayah</th>
+                        <th>Pekerjaan Ayah</th>
                         <th>Nama Ibu</th>
-                        <th>Kelas</th>
+                        <th>Pekerjaan Ibu</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($siswa as $index => $s)
-                    <tr data-kelas="{{ $s['kelas'] }}" data-jk="{{ $s['jenis_kelamin'] == 'Laki-laki' ? 'L' : 'P' }}" data-status="{{ $s['status'] }}">
+                    <tr data-kelas="{{ $s['kelas'] }}" data-jk="{{ $s['jenis_kelamin'] == 'Laki-laki' ? 'L' : 'P' }}">
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $s['nisn'] ?? '-' }}</td>
-                        <td>{{ $s['nik'] ?? '-' }}</td>
-                        <td class="name-cell">{{ $s['nama'] }}</td>
+                        <td class="name-cell" style="text-transform:uppercase;">{{ $s['nama'] }}</td>
                         <td>{{ $s['jenis_kelamin'] == 'Laki-laki' ? 'L' : 'P' }}</td>
-                        <td>{{ $s['tempat_lahir'] ?? '-' }}</td>
-                        <td>{{ $s['tanggal_lahir'] ?? '-' }}</td>
-                        <td>{{ $s['agama'] ?? 'Islam' }}</td>
-                        <td class="address-cell">{{ $s['alamat'] ?? '-' }}</td>
-                        <td>{{ $s['nama_ayah'] ?? '-' }}</td>
-                        <td>{{ $s['nama_ibu'] ?? '-' }}</td>
-                        <td>{{ $s['kelas'] }}</td>
+                        <td><strong>{{ $s['rombel'] }}</strong></td>
+                        <td>{{ $s['nomor_induk'] }}</td>
+                        <td>{{ $s['nisn'] }}</td>
+                        <td>{{ $s['tempat_lahir'] }}</td>
+                        <td>{{ $s['tanggal_lahir'] }}</td>
+                        <td>{{ $s['nik'] }}</td>
+                        <td class="address-cell">{{ $s['alamat'] }}</td>
+                        <td>{{ $s['hp'] }}</td>
+                        <td>{{ $s['nama_ayah'] }}</td>
+                        <td>{{ $s['pekerjaan_ayah'] }}</td>
+                        <td>{{ $s['nama_ibu'] }}</td>
+                        <td>{{ $s['pekerjaan_ibu'] }}</td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="12" class="text-center py-4">Belum ada data siswa aktif</td>
+                        <td colspan="15" class="text-center py-4">
+                            @if (empty($selectedTermId))
+                                Silakan pilih tahun ajaran terlebih dahulu.
+                            @else
+                                Belum ada data siswa pada tahun ajaran terpilih.
+                            @endif
+                        </td>
                     </tr>
                     @endforelse
                 </tbody>

@@ -109,6 +109,7 @@ Route::middleware('dummy.auth')->group(function () {
 
     // Admin - Rekap Data DAPODIK
     Route::get('/admin/dapodik', [AdminController::class, 'dapodikIndex'])->name('admin.dapodik.index');
+    Route::get('/admin/dapodik/export', [AdminController::class, 'dapodikExport'])->name('admin.dapodik.export');
     
     // Admin - Backup Database
     Route::get('/admin/backup', [AdminController::class, 'backupIndex'])->name('admin.backup.index');
