@@ -198,6 +198,26 @@
         Pilih aksi dan class term tujuan untuk setiap siswa. Setelah disimpan, class term ini akan berubah menjadi <strong>Selesai</strong>.
     </div>
 
+    @if ($classTermOptions->isEmpty())
+    <div style="background:#fff;border:1px solid #fde68a;border-radius:10px;padding:20px 24px;margin-bottom:20px;display:flex;align-items:flex-start;gap:14px;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#f59e0b" width="22" height="22" style="flex-shrink:0;margin-top:1px;">
+            <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd"/>
+        </svg>
+        <div>
+            <div style="font-size:14px;font-weight:600;color:#92400e;margin-bottom:4px;">Belum ada Class Term tujuan</div>
+            <div style="font-size:13px;color:#78716c;line-height:1.6;">
+                Untuk memproses kenaikan, Anda perlu membuat <strong>Class Term baru</strong> sebagai tujuan siswa terlebih dahulu.<br>
+                Contoh: buat tahun ajaran <em>semester berikutnya</em> lalu tambahkan kelas ke dalamnya.
+            </div>
+            <a href="{{ route('admin.tahun_ajaran.index') }}"
+               style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:#f59e0b;color:#fff;padding:7px 16px;border-radius:7px;font-size:13px;font-weight:600;text-decoration:none;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
+                Buat Class Term Baru
+            </a>
+        </div>
+    </div>
+    @endif
+
     <form action="{{ route('admin.kenaikan.proses', $classTerm['id']) }}" method="POST">
         @csrf
 

@@ -164,8 +164,8 @@
         border-radius: 20px;
         display: inline-block;
     }
-    .ispass-pill--true  { background: rgba(76,175,130,0.15); color: #2E8B60; }
-    .ispass-pill--false { background: rgba(240,98,146,0.12); color: #d81b72; }
+    .ispass-pill--true  { background: rgba(62,39,35,0.08); color: #5D4037; }
+    .ispass-pill--false { background: rgba(76,175,130,0.15); color: #2E8B60; }
 
     .siswa-count {
         display: inline-flex;
@@ -240,7 +240,7 @@
 
     <div class="section-header">
         <h2>Semua Class Term</h2>
-        <p>Class term dengan status <strong>isPass = true</strong> menampilkan riwayat enrollment per siswa.</p>
+        <p>Class term dengan status <strong>Selesai</strong> menampilkan riwayat enrollment per siswa.</p>
     </div>
 
     @if ($grouped->isEmpty())
@@ -249,15 +249,29 @@
             <p>Belum ada class term.</p>
         </div>
     @else
+        @php
+            $tahunList = $grouped->keys()->sort()->values();
+        @endphp
         <div class="table-toolbar">
             <div class="search-wrap">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd"/></svg>
-                <input type="text" id="searchInput" class="search-input" placeholder="Cari kelas, tahun ajaran, semester...">
+                <input type="text" id="searchInput" class="search-input" placeholder="Cari kelas...">
             </div>
-            <select id="filterIsPass" class="filter-select">
-                <option value="">Semua isPass</option>
-                <option value="true">isPass: True</option>
-                <option value="false">isPass: False</option>
+            <select id="filterTahun" class="filter-select" style="min-width:150px;">
+                <option value="">Semua Tahun Ajaran</option>
+                @foreach ($tahunList as $t)
+                    <option value="{{ $t }}">{{ $t }}</option>
+                @endforeach
+            </select>
+            <select id="filterSemester" class="filter-select" style="min-width:130px;">
+                <option value="">Semua Semester</option>
+                <option value="ganjil">Ganjil</option>
+                <option value="genap">Genap</option>
+            </select>
+            <select id="filterIsPass" class="filter-select" style="min-width:150px;">
+                <option value="">Semua Status</option>
+                <option value="false">Sedang Berjalan</option>
+                <option value="true">Selesai</option>
             </select>
             <span class="result-count" id="resultCount"></span>
         </div>
@@ -271,7 +285,7 @@
                         <th>Tahun Ajaran</th>
                         <th>Semester</th>
                         <th>Status</th>
-                        <th>isPass</th>
+                        <th>Kenaikan</th>
                         <th>Jumlah Siswa</th>
                         <th>Aksi</th>
                     </tr>
@@ -282,6 +296,9 @@
                         @foreach ($terms as $ct)
                         <tr
                             data-search="{{ strtolower($ct['kelas_nama'] . ' ' . $ct['tahun_ajaran'] . ' ' . $ct['semester']) }}"
+                            data-kelas="{{ strtolower($ct['kelas_nama']) }}"
+                            data-tahun="{{ $ct['tahun_ajaran'] }}"
+                            data-semester="{{ $ct['semester'] }}"
                             data-ispass="{{ $ct['isPass'] ? 'true' : 'false' }}"
                         >
                             <td>{{ $no++ }}</td>
@@ -295,7 +312,7 @@
                             </td>
                             <td>
                                 <span class="ispass-pill ispass-pill--{{ $ct['isPass'] ? 'true' : 'false' }}">
-                                    {{ $ct['isPass'] ? 'True' : 'False' }}
+                                    {{ $ct['isPass'] ? 'Selesai' : 'Sedang Berjalan' }}
                                 </span>
                             </td>
                             <td>
@@ -334,11 +351,13 @@
 @push('scripts')
 <script>
     (function () {
-        const searchInput  = document.getElementById('searchInput');
-        const filterIsPass = document.getElementById('filterIsPass');
-        const tableBody    = document.getElementById('tableBody');
-        const noResults    = document.getElementById('noResults');
-        const resultCount  = document.getElementById('resultCount');
+        const searchInput    = document.getElementById('searchInput');
+        const filterTahun    = document.getElementById('filterTahun');
+        const filterSemester = document.getElementById('filterSemester');
+        const filterIsPass   = document.getElementById('filterIsPass');
+        const tableBody      = document.getElementById('tableBody');
+        const noResults      = document.getElementById('noResults');
+        const resultCount    = document.getElementById('resultCount');
 
         if (!tableBody) return;
 
@@ -347,17 +366,23 @@
 
         function applyFilters() {
             const keyword  = searchInput.value.toLowerCase().trim();
+            const tahun    = filterTahun.value;
+            const semester = filterSemester.value;
             const ispass   = filterIsPass.value;
             let visible    = 0;
 
             allRows.forEach(function (row) {
-                const searchText = row.dataset.search || '';
-                const rowIsPass  = row.dataset.ispass || '';
+                const rowSearch   = row.dataset.search   || '';
+                const rowTahun    = row.dataset.tahun    || '';
+                const rowSemester = row.dataset.semester || '';
+                const rowIsPass   = row.dataset.ispass   || '';
 
-                const matchSearch = !keyword || searchText.includes(keyword);
-                const matchIsPass = !ispass  || rowIsPass === ispass;
+                const matchSearch   = !keyword   || rowSearch.includes(keyword);
+                const matchTahun    = !tahun     || rowTahun    === tahun;
+                const matchSemester = !semester  || rowSemester === semester;
+                const matchIsPass   = !ispass    || rowIsPass   === ispass;
 
-                if (matchSearch && matchIsPass) {
+                if (matchSearch && matchTahun && matchSemester && matchIsPass) {
                     row.style.display = '';
                     visible++;
                 } else {
@@ -365,10 +390,9 @@
                 }
             });
 
-            noResults.style.display   = visible === 0 ? 'block' : 'none';
-            resultCount.textContent   = visible + ' dari ' + total + ' data';
+            noResults.style.display = visible === 0 ? 'block' : 'none';
+            resultCount.textContent = visible + ' dari ' + total + ' data';
 
-            /* Re-number visible rows */
             let no = 1;
             allRows.forEach(function (row) {
                 if (row.style.display !== 'none') {
@@ -378,6 +402,8 @@
         }
 
         searchInput.addEventListener('input', applyFilters);
+        filterTahun.addEventListener('change', applyFilters);
+        filterSemester.addEventListener('change', applyFilters);
         filterIsPass.addEventListener('change', applyFilters);
 
         applyFilters();

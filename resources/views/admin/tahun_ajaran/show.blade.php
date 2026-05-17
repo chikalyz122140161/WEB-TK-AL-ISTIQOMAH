@@ -50,12 +50,16 @@
 .picker-label {
     font-size: 14px; font-weight: 600; color: #5D4037; margin-bottom: 12px;
 }
+.picker-header {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;
+}
 .class-picker {
     display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px;
 }
 .class-card {
+    position: relative;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    width: 120px; padding: 16px 12px; border-radius: 12px; cursor: pointer;
+    width: 120px; padding: 16px 12px 12px; border-radius: 12px; cursor: pointer;
     border: 2px solid #e7e5e4; background: #fff; transition: all 0.2s;
     user-select: none;
 }
@@ -68,6 +72,78 @@
     font-size: 12px; color: #78716c; margin-top: 6px;
 }
 .class-card__empty { font-size: 11px; color: #d1d5db; margin-top: 4px; }
+.class-card__delete {
+    position: absolute; top: 5px; right: 5px;
+    background: none; border: none; cursor: pointer; padding: 2px;
+    color: #d1d5db; transition: color 0.15s; line-height: 1;
+}
+.class-card__delete:hover { color: #ef4444; }
+.class-card__delete svg { width: 14px; height: 14px; fill: currentColor; pointer-events: none; }
+
+/* Modal */
+.ta-modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4); z-index: 1000;
+    align-items: center; justify-content: center;
+}
+.ta-modal-overlay.open { display: flex; }
+.modal-box {
+    background: #fff; border-radius: 14px; width: 100%; max-width: 480px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15); overflow: hidden;
+}
+.modal-header {
+    padding: 18px 22px; border-bottom: 1px solid #e7e5e4;
+    display: flex; align-items: center; justify-content: space-between;
+}
+.modal-header h3 { font-size: 15px; font-weight: 700; color: #3E2723; margin: 0; }
+.modal-close {
+    background: none; border: none; cursor: pointer; padding: 4px; color: #a8a29e; line-height: 1;
+}
+.modal-close:hover { color: #3E2723; }
+.modal-body { padding: 20px 22px; max-height: 360px; overflow-y: auto; }
+.modal-footer {
+    padding: 14px 22px; border-top: 1px solid #e7e5e4;
+    display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+}
+.kelas-checkbox-list { display: flex; flex-direction: column; gap: 10px; }
+.kelas-checkbox-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px; border: 1px solid #e7e5e4; border-radius: 9px;
+    cursor: pointer; transition: border-color 0.15s, background 0.15s;
+}
+.kelas-checkbox-item:hover { border-color: #4CAF82; background: rgba(76,175,130,0.04); }
+.kelas-checkbox-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: #3D9B72; cursor: pointer; flex-shrink: 0; }
+.kelas-checkbox-item label { cursor: pointer; font-size: 14px; font-weight: 600; color: #3E2723; flex: 1; margin: 0; }
+.btn-add-kelas {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: linear-gradient(135deg, #4CAF82, #3D9B72);
+    color: #fff; padding: 8px 16px; border-radius: 8px;
+    font-size: 13px; font-weight: 600; text-decoration: none; border: none; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(61,155,114,0.25); transition: all 0.2s;
+}
+.btn-add-kelas:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(61,155,114,0.35); }
+.btn-add-kelas svg { width: 15px; height: 15px; fill: currentColor; }
+.btn-modal-submit {
+    background: linear-gradient(135deg, #4CAF82, #3D9B72); color: #fff;
+    border: none; padding: 9px 22px; border-radius: 8px;
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.btn-modal-submit:hover { opacity: 0.9; }
+.btn-modal-cancel {
+    background: #f5f5f4; color: #57534e; border: none;
+    padding: 9px 18px; border-radius: 8px; font-size: 14px; cursor: pointer;
+}
+.btn-modal-cancel:hover { background: #e7e5e4; }
+.alert-success-inline {
+    background: rgba(76,175,130,0.12); border: 1px solid rgba(76,175,130,0.3);
+    color: #2E8B60; padding: 10px 14px; border-radius: 8px;
+    font-size: 13px; margin-bottom: 16px;
+}
+.alert-error-inline {
+    background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25);
+    color: #dc2626; padding: 10px 14px; border-radius: 8px;
+    font-size: 13px; margin-bottom: 16px;
+}
 
 /* Student table */
 .student-section { display: none; }
@@ -125,18 +201,39 @@
     <span class="status-badge status-badge--{{ $academicTerm->status }}">{{ ucfirst($academicTerm->status) }}</span>
 </div>
 
-@if($academicTerm->classTerms->isEmpty())
-    <div class="card">
-        <div class="empty-state" style="padding:3rem;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875Z" clip-rule="evenodd"/></svg>
-            <p>Belum ada kelas yang terdaftar untuk tahun ajaran ini.</p>
-        </div>
-    </div>
-@else
-    <p class="picker-label">Pilih Kelas untuk melihat daftar siswa:</p>
+@if (session('success'))
+    <div class="alert-success-inline">{{ session('success') }}</div>
+@endif
+@if (session('error'))
+    <div class="alert-error-inline">{{ session('error') }}</div>
+@endif
+
+<div class="picker-header">
+    <span class="picker-label" style="margin-bottom:0;">
+        {{ $academicTerm->classTerms->isEmpty() ? 'Belum ada kelas terdaftar.' : 'Pilih Kelas untuk melihat daftar siswa:' }}
+    </span>
+    @if ($availableClasses->isNotEmpty())
+        <button type="button" id="btnTambahKelas" class="btn-add-kelas">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
+            Tambah Kelas
+        </button>
+    @endif
+</div>
+
+@if ($academicTerm->classTerms->isNotEmpty())
     <div class="class-picker">
         @foreach($academicTerm->classTerms as $ct)
         <div class="class-card" onclick="showClass('{{ $ct->id }}')" id="card-{{ $ct->id }}">
+            @if ($ct->enrollments->isEmpty())
+                <form action="{{ route('admin.tahun_ajaran.class_term.destroy', [$academicTerm->id, $ct->id]) }}"
+                      method="POST" onclick="event.stopPropagation()"
+                      onsubmit="return confirm('Hapus kelas {{ $ct->class?->name }} dari tahun ajaran ini?')">
+                    @csrf @method('DELETE')
+                    <button type="submit" class="class-card__delete" title="Hapus kelas">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
+                    </button>
+                </form>
+            @endif
             <div class="class-card__name">{{ $ct->class?->name ?? '-' }}</div>
             <div class="class-card__count">{{ $ct->enrollments->count() }} siswa</div>
         </div>
@@ -198,6 +295,40 @@
     @endforeach
 @endif
 
+{{-- Modal Tambah Kelas --}}
+@if ($availableClasses->isNotEmpty())
+<div class="ta-modal-overlay" id="modalAddKelas" style="display:none;">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>Tambah Kelas ke Tahun Ajaran Ini</h3>
+            <button type="button" class="modal-close" onclick="closeModal(); return false;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+            </button>
+        </div>
+        <form action="{{ route('admin.tahun_ajaran.class_term.store', $academicTerm->id) }}" method="POST">
+            @csrf
+            <div class="modal-body">
+                <div class="kelas-checkbox-list">
+                    @foreach ($availableClasses as $kelas)
+                    <div class="kelas-checkbox-item">
+                        <input type="checkbox" name="class_ids[]" value="{{ $kelas->id }}" id="kelas-{{ $kelas->id }}">
+                        <label for="kelas-{{ $kelas->id }}">
+                            Kelas {{ $kelas->name }}
+                            <span style="font-size:12px;font-weight:400;color:#78716c;">— maks. {{ $kelas->maximum }} siswa</span>
+                        </label>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modal-cancel" onclick="closeModal(); return false;">Batal</button>
+                <button type="submit" class="btn-modal-submit">Tambahkan</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
+
 <script>
 function showClass(id) {
     document.querySelectorAll('.student-section').forEach(s => s.classList.remove('visible'));
@@ -205,5 +336,29 @@ function showClass(id) {
     document.getElementById('section-' + id).classList.add('visible');
     document.getElementById('card-' + id).classList.add('active');
 }
+
+function openModal() {
+    var m = document.getElementById('modalAddKelas');
+    if (m) m.style.display = 'flex';
+}
+
+function closeModal() {
+    var m = document.getElementById('modalAddKelas');
+    if (m) m.style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    var m = document.getElementById('modalAddKelas');
+    if (m) {
+        m.addEventListener('click', function (e) {
+            if (e.target === m) closeModal();
+        });
+    }
+
+    var btn = document.getElementById('btnTambahKelas');
+    if (btn) {
+        btn.addEventListener('click', openModal);
+    }
+});
 </script>
 @endsection

@@ -92,7 +92,14 @@
                                 <span>{{ $s['nama'] }}</span>
                             </div>
                         </td>
-                        <td><span class="badge badge--kelas">{{ $s['kelas'] }}</span></td>
+                        <td>
+                            <div class="kelas-cell">
+                                <span class="badge badge--kelas">{{ $s['kelas'] }}</span>
+                                @if($s['class_term_id'])
+                                <span class="kelas-cell__sub">{{ $s['tahun_ajaran'] }} · {{ ucfirst($s['semester']) }}</span>
+                                @endif
+                            </div>
+                        </td>
                         <td>
                             <div class="parent-cell">
                                 <span class="parent-cell__name">{{ $s['nama_ortu'] ?? '-' }}</span>
@@ -117,6 +124,10 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
                                     Edit
                                 </a>
+                                <button type="button" class="btn btn--kelas-edit btn--sm" onclick="showEditKelasModal('{{ $s['id'] }}', '{{ addslashes($s['nama']) }}', '{{ $s['class_term_id'] }}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 7.5 12.173v-.224c0-.131.067-.248.172-.311a54.615 54.615 0 0 1 4.653-2.52.75.75 0 0 0-.65-1.352 56.123 56.123 0 0 0-4.78 2.589 1.858 1.858 0 0 0-.859 1.228 49.803 49.803 0 0 0-4.634-1.527.75.75 0 0 1-.231-1.337A60.653 60.653 0 0 1 11.7 2.805Z"/><path d="M13.06 15.473a48.45 48.45 0 0 1 7.666-3.282c.134 1.414.22 2.843.255 4.284a.75.75 0 0 1-.46.71 47.87 47.87 0 0 1-8.105 2.874.75.75 0 0 1-.832-.586 48.055 48.055 0 0 1 1.476-4Z"/></svg>
+                                    Kelas
+                                </button>
                                 <button type="button" class="btn btn--danger btn--sm" onclick="showDeleteModal('{{ $s['id'] }}', '{{ $s['nama'] }}')">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
                                     Hapus
@@ -275,6 +286,9 @@
     color: #3E2723;
 }
 
+.kelas-cell { display: flex; flex-direction: column; gap: 3px; }
+.kelas-cell__sub { font-size: 11px; color: #78716c; }
+
 .badge--success {
     background: rgba(76, 175, 130, 0.15);
     color: #4CAF82;
@@ -328,6 +342,17 @@
 
 .btn--danger:hover {
     background: #e91e8c;
+}
+
+.btn--kelas-edit {
+    background: rgba(76,175,130,0.15);
+    color: #2E8B60;
+    border: 1.5px solid rgba(76,175,130,0.4);
+}
+
+.btn--kelas-edit:hover {
+    background: rgba(76,175,130,0.25);
+    color: #2E8B60;
 }
 
 /* Alerts */
@@ -425,6 +450,40 @@
 }
 </style>
 
+<!-- Edit Kelas Modal -->
+<div id="editKelasModal" class="modal-overlay">
+    <div class="modal-box" style="text-align:left;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+            <h3 class="modal-title" style="margin:0;">Edit Kelas Siswa</h3>
+            <button type="button" onclick="closeEditKelasModal()" style="background:none;border:none;cursor:pointer;color:#a8a29e;padding:4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+            </button>
+        </div>
+        <p style="font-size:13px;color:#78716c;margin-bottom:1rem;">Pilih kelas tujuan untuk siswa <strong id="editKelasNama"></strong>.</p>
+        <form id="editKelasForm" method="POST">
+            @csrf
+            @method('PUT')
+            <div style="margin-bottom:1.25rem;">
+                <label style="font-size:13px;font-weight:600;color:#5D4037;display:block;margin-bottom:6px;">Kelas</label>
+                <select name="class_term_id" id="editKelasSelect"
+                        style="width:100%;padding:9px 12px;border:1px solid #e7e5e4;border-radius:8px;font-size:14px;color:#3E2723;background:#FFFDE7;font-family:inherit;">
+                    <option value="" disabled selected>-- Pilih Kelas --</option>
+                    @foreach ($classTermOptions as $ct)
+                    <option value="{{ $ct['id'] }}">{{ $ct['label'] }}</option>
+                    @endforeach
+                </select>
+                @if ($classTermOptions->isEmpty())
+                <p style="font-size:12px;color:#d97706;margin-top:6px;">Belum ada kelas aktif. Tambahkan class term terlebih dahulu.</p>
+                @endif
+            </div>
+            <div style="display:flex;gap:10px;justify-content:flex-end;">
+                <button type="button" onclick="closeEditKelasModal()" style="background:#f5f5f4;color:#57534e;border:none;padding:9px 18px;border-radius:8px;font-size:14px;cursor:pointer;">Batal</button>
+                <button type="submit" style="background:linear-gradient(135deg,#4CAF82,#3D9B72);color:#fff;border:none;padding:9px 22px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Delete Confirmation Modal -->
 <div id="deleteModal" class="modal-overlay">
     <div class="modal-box">
@@ -466,6 +525,22 @@ document.getElementById('search').addEventListener('input', applyFilters);
 document.getElementById('kelas').addEventListener('change', applyFilters);
 document.getElementById('jk').addEventListener('change', applyFilters);
 document.getElementById('status').addEventListener('change', applyFilters);
+
+function showEditKelasModal(studentId, nama, currentClassTermId) {
+    document.getElementById('editKelasNama').textContent = nama;
+    document.getElementById('editKelasForm').action = "{{ url('admin/siswa') }}/" + studentId + "/class-term";
+    var sel = document.getElementById('editKelasSelect');
+    sel.value = currentClassTermId || '';
+    document.getElementById('editKelasModal').classList.add('active');
+}
+
+function closeEditKelasModal() {
+    document.getElementById('editKelasModal').classList.remove('active');
+}
+
+document.getElementById('editKelasModal').addEventListener('click', function(e) {
+    if (e.target === this) closeEditKelasModal();
+});
 
 function showDeleteModal(id, name) {
     document.getElementById('deleteSiswaName').textContent = name;

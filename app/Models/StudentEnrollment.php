@@ -14,7 +14,7 @@ class StudentEnrollment extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['student_id', 'class_term_id', 'status'];
+    protected $fillable = ['student_id', 'class_term_id', 'status', 'aksi', 'class_term_tujuan_id'];
 
     public function student()
     {
@@ -24,6 +24,11 @@ class StudentEnrollment extends Model
     public function classTerm()
     {
         return $this->belongsTo(ClassTerm::class, 'class_term_id');
+    }
+
+    public function classTermTujuan()
+    {
+        return $this->belongsTo(ClassTerm::class, 'class_term_tujuan_id');
     }
 
     public function presences()

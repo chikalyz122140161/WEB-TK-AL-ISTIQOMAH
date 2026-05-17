@@ -44,6 +44,7 @@ Route::middleware('dummy.auth')->group(function () {
     Route::get('/admin/siswa/{id}/edit', [AdminController::class, 'siswaEdit'])->name('admin.siswa.edit');
     Route::put('/admin/siswa/{id}', [AdminController::class, 'siswaUpdate'])->name('admin.siswa.update');
     Route::delete('/admin/siswa/{id}', [AdminController::class, 'siswaDestroy'])->name('admin.siswa.destroy');
+    Route::put('/admin/siswa/{id}/class-term', [AdminController::class, 'siswaUpdateClassTerm'])->name('admin.siswa.update_class_term');
     
     // Admin - Kelola Pendaftaran
     Route::get('/admin/pendaftaran', [AdminController::class, 'pendaftaranIndex'])->name('admin.pendaftaran.index');
@@ -59,6 +60,8 @@ Route::middleware('dummy.auth')->group(function () {
     Route::get('/admin/tahun-ajaran/{id}/edit', [AdminController::class, 'tahunAjaranEdit'])->name('admin.tahun_ajaran.edit');
     Route::put('/admin/tahun-ajaran/{id}', [AdminController::class, 'tahunAjaranUpdate'])->name('admin.tahun_ajaran.update');
     Route::delete('/admin/tahun-ajaran/{id}', [AdminController::class, 'tahunAjaranDestroy'])->name('admin.tahun_ajaran.destroy');
+    Route::post('/admin/tahun-ajaran/{id}/class-term', [AdminController::class, 'tahunAjaranClassTermStore'])->name('admin.tahun_ajaran.class_term.store');
+    Route::delete('/admin/tahun-ajaran/{id}/class-term/{classTermId}', [AdminController::class, 'tahunAjaranClassTermDestroy'])->name('admin.tahun_ajaran.class_term.destroy');
 
     // Admin - Kelola Kelas
     Route::get('/admin/kelas', [AdminController::class, 'kelasIndex'])->name('admin.kelas.index');

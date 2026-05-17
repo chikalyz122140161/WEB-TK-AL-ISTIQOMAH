@@ -156,7 +156,7 @@
                 &nbsp;·&nbsp; {{ count($history) }} siswa tercatat
             </p>
         </div>
-        <span class="ispass-pill">isPass: true</span>
+        <span class="ispass-pill">Selesai</span>
     </div>
 
     <div class="table-wrap">
