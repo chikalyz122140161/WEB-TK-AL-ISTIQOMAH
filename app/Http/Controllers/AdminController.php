@@ -2,11 +2,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\AcademicTerm;
+use App\Models\ClassTerm;
 use App\Models\Classroom;
+use App\Models\Counseling;
+use App\Models\CounselingAssessment;
+use App\Models\Extracurricular;
+use App\Models\ExtracurricularAssessment;
+use App\Models\ClassTermCounseling;
+use App\Models\ClassTermExtracurricular;
+use App\Models\ClassTermSubject;
+use App\Models\Subject;
+use App\Models\Parents;
 use App\Models\Registration;
 use App\Models\StudentEnrollment;
+use App\Models\StudentFile;
 use App\Models\User;
 use App\Models\Student;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -50,9 +63,9 @@ class AdminController extends Controller
             'orangtua' => 'Orang Tua',
         ];
         $statusMap = [
-            'aktif'    => 'Aktif',
+            'active'   => 'Aktif',
             'pending'  => 'Pending',
-            'nonaktif' => 'Nonaktif',
+            'inactive' => 'Nonaktif',
         ];
 
         $query = User::query()->orderByRaw("FIELD(role, 'admin', 'guru', 'orangtua')")
@@ -143,7 +156,7 @@ class AdminController extends Controller
             'nama'   => 'required|string|max:255',
             'email'  => 'required|email|unique:user,email,' . $id,
             'role'   => 'required|in:admin,guru,orangtua',
-            'status' => 'nullable|in:aktif,pending,nonaktif',
+            'status' => 'nullable|in:active,pending,inactive',
         ]);
 
         $user->update([
@@ -306,223 +319,164 @@ class AdminController extends Controller
     }
     
     // KELOLA PENDAFTARAN
+    private function statusLabel(string $status): string
+    {
+        return match($status) {
+            'active'   => 'Diterima',
+            'inactive' => 'Ditolak',
+            default    => 'Pending',
+        };
+    }
+
+    private function genderLabel(?string $gender): string
+    {
+        return match($gender) {
+            'L' => 'Laki-laki',
+            'P' => 'Perempuan',
+            default => '-',
+        };
+    }
+
+    private function buildPendaftaranRow(User $u): array
+    {
+        $s      = $u->student;
+        $ayah   = $s?->parents->firstWhere('category', 'ayah');
+        $ibu    = $s?->parents->firstWhere('category', 'ibu');
+        $wali   = $s?->parents->firstWhere('category', 'wali');
+
+        $typeLabel = ['akta' => 'Akta Kelahiran', 'kk' => 'Kartu Keluarga', 'foto' => 'Foto', 'ktp_ortu' => 'KTP Orang Tua', 'lainnya' => 'Lainnya'];
+
+        return [
+            'id'                 => $u->id,
+            'tanggal_daftar'     => optional($u->created_at)->translatedFormat('d M Y') ?? '-',
+            'tanggal_daftar_iso' => optional($u->created_at)->format('Y-m-d') ?? '',
+            'status'             => $this->statusLabel($u->status ?? 'pending'),
+
+            'nama_siswa'         => $s?->name ?? '-',
+            'nama_panggilan'     => $s?->nickname ?? '-',
+            'nik'                => $s?->nik ?? '-',
+            'jenis_kelamin'      => $this->genderLabel($s?->gender),
+            'agama'              => $s?->religion ?? '-',
+            'tempat_lahir'       => $s?->pob ?? '-',
+            'tanggal_lahir'      => optional($s?->dob)->translatedFormat('d F Y') ?? '-',
+            'anak_ke'            => $s?->birth_order ?? '-',
+            'jumlah_saudara'     => $s?->siblings_count ?? '-',
+            'suku_bangsa'        => $s?->ethnicity ?? '-',
+            'riwayat_penyakit'   => $s?->illness_history ?? '-',
+            'berat_badan'        => $s?->weight ? $s->weight . ' kg' : '-',
+            'tinggi_badan'       => $s?->height ? $s->height . ' cm' : '-',
+            'alamat_siswa'       => $s?->address ?? '-',
+
+            'nama_ayah'          => $ayah?->name ?? '-',
+            'pekerjaan_ayah'     => $ayah?->work ?? '-',
+            'pendidikan_ayah'    => $ayah?->education ?? '-',
+            'tempat_lahir_ayah'  => $ayah?->pob ?? '-',
+            'tanggal_lahir_ayah' => optional($ayah?->dob)->translatedFormat('d F Y') ?? '-',
+            'no_telp_ayah'       => $u->phone ?? '-',
+
+            'nama_ibu'           => $ibu?->name ?? '-',
+            'pekerjaan_ibu'      => $ibu?->work ?? '-',
+            'pendidikan_ibu'     => $ibu?->education ?? '-',
+            'tempat_lahir_ibu'   => $ibu?->pob ?? '-',
+            'tanggal_lahir_ibu'  => optional($ibu?->dob)->translatedFormat('d F Y') ?? '-',
+            'no_telp_ibu'        => '-',
+
+            'nama_wali'          => $wali?->name ?? '-',
+            'pekerjaan_wali'     => $wali?->work ?? '-',
+            'pendidikan_wali'    => $wali?->education ?? '-',
+            'tempat_lahir_wali'  => $wali?->pob ?? '-',
+            'tanggal_lahir_wali' => optional($wali?->dob)->translatedFormat('d F Y') ?? '-',
+            'no_telp_wali'       => '-',
+
+            'telepon'            => $u->phone ?? '-',
+            'email'              => $u->email ?? '-',
+            'alamat_ortu'        => $s?->address ?? '-',
+
+            'dokumen'            => $s?->files->map(fn($f) => [
+                'id'   => $f->id,
+                'nama' => $typeLabel[$f->type] ?? ucfirst($f->type),
+                'file' => $f->path,
+            ])->all() ?? [],
+        ];
+    }
+
     public function pendaftaranIndex()
     {
-        // Status di DB lowercase ('pending', 'diterima', 'ditolak'). Mapping ke label tampil.
-        $statusLabel = [
-            'pending'  => 'Pending',
-            'diterima' => 'Diterima',
-            'ditolak'  => 'Ditolak',
-        ];
-
-        $pendaftaran = Registration::with('dokumen')
+        $users = User::where('role', 'orangtua')
+            ->with(['student.parents', 'student.files'])
             ->orderByDesc('created_at')
-            ->get()
-            ->map(function ($r) use ($statusLabel) {
-                $st = strtolower($r->status ?? 'pending');
-                return [
-                    'id'              => $r->id,
-                    'tanggal_daftar'  => optional($r->created_at)->translatedFormat('d M Y') ?? '-',
-                    'nama_siswa'      => $r->nama_lengkap,
-                    'nama_panggilan'  => $r->nama_panggilan ?? '-',
-                    'jenis_kelamin'   => $r->jenis_kelamin ?? '-',
-                    'tempat_lahir'    => $r->tempat_lahir ?? '-',
-                    'tanggal_lahir'   => optional($r->tanggal_lahir)->translatedFormat('d M Y') ?? '-',
-                    'agama'           => $r->agama ?? '-',
-                    'anak_ke'         => $r->anak_ke ?? '-',
-                    'jumlah_saudara'  => $r->jumlah_saudara ?? '-',
-                    'alamat_siswa'    => $r->alamat_siswa ?? '-',
-                    'nama_ayah'       => $r->nama_ayah ?? '-',
-                    'pekerjaan_ayah'  => $r->pekerjaan_ayah ?? '-',
-                    'nama_ibu'        => $r->nama_ibu ?? '-',
-                    'pekerjaan_ibu'   => $r->pekerjaan_ibu ?? '-',
-                    'telepon'         => $r->telepon ?? '-',
-                    'email'           => $r->email ?? '-',
-                    'status'          => $statusLabel[$st] ?? ucfirst($st),
-                    'dokumen'         => $r->dokumen->map(fn($d) => [
-                        'id'   => $d->id,
-                        'nama' => $d->nama ?? $d->jenis ?? 'Dokumen',
-                        'file' => $d->file ?? $d->path ?? null,
-                    ])->all(),
-                ];
-            })->all();
+            ->get();
 
-        $totalPending  = Registration::where('status', 'pending')->count();
-        $totalDiterima = Registration::where('status', 'diterima')->count();
-        $totalDitolak  = Registration::where('status', 'ditolak')->count();
-        $totalSemua    = Registration::count();
+        $pendaftaran   = $users->map(fn($u) => $this->buildPendaftaranRow($u))->all();
+        $totalPending  = $users->where('status', 'pending')->count();
+        $totalDiterima = $users->where('status', 'active')->count();
+        $totalDitolak  = $users->where('status', 'inactive')->count();
+        $totalSemua    = $users->count();
 
         return view('admin.pendaftaran.index', compact('pendaftaran', 'totalPending', 'totalDiterima', 'totalDitolak', 'totalSemua'));
     }
-    
+
     public function pendaftaranShow($id)
     {
-        $r = Registration::with('dokumen')->findOrFail($id);
+        $user = User::with(['student.parents', 'student.files'])->findOrFail($id);
 
-        $statusLabel = [
-            'pending'  => 'Pending',
-            'diterima' => 'Diterima',
-            'ditolak'  => 'Ditolak',
-        ];
-        $st = strtolower($r->status ?? 'pending');
-
-        $pendaftaran = [
-            'id'                  => $r->id,
-            'tanggal_daftar'      => optional($r->created_at)->translatedFormat('d M Y') ?? '-',
-            'status'              => $statusLabel[$st] ?? ucfirst($st),
-
-            // Identitas Anak
-            'nama_siswa'          => $r->nama_lengkap ?? '-',
-            'nama_panggilan'      => $r->nama_panggilan ?? '-',
-            'nik'                 => $r->nik ?? '-',
-            'jenis_kelamin'       => $r->jenis_kelamin ?? '-',
-            'agama'               => $r->agama ?? '-',
-            'tempat_lahir'        => $r->tempat_lahir ?? '-',
-            'tanggal_lahir'       => optional($r->tanggal_lahir)->translatedFormat('d F Y') ?? '-',
-            'anak_ke'             => $r->anak_ke ?? '-',
-            'jumlah_saudara'      => $r->jumlah_saudara ?? '-',
-            'suku_bangsa'         => $r->suku_bangsa ?? '-',
-            'riwayat_penyakit'    => $r->riwayat_penyakit ?? '-',
-            'berat_badan'         => $r->berat_badan ? $r->berat_badan . ' kg' : '-',
-            'tinggi_badan'        => $r->tinggi_badan ? $r->tinggi_badan . ' cm' : '-',
-            'alamat_siswa'        => $r->alamat_siswa ?? '-',
-
-            // Data Ayah
-            'nama_ayah'           => $r->nama_ayah ?? '-',
-            'pekerjaan_ayah'      => $r->pekerjaan_ayah ?? '-',
-            'pendidikan_ayah'     => $r->pendidikan_ayah ?? '-',
-            'tempat_lahir_ayah'   => $r->tempat_lahir_ayah ?? '-',
-            'tanggal_lahir_ayah'  => $r->tanggal_lahir_ayah
-                ? \Carbon\Carbon::parse($r->tanggal_lahir_ayah)->translatedFormat('d F Y')
-                : '-',
-            'no_telp_ayah'        => $r->no_telp_ayah ?? $r->telepon ?? '-',
-
-            // Data Ibu
-            'nama_ibu'            => $r->nama_ibu ?? '-',
-            'pekerjaan_ibu'       => $r->pekerjaan_ibu ?? '-',
-            'pendidikan_ibu'      => $r->pendidikan_ibu ?? '-',
-            'tempat_lahir_ibu'    => $r->tempat_lahir_ibu ?? '-',
-            'tanggal_lahir_ibu'   => $r->tanggal_lahir_ibu
-                ? \Carbon\Carbon::parse($r->tanggal_lahir_ibu)->translatedFormat('d F Y')
-                : '-',
-            'no_telp_ibu'         => $r->no_telp_ibu ?? '-',
-
-            // Data Wali
-            'nama_wali'           => $r->nama_wali ?? '-',
-            'pekerjaan_wali'      => $r->pekerjaan_wali ?? '-',
-            'pendidikan_wali'     => $r->pendidikan_wali ?? '-',
-            'tempat_lahir_wali'   => $r->tempat_lahir_wali ?? '-',
-            'tanggal_lahir_wali'  => $r->tanggal_lahir_wali
-                ? \Carbon\Carbon::parse($r->tanggal_lahir_wali)->translatedFormat('d F Y')
-                : '-',
-            'no_telp_wali'        => $r->no_telp_wali ?? '-',
-
-            // Kontak
-            'telepon'             => $r->telepon ?? '-',
-            'email'               => $r->email ?? '-',
-            'alamat_ortu'         => $r->alamat_ortu ?? $r->alamat_siswa ?? '-',
-
-            // Dokumen
-            'dokumen' => $r->dokumen->map(fn($d) => [
-                'id'   => $d->id,
-                'nama' => $d->nama ?? $d->jenis ?? 'Dokumen',
-                'file' => $d->file ?? $d->path ?? null,
-            ])->all(),
-        ];
+        $pendaftaran = $this->buildPendaftaranRow($user);
 
         return view('admin.pendaftaran.show', compact('pendaftaran'));
     }
-    
+
     public function pendaftaranTerima(Request $request, $id)
     {
-        $r = Registration::findOrFail($id);
+        $user = User::findOrFail($id);
 
-        $kelas       = $request->input('kelas', '-');
-        $tahunAjaran = $request->input('tahun_ajaran', '-');
-        $semester    = $request->input('semester', '-');
+        $kelas       = $request->input('kelas', '');
+        $tahunAjaran = $request->input('tahun_ajaran', '');
 
-        $r->update([
-            'status'        => 'diterima',
-            'catatan_admin' => "Diterima di Kelas {$kelas}, TA {$tahunAjaran} Semester " . ucfirst($semester),
-        ]);
+        DB::transaction(function () use ($user, $kelas, $tahunAjaran) {
+            $user->update(['status' => 'active']);
+
+            if ($kelas && $tahunAjaran && $user->student) {
+                $classTerm = ClassTerm::whereHas('class', fn($q) => $q->where('name', $kelas))
+                    ->whereHas('academicTerm', fn($q) => $q->where('academic_year', $tahunAjaran))
+                    ->first();
+
+                if ($classTerm) {
+                    StudentEnrollment::firstOrCreate(
+                        ['student_id' => $user->student->id, 'class_term_id' => $classTerm->id],
+                        ['status' => 'aktif']
+                    );
+                }
+            }
+        });
 
         return redirect()->route('admin.pendaftaran.index')
-            ->with('success', "Pendaftaran berhasil diterima! Siswa ditempatkan di Kelas {$kelas}, TA {$tahunAjaran} Semester " . ucfirst($semester) . ".");
+            ->with('success', "Pendaftaran {$user->student?->name} telah diterima. Akun orang tua sekarang aktif.");
     }
 
     public function pendaftaranTolak(Request $request, $id)
     {
-        $r = Registration::findOrFail($id);
-        $alasan = $request->input('alasan_penolakan', 'Tidak memenuhi persyaratan');
+        $user = User::findOrFail($id);
+        $user->update(['status' => 'inactive']);
 
-        $r->update([
-            'status'        => 'ditolak',
-            'catatan_admin' => $alasan,
-        ]);
-
-        return redirect()->route('admin.pendaftaran.index')->with('success', 'Pendaftaran telah ditolak.');
+        return redirect()->route('admin.pendaftaran.index')
+            ->with('success', "Pendaftaran {$user->student?->name} telah ditolak.");
     }
     
     // KELOLA TAHUN AJARAN
-    private function dummyTahunAjaran()
-    {
-        return [
-            ['id' => 1, 'tahun_ajaran' => '2023/2024', 'semester' => 'ganjil', 'status' => 'selesai'],
-            ['id' => 2, 'tahun_ajaran' => '2023/2024', 'semester' => 'genap',  'status' => 'selesai'],
-            ['id' => 3, 'tahun_ajaran' => '2024/2025', 'semester' => 'ganjil', 'status' => 'selesai'],
-            ['id' => 4, 'tahun_ajaran' => '2024/2025', 'semester' => 'genap',  'status' => 'aktif'],
-            ['id' => 5, 'tahun_ajaran' => '2025/2026', 'semester' => 'ganjil', 'status' => 'menunggu'],
-        ];
-    }
-
-    private function dummyRiwayatKenaikan()
-    {
-        // Riwayat perubahan class term per siswa, dikelompokkan per tahun ajaran (yang sudah selesai)
-        return [
-            // Tahun Ajaran 2023/2024 Ganjil (id=1)
-            1 => [
-                ['siswa_nama' => 'Ahmad Fauzi',     'nis' => '2023001', 'kelas_asal' => 'A1', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'A1 — 2023/2024 Genap'],
-                ['siswa_nama' => 'Siti Nurhaliza',  'nis' => '2023002', 'kelas_asal' => 'A1', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'A1 — 2023/2024 Genap'],
-                ['siswa_nama' => 'Budi Santoso',    'nis' => '2023003', 'kelas_asal' => 'A1', 'aksi' => 'tinggal_kelas',  'class_term_tujuan' => 'A1 — 2023/2024 Genap'],
-                ['siswa_nama' => 'Dewi Lestari',    'nis' => '2023004', 'kelas_asal' => 'B1', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B1 — 2023/2024 Genap'],
-                ['siswa_nama' => 'Eko Prasetyo',    'nis' => '2023005', 'kelas_asal' => 'B2', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B2 — 2023/2024 Genap'],
-            ],
-            // Tahun Ajaran 2023/2024 Genap (id=2)
-            2 => [
-                ['siswa_nama' => 'Ahmad Fauzi',     'nis' => '2023001', 'kelas_asal' => 'A1', 'aksi' => 'ganti_kelas',   'class_term_tujuan' => 'B1 — 2024/2025 Ganjil'],
-                ['siswa_nama' => 'Siti Nurhaliza',  'nis' => '2023002', 'kelas_asal' => 'A1', 'aksi' => 'ganti_kelas',   'class_term_tujuan' => 'B2 — 2024/2025 Ganjil'],
-                ['siswa_nama' => 'Budi Santoso',    'nis' => '2023003', 'kelas_asal' => 'A1', 'aksi' => 'tinggal_kelas',  'class_term_tujuan' => 'A1 — 2024/2025 Ganjil'],
-                ['siswa_nama' => 'Dewi Lestari',    'nis' => '2023004', 'kelas_asal' => 'B1', 'aksi' => 'ganti_kelas',   'class_term_tujuan' => 'B1 — 2024/2025 Ganjil'],
-                ['siswa_nama' => 'Eko Prasetyo',    'nis' => '2023005', 'kelas_asal' => 'B2', 'aksi' => 'ganti_kelas',   'class_term_tujuan' => 'B2 — 2024/2025 Ganjil'],
-            ],
-            // Tahun Ajaran 2024/2025 Ganjil (id=3)
-            3 => [
-                ['siswa_nama' => 'Ahmad Fauzi',     'nis' => '2024001', 'kelas_asal' => 'B1', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B1 — 2024/2025 Genap'],
-                ['siswa_nama' => 'Siti Nurhaliza',  'nis' => '2024002', 'kelas_asal' => 'B2', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B2 — 2024/2025 Genap'],
-                ['siswa_nama' => 'Budi Santoso',    'nis' => '2023003', 'kelas_asal' => 'A1', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'A1 — 2024/2025 Genap'],
-                ['siswa_nama' => 'Dewi Lestari',    'nis' => '2023004', 'kelas_asal' => 'B1', 'aksi' => 'tinggal_kelas',  'class_term_tujuan' => 'B1 — 2024/2025 Genap'],
-                ['siswa_nama' => 'Eko Prasetyo',    'nis' => '2023005', 'kelas_asal' => 'B2', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'B2 — 2024/2025 Genap'],
-                ['siswa_nama' => 'Fitri Handayani', 'nis' => '2024006', 'kelas_asal' => 'A1', 'aksi' => 'ganti_semester', 'class_term_tujuan' => 'A1 — 2024/2025 Genap'],
-            ],
-        ];
-    }
-
     public function tahunAjaranIndex()
     {
-        $data = collect($this->dummyTahunAjaran());
+        $data = AcademicTerm::orderBy('academic_year')->orderBy('semester')->get();
         return view('admin.tahun_ajaran.index', compact('data'));
     }
 
     public function tahunAjaranShow($id)
     {
-        $item = collect($this->dummyTahunAjaran())->firstWhere('id', (int) $id);
-        if (!$item || $item['status'] !== 'selesai') {
-            return redirect()->route('admin.tahun_ajaran.index')->with('error', 'Riwayat hanya tersedia untuk tahun ajaran yang sudah selesai.');
-        }
+        $academicTerm = AcademicTerm::with([
+            'classTerms.class',
+            'classTerms.enrollments.student',
+        ])->findOrFail($id);
 
-        $riwayat = $this->dummyRiwayatKenaikan()[(int) $id] ?? [];
-
-        return view('admin.tahun_ajaran.show', compact('item', 'riwayat'));
+        return view('admin.tahun_ajaran.show', compact('academicTerm'));
     }
 
     public function tahunAjaranCreate()
@@ -533,36 +487,51 @@ class AdminController extends Controller
     public function tahunAjaranStore(Request $request)
     {
         $request->validate([
-            'tahun_ajaran' => 'required|string',
-            'semester'     => 'required|in:ganjil,genap',
+            'academic_year' => 'required|string|max:20',
+            'semester'      => 'required|in:ganjil,genap',
+            'status'        => 'required|in:menunggu,aktif,selesai',
+        ]);
+
+        AcademicTerm::create([
+            'academic_year' => $request->academic_year,
+            'semester'      => $request->semester,
+            'status'        => $request->status,
         ]);
 
         return redirect()->route('admin.tahun_ajaran.index')
-            ->with('success', "Tahun Ajaran {$request->tahun_ajaran} Semester " . ucfirst($request->semester) . " berhasil ditambahkan.");
+            ->with('success', "Tahun Ajaran {$request->academic_year} Semester " . ucfirst($request->semester) . " berhasil ditambahkan.");
     }
 
     public function tahunAjaranEdit($id)
     {
-        $row  = collect($this->dummyTahunAjaran())->firstWhere('id', (int) $id);
-        $item = (object) ($row ?? abort(404));
+        $item = AcademicTerm::findOrFail($id);
         return view('admin.tahun_ajaran.edit', compact('item'));
     }
 
     public function tahunAjaranUpdate(Request $request, $id)
     {
         $request->validate([
-            'tahun_ajaran' => 'required|string',
-            'semester'     => 'required|in:ganjil,genap',
+            'academic_year' => 'required|string|max:20',
+            'semester'      => 'required|in:ganjil,genap',
+            'status'        => 'required|in:menunggu,aktif,selesai',
+        ]);
+
+        $item = AcademicTerm::findOrFail($id);
+        $item->update([
+            'academic_year' => $request->academic_year,
+            'semester'      => $request->semester,
+            'status'        => $request->status,
         ]);
 
         return redirect()->route('admin.tahun_ajaran.index')
-            ->with('success', "Tahun Ajaran {$request->tahun_ajaran} Semester " . ucfirst($request->semester) . " berhasil diperbarui.");
+            ->with('success', "Tahun Ajaran {$item->academic_year} Semester " . ucfirst($item->semester) . " berhasil diperbarui.");
     }
 
     public function tahunAjaranDestroy($id)
     {
-        $row  = collect($this->dummyTahunAjaran())->firstWhere('id', (int) $id);
-        $label = $row ? "{$row['tahun_ajaran']} " . ucfirst($row['semester']) : 'Tidak diketahui';
+        $item = AcademicTerm::findOrFail($id);
+        $label = "{$item->academic_year} " . ucfirst($item->semester);
+        $item->delete();
 
         return redirect()->route('admin.tahun_ajaran.index')
             ->with('success', "Tahun Ajaran {$label} berhasil dihapus.");
@@ -571,32 +540,27 @@ class AdminController extends Controller
     // ═══════════════════════════════════════════════════════
     // KELOLA KELAS
     // ═══════════════════════════════════════════════════════
-    private function dummyKelas()
-    {
-        return [
-            ['id' => 1, 'nama' => 'A1', 'jumlah_maksimum' => 20],
-            ['id' => 2, 'nama' => 'B1', 'jumlah_maksimum' => 20],
-            ['id' => 3, 'nama' => 'B2', 'jumlah_maksimum' => 18],
-        ];
-    }
-
     public function kelasIndex()
     {
-        $kelas = collect($this->dummyKelas());
+        $kelas = Classroom::orderBy('name')->get();
         return view('admin.kelas.index', compact('kelas'));
     }
 
     public function kelasCreate()
     {
-        $available = ['A1', 'B1', 'B2'];
-        return view('admin.kelas.create', compact('available'));
+        return view('admin.kelas.create');
     }
 
     public function kelasStore(Request $request)
     {
         $request->validate([
-            'nama'            => 'required|in:A1,B1,B2',
+            'nama'            => 'required|string|max:20|unique:class,name',
             'jumlah_maksimum' => 'required|integer|min:1|max:50',
+        ]);
+
+        Classroom::create([
+            'name'    => $request->nama,
+            'maximum' => $request->jumlah_maksimum,
         ]);
 
         return redirect()->route('admin.kelas.index')
@@ -605,16 +569,22 @@ class AdminController extends Controller
 
     public function kelasEdit($id)
     {
-        $data  = collect($this->dummyKelas())->firstWhere('id', (int) $id);
-        $kelas = (object) ($data ?? abort(404));
+        $kelas = Classroom::findOrFail($id);
         return view('admin.kelas.edit', compact('kelas'));
     }
 
     public function kelasUpdate(Request $request, $id)
     {
+        $kelas = Classroom::findOrFail($id);
+
         $request->validate([
-            'nama'            => 'required|in:A1,B1,B2',
+            'nama'            => 'required|string|max:20|unique:class,name,' . $id,
             'jumlah_maksimum' => 'required|integer|min:1|max:50',
+        ]);
+
+        $kelas->update([
+            'name'    => $request->nama,
+            'maximum' => $request->jumlah_maksimum,
         ]);
 
         return redirect()->route('admin.kelas.index')
@@ -623,8 +593,9 @@ class AdminController extends Controller
 
     public function kelasDestroy($id)
     {
-        $data = collect($this->dummyKelas())->firstWhere('id', (int) $id);
-        $nama = $data ? $data['nama'] : 'Tidak diketahui';
+        $kelas = Classroom::findOrFail($id);
+        $nama  = $kelas->name;
+        $kelas->delete();
 
         return redirect()->route('admin.kelas.index')
             ->with('success', "Kelas {$nama} berhasil dihapus.");
@@ -676,7 +647,7 @@ class AdminController extends Controller
 
     public function ekstrakurikulerIndex()
     {
-        $ekstrakurikuler = collect($this->dummyEkstrakurikuler());
+        $ekstrakurikuler = Extracurricular::with('assessments')->orderBy('name')->get();
         return view('admin.ekstrakurikuler.index', compact('ekstrakurikuler'));
     }
 
@@ -693,17 +664,23 @@ class AdminController extends Controller
             'penilaian.*' => 'nullable|string|max:100',
         ]);
 
+        DB::transaction(function () use ($request) {
+            $ekskul = Extracurricular::create(['name' => $request->nama]);
+            foreach (array_filter($request->penilaian ?? []) as $poin) {
+                ExtracurricularAssessment::create([
+                    'extracurricular_id' => $ekskul->id,
+                    'name'               => $poin,
+                ]);
+            }
+        });
+
         return redirect()->route('admin.ekstrakurikuler.index')
             ->with('success', "Ekstrakurikuler {$request->nama} berhasil ditambahkan.");
     }
 
     public function ekstrakurikulerEdit($id)
     {
-        $data = collect($this->dummyEkstrakurikuler())->firstWhere('id', (int) $id);
-        if (!$data) {
-            abort(404);
-        }
-        $ekstrakurikuler = (object) $data;
+        $ekstrakurikuler = Extracurricular::with('assessments')->findOrFail($id);
         return view('admin.ekstrakurikuler.edit', compact('ekstrakurikuler'));
     }
 
@@ -715,14 +692,32 @@ class AdminController extends Controller
             'penilaian.*' => 'nullable|string|max:100',
         ]);
 
+        $ekskul = Extracurricular::findOrFail($id);
+
+        DB::transaction(function () use ($request, $ekskul) {
+            $ekskul->update(['name' => $request->nama]);
+            $ekskul->assessments()->delete();
+            foreach (array_filter($request->penilaian ?? []) as $poin) {
+                ExtracurricularAssessment::create([
+                    'extracurricular_id' => $ekskul->id,
+                    'name'               => $poin,
+                ]);
+            }
+        });
+
         return redirect()->route('admin.ekstrakurikuler.index')
             ->with('success', "Ekstrakurikuler {$request->nama} berhasil diperbarui.");
     }
 
     public function ekstrakurikulerDestroy($id)
     {
-        $data = collect($this->dummyEkstrakurikuler())->firstWhere('id', (int) $id);
-        $nama = $data ? $data['nama'] : 'Tidak diketahui';
+        $ekskul = Extracurricular::findOrFail($id);
+        $nama   = $ekskul->name;
+
+        DB::transaction(function () use ($ekskul) {
+            $ekskul->assessments()->delete();
+            $ekskul->delete();
+        });
 
         return redirect()->route('admin.ekstrakurikuler.index')
             ->with('success', "Ekstrakurikuler {$nama} berhasil dihapus.");
@@ -731,50 +726,9 @@ class AdminController extends Controller
     // ═══════════════════════════════════════════════════════
     // KELOLA KONSELING (DUMMY)
     // ═══════════════════════════════════════════════════════
-    private function dummyKonseling()
-    {
-        return [
-            [
-                'id'        => 1,
-                'nama'      => 'Konseling Sosial-Emosional',
-                'penilaian' => [
-                    ['id' => 1, 'nama' => 'Kemampuan Berinteraksi'],
-                    ['id' => 2, 'nama' => 'Pengelolaan Emosi'],
-                    ['id' => 3, 'nama' => 'Empati'],
-                ],
-            ],
-            [
-                'id'        => 2,
-                'nama'      => 'Konseling Perilaku',
-                'penilaian' => [
-                    ['id' => 4, 'nama' => 'Kepatuhan Aturan'],
-                    ['id' => 5, 'nama' => 'Kemandirian'],
-                    ['id' => 6, 'nama' => 'Tanggung Jawab'],
-                ],
-            ],
-            [
-                'id'        => 3,
-                'nama'      => 'Konseling Belajar',
-                'penilaian' => [
-                    ['id' => 7, 'nama' => 'Konsentrasi'],
-                    ['id' => 8, 'nama' => 'Minat Belajar'],
-                ],
-            ],
-            [
-                'id'        => 4,
-                'nama'      => 'Konseling Komunikasi',
-                'penilaian' => [
-                    ['id' => 9,  'nama' => 'Kemampuan Bercerita'],
-                    ['id' => 10, 'nama' => 'Kepercayaan Diri'],
-                    ['id' => 11, 'nama' => 'Kemampuan Mendengarkan'],
-                ],
-            ],
-        ];
-    }
-
     public function konselingIndex()
     {
-        $konseling = collect($this->dummyKonseling());
+        $konseling = Counseling::with('assessments')->orderBy('name')->get();
         return view('admin.konseling.index', compact('konseling'));
     }
 
@@ -791,17 +745,23 @@ class AdminController extends Controller
             'penilaian.*' => 'nullable|string|max:100',
         ]);
 
+        DB::transaction(function () use ($request) {
+            $konseling = Counseling::create(['name' => $request->nama]);
+            foreach (array_filter($request->penilaian ?? []) as $poin) {
+                CounselingAssessment::create([
+                    'counseling_id' => $konseling->id,
+                    'name'          => $poin,
+                ]);
+            }
+        });
+
         return redirect()->route('admin.konseling.index')
             ->with('success', "Konseling {$request->nama} berhasil ditambahkan.");
     }
 
     public function konselingEdit($id)
     {
-        $data = collect($this->dummyKonseling())->firstWhere('id', (int) $id);
-        if (!$data) {
-            abort(404);
-        }
-        $konseling = (object) $data;
+        $konseling = Counseling::with('assessments')->findOrFail($id);
         return view('admin.konseling.edit', compact('konseling'));
     }
 
@@ -813,14 +773,32 @@ class AdminController extends Controller
             'penilaian.*' => 'nullable|string|max:100',
         ]);
 
+        $konseling = Counseling::findOrFail($id);
+
+        DB::transaction(function () use ($request, $konseling) {
+            $konseling->update(['name' => $request->nama]);
+            $konseling->assessments()->delete();
+            foreach (array_filter($request->penilaian ?? []) as $poin) {
+                CounselingAssessment::create([
+                    'counseling_id' => $konseling->id,
+                    'name'          => $poin,
+                ]);
+            }
+        });
+
         return redirect()->route('admin.konseling.index')
             ->with('success', "Konseling {$request->nama} berhasil diperbarui.");
     }
 
     public function konselingDestroy($id)
     {
-        $data = collect($this->dummyKonseling())->firstWhere('id', (int) $id);
-        $nama = $data ? $data['nama'] : 'Tidak diketahui';
+        $konseling = Counseling::findOrFail($id);
+        $nama = $konseling->name;
+
+        DB::transaction(function () use ($konseling) {
+            $konseling->assessments()->delete();
+            $konseling->delete();
+        });
 
         return redirect()->route('admin.konseling.index')
             ->with('success', "Konseling {$nama} berhasil dihapus.");
@@ -829,24 +807,9 @@ class AdminController extends Controller
     // ═══════════════════════════════════════════════════════
     // KELOLA MATA PELAJARAN (DUMMY)
     // ═══════════════════════════════════════════════════════
-    private function dummyMataPelajaran()
-    {
-        return [
-            ['id' => 1, 'nama' => 'Pendidikan Agama Islam'],
-            ['id' => 2, 'nama' => 'Sentra Balok'],
-            ['id' => 3, 'nama' => 'Sentra Bahan Alam'],
-            ['id' => 4, 'nama' => 'Sentra Seni'],
-            ['id' => 5, 'nama' => 'Sentra Peran'],
-            ['id' => 6, 'nama' => 'Bahasa Indonesia'],
-            ['id' => 7, 'nama' => 'Berhitung'],
-            ['id' => 8, 'nama' => 'Menyanyi & Musik'],
-            ['id' => 9, 'nama' => 'Senam & Olahraga'],
-        ];
-    }
-
     public function mataPelajaranIndex()
     {
-        $mataPelajaran = collect($this->dummyMataPelajaran());
+        $mataPelajaran = Subject::orderBy('name')->get();
         return view('admin.mata_pelajaran.index', compact('mataPelajaran'));
     }
 
@@ -858,8 +821,10 @@ class AdminController extends Controller
     public function mataPelajaranStore(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:100',
+            'nama' => 'required|string|max:100|unique:subject,name',
         ]);
+
+        Subject::create(['name' => $request->nama]);
 
         return redirect()->route('admin.mata_pelajaran.index')
             ->with('success', "Mata pelajaran {$request->nama} berhasil ditambahkan.");
@@ -867,19 +832,19 @@ class AdminController extends Controller
 
     public function mataPelajaranEdit($id)
     {
-        $data = collect($this->dummyMataPelajaran())->firstWhere('id', (int) $id);
-        if (!$data) {
-            abort(404);
-        }
-        $mataPelajaran = (object) $data;
+        $mataPelajaran = Subject::findOrFail($id);
         return view('admin.mata_pelajaran.edit', compact('mataPelajaran'));
     }
 
     public function mataPelajaranUpdate(Request $request, $id)
     {
+        $mataPelajaran = Subject::findOrFail($id);
+
         $request->validate([
-            'nama' => 'required|string|max:100',
+            'nama' => 'required|string|max:100|unique:subject,name,' . $id,
         ]);
+
+        $mataPelajaran->update(['name' => $request->nama]);
 
         return redirect()->route('admin.mata_pelajaran.index')
             ->with('success', "Mata pelajaran {$request->nama} berhasil diperbarui.");
@@ -887,57 +852,38 @@ class AdminController extends Controller
 
     public function mataPelajaranDestroy($id)
     {
-        $data = collect($this->dummyMataPelajaran())->firstWhere('id', (int) $id);
-        $nama = $data ? $data['nama'] : 'Tidak diketahui';
+        $mataPelajaran = Subject::findOrFail($id);
+        $nama = $mataPelajaran->name;
+        $mataPelajaran->delete();
 
         return redirect()->route('admin.mata_pelajaran.index')
             ->with('success', "Mata pelajaran {$nama} berhasil dihapus.");
     }
 
     // ═══════════════════════════════════════════════════════
-    // KELOLA AKTIVITAS TAHUN AJARAN (DUMMY)
+    // KELOLA AKTIVITAS TAHUN AJARAN
     // Mengaitkan mata pelajaran, ekstrakurikuler, konseling ke class_term (tahun ajaran)
     // ═══════════════════════════════════════════════════════
-    private function dummyAktivitasTahunAjaran()
-    {
-        // Pivot dummy: untuk tiap class_term_id, simpan array id mapel/ekskul/konseling yang sudah di-assign
-        return [
-            1 => [
-                'mata_pelajaran_ids' => [1, 2, 4, 6, 7],
-                'ekstrakurikuler_ids' => [1, 2],
-                'konseling_ids' => [1, 3],
-            ],
-            2 => [
-                'mata_pelajaran_ids' => [1, 3, 5, 8],
-                'ekstrakurikuler_ids' => [3],
-                'konseling_ids' => [2],
-            ],
-            3 => [
-                'mata_pelajaran_ids' => [],
-                'ekstrakurikuler_ids' => [],
-                'konseling_ids' => [],
-            ],
-        ];
-    }
-
     public function aktivitasTahunAjaranIndex()
     {
-        $tahunAjaran     = collect($this->dummyTahunAjaran());
-        $aktivitas       = $this->dummyAktivitasTahunAjaran();
-        $mataPelajaran   = collect($this->dummyMataPelajaran())->keyBy('id');
-        $ekstrakurikuler = collect($this->dummyEkstrakurikuler())->keyBy('id');
-        $konseling       = collect($this->dummyKonseling())->keyBy('id');
+        $academicTerms = AcademicTerm::with([
+            'classTerms.subjects.subject',
+            'classTerms.extracurriculars.extracurricular',
+            'classTerms.counselings.counseling',
+        ])->orderBy('academic_year')->orderBy('semester')->get();
 
-        $rows = $tahunAjaran->map(function ($ta) use ($aktivitas, $mataPelajaran, $ekstrakurikuler, $konseling) {
-            $assign = $aktivitas[$ta['id']] ?? ['mata_pelajaran_ids' => [], 'ekstrakurikuler_ids' => [], 'konseling_ids' => []];
+        $rows = $academicTerms->map(function ($ta) {
+            $mataPelajaran   = $ta->classTerms->flatMap(fn($ct) => $ct->subjects->map(fn($s) => $s->subject?->name))->filter()->unique()->values();
+            $ekstrakurikuler = $ta->classTerms->flatMap(fn($ct) => $ct->extracurriculars->map(fn($e) => $e->extracurricular?->name))->filter()->unique()->values();
+            $konseling       = $ta->classTerms->flatMap(fn($ct) => $ct->counselings->map(fn($k) => $k->counseling?->name))->filter()->unique()->values();
 
             return [
-                'id'              => $ta['id'],
-                'tahun_ajaran'    => $ta['tahun_ajaran'],
-                'semester'        => $ta['semester'],
-                'mata_pelajaran'  => collect($assign['mata_pelajaran_ids'])->map(fn($id) => $mataPelajaran[$id]['nama'] ?? null)->filter()->values()->all(),
-                'ekstrakurikuler' => collect($assign['ekstrakurikuler_ids'])->map(fn($id) => $ekstrakurikuler[$id]['nama'] ?? null)->filter()->values()->all(),
-                'konseling'       => collect($assign['konseling_ids'])->map(fn($id) => $konseling[$id]['nama'] ?? null)->filter()->values()->all(),
+                'id'              => $ta->id,
+                'tahun_ajaran'    => $ta->academic_year,
+                'semester'        => $ta->semester,
+                'mata_pelajaran'  => $mataPelajaran->all(),
+                'ekstrakurikuler' => $ekstrakurikuler->all(),
+                'konseling'       => $konseling->all(),
             ];
         });
 
@@ -946,18 +892,21 @@ class AdminController extends Controller
 
     public function aktivitasTahunAjaranEdit($id)
     {
-        $ta = collect($this->dummyTahunAjaran())->firstWhere('id', (int) $id);
-        if (!$ta) {
-            abort(404);
-        }
+        $tahunAjaran = AcademicTerm::with([
+            'classTerms.subjects',
+            'classTerms.extracurriculars',
+            'classTerms.counselings',
+        ])->findOrFail($id);
 
-        $aktivitas      = $this->dummyAktivitasTahunAjaran();
-        $assigned       = $aktivitas[$ta['id']] ?? ['mata_pelajaran_ids' => [], 'ekstrakurikuler_ids' => [], 'konseling_ids' => []];
+        $mataPelajaran   = Subject::orderBy('name')->get();
+        $ekstrakurikuler = Extracurricular::orderBy('name')->get();
+        $konseling       = Counseling::orderBy('name')->get();
 
-        $tahunAjaran     = (object) $ta;
-        $mataPelajaran   = collect($this->dummyMataPelajaran());
-        $ekstrakurikuler = collect($this->dummyEkstrakurikuler());
-        $konseling       = collect($this->dummyKonseling());
+        $assigned = [
+            'mata_pelajaran_ids'  => $tahunAjaran->classTerms->flatMap(fn($ct) => $ct->subjects->pluck('subject_id'))->unique()->values()->all(),
+            'ekstrakurikuler_ids' => $tahunAjaran->classTerms->flatMap(fn($ct) => $ct->extracurriculars->pluck('extracurricular_id'))->unique()->values()->all(),
+            'konseling_ids'       => $tahunAjaran->classTerms->flatMap(fn($ct) => $ct->counselings->pluck('counseling_id'))->unique()->values()->all(),
+        ];
 
         return view('admin.aktivitas_tahun_ajaran.edit', compact(
             'tahunAjaran', 'mataPelajaran', 'ekstrakurikuler', 'konseling', 'assigned'
@@ -967,19 +916,38 @@ class AdminController extends Controller
     public function aktivitasTahunAjaranUpdate(Request $request, $id)
     {
         $request->validate([
-            'mata_pelajaran_ids'   => 'nullable|array',
-            'mata_pelajaran_ids.*' => 'integer',
-            'ekstrakurikuler_ids'  => 'nullable|array',
-            'ekstrakurikuler_ids.*' => 'integer',
-            'konseling_ids'        => 'nullable|array',
-            'konseling_ids.*'      => 'integer',
+            'mata_pelajaran_ids'    => 'nullable|array',
+            'mata_pelajaran_ids.*'  => 'string|exists:subject,id',
+            'ekstrakurikuler_ids'   => 'nullable|array',
+            'ekstrakurikuler_ids.*' => 'string|exists:extracurricular,id',
+            'konseling_ids'         => 'nullable|array',
+            'konseling_ids.*'       => 'string|exists:counseling,id',
         ]);
 
-        $ta = collect($this->dummyTahunAjaran())->firstWhere('id', (int) $id);
-        $label = $ta ? "{$ta['tahun_ajaran']} " . ucfirst($ta['semester']) : 'Tidak diketahui';
+        $academicTerm  = AcademicTerm::with('classTerms')->findOrFail($id);
+        $subjectIds    = $request->mata_pelajaran_ids ?? [];
+        $ekskuIds      = $request->ekstrakurikuler_ids ?? [];
+        $konselingIds  = $request->konseling_ids ?? [];
+
+        DB::transaction(function () use ($academicTerm, $subjectIds, $ekskuIds, $konselingIds) {
+            foreach ($academicTerm->classTerms as $ct) {
+                $ct->subjects()->delete();
+                foreach ($subjectIds as $sid) {
+                    ClassTermSubject::create(['class_term_id' => $ct->id, 'subject_id' => $sid]);
+                }
+                $ct->extracurriculars()->delete();
+                foreach ($ekskuIds as $eid) {
+                    ClassTermExtracurricular::create(['class_term_id' => $ct->id, 'extracurricular_id' => $eid]);
+                }
+                $ct->counselings()->delete();
+                foreach ($konselingIds as $kid) {
+                    ClassTermCounseling::create(['class_term_id' => $ct->id, 'counseling_id' => $kid]);
+                }
+            }
+        });
 
         return redirect()->route('admin.aktivitas_tahun_ajaran.index')
-            ->with('success', "Aktivitas Tahun Ajaran {$label} berhasil diperbarui.");
+            ->with('success', "Aktivitas Tahun Ajaran {$academicTerm->academic_year} berhasil diperbarui.");
     }
 
     // ═══════════════════════════════════════════════════════

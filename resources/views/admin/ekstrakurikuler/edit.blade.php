@@ -115,7 +115,7 @@
             <div class="form-group">
                 <label for="nama" class="form-label required">Nama Ekstrakurikuler</label>
                 <input type="text" id="nama" name="nama" class="form-input"
-                    value="{{ old('nama', $ekstrakurikuler->nama) }}" placeholder="Contoh: Menari, Mewarnai, Bercerita" required maxlength="100">
+                    value="{{ old('nama', $ekstrakurikuler->name) }}" placeholder="Contoh: Menari, Mewarnai, Bercerita" required maxlength="100">
             </div>
 
             <div class="section-divider">
@@ -126,7 +126,7 @@
             @php
                 $oldPoin = old('penilaian');
                 if ($oldPoin === null) {
-                    $oldPoin = collect($ekstrakurikuler->penilaian)->pluck('nama')->all();
+                    $oldPoin = $ekstrakurikuler->assessments->pluck('name')->all();
                 }
             @endphp
 

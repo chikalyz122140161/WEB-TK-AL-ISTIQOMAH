@@ -131,31 +131,31 @@
                 @foreach($data as $i => $item)
                 <tr>
                     <td class="row-no">{{ $i + 1 }}</td>
-                    <td class="tahun-text">{{ $item['tahun_ajaran'] }}</td>
+                    <td class="tahun-text">{{ $item->academic_year }}</td>
                     <td>
-                        <span class="semester-pill semester-pill--{{ $item['semester'] }}">
-                            {{ ucfirst($item['semester']) }}
+                        <span class="semester-pill semester-pill--{{ $item->semester }}">
+                            {{ ucfirst($item->semester) }}
                         </span>
                     </td>
                     <td>
-                        <span class="status-pill status-pill--{{ $item['status'] }}">
-                            {{ ucfirst($item['status']) }}
+                        <span class="status-pill status-pill--{{ $item->status }}">
+                            {{ ucfirst($item->status) }}
                         </span>
                     </td>
                     <td>
                         <div class="btn-row">
-                            @if ($item['status'] === 'selesai')
-                                <a href="{{ route('admin.tahun_ajaran.show', $item['id']) }}" class="btn btn--secondary btn--sm">
+                            @if ($item->status === 'selesai')
+                                <a href="{{ route('admin.tahun_ajaran.show', $item->id) }}" class="btn btn--secondary btn--sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd"/></svg>
                                     Lihat Riwayat
                                 </a>
                             @else
-                                <a href="{{ route('admin.tahun_ajaran.edit', $item['id']) }}" class="btn btn--secondary btn--sm">
+                                <a href="{{ route('admin.tahun_ajaran.edit', $item->id) }}" class="btn btn--secondary btn--sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
                                     Edit
                                 </a>
-                                <form action="{{ route('admin.tahun_ajaran.destroy', $item['id']) }}" method="POST"
-                                      onsubmit="return confirm('Hapus Tahun Ajaran {{ $item['tahun_ajaran'] }} Semester {{ ucfirst($item['semester']) }}?')">
+                                <form action="{{ route('admin.tahun_ajaran.destroy', $item->id) }}" method="POST"
+                                      onsubmit="return confirm('Hapus Tahun Ajaran {{ $item->academic_year }} Semester {{ ucfirst($item->semester) }}?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn--danger btn--sm">

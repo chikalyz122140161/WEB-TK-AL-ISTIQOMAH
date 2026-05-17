@@ -292,25 +292,7 @@
         <h1>Pendaftaran Berhasil!</h1>
         <p>Terima kasih telah mendaftarkan putra/putri Anda di TK Al-Istiqomah. Data pendaftaran telah kami terima dan akan segera diproses.</p>
 
-        <div class="registration-code-box">
-            <span>Kode Pendaftaran</span>
-            <strong>{{ $kode_pendaftaran }}</strong>
-        </div>
-
-        <div class="info-box">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <p>Simpan kode pendaftaran ini untuk mengecek status pendaftaran. Kami akan menghubungi Anda melalui nomor telepon atau email yang terdaftar.</p>
-        </div>
-
         <div class="button-group">
-            <a href="{{ route('pendaftaran.cek-status') }}" class="btn-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                </svg>
-                Cek Status Pendaftaran
-            </a>
             <a href="{{ route('login') }}" class="btn-secondary">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />

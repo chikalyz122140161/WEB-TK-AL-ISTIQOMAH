@@ -41,7 +41,7 @@
             <div class="form-group">
                 <label for="nama" class="form-label required">Nama Mata Pelajaran</label>
                 <input type="text" id="nama" name="nama" class="form-input"
-                    value="{{ old('nama', $mataPelajaran->nama) }}" placeholder="Contoh: Sentra Balok, Bahasa Indonesia" required maxlength="100">
+                    value="{{ old('nama', $mataPelajaran->name) }}" placeholder="Contoh: Sentra Balok, Bahasa Indonesia" required maxlength="100">
             </div>
 
             <div class="form-actions">

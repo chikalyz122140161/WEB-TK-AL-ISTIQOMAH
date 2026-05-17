@@ -62,12 +62,8 @@
 
             <div class="form-group">
                 <label for="nama" class="form-label required">Nama Kelas</label>
-                <select id="nama" name="nama" class="form-select" required>
-                    <option value="">Pilih Kelas</option>
-                    @foreach($available as $nama)
-                        <option value="{{ $nama }}" {{ old('nama') == $nama ? 'selected' : '' }}>{{ $nama }}</option>
-                    @endforeach
-                </select>
+                <input type="text" id="nama" name="nama" class="form-input"
+                    value="{{ old('nama') }}" placeholder="Contoh: A1, B1, B2" required maxlength="20">
             </div>
 
             <div class="form-group">

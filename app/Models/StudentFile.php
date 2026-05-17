@@ -14,7 +14,7 @@ class StudentFile extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['student_id', 'type'];
+    protected $fillable = ['student_id', 'type', 'path'];
 
     public function student()
     {

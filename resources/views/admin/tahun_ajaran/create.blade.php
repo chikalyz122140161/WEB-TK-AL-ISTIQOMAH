@@ -38,9 +38,9 @@
             @csrf
 
             <div class="form-group">
-                <label for="tahun_ajaran" class="form-label required">Tahun Ajaran</label>
-                <input type="text" id="tahun_ajaran" name="tahun_ajaran" class="form-input"
-                    value="{{ old('tahun_ajaran') }}" placeholder="contoh: 2025/2026" required>
+                <label for="academic_year" class="form-label required">Tahun Ajaran</label>
+                <input type="text" id="academic_year" name="academic_year" class="form-input"
+                    value="{{ old('academic_year') }}" placeholder="contoh: 2025/2026" required>
             </div>
 
             <div class="form-group">
@@ -49,6 +49,15 @@
                     <option value="">-- Pilih Semester --</option>
                     <option value="ganjil" {{ old('semester') == 'ganjil' ? 'selected' : '' }}>Ganjil</option>
                     <option value="genap"  {{ old('semester') == 'genap'  ? 'selected' : '' }}>Genap</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="status" class="form-label required">Status</label>
+                <select id="status" name="status" class="form-select" required>
+                    <option value="menunggu" {{ old('status','menunggu') == 'menunggu' ? 'selected' : '' }}>Menunggu</option>
+                    <option value="aktif"    {{ old('status') == 'aktif'    ? 'selected' : '' }}>Aktif</option>
+                    <option value="selesai"  {{ old('status') == 'selesai'  ? 'selected' : '' }}>Selesai</option>
                 </select>
             </div>
 

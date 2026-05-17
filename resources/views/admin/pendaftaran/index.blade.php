@@ -118,7 +118,9 @@
                 </thead>
                 <tbody>
                     @forelse($pendaftaran as $index => $p)
-                    <tr data-status="{{ strtolower($p['status']) }}">
+                    <tr data-status="{{ strtolower($p['status']) }}"
+                        data-tanggal="{{ $p['tanggal_daftar_iso'] }}"
+                        data-search="{{ strtolower($p['nama_siswa'] . ' ' . $p['email'] . ' ' . $p['nama_ayah'] . ' ' . $p['nama_ibu'] . ' ' . $p['telepon']) }}">
                         <td>{{ $index + 1 }}</td>
                         <td>
                             <span class="date-cell">{{ $p['tanggal_daftar'] }}</span>
@@ -389,20 +391,34 @@
 </div>
 
 <script>
+let activeTab = 'pending';
+
+function applyFilters() {
+    const search  = document.getElementById('search').value.toLowerCase().trim();
+    const tanggal = document.getElementById('tanggal').value;
+    const kelas   = document.getElementById('kelas').value.toLowerCase();
+
+    document.querySelectorAll('.data-table tbody tr[data-status]').forEach(row => {
+        const matchTab     = activeTab === 'semua' || row.dataset.status === activeTab;
+        const matchSearch  = !search  || row.dataset.search.includes(search);
+        const matchTanggal = !tanggal || row.dataset.tanggal === tanggal;
+        const matchKelas   = !kelas   || row.dataset.search.includes(kelas);
+
+        row.style.display = (matchTab && matchSearch && matchTanggal && matchKelas) ? '' : 'none';
+    });
+}
+
+document.getElementById('search').addEventListener('input', applyFilters);
+document.getElementById('tanggal').addEventListener('change', applyFilters);
+document.getElementById('kelas').addEventListener('change', applyFilters);
+
 // Tab Filtering
 document.querySelectorAll('.tabs-nav__item').forEach(tab => {
     tab.addEventListener('click', function() {
         document.querySelectorAll('.tabs-nav__item').forEach(t => t.classList.remove('active'));
         this.classList.add('active');
-
-        const status = this.dataset.tab;
-        document.querySelectorAll('.data-table tbody tr').forEach(row => {
-            if (status === 'semua') {
-                row.style.display = '';
-            } else {
-                row.style.display = row.dataset.status === status ? '' : 'none';
-            }
-        });
+        activeTab = this.dataset.tab;
+        applyFilters();
     });
 });
 

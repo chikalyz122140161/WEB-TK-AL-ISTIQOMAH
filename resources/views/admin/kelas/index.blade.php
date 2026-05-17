@@ -103,10 +103,10 @@
 <div class="card">
     <div class="card__header">
         <h3 class="card__title">Daftar Kelas</h3>
-        <span class="badge badge--primary">{{ count($kelas) }} Kelas</span>
+        <span class="badge badge--primary">{{ $kelas->count() }} Kelas</span>
     </div>
     <div class="card__body p-0">
-        @if(count($kelas) === 0)
+        @if($kelas->isEmpty())
         <div class="empty-state" style="padding: 3rem; text-align:center;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="48" height="48" style="color:#d1d5db;margin-bottom:1rem;"><path d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 4.8 11.06a.75.75 0 0 1-.231-1.337A60.65 60.65 0 0 1 11.7 2.805Z"/></svg>
             <p style="color:#6b7280;margin-bottom:1rem;">Belum ada kelas yang ditambahkan.</p>
@@ -127,21 +127,21 @@
                 <tr>
                     <td class="row-no">{{ $i + 1 }}</td>
                     <td>
-                        <span class="kelas-badge {{ $k['nama'] === 'A1' ? 'kelas-badge--a' : 'kelas-badge--b' }}">
-                            {{ $k['nama'] }}
+                        <span class="kelas-badge {{ str_starts_with($k->name, 'A') ? 'kelas-badge--a' : 'kelas-badge--b' }}">
+                            {{ $k->name }}
                         </span>
                     </td>
                     <td>
-                        <span class="maks-pill">{{ $k['jumlah_maksimum'] }} siswa</span>
+                        <span class="maks-pill">{{ $k->maximum }} siswa</span>
                     </td>
                     <td>
                         <div class="btn-row">
-                            <a href="{{ route('admin.kelas.edit', $k['id']) }}" class="btn btn--secondary btn--sm">
+                            <a href="{{ route('admin.kelas.edit', $k->id) }}" class="btn btn--secondary btn--sm">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
                                 Edit
                             </a>
-                            <form action="{{ route('admin.kelas.destroy', $k['id']) }}" method="POST"
-                                  onsubmit="return confirm('Hapus kelas {{ $k['nama'] }}?')">
+                            <form action="{{ route('admin.kelas.destroy', $k->id) }}" method="POST"
+                                  onsubmit="return confirm('Hapus kelas {{ $k->name }}?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn--danger btn--sm">

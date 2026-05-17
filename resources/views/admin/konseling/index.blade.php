@@ -169,10 +169,10 @@
 <div class="card">
     <div class="card__header">
         <h3 class="card__title">Daftar Konseling</h3>
-        <span class="badge badge--primary">{{ count($konseling) }} Konseling</span>
+        <span class="badge badge--primary">{{ $konseling->count() }} Konseling</span>
     </div>
     <div class="card__body p-0">
-        @if(count($konseling) === 0)
+        @if($konseling->isEmpty())
         <div class="empty-state" style="padding: 3rem; text-align:center;">
             <p style="color:#6b7280;margin-bottom:1rem;">Belum ada konseling yang ditambahkan.</p>
             <a href="{{ route('admin.konseling.create') }}" class="btn btn--primary">Tambah Konseling Pertama</a>
@@ -192,28 +192,28 @@
                 <tr>
                     <td class="row-no">{{ $i + 1 }}</td>
                     <td>
-                        <span class="konseling-name">{{ $k['nama'] }}</span>
-                        <span class="poin-count">{{ count($k['penilaian']) }} poin</span>
+                        <span class="konseling-name">{{ $k->name }}</span>
+                        <span class="poin-count">{{ $k->assessments->count() }} poin</span>
                     </td>
                     <td>
-                        @if(count($k['penilaian']) === 0)
+                        @if($k->assessments->isEmpty())
                             <span class="poin-empty">Belum ada poin penilaian</span>
                         @else
                             <div class="poin-chips">
-                                @foreach($k['penilaian'] as $p)
-                                    <span class="poin-chip">{{ $p['nama'] }}</span>
+                                @foreach($k->assessments as $p)
+                                    <span class="poin-chip">{{ $p->name }}</span>
                                 @endforeach
                             </div>
                         @endif
                     </td>
                     <td>
                         <div class="btn-row">
-                            <a href="{{ route('admin.konseling.edit', $k['id']) }}" class="btn btn--secondary btn--sm">
+                            <a href="{{ route('admin.konseling.edit', $k->id) }}" class="btn btn--secondary btn--sm">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
                                 Edit
                             </a>
                             <button type="button" class="btn btn--danger btn--sm"
-                                    onclick="showDeleteModal('{{ $k['id'] }}', '{{ $k['nama'] }}')">
+                                    onclick="showDeleteModal('{{ $k->id }}', '{{ $k->name }}')">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
                                 Hapus
                             </button>

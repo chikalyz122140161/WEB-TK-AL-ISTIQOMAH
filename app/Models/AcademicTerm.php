@@ -14,7 +14,7 @@ class AcademicTerm extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['academic_year', 'semester'];
+    protected $fillable = ['academic_year', 'semester', 'status'];
 
     public function classTerms()
     {

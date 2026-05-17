@@ -115,7 +115,7 @@
             <div class="form-group">
                 <label for="nama" class="form-label required">Nama Konseling</label>
                 <input type="text" id="nama" name="nama" class="form-input"
-                    value="{{ old('nama', $konseling->nama) }}" placeholder="Contoh: Konseling Sosial-Emosional" required maxlength="100">
+                    value="{{ old('nama', $konseling->name) }}" placeholder="Contoh: Konseling Sosial-Emosional" required maxlength="100">
             </div>
 
             <div class="section-divider">
@@ -126,7 +126,7 @@
             @php
                 $oldPoin = old('penilaian');
                 if ($oldPoin === null) {
-                    $oldPoin = collect($konseling->penilaian)->pluck('nama')->all();
+                    $oldPoin = $konseling->assessments->pluck('name')->all();
                 }
             @endphp
 

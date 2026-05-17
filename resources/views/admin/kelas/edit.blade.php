@@ -40,18 +40,14 @@
 
             <div class="form-group">
                 <label for="nama" class="form-label required">Nama Kelas</label>
-                <select id="nama" name="nama" class="form-select" required>
-                    <option value="">Pilih Kelas</option>
-                    @foreach(['A1', 'B1', 'B2'] as $nama)
-                        <option value="{{ $nama }}" {{ old('nama', $kelas->nama) == $nama ? 'selected' : '' }}>{{ $nama }}</option>
-                    @endforeach
-                </select>
+                <input type="text" id="nama" name="nama" class="form-input"
+                    value="{{ old('nama', $kelas->name) }}" placeholder="Contoh: A1, B1, B2" required maxlength="20">
             </div>
 
             <div class="form-group">
                 <label for="jumlah_maksimum" class="form-label required">Jumlah Maksimum Siswa</label>
                 <input type="number" id="jumlah_maksimum" name="jumlah_maksimum" class="form-input"
-                    value="{{ old('jumlah_maksimum', $kelas->jumlah_maksimum) }}" required min="1" max="50">
+                    value="{{ old('jumlah_maksimum', $kelas->maximum) }}" required min="1" max="50">
                 <small class="form-hint">Maksimum kapasitas siswa per kelas (1–50)</small>
             </div>
 
