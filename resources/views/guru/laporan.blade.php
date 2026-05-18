@@ -12,8 +12,10 @@
         padding: 14px 16px;
         margin-bottom: 16px;
         box-shadow: var(--shadow-xs, 0 1px 3px rgba(0,0,0,0.04));
+    }
+    .lp-filter-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) auto;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) auto;
         gap: 12px;
         align-items: end;
     }
@@ -29,6 +31,7 @@
         cursor: pointer; font-family: inherit;
         transition: border-color .15s;
         appearance: none;
+        width: 100%;
     }
     .lp-select:focus { border-color: #3D9B72; box-shadow: 0 0 0 3px rgba(61,155,114,0.12); }
 
@@ -40,6 +43,7 @@
         font-family: inherit;
         box-shadow: 0 2px 6px rgba(61,155,114,0.25);
         transition: all .15s;
+        white-space: nowrap;
     }
     .lp-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(61,155,114,0.35); }
     .lp-btn--ghost {
@@ -122,6 +126,11 @@
         padding: 50px 20px; text-align: center;
         color: #9ca3af; font-size: 13px;
     }
+
+    .lp-info {
+        display: inline-flex; align-items: center; gap: 6px;
+        font-size: 12px; color: #6b7280; margin-bottom: 12px;
+    }
 </style>
 @endpush
 
@@ -130,61 +139,44 @@
 @endsection
 
 @section('content')
+
+    @if (session('success'))
+        <div style="background:rgba(76,175,130,0.12);border:1px solid rgba(76,175,130,0.3);color:#2E8B60;padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:13px;">
+            {{ session('success') }}
+        </div>
+    @endif
+
     {{-- Filter --}}
     <form method="GET" action="{{ route('guru.laporan_bk') }}" class="lp-filter">
-        <div class="lp-field">
-            <label class="lp-field__label">Tahun Ajaran / Semester</label>
-            <select class="lp-select" name="semester" id="filterSemester">
-                <option value="">Semua Semester</option>
-                @foreach ($semesters as $sm)
-                    <option value="{{ $sm['id'] }}" {{ ($filters['semester'] ?? '') === $sm['id'] ? 'selected' : '' }}>
-                        {{ $sm['label'] }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+        <div class="lp-filter-grid">
+            <div class="lp-field">
+                <label class="lp-field__label">Class Term (Kelas & Semester)</label>
+                <select class="lp-select" name="class_term_id">
+                    <option value="">Semua Class Term</option>
+                    @foreach ($classTerms as $ct)
+                        <option value="{{ $ct['id'] }}" {{ ($filters['class_term_id'] ?? '') === $ct['id'] ? 'selected' : '' }}>
+                            {{ $ct['label'] }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-        <div class="lp-field">
-            <label class="lp-field__label">Kelas</label>
-            <select class="lp-select" name="kelas" id="filterKelas">
-                <option value="">Semua Kelas</option>
-                @foreach ($kelas as $k)
-                    <option value="{{ $k['id'] }}" {{ ($filters['kelas'] ?? '') === $k['id'] ? 'selected' : '' }}>
-                        Kelas {{ $k['nama'] }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+            <div class="lp-field">
+                <label class="lp-field__label">Minggu</label>
+                <select class="lp-select" name="minggu">
+                    <option value="">Semua Minggu</option>
+                    @foreach ($weeks as $w)
+                        <option value="{{ $w }}" {{ (string)($filters['minggu'] ?? '') === (string)$w ? 'selected' : '' }}>
+                            Minggu {{ $w }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-        <div class="lp-field">
-            <label class="lp-field__label">Siswa</label>
-            <select class="lp-select" name="siswa" id="filterSiswa">
-                <option value="">Semua Siswa</option>
-                @foreach ($allSiswa as $s)
-                    <option value="{{ $s['id'] }}"
-                            data-kelas="{{ collect($siswaByKelas)->search(fn($arr) => collect($arr)->contains('id', $s['id'])) }}"
-                            {{ ($filters['siswa'] ?? '') === $s['id'] ? 'selected' : '' }}>
-                        {{ $s['nama'] }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        <div class="lp-field">
-            <label class="lp-field__label">Minggu</label>
-            <select class="lp-select" name="minggu">
-                <option value="">Semua Minggu</option>
-                @foreach ($weeks as $w)
-                    <option value="{{ $w }}" {{ (string)($filters['minggu'] ?? '') === (string)$w ? 'selected' : '' }}>
-                        Minggu {{ $w }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        <div class="lp-field" style="flex-direction:row;gap:8px;">
-            <button type="submit" class="lp-btn">Filter</button>
-            <a href="{{ route('guru.laporan_bk') }}" class="lp-btn lp-btn--ghost" style="padding:10px 18px;text-decoration:none;display:inline-flex;align-items:center;">Reset</a>
+            <div class="lp-field" style="flex-direction:row;gap:8px;padding-bottom:1px;">
+                <button type="submit" class="lp-btn">Filter</button>
+                <a href="{{ route('guru.laporan_bk') }}" class="lp-btn lp-btn--ghost" style="padding:10px 18px;text-decoration:none;display:inline-flex;align-items:center;">Reset</a>
+            </div>
         </div>
     </form>
 
@@ -213,10 +205,10 @@
                         @endphp
                         <tr>
                             <td class="lp-row-no">{{ $i + 1 }}</td>
-                            <td style="font-weight:600;">{{ $row['siswa_nama'] }}</td>
+                            <td style="font-weight:600;">{{ $row['student_name'] }}</td>
                             <td><span class="lp-pill lp-pill--kelas">{{ $row['kelas'] }}</span></td>
                             <td style="font-size:12px;color:#6b7280;">{{ $row['semester'] }}</td>
-                            <td><span class="lp-pill lp-pill--week">Minggu {{ $row['minggu'] }}</span></td>
+                            <td><span class="lp-pill lp-pill--week">Minggu {{ $row['week'] }}</span></td>
                             <td>{{ $row['tanggal_label'] }}</td>
                             <td>
                                 <div class="lp-rata">
@@ -228,11 +220,11 @@
                             </td>
                             <td>
                                 <div class="lp-aksi">
-                                    <a href="{{ route('guru.laporan_bk.show', $row['id']) }}" class="lp-aksi__view">
+                                    <a href="{{ route('guru.laporan_bk.show', $row['report_id']) }}?week={{ $row['week'] }}" class="lp-aksi__view">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd"/></svg>
                                         Lihat
                                     </a>
-                                    <a href="{{ route('guru.laporan_bk.edit', $row['id']) }}" class="lp-aksi__edit">
+                                    <a href="{{ route('guru.laporan_bk.edit', $row['report_id']) }}?week={{ $row['week'] }}" class="lp-aksi__edit">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
                                         Edit
                                     </a>
@@ -246,24 +238,3 @@
     </div>
 
 @endsection
-
-@push('scripts')
-<script>
-const siswaByKelas = @json($siswaByKelas);
-const filterKelas  = document.getElementById('filterKelas');
-const filterSiswa  = document.getElementById('filterSiswa');
-
-// Filter siswa dropdown saat kelas berubah
-filterKelas.addEventListener('change', () => {
-    const kelas = filterKelas.value;
-    Array.from(filterSiswa.options).forEach(opt => {
-        if (opt.value === '') return;
-        opt.hidden = kelas && opt.dataset.kelas !== kelas;
-    });
-    if (filterSiswa.selectedOptions[0]?.hidden) filterSiswa.value = '';
-});
-
-// Trigger initial filter
-filterKelas.dispatchEvent(new Event('change'));
-</script>
-@endpush

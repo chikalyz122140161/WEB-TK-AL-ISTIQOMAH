@@ -366,106 +366,155 @@ class GuruController extends Controller
 
     public function laporan(Request $request)
     {
-        $ds      = $this->dummyGrafikDataset();
-        $semua   = $this->buildDummyLaporanList();
-        $laporan = collect($semua);
+        $classTerms = ClassTerm::with(['class', 'academicTerm'])->get()->map(fn($ct) => [
+            'id'    => $ct->id,
+            'label' => ($ct->class->name ?? '-') . ' — ' . ($ct->academicTerm->academic_year ?? '') . ' ' . ucfirst($ct->academicTerm->semester ?? ''),
+        ])->toArray();
 
-        // Filter
-        $smFilter    = $request->input('semester');
-        $kelasFilter = $request->input('kelas');
-        $siswaFilter = $request->input('siswa');
-        $mingguFilter= $request->input('minggu');
+        $ctFilter   = $request->input('class_term_id');
+        $weekFilter = $request->input('minggu');
 
-        if ($smFilter) {
-            $laporan = $laporan->where('semester_id', $smFilter);
-        }
-        if ($kelasFilter) {
-            $laporan = $laporan->where('kelas_id', $kelasFilter);
-        }
-        if ($siswaFilter) {
-            $laporan = $laporan->where('siswa_id', $siswaFilter);
-        }
-        if ($mingguFilter) {
-            $laporan = $laporan->where('minggu', (int) $mingguFilter);
+        $lvMap = ['BB' => 1, 'MB' => 2, 'BSH' => 3, 'BSB' => 4];
+
+        $query = ReportCounselingScore::with([
+            'reportCounseling.report.studentEnrollment.student',
+            'reportCounseling.report.studentEnrollment.classTerm.class',
+            'reportCounseling.report.studentEnrollment.classTerm.academicTerm',
+        ])->whereNotNull('week');
+
+        if ($weekFilter) {
+            $query->where('week', (int) $weekFilter);
         }
 
-        // Default: tampilkan minggu terakhir saja kalau belum ada filter minggu (hindari overload row)
-        if (!$mingguFilter) {
-            $laporan = $laporan->groupBy('siswa_id')->map(fn($g) => $g->sortByDesc('minggu')->first())->values();
-        } else {
-            $laporan = $laporan->values();
+        $scores = $query->get();
+
+        // Collect all distinct weeks for dropdown
+        $weeksSet = [];
+        foreach ($scores as $sc) {
+            if ($sc->week) $weeksSet[(int) $sc->week] = true;
         }
+        $allWeeks = array_keys($weeksSet);
+        sort($allWeeks);
+
+        // Group by (report_id, week) → one row per student per week
+        $grouped = [];
+        foreach ($scores as $sc) {
+            $rc  = $sc->reportCounseling; if (!$rc) continue;
+            $rep = $rc->report;            if (!$rep) continue;
+            $enr = $rep->studentEnrollment; if (!$enr) continue;
+            $ct  = $enr->classTerm;        if (!$ct) continue;
+
+            if ($ctFilter && $ct->id !== $ctFilter) continue;
+
+            $key = $rep->id . '__' . (int) $sc->week;
+            if (!isset($grouped[$key])) {
+                $grouped[$key] = [
+                    'report_id'    => $rep->id,
+                    'week'         => (int) $sc->week,
+                    'student_name' => $enr->student->name ?? '-',
+                    'kelas'        => $ct->class->name ?? '-',
+                    'semester'     => trim(($ct->academicTerm->academic_year ?? '') . ' ' . ucfirst($ct->academicTerm->semester ?? '')),
+                    'tanggal'      => $sc->date,
+                    'sum'          => 0,
+                    'cnt'          => 0,
+                ];
+            }
+            $lv = $lvMap[$sc->level] ?? null;
+            if ($lv) { $grouped[$key]['sum'] += $lv; $grouped[$key]['cnt']++; }
+            if ($sc->date && !$grouped[$key]['tanggal']) {
+                $grouped[$key]['tanggal'] = $sc->date;
+            }
+        }
+
+        $laporan = [];
+        foreach ($grouped as $item) {
+            $tanggal = $item['tanggal'];
+            $laporan[] = [
+                'report_id'    => $item['report_id'],
+                'week'         => $item['week'],
+                'student_name' => $item['student_name'],
+                'kelas'        => $item['kelas'],
+                'semester'     => $item['semester'],
+                'tanggal_label'=> $tanggal ? \Carbon\Carbon::parse($tanggal)->format('d M Y') : '-',
+                'rata_rata'    => $item['cnt'] ? round($item['sum'] / $item['cnt'], 1) : 0,
+            ];
+        }
+
+        usort($laporan, fn($a, $b) => strcmp($a['kelas'] . $a['student_name'], $b['kelas'] . $b['student_name']));
 
         return view('guru.laporan', [
-            'laporan'   => $laporan->all(),
-            'semesters' => $ds['semesters'],
-            'kelas'     => $ds['kelas'],
-            'siswaByKelas' => $ds['siswaByKelas'],
-            'allSiswa'  => collect($ds['siswaByKelas'])->flatten(1)->values()->all(),
-            'weeks'     => range(1, 12),
-            'filters'   => [
-                'semester' => $smFilter,
-                'kelas'    => $kelasFilter,
-                'siswa'    => $siswaFilter,
-                'minggu'   => $mingguFilter,
-            ],
+            'laporan'    => $laporan,
+            'classTerms' => $classTerms,
+            'weeks'      => $allWeeks,
+            'filters'    => ['class_term_id' => $ctFilter, 'minggu' => $weekFilter],
         ]);
     }
 
     public function laporanBkShow($id)
     {
-        $ds    = $this->dummyGrafikDataset();
-        $semua = $this->buildDummyLaporanList();
-        $row   = collect($semua)->firstWhere('id', (int) $id);
+        $week = (int) request()->input('week');
 
-        if (!$row) {
+        $report = Report::with([
+            'studentEnrollment.student',
+            'studentEnrollment.classTerm.class',
+            'studentEnrollment.classTerm.academicTerm',
+            'studentEnrollment.classTerm.counselings.counseling.assessments',
+            'counselings.scores',
+            'counselings.counseling',
+        ])->find($id);
+
+        if (!$report || !$week) {
             return redirect()->route('guru.laporan_bk')->with('error', 'Laporan tidak ditemukan.');
         }
 
-        // Bangun struktur per konseling beserta skor per poin penilaian pada minggu ini
-        $LV = [1 => 'BB', 2 => 'MB', 3 => 'BSH', 4 => 'BSB'];
-        $LV_LABEL = [
-            'BB'  => 'Belum Berkembang',
-            'MB'  => 'Mulai Berkembang',
-            'BSH' => 'Berkembang Sesuai Harapan',
-            'BSB' => 'Berkembang Sangat Baik',
-        ];
+        $enr = $report->studentEnrollment;
+        $ct  = $enr->classTerm;
 
-        $minggu = $row['minggu'];
+        $LV_LABEL = ['BB' => 'Belum Berkembang', 'MB' => 'Mulai Berkembang', 'BSH' => 'Berkembang Sesuai Harapan', 'BSB' => 'Berkembang Sangat Baik'];
+        $lvMap    = ['BB' => 1, 'MB' => 2, 'BSH' => 3, 'BSB' => 4];
+
+        // Build score lookup: [assessment_id => level]
+        $scoreLookup = [];
+        $dateLabel   = null;
+        foreach ($report->counselings as $rc) {
+            foreach ($rc->scores->where('week', $week) as $sc) {
+                $scoreLookup[$sc->counseling_assessment_id] = $sc->level;
+                if (!$dateLabel && $sc->date) {
+                    $dateLabel = \Carbon\Carbon::parse($sc->date)->format('d M Y');
+                }
+            }
+        }
+
         $konselings = [];
         $totalSum = 0; $totalCnt = 0;
 
-        foreach ($ds['konselings'] as $con) {
+        foreach ($ct->counselings as $ctc) {
+            $con   = $ctc->counseling;
+            if (!$con) continue;
             $items = [];
             $sum = 0; $cnt = 0;
-            foreach ($con['assessments'] as $ca) {
-                $level = $row['scores'][$ca['id']][$minggu] ?? null;
-                if ($level !== null) {
-                    $sum += $level; $cnt++;
-                    $totalSum += $level; $totalCnt++;
-                }
+            foreach ($con->assessments as $ca) {
+                $kode = $scoreLookup[$ca->id] ?? null;
+                $lv   = $kode ? ($lvMap[$kode] ?? null) : null;
+                if ($lv) { $sum += $lv; $cnt++; $totalSum += $lv; $totalCnt++; }
                 $items[] = [
-                    'nama'  => $ca['nama'],
-                    'level' => $level,
-                    'kode'  => $level !== null ? $LV[$level] : '-',
-                    'label' => $level !== null ? $LV_LABEL[$LV[$level]] : '-',
+                    'nama'  => $ca->name,
+                    'level' => $lv,
+                    'kode'  => $kode ?? '-',
+                    'label' => $kode ? ($LV_LABEL[$kode] ?? '-') : '-',
                 ];
             }
-            $konselings[] = [
-                'nama'  => $con['nama'],
-                'items' => $items,
-                'avg'   => $cnt ? round($sum / $cnt, 2) : 0,
-                'count' => $cnt,
-            ];
+            $konselings[] = ['nama' => $con->name, 'items' => $items, 'avg' => $cnt ? round($sum / $cnt, 2) : 0, 'count' => $cnt];
         }
 
         $laporan = [
-            'id'            => $row['id'],
-            'siswa_nama'    => $row['siswa_nama'],
-            'kelas'         => $row['kelas'],
-            'semester'      => $row['semester'],
-            'minggu'        => $row['minggu'],
-            'tanggal_label' => $row['tanggal_label'],
+            'id'            => $report->id,
+            'week'          => $week,
+            'siswa_nama'    => $enr->student->name ?? '-',
+            'kelas'         => $ct->class->name ?? '-',
+            'semester'      => trim(($ct->academicTerm->academic_year ?? '') . ' ' . ucfirst($ct->academicTerm->semester ?? '')),
+            'minggu'        => $week,
+            'tanggal_label' => $dateLabel ?? '-',
             'rata_rata'     => $totalCnt ? round($totalSum / $totalCnt, 2) : 0,
             'konselings'    => $konselings,
         ];
@@ -475,57 +524,100 @@ class GuruController extends Controller
 
     public function laporanBkEdit($id)
     {
-        $ds    = $this->dummyGrafikDataset();
-        $semua = $this->buildDummyLaporanList();
-        $row   = collect($semua)->firstWhere('id', (int) $id);
+        $week = (int) request()->input('week');
 
-        if (!$row) {
+        $report = Report::with([
+            'studentEnrollment.student',
+            'studentEnrollment.classTerm.class',
+            'studentEnrollment.classTerm.academicTerm',
+            'studentEnrollment.classTerm.counselings.counseling.assessments',
+            'counselings.scores',
+            'counselings.counseling',
+        ])->find($id);
+
+        if (!$report || !$week) {
             return redirect()->route('guru.laporan_bk')->with('error', 'Laporan tidak ditemukan.');
         }
 
-        $minggu = $row['minggu'];
+        $enr = $report->studentEnrollment;
+        $ct  = $enr->classTerm;
 
-        // Bangun struktur per konseling beserta level per poin penilaian (untuk prefill dropdown)
-        $konselings = [];
-        foreach ($ds['konselings'] as $con) {
-            $items = [];
-            foreach ($con['assessments'] as $ca) {
-                $items[] = [
-                    'id'    => $ca['id'],
-                    'nama'  => $ca['nama'],
-                    'level' => $row['scores'][$ca['id']][$minggu] ?? null,
-                ];
+        // Score lookup: [assessment_id => level]
+        $scoreLookup = [];
+        $tanggal     = null;
+        foreach ($report->counselings as $rc) {
+            foreach ($rc->scores->where('week', $week) as $sc) {
+                $scoreLookup[$sc->counseling_assessment_id] = $sc->level;
+                if (!$tanggal && $sc->date) {
+                    $tanggal = \Carbon\Carbon::parse($sc->date)->format('Y-m-d');
+                }
             }
-            $konselings[] = [
-                'id'    => $con['id'],
-                'nama'  => $con['nama'],
-                'items' => $items,
-            ];
+        }
+
+        $konselings = [];
+        foreach ($ct->counselings as $ctc) {
+            $con = $ctc->counseling;
+            if (!$con) continue;
+            $items = [];
+            foreach ($con->assessments as $ca) {
+                $items[] = ['id' => $ca->id, 'nama' => $ca->name, 'level' => $scoreLookup[$ca->id] ?? null];
+            }
+            $konselings[] = ['id' => $con->id, 'nama' => $con->name, 'items' => $items];
         }
 
         $laporan = [
-            'id'            => $row['id'],
-            'siswa_id'      => $row['siswa_id'],
-            'siswa_nama'    => $row['siswa_nama'],
-            'kelas'         => $row['kelas'],
-            'kelas_id'      => $row['kelas_id'],
-            'semester_id'   => $row['semester_id'],
-            'semester'      => $row['semester'],
-            'minggu'        => $row['minggu'],
-            'tanggal'       => $row['tanggal'],
-            'tanggal_label' => $row['tanggal_label'],
-            'konselings'    => $konselings,
+            'id'          => $report->id,
+            'week'        => $week,
+            'siswa_nama'  => $enr->student->name ?? '-',
+            'kelas'       => $ct->class->name ?? '-',
+            'semester'    => trim(($ct->academicTerm->academic_year ?? '') . ' ' . ucfirst($ct->academicTerm->semester ?? '')),
+            'minggu'      => $week,
+            'tanggal'     => $tanggal ?? date('Y-m-d'),
+            'konselings'  => $konselings,
         ];
 
-        return view('guru.laporan_edit', [
-            'laporan'   => $laporan,
-            'semesters' => $ds['semesters'],
-        ]);
+        return view('guru.laporan_edit', ['laporan' => $laporan]);
     }
 
     public function laporanBkUpdate(Request $request, $id)
     {
-        // Nanti diganti dengan logika update database
+        $request->validate([
+            'week'    => 'required|integer|min:1|max:52',
+            'tanggal' => 'required|date',
+        ]);
+
+        $report = Report::with([
+            'counselings.scores',
+            'counselings.counseling',
+        ])->find($id);
+
+        if (!$report) {
+            return redirect()->route('guru.laporan_bk')->with('error', 'Laporan tidak ditemukan.');
+        }
+
+        $week    = (int) $request->week;
+        $tanggal = $request->tanggal;
+
+        foreach ($request->input('counseling', []) as $conId => $assessments) {
+            $rc = $report->counselings->firstWhere('counseling_id', $conId);
+            if (!$rc) continue;
+            foreach ($assessments as $assessmentId => $level) {
+                if (!$level) continue;
+                $score = $rc->scores->where('counseling_assessment_id', $assessmentId)->where('week', $week)->first();
+                if ($score) {
+                    $score->update(['level' => $level, 'date' => $tanggal]);
+                } else {
+                    ReportCounselingScore::create([
+                        'report_counseling_id'     => $rc->id,
+                        'counseling_assessment_id' => $assessmentId,
+                        'level'                    => $level,
+                        'week'                     => $week,
+                        'date'                     => $tanggal,
+                    ]);
+                }
+            }
+        }
+
         return redirect()->route('guru.laporan_bk')->with('success', 'Laporan perkembangan berhasil diperbarui.');
     }
 

@@ -138,6 +138,7 @@
     <form method="POST" action="{{ route('guru.laporan_bk.update', $laporan['id']) }}">
         @csrf
         @method('PUT')
+        <input type="hidden" name="week" value="{{ $laporan['week'] }}">
 
         {{-- Data Dasar --}}
         <div class="form-section">
@@ -148,18 +149,16 @@
             <div class="form-section__body">
                 <div class="field-grid">
                     <div class="field-group">
-                        <label class="field-label">Tahun Ajaran (Class Term)</label>
+                        <label class="field-label">Tahun Ajaran / Kelas</label>
                         <input class="field-control" type="text" value="{{ $laporan['semester'] }} — Kelas {{ $laporan['kelas'] }}" readonly>
-                        <input type="hidden" name="semester_id" value="{{ $laporan['semester_id'] }}">
                     </div>
                     <div class="field-group">
                         <label class="field-label">Siswa</label>
                         <input class="field-control" type="text" value="{{ $laporan['siswa_nama'] }}" readonly>
-                        <input type="hidden" name="siswa_id" value="{{ $laporan['siswa_id'] }}">
                     </div>
                     <div class="field-group">
                         <label class="field-label">Minggu Ke</label>
-                        <input class="field-control" type="number" name="minggu_ke" min="1" max="52" value="{{ $laporan['minggu'] }}" required>
+                        <input class="field-control" type="number" readonly value="{{ $laporan['minggu'] }}">
                     </div>
                     <div class="field-group">
                         <label class="field-label">Tanggal</label>
@@ -192,9 +191,7 @@
                         <div class="group-box__body">
                             @foreach ($kon['items'] as $item)
                                 @php
-                                    $LV   = [1 => 'BB', 2 => 'MB', 3 => 'BSH', 4 => 'BSB'];
-                                    $cur  = $item['level'];
-                                    $kode = $cur !== null ? $LV[$cur] : '';
+                                    $kode = $item['level'] ?? '';
                                     $cls  = $kode ? 'lv-' . strtolower($kode) : '';
                                 @endphp
                                 <div class="assessment-row">
