@@ -22,20 +22,65 @@ use App\Models\ExtracurricularAssessment;
 use App\Models\CounselingAssessment;
 use App\Models\ChatRoom;
 use App\Models\ChatMessage;
+use App\Models\PrivateCounselingSchedule;
 use Illuminate\Support\Str;
 
 class GuruController extends Controller
 {
-    private function getDaftarSiswa(): array
+    private function academicTermLabel($at): string
     {
-        return Student::orderBy('kelas')->orderBy('name')
+        if (!$at) return '-';
+        return trim(($at->academic_year ?? '') . ' ' . ucfirst($at->semester ?? ''));
+    }
+
+    private function buildClassTermsForJadwal(): array
+    {
+        return ClassTerm::with(['class', 'academicTerm', 'enrollments.student'])
             ->get()
-            ->map(fn($s) => [
-                'id'    => $s->id,
-                'nama'  => $s->name,
-                'kelas' => 'TK ' . $s->kelas,
-            ])
-            ->toArray();
+            ->map(function ($ct) {
+                $students = $ct->enrollments
+                    ->filter(fn($e) => $e->student)
+                    ->map(fn($e) => ['id' => $e->student->id, 'nama' => $e->student->name])
+                    ->values()->toArray();
+                $semLabel = $this->academicTermLabel($ct->academicTerm);
+                return [
+                    'id'          => $ct->id,
+                    'label'       => ($ct->class->name ?? '-') . ' — ' . $semLabel,
+                    'kelas'       => $ct->class->name ?? '-',
+                    'semester'    => $semLabel,
+                    'siswa'       => $students,
+                    'siswa_count' => count($students),
+                ];
+            })->toArray();
+    }
+
+    private function scheduleToArray(PrivateCounselingSchedule $s): array
+    {
+        $isKelas   = is_null($s->student_id);
+        $classTerm = $s->classTerm;
+        $count     = $isKelas ? ($classTerm ? $classTerm->enrollments()->count() : 0) : 0;
+        $siswa     = $isKelas
+            ? ($classTerm?->class?->name ?? 'Kelas') . ' (' . $count . ' siswa)'
+            : ($s->student?->name ?? '-');
+        $semLabel = $this->academicTermLabel($classTerm?->academicTerm);
+        return [
+            'id'          => $s->id,
+            'tanggal'     => $s->date?->translatedFormat('d M Y') ?? '-',
+            'tanggal_raw' => $s->date?->format('Y-m-d') ?? '',
+            'tanggal_sort'=> $s->date?->format('Y-m-d') ?? '',
+            'waktu'       => ($s->start_hour ?? '') . ' - ' . ($s->end_hour ?? ''),
+            'orang_tua'   => '-',
+            'siswa'       => $siswa,
+            'class_term'  => ($classTerm?->class?->name ?? '-') . ' — ' . $semLabel,
+            'kelas'       => $classTerm?->class?->name ?? '-',
+            'tipe'        => $isKelas ? 'per_kelas' : 'per_siswa',
+            'dari'        => 'guru',
+            'topik'       => $s->topic ?? '',
+            'status'      => $s->status ?? 'pending',
+            'bulan'       => (int) ($s->date?->format('n') ?? 0),
+            'tahun'       => (int) ($s->date?->format('Y') ?? 0),
+            'catatan'     => '',
+        ];
     }
 
     public function jadwalKonseling(Request $request)
@@ -43,76 +88,48 @@ class GuruController extends Controller
         $bulanTahun = $request->get('bulan_tahun', date('Y-m'));
         [$tahunFilter, $bulan] = array_map('intval', explode('-', $bulanTahun));
 
-        $daftarSiswa = Student::with('parent')->orderBy('name')->get()->map(fn($s) => [
-            'id'          => $s->id,
-            'nama'        => $s->name,
-            'orang_tua_id'=> $s->parent_id,
-        ])->toArray();
+        $jadwal = PrivateCounselingSchedule::with(['student', 'classTerm.class', 'classTerm.academicTerm'])
+            ->whereYear('date', $tahunFilter)
+            ->whereMonth('date', $bulan)
+            ->orderByDesc('date')
+            ->get()
+            ->map(fn($s) => $this->scheduleToArray($s))
+            ->values()->all();
 
-        $daftarOrangTua = \App\Models\User::where('role', 'orangtua')->orderBy('name')->get()
-            ->map(fn($u) => ['id' => $u->id, 'nama' => $u->name])->toArray();
-
-        // Class term + siswa per class term untuk form "Per Kelas" / "Per Siswa"
-        $ds          = $this->dummyGrafikDataset();
-        $classTerms  = [];
-        foreach ($ds['semesters'] as $sm) {
-            foreach ($ds['kelas'] as $k) {
-                $siswas = $ds['siswaByKelas'][$k['id']] ?? [];
-                $classTerms[] = [
-                    'id'         => $sm['id'] . '__' . $k['id'],
-                    'label'      => "Kelas {$k['nama']} â€” {$sm['label']}",
-                    'kelas'      => $k['nama'],
-                    'semester'   => $sm['label'],
-                    'siswa'      => array_map(fn($s) => ['id' => $s['id'], 'nama' => $s['nama']], $siswas),
-                    'siswa_count'=> count($siswas),
-                ];
-            }
-        }
-
-        $jadwal = collect($this->getDummyJadwalKonseling())
-            ->where('bulan', $bulan)
-            ->where('tahun', $tahunFilter)
-            ->sortByDesc('tanggal_sort')
-            ->values()
-            ->all();
-
-        return view('guru.jadwal_konseling', compact(
-            'jadwal', 'bulan', 'bulanTahun', 'daftarSiswa', 'daftarOrangTua', 'classTerms'
-        ));
+        return view('guru.jadwal_konseling', compact('jadwal', 'bulan', 'bulanTahun'));
     }
 
     public function storeJadwalKonseling(Request $request)
     {
-        $mode = $request->input('mode', 'siswa'); // 'siswa' | 'kelas'
+        $request->validate([
+            'mode'          => 'required|in:siswa,kelas',
+            'class_term_id' => 'required|exists:class_term,id',
+            'tanggal'       => 'required|date',
+            'waktu_mulai'   => 'required',
+            'waktu_selesai' => 'required',
+            'topik'         => 'required|string|max:1000',
+        ]);
 
-        if ($mode === 'kelas') {
-            // Dummy: ambil class_term_id, lalu generate jadwal untuk semua siswa di kelas tsb
-            $msg = "Jadwal berhasil dibuat untuk semua siswa di class term terpilih.";
+        $base = [
+            'class_term_id' => $request->class_term_id,
+            'teacher_id'    => auth()->id(),
+            'date'          => $request->tanggal,
+            'start_hour'    => $request->waktu_mulai,
+            'end_hour'      => $request->waktu_selesai,
+            'topic'         => $request->topik,
+            'status'        => 'pending',
+        ];
+
+        if ($request->mode === 'kelas') {
+            PrivateCounselingSchedule::create(array_merge($base, ['student_id' => null]));
+            $msg = 'Jadwal konseling per kelas berhasil dibuat.';
         } else {
-            $msg = "Jadwal berhasil dibuat untuk siswa terpilih.";
+            $request->validate(['siswa_id' => 'required|exists:student,id']);
+            PrivateCounselingSchedule::create(array_merge($base, ['student_id' => $request->siswa_id]));
+            $msg = 'Jadwal konseling berhasil dibuat.';
         }
 
         return redirect()->route('guru.jadwal_konseling')->with('success', $msg);
-    }
-
-    private function buildClassTermsForJadwal()
-    {
-        $ds = $this->dummyGrafikDataset();
-        $classTerms = [];
-        foreach ($ds['semesters'] as $sm) {
-            foreach ($ds['kelas'] as $k) {
-                $siswas = $ds['siswaByKelas'][$k['id']] ?? [];
-                $classTerms[] = [
-                    'id'          => $sm['id'] . '__' . $k['id'],
-                    'label'       => "Kelas {$k['nama']} â€” {$sm['label']}",
-                    'kelas'       => $k['nama'],
-                    'semester'    => $sm['label'],
-                    'siswa'       => array_map(fn($s) => ['id' => $s['id'], 'nama' => $s['nama']], $siswas),
-                    'siswa_count' => count($siswas),
-                ];
-            }
-        }
-        return $classTerms;
     }
 
     public function jadwalKonselingCreateSiswa()
@@ -207,40 +224,52 @@ class GuruController extends Controller
 
     public function jadwalKonselingShow($id)
     {
-        $jadwal = $this->getDummyJadwalKonseling()[$id] ?? abort(404);
+        $s = PrivateCounselingSchedule::with(['student', 'classTerm.class', 'classTerm.academicTerm'])
+            ->findOrFail($id);
+        $jadwal = $this->scheduleToArray($s);
         return view('guru.jadwal_konseling_show', compact('jadwal'));
     }
 
     public function jadwalKonselingEdit($id)
     {
-        $jadwal         = $this->getDummyJadwalKonseling()[$id] ?? abort(404);
-        $daftarSiswa    = $this->getDaftarSiswa();
-        $daftarOrangTua = \App\Models\User::where('role', 'orangtua')->orderBy('name')->get()
-            ->map(fn($u) => ['id' => $u->id, 'nama' => $u->name])->toArray();
-
-        // Dummy class term untuk jadwal ini (sementara hardcode, nanti dari DB)
-        $jadwal['class_term'] = $jadwal['class_term'] ?? 'Kelas A1 â€” 2025/2026 Ganjil';
-
-        return view('guru.jadwal_konseling_edit', compact('jadwal', 'daftarSiswa', 'daftarOrangTua'));
+        $s = PrivateCounselingSchedule::with(['student', 'classTerm.class', 'classTerm.academicTerm'])
+            ->findOrFail($id);
+        $jadwal = $this->scheduleToArray($s);
+        return view('guru.jadwal_konseling_edit', compact('jadwal'));
     }
 
     public function jadwalKonselingUpdate(Request $request, $id)
     {
+        $request->validate([
+            'tanggal'      => 'required|date',
+            'waktu_mulai'  => 'required',
+            'waktu_selesai'=> 'required',
+            'topik'        => 'required|string|max:1000',
+        ]);
+        PrivateCounselingSchedule::findOrFail($id)->update([
+            'date'       => $request->tanggal,
+            'start_hour' => $request->waktu_mulai,
+            'end_hour'   => $request->waktu_selesai,
+            'topic'      => $request->topik,
+        ]);
         return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal berhasil diperbarui.');
     }
 
     public function jadwalKonselingSetuju(Request $request, $id)
     {
+        PrivateCounselingSchedule::findOrFail($id)->update(['status' => 'disetujui']);
         return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal konseling disetujui.');
     }
 
     public function jadwalKonselingTolak(Request $request, $id)
     {
+        PrivateCounselingSchedule::findOrFail($id)->update(['status' => 'tolak']);
         return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal konseling ditolak.');
     }
 
     public function jadwalKonselingBatalkan(Request $request, $id)
     {
+        PrivateCounselingSchedule::findOrFail($id)->delete();
         return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal konseling dibatalkan.');
     }
 
