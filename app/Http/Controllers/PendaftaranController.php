@@ -24,7 +24,7 @@ class PendaftaranController extends Controller
             'nama_panggilan'     => 'required|string|max:100',
             'nik'                => 'required|string|size:16',
             'jenis_kelamin'      => 'required|in:L,P',
-            'agama'              => 'required|string|max:50',
+            'agama'              => 'required|in:islam,christian,catholic,hindu,buddhism,confucianism',
             'tempat_lahir'       => 'required|string|max:100',
             'tanggal_lahir'      => 'required|date',
             'anak_ke'            => 'required|integer|min:1',

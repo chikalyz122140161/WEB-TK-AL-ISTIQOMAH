@@ -19,6 +19,7 @@ use App\Models\StudentEnrollment;
 use App\Models\StudentFile;
 use App\Models\User;
 use App\Models\Student;
+use App\Services\DatabaseBackupService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -258,7 +259,7 @@ class AdminController extends Controller
             'nis'            => 'required|string|max:20|unique:student,nis',
             'nama'           => 'required|string|max:255',
             'jenis_kelamin'  => 'required|in:L,P',
-            'agama'          => 'required|in:islam,kristen,katolik,hindu,budha,konghucu',
+            'agama'          => 'required|in:islam,christian,catholic,hindu,buddhism,confucianism',
             'tempat_lahir'   => 'required|string|max:100',
             'tanggal_lahir'  => 'required|date',
             'anak_ke'        => 'required|integer|min:1',
@@ -376,7 +377,7 @@ class AdminController extends Controller
             'nis'            => 'required|string|max:20|unique:student,nis,' . $id,
             'nama'           => 'required|string|max:255',
             'jenis_kelamin'  => 'required|in:L,P',
-            'agama'          => 'required|in:islam,kristen,katolik,hindu,budha,konghucu',
+            'agama'          => 'required|in:islam,christian,catholic,hindu,buddhism,confucianism',
             'tempat_lahir'   => 'required|string|max:100',
             'tanggal_lahir'  => 'required|date',
             'anak_ke'        => 'required|integer|min:1',
@@ -466,36 +467,76 @@ class AdminController extends Controller
     }
     
     // BACKUP DATABASE
-    public function backupIndex()
+    public function backupIndex(DatabaseBackupService $service)
     {
-        // Dummy backup history - replace with actual file listing
-        $backups = [
-            ['filename' => 'backup_tk_2024-01-10.sql.gz', 'tanggal' => '10 Jan 2024', 'ukuran' => '2.4 MB'],
-            ['filename' => 'backup_tk_2024-01-05.sql.gz', 'tanggal' => '05 Jan 2024', 'ukuran' => '2.1 MB'],
-        ];
-        
+        $backups = collect($service->list())->map(function ($b) {
+            $jakarta = $b['created_at']->copy()->setTimezone('Asia/Jakarta');
+            return [
+                'filename'   => $b['filename'],
+                'tanggal'    => $jakarta->translatedFormat('d M Y H:i') . ' WIB',
+                'ukuran'     => $b['size_human'],
+                'sumber'     => $b['source'],
+                'created_at' => $jakarta,
+            ];
+        })->all();
+
         return view('admin.backup.index', compact('backups'));
     }
-    
-    public function backupCreate(Request $request)
+
+    public function backupCreate(Request $request, DatabaseBackupService $service)
     {
-        // Create backup logic here
-        // This would typically use mysqldump or a package like spatie/laravel-backup
-        
-        return redirect()->route('admin.backup.index')->with('success', 'Backup database berhasil dibuat!');
+        try {
+            $filename = $service->create('manual');
+            return redirect()->route('admin.backup.index')
+                ->with('success', "Backup berhasil dibuat: {$filename}");
+        } catch (\Throwable $e) {
+            return redirect()->route('admin.backup.index')
+                ->with('error', 'Gagal membuat backup: ' . $e->getMessage());
+        }
     }
-    
-    public function backupRestore(Request $request)
+
+    public function backupRestore(Request $request, DatabaseBackupService $service)
     {
-        // Dummy - redirect with success
-        return redirect()->route('admin.backup.index')->with('success', 'Database berhasil di-restore!');
+        $data = $request->validate([
+            'backup_file' => 'required|string',
+            'konfirmasi'  => 'required|string',
+        ]);
+
+        if (strtoupper(trim($data['konfirmasi'])) !== 'RESTORE') {
+            return redirect()->route('admin.backup.index')
+                ->with('error', 'Konfirmasi tidak valid. Ketik RESTORE untuk melanjutkan.');
+        }
+
+        try {
+            $service->restore($data['backup_file']);
+            return redirect()->route('admin.backup.index')
+                ->with('success', 'Database berhasil di-restore dari ' . $data['backup_file']);
+        } catch (\Throwable $e) {
+            return redirect()->route('admin.backup.index')
+                ->with('error', 'Gagal restore: ' . $e->getMessage());
+        }
     }
-    
-    public function backupDelete($filename)
+
+    public function backupDelete($filename, DatabaseBackupService $service)
     {
-        // Delete backup file logic here
-        
-        return redirect()->route('admin.backup.index')->with('success', 'File backup berhasil dihapus!');
+        if ($service->delete($filename)) {
+            return redirect()->route('admin.backup.index')
+                ->with('success', "File backup {$filename} berhasil dihapus.");
+        }
+        return redirect()->route('admin.backup.index')
+            ->with('error', "File backup tidak ditemukan: {$filename}");
+    }
+
+    public function backupDownload($filename, DatabaseBackupService $service)
+    {
+        $path = $service->path($filename);
+        if (! $path) {
+            return redirect()->route('admin.backup.index')
+                ->with('error', "File backup tidak ditemukan: {$filename}");
+        }
+        return response()->download($path, basename($filename), [
+            'Content-Type' => 'application/sql',
+        ]);
     }
     
     // KELOLA PENDAFTARAN
@@ -513,6 +554,19 @@ class AdminController extends Controller
         return match($gender) {
             'L' => 'Laki-laki',
             'P' => 'Perempuan',
+            default => '-',
+        };
+    }
+
+    private function religionLabel(?string $religion): string
+    {
+        return match($religion) {
+            'islam'        => 'Islam',
+            'christian'    => 'Kristen',
+            'catholic'     => 'Katolik',
+            'hindu'        => 'Hindu',
+            'buddhism'     => 'Buddha',
+            'confucianism' => 'Konghucu',
             default => '-',
         };
     }
@@ -1230,7 +1284,7 @@ class AdminController extends Controller
                     'jenis_kelamin'  => $s->gender === 'L' ? 'Laki-laki' : 'Perempuan',
                     'tempat_lahir'   => $s->pob ?? $s->tempat_lahir ?? '-',
                     'tanggal_lahir'  => $s->dob ? \Carbon\Carbon::parse($s->dob)->translatedFormat('d M Y') : '-',
-                    'agama'          => ucfirst($s->religion ?? 'islam'),
+                    'agama'          => $this->religionLabel($s->religion),
                     'alamat'         => $s->address ?? '-',
                     'hp'             => $s->phone ?? $s->telepon ?? '-',
                     'nama_ayah'      => optional($ayah)->name ?? $s->nama_ayah ?? '-',

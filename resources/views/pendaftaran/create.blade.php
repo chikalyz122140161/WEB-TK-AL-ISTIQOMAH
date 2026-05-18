@@ -335,6 +335,41 @@
             margin-top: 8px;
         }
 
+        /* File selected state */
+        .file-input-wrapper.has-file {
+            border-style: solid;
+            border-color: #3D9B72;
+            background: rgba(61,155,114,0.08);
+        }
+
+        .file-input-wrapper.has-file .file-input-icon {
+            background: #3D9B72;
+        }
+
+        .file-input-wrapper.has-file .file-input-icon svg {
+            color: #ffffff;
+        }
+
+        .file-input-wrapper.has-file .file-input-text {
+            color: #2E8B60;
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .file-input-wrapper.has-file .file-input-text strong {
+            color: #2E8B60;
+        }
+
+        .file-input-wrapper.has-file .file-hint {
+            color: #3D9B72;
+            font-weight: 500;
+        }
+
+        .file-input-wrapper.has-file .file-hint::before {
+            content: "\2713 ";
+            margin-right: 4px;
+        }
+
         /* Error Message */
         .error-message {
             background: linear-gradient(135deg, #F0629220 0%, #F0629220 100%);
@@ -519,12 +554,12 @@
                         <label>Agama <span class="required">*</span></label>
                         <select name="agama" required>
                             <option value="">Pilih agama</option>
-                            <option value="Islam" {{ old('agama') == 'Islam' ? 'selected' : '' }}>Islam</option>
-                            <option value="Kristen" {{ old('agama') == 'Kristen' ? 'selected' : '' }}>Kristen</option>
-                            <option value="Katolik" {{ old('agama') == 'Katolik' ? 'selected' : '' }}>Katolik</option>
-                            <option value="Hindu" {{ old('agama') == 'Hindu' ? 'selected' : '' }}>Hindu</option>
-                            <option value="Buddha" {{ old('agama') == 'Buddha' ? 'selected' : '' }}>Buddha</option>
-                            <option value="Konghucu" {{ old('agama') == 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
+                            <option value="islam"        {{ old('agama') == 'islam'        ? 'selected' : '' }}>Islam</option>
+                            <option value="christian"    {{ old('agama') == 'christian'    ? 'selected' : '' }}>Kristen</option>
+                            <option value="catholic"     {{ old('agama') == 'catholic'     ? 'selected' : '' }}>Katolik</option>
+                            <option value="hindu"        {{ old('agama') == 'hindu'        ? 'selected' : '' }}>Hindu</option>
+                            <option value="buddhism"     {{ old('agama') == 'buddhism'     ? 'selected' : '' }}>Buddha</option>
+                            <option value="confucianism" {{ old('agama') == 'confucianism' ? 'selected' : '' }}>Konghucu</option>
                         </select>
                     </div>
                 </div>
@@ -818,5 +853,48 @@
             &copy; 2026 TK Al-Istiqomah. All rights reserved.
         </div>
     </div>
+
+    <script>
+    (function () {
+        const formatSize = function (bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        };
+
+        const escapeHtml = function (s) {
+            return String(s).replace(/[&<>"']/g, function (c) {
+                return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[c];
+            });
+        };
+
+        document.querySelectorAll('.file-input-wrapper input[type="file"]').forEach(function (input) {
+            const wrapper = input.closest('.file-input-wrapper');
+            const textEl  = wrapper.querySelector('.file-input-text');
+            const hintEl  = wrapper.querySelector('.file-hint');
+            const defaultText = textEl ? textEl.innerHTML : '';
+            const defaultHint = hintEl ? hintEl.innerHTML : '';
+
+            input.addEventListener('change', function () {
+                if (!input.files || input.files.length === 0) {
+                    wrapper.classList.remove('has-file');
+                    if (textEl) textEl.innerHTML = defaultText;
+                    if (hintEl) hintEl.innerHTML = defaultHint;
+                    return;
+                }
+
+                const file = input.files[0];
+                wrapper.classList.add('has-file');
+
+                if (textEl) {
+                    textEl.innerHTML = '<strong>' + escapeHtml(file.name) + '</strong>';
+                }
+                if (hintEl) {
+                    hintEl.innerHTML = formatSize(file.size) + ' &middot; Klik untuk ganti file';
+                }
+            });
+        });
+    })();
+    </script>
 </body>
 </html>

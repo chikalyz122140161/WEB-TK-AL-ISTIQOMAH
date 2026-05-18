@@ -115,7 +115,12 @@ Route::middleware('dummy.auth')->group(function () {
     Route::get('/admin/backup', [AdminController::class, 'backupIndex'])->name('admin.backup.index');
     Route::post('/admin/backup/create', [AdminController::class, 'backupCreate'])->name('admin.backup.create');
     Route::post('/admin/backup/restore', [AdminController::class, 'backupRestore'])->name('admin.backup.restore');
-    Route::delete('/admin/backup/{filename}', [AdminController::class, 'backupDelete'])->name('admin.backup.delete');
+    Route::get('/admin/backup/download/{filename}', [AdminController::class, 'backupDownload'])
+        ->where('filename', '.*\\.sql')
+        ->name('admin.backup.download');
+    Route::delete('/admin/backup/{filename}', [AdminController::class, 'backupDelete'])
+        ->where('filename', '.*\\.sql')
+        ->name('admin.backup.delete');
 
     // ═══════════════════════════════════════════════════════
     // GURU ROUTES

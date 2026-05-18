@@ -154,7 +154,7 @@ return new class extends Migration {
             $t->string('nik')->nullable();
             $t->longText('address')->nullable();
             $t->string('phone')->nullable();
-            $t->enum('religion', ['islam', 'kristen', 'katolik', 'hindu', 'budha', 'konghucu'])->default('islam');
+            $t->enum('religion', ['islam', 'christian', 'catholic', 'hindu', 'buddhism', 'confucianism'])->default('islam');
             $t->integer('birth_order')->nullable();
             $t->integer('siblings_count')->nullable();
             $t->string('ethnicity')->nullable();

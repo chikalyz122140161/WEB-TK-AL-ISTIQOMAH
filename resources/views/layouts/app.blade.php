@@ -202,7 +202,7 @@
         /* ═══════════════════════════════════════════════════════════
            MAIN CONTENT AREA
         ═══════════════════════════════════════════════════════════ */
-        .main { flex: 1; margin-left: 248px; display: flex; flex-direction: column; min-height: 100vh; }
+        .main { flex: 1; margin-left: 248px; display: flex; flex-direction: column; min-height: 100vh; min-width: 0; max-width: calc(100% - 248px); }
 
         /* ─── CONTENT HEADER ────────────────────────────────────── */
         .content-header {
@@ -268,7 +268,7 @@
         .header-account__role { font-size: 10.5px; color: rgba(255,255,255,0.70); }
 
         /* ─── CONTENT BODY ──────────────────────────────────────── */
-        .content-body { flex: 1; padding: 24px; background: var(--bg); }
+        .content-body { flex: 1; padding: 24px; background: var(--bg); min-width: 0; overflow-x: hidden; }
 
         /* ═══════════════════════════════════════════════════════════
            PAGE HEADER

@@ -520,6 +520,7 @@
 /* Table */
 .table-responsive {
     overflow-x: auto;
+    max-width: 100%;
 }
 
 .data-table {
@@ -693,26 +694,53 @@ document.addEventListener('click', function(e) {
 });
 
 function filterTable() {
-    const search = document.getElementById('search').value.toLowerCase();
-    const kelas = document.getElementById('kelas').value;
-    const jk = document.getElementById('jk').value;
-    const status = document.getElementById('status').value;
-    
+    const searchEl = document.getElementById('search');
+    const kelasEl  = document.getElementById('kelas');
+    const jkEl     = document.getElementById('jk');
+
+    const search = (searchEl?.value ?? '').trim().toLowerCase();
+    const kelas  = kelasEl?.value ?? '';
+    const jk     = jkEl?.value ?? '';
+
     const rows = document.querySelectorAll('#dataTable tbody tr');
-    
+    let visibleIndex = 0;
+
     rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        const rowKelas = row.dataset.kelas;
-        const rowJk = row.dataset.jk;
-        const rowStatus = row.dataset.status;
-        
-        const matchSearch = text.includes(search);
-        const matchKelas = !kelas || rowKelas === kelas;
-        const matchJk = !jk || rowJk === jk;
-        const matchStatus = !status || rowStatus === status;
-        
-        row.style.display = (matchSearch && matchKelas && matchJk && matchStatus) ? '' : 'none';
+        if (row.classList.contains('kelas-header-row')) return;
+
+        const text     = row.textContent.toLowerCase();
+        const rowKelas = row.dataset.kelas || '';
+        const rowJk    = row.dataset.jk || '';
+
+        const matchSearch = !search || text.includes(search);
+        const matchKelas  = !kelas  || rowKelas === kelas;
+        const matchJk     = !jk     || rowJk === jk;
+
+        const visible = matchSearch && matchKelas && matchJk;
+        row.style.display = visible ? '' : 'none';
+
+        if (visible) {
+            visibleIndex++;
+            const noCell = row.querySelector('td:first-child');
+            if (noCell) noCell.textContent = visibleIndex;
+        }
     });
+
+    // Empty-state row
+    const tbody = document.querySelector('#dataTable tbody');
+    let emptyRow = document.getElementById('emptyRow');
+    if (visibleIndex === 0) {
+        if (!emptyRow && tbody) {
+            const colCount = document.querySelectorAll('#dataTable thead th').length || 15;
+            emptyRow = document.createElement('tr');
+            emptyRow.id = 'emptyRow';
+            emptyRow.innerHTML = '<td colspan="' + colCount + '" style="text-align:center;padding:24px;color:#5D4037;">Tidak ada siswa yang cocok dengan filter</td>';
+            tbody.appendChild(emptyRow);
+        }
+        if (emptyRow) emptyRow.style.display = '';
+    } else if (emptyRow) {
+        emptyRow.style.display = 'none';
+    }
 }
 
 function getTableData() {
