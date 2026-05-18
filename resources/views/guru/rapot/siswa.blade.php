@@ -351,20 +351,47 @@
         </div>
         @endif
 
-        {{-- ── 3. Catatan Guru ───────────────────────────────────────────── --}}
+        {{-- ── 3. Bimbingan Konseling ────────────────────────────────────── --}}
+        @if (count($counselings) > 0)
         <div class="form-section">
             <div class="form-section__head">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z"/><path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z"/></svg>
-                <h3 class="form-section__title">Catatan Guru</h3>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M4.848 2.771A49.144 49.144 0 0 1 12 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 0 1-3.476.383.39.39 0 0 0-.297.17l-2.755 4.133a.75.75 0 0 1-1.248 0l-2.755-4.133a.39.39 0 0 0-.297-.17 48.9 48.9 0 0 1-3.476-.384c-1.978-.29-3.348-2.024-3.348-3.97V6.741c0-1.946 1.37-3.68 3.348-3.97Z" clip-rule="evenodd"/></svg>
+                <h3 class="form-section__title">Bimbingan Konseling</h3>
             </div>
             <div class="form-section__body">
-                <label class="lbl">Catatan perkembangan umum siswa (opsional)</label>
-                <textarea name="catatan_guru"
-                          class="form-textarea catatan-wrap"
-                          style="min-height:90px"
-                          placeholder="Tulis catatan perkembangan siswa selama semester ini...">{{ $scores['catatan_guru'] ?? '' }}</textarea>
+                @foreach ($counselings as $con)
+                    <div class="group-box">
+                        <div class="group-box__head">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clip-rule="evenodd"/></svg>
+                            {{ $con['nama'] }}
+                        </div>
+                        <div class="group-box__body">
+                            @foreach ($con['assessments'] as $ca)
+                                @php
+                                    $caLvl = $scores['counselings'][$ca['id']] ?? null;
+                                    $caCls = $caLvl ? 'lv-' . strtolower($caLvl) : '';
+                                @endphp
+                                <div class="assessment-row">
+                                    <div class="assessment-row__label">{{ $ca['nama'] }}</div>
+                                    <div class="assessment-row__select">
+                                        <select name="counselings[{{ $ca['id'] }}]"
+                                                class="form-select {{ $caCls }}"
+                                                onchange="updateSelectStyle(this)">
+                                            <option value="">-- Pilih --</option>
+                                            <option value="BB"  {{ $caLvl === 'BB'  ? 'selected' : '' }}>BB</option>
+                                            <option value="MB"  {{ $caLvl === 'MB'  ? 'selected' : '' }}>MB</option>
+                                            <option value="BSH" {{ $caLvl === 'BSH' ? 'selected' : '' }}>BSH</option>
+                                            <option value="BSB" {{ $caLvl === 'BSB' ? 'selected' : '' }}>BSB</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
+        @endif
 
         {{-- Submit bar --}}
         <div class="submit-bar">
