@@ -3,6 +3,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Student;
+use App\Models\ClassTerm;
+use App\Models\StudentEnrollment;
+use App\Models\Presence;
 
 class GuruController extends Controller
 {
@@ -843,59 +846,96 @@ class GuruController extends Controller
      */
     public function kehadiranIndex(Request $request)
     {
-        $siswaList = $this->getDaftarSiswa();
+        $classTerms = ClassTerm::with(['class', 'academicTerm'])
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        // Dummy data kehadiran
-        $kehadiranList = [
-            ['id' => 1, 'nama' => 'Ahmad Fauzi', 'kelas' => 'TK A', 'tanggal' => '04 Mar 2026', 'status' => 'hadir', 'keterangan' => '-'],
-            ['id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A', 'tanggal' => '04 Mar 2026', 'status' => 'hadir', 'keterangan' => '-'],
-            ['id' => 3, 'nama' => 'Budi Santoso', 'kelas' => 'TK B', 'tanggal' => '04 Mar 2026', 'status' => 'izin', 'keterangan' => 'Acara keluarga'],
-            ['id' => 4, 'nama' => 'Dewi Lestari', 'kelas' => 'TK A', 'tanggal' => '04 Mar 2026', 'status' => 'sakit', 'keterangan' => 'Demam'],
-            ['id' => 5, 'nama' => 'Eko Prasetyo', 'kelas' => 'TK B', 'tanggal' => '04 Mar 2026', 'status' => 'hadir', 'keterangan' => '-'],
-        ];
+        $selectedClassTermId = $request->input('class_term_id');
+        $tanggal             = $request->input('tanggal', date('Y-m-d'));
+        $selectedClassTerm   = null;
+        $enrollments         = collect();
+        $existingPresences   = collect();
+        $kehadiranList       = collect();
 
-        return view('guru.kehadiran.index', compact('siswaList', 'kehadiranList'));
-    }
+        if ($selectedClassTermId) {
+            $selectedClassTerm = ClassTerm::with(['class', 'academicTerm'])->find($selectedClassTermId);
 
-    /**
-     * Kehadiran - Store
-     */
-    public function kehadiranStore(Request $request)
-    {
-        // Dummy - redirect with success
-        return redirect()->route('guru.kehadiran.index')->with('success', 'Kehadiran berhasil disimpan.');
-    }
+            $enrollments = StudentEnrollment::with('student')
+                ->where('class_term_id', $selectedClassTermId)
+                ->where('status', 'aktif')
+                ->orderBy('created_at')
+                ->get();
 
-    /**
-     * Kehadiran - Edit
-     */
-    public function kehadiranEdit($id)
-    {
-        // Dummy data - nanti bisa diganti dengan query database
-        $allKehadiran = [
-            1 => ['id' => 1, 'nama' => 'Ahmad Fauzi', 'kelas' => 'TK A', 'tanggal' => '2026-03-04', 'status' => 'hadir', 'keterangan' => '-'],
-            2 => ['id' => 2, 'nama' => 'Siti Nurhaliza', 'kelas' => 'TK A', 'tanggal' => '2026-03-04', 'status' => 'hadir', 'keterangan' => '-'],
-            3 => ['id' => 3, 'nama' => 'Budi Santoso', 'kelas' => 'TK B', 'tanggal' => '2026-03-04', 'status' => 'izin', 'keterangan' => 'Acara keluarga'],
-            4 => ['id' => 4, 'nama' => 'Dewi Lestari', 'kelas' => 'TK A', 'tanggal' => '2026-03-04', 'status' => 'sakit', 'keterangan' => 'Demam'],
-            5 => ['id' => 5, 'nama' => 'Eko Prasetyo', 'kelas' => 'TK B', 'tanggal' => '2026-03-04', 'status' => 'hadir', 'keterangan' => '-'],
-        ];
+            $existingPresences = Presence::whereIn('student_class_id', $enrollments->pluck('id'))
+                ->where('date', $tanggal)
+                ->get()
+                ->keyBy('student_class_id');
 
-        if (!isset($allKehadiran[$id])) {
-            return redirect()->route('guru.kehadiran.index')->with('error', 'Data kehadiran tidak ditemukan.');
+            $kehadiranList = Presence::whereIn('student_class_id', $enrollments->pluck('id'))
+                ->where('date', $tanggal)
+                ->with('studentEnrollment.student')
+                ->orderBy('created_at')
+                ->get();
         }
 
-        $kehadiran = $allKehadiran[$id];
-
-        return view('guru.kehadiran.edit', compact('kehadiran'));
+        return view('guru.kehadiran.index', compact(
+            'classTerms', 'selectedClassTermId', 'selectedClassTerm',
+            'tanggal', 'enrollments', 'existingPresences', 'kehadiranList'
+        ));
     }
 
-    /**
-     * Kehadiran - Update
-     */
+    public function kehadiranStore(Request $request)
+    {
+        $request->validate([
+            'class_term_id' => 'required|exists:class_term,id',
+            'tanggal'       => 'required|date',
+            'attendance'    => 'required|array',
+        ]);
+
+        foreach ($request->attendance as $enrollmentId => $value) {
+            Presence::updateOrCreate(
+                ['student_class_id' => $enrollmentId, 'date' => $request->tanggal],
+                [
+                    'attendance'  => $value,
+                    'description' => $request->input("description.{$enrollmentId}"),
+                ]
+            );
+        }
+
+        return redirect()->route('guru.kehadiran.index', [
+            'class_term_id' => $request->class_term_id,
+            'tanggal'       => $request->tanggal,
+        ])->with('success', 'Kehadiran berhasil disimpan.');
+    }
+
+    public function kehadiranEdit($id)
+    {
+        $presence = Presence::with('studentEnrollment.student', 'studentEnrollment.classTerm.class', 'studentEnrollment.classTerm.academicTerm')
+            ->findOrFail($id);
+
+        return view('guru.kehadiran.edit', compact('presence'));
+    }
+
     public function kehadiranUpdate(Request $request, $id)
     {
-        // Dummy - redirect with success
-        return redirect()->route('guru.kehadiran.index')->with('success', 'Data kehadiran berhasil diperbarui.');
+        $presence = Presence::findOrFail($id);
+
+        $request->validate([
+            'attendance'  => 'required|in:hadir,izin,sakit,alpa',
+            'description' => 'nullable|string|max:255',
+        ]);
+
+        $presence->update([
+            'attendance'  => $request->attendance,
+            'description' => $request->description,
+        ]);
+
+        $classTermId = $presence->studentEnrollment->class_term_id;
+
+        return redirect()->route('guru.kehadiran.index', [
+            'class_term_id' => $classTermId,
+            'tanggal'       => $presence->date->format('Y-m-d'),
+        ])->with('success', 'Kehadiran berhasil diperbarui.');
     }
 
     /**
