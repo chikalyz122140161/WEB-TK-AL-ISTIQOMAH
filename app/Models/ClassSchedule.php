@@ -14,7 +14,7 @@ class ClassSchedule extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['class_term_id', 'name', 'day', 'hour'];
+    protected $fillable = ['class_term_id', 'name', 'day', 'start_hour', 'end_hour'];
 
     protected function casts(): array
     {

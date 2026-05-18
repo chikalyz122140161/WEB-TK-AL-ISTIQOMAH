@@ -305,42 +305,52 @@
     /* Filter Row */
     .filter-row {
         display: flex;
-        align-items: center;
-        gap: 10px;
+        align-items: flex-end;
+        gap: 12px;
         margin-bottom: 20px;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
     }
     .filter-row .form-group {
         display: flex;
-        align-items: center;
-        gap: 8px;
+        flex-direction: column;
+        gap: 6px;
         margin: 0;
     }
+    .filter-row .form-group:nth-child(1) { flex: 0 0 300px; }
+    .filter-row .form-group:nth-child(2) { flex: 0 0 auto; }
     .filter-row .form-group label {
         font-size: 13px;
         font-weight: 600;
         color: #5D4037;
-        white-space: nowrap;
-        margin: 0;
     }
     .filter-row .form-group select {
-        height: 38px;
-        padding: 0 10px;
+        height: 40px;
+        padding: 0 12px;
         font-size: 13px;
         border-radius: 8px;
-        border: 1px solid #d1d5db;
-        background: #fff;
+        border: 1.5px solid #3E272320;
+        background: #FFFDE7;
         color: #3E2723;
-        min-width: 140px;
+        font-family: inherit;
+    }
+    .filter-row .form-group select:focus {
+        outline: none;
+        border-color: #3D9B72;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(76,175,130,0.10);
     }
     .filter-row .btn-secondary {
-        height: 38px;
-        padding: 0 18px;
+        height: 40px;
+        padding: 0 20px;
         font-size: 13px;
         border-radius: 8px;
         white-space: nowrap;
         background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
         color: #fff;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        font-family: inherit;
     }
     
     /* Alert */
@@ -409,6 +419,8 @@
     }
     .modal-overlay.show {
         display: flex;
+        opacity: 1;
+        visibility: visible;
     }
     .modal-box {
         background: white;
@@ -626,77 +638,84 @@
             List Jadwal
         </div>
         
+        <form action="{{ route('guru.jadwal.index') }}" method="GET" class="filter-row">
+            <div class="form-group">
+                <label for="class_term_id">Kelas</label>
+                <select name="class_term_id" id="class_term_id" onchange="this.form.submit()">
+                    <option value="">-- Pilih Kelas --</option>
+                    @foreach($classTerms as $ct)
+                        <option value="{{ $ct->id }}" {{ $selectedClassTermId == $ct->id ? 'selected' : '' }}>
+                            {{ $ct->class->name ?? '-' }} — {{ $ct->academicTerm->academic_year ?? '' }} {{ ucfirst($ct->academicTerm->semester ?? '') }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
+                <label style="opacity:0;pointer-events:none;">‎</label>
+                <button type="submit" class="btn-secondary">Tampilkan</button>
+            </div>
+        </form>
+
+        @if($selectedClassTermId)
         <!-- Tabs -->
         <div class="list-tabs">
             <button class="list-tab active" data-tab="kegiatan">Jadwal Kegiatan</button>
             <button class="list-tab" data-tab="pembelajaran">Jadwal Pembelajaran</button>
         </div>
         
-        <form action="" method="GET" class="filter-row">
-            <select name="kelas" style="height:38px;padding:0 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;color:#3E2723;background:#fff;min-width:160px;">
-                <option value="">Semua Kelas</option>
-                <option value="TK A" {{ request('kelas') == 'TK A' ? 'selected' : '' }}>TK A</option>
-                <option value="TK B" {{ request('kelas') == 'TK B' ? 'selected' : '' }}>TK B</option>
-            </select>
-            <button type="submit" class="btn-secondary">Filter</button>
-        </form>
-        
         <!-- Tab Content: Jadwal Kegiatan -->
         <div id="tab-kegiatan" class="tab-content active">
             <div class="schedule-cards">
-                @forelse ($jadwalKegiatan ?? [
-                    ['id' => 1, 'nama' => 'Upacara Bendera', 'tanggal' => 'Senin, 10 Mar 2026', 'waktu' => '07:00 - 08:00', 'lokasi' => 'Lapangan', 'kelas' => 'Semua'],
-                    ['id' => 2, 'nama' => 'Senam Pagi', 'tanggal' => 'Selasa, 11 Mar 2026', 'waktu' => '07:30 - 08:00', 'lokasi' => 'Lapangan', 'kelas' => 'Semua'],
-                    ['id' => 3, 'nama' => 'Outing Class', 'tanggal' => 'Rabu, 12 Mar 2026', 'waktu' => '08:00 - 12:00', 'lokasi' => 'Kebun Binatang', 'kelas' => 'TK B'],
-                    ['id' => 4, 'nama' => 'Lomba Mewarnai', 'tanggal' => 'Kamis, 13 Mar 2026', 'waktu' => '09:00 - 11:00', 'lokasi' => 'Aula', 'kelas' => 'Semua'],
-                ] as $jadwal)
+                @forelse ($jadwalKegiatan as $jadwal)
                     <div class="schedule-card">
                         <div class="schedule-card__header">
-                            <div class="schedule-card__title">{{ $jadwal['nama'] }}</div>
+                            <div class="schedule-card__title">{{ $jadwal->name }}</div>
                             <span class="type-badge type-badge--kegiatan">Kegiatan</span>
                         </div>
                         <div class="schedule-card__row">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/>
                             </svg>
-                            {{ $jadwal['tanggal'] }}
+                            {{ $jadwal->date->translatedFormat('l, d F Y') }}
                         </div>
+                        @if($jadwal->start_hour)
                         <div class="schedule-card__row">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/>
                             </svg>
-                            {{ $jadwal['waktu'] }}
+                            {{ \Carbon\Carbon::parse($jadwal->start_hour)->format('H:i') }}{{ $jadwal->end_hour ? ' – ' . \Carbon\Carbon::parse($jadwal->end_hour)->format('H:i') : '' }}
                         </div>
+                        @endif
+                        @if($jadwal->location)
                         <div class="schedule-card__row">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <path fill-rule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd"/>
                             </svg>
-                            {{ $jadwal['lokasi'] }}
+                            {{ $jadwal->location }}
                         </div>
-                        <div class="schedule-card__row">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM17.25 19.128l-.001.144a2.25 2.25 0 0 1-.233.96 10.088 10.088 0 0 0 5.06-1.01.75.75 0 0 0 .42-.643 4.875 4.875 0 0 0-6.957-4.611 8.586 8.586 0 0 1 1.71 5.157v.003Z"/>
+                        @endif
+                        @if($jadwal->description)
+                        <div class="schedule-card__row" style="color:#78716c;font-size:12.5px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:15px;height:15px;fill:#78716c;flex-shrink:0;">
+                                <path fill-rule="evenodd" d="M4.848 2.771A49.144 49.144 0 0 1 12 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 0 1-3.476.383.39.39 0 0 0-.297.17l-2.755 4.133a.75.75 0 0 1-1.248 0l-2.755-4.133a.39.39 0 0 0-.297-.17 48.9 48.9 0 0 1-3.476-.384c-1.978-.29-3.348-2.024-3.348-3.97V6.741c0-1.946 1.37-3.68 3.348-3.97Z" clip-rule="evenodd"/>
                             </svg>
-                            Kelas: {{ $jadwal['kelas'] }}
+                            {{ Str::limit($jadwal->description, 80) }}
                         </div>
+                        @endif
                         <div class="schedule-card__actions">
-                            <a href="{{ route('guru.jadwal.edit', ['id' => $jadwal['id'], 'jenis' => 'kegiatan']) }}" class="btn-edit">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/>
-                                </svg>
+                            <a href="{{ route('guru.jadwal.edit', ['id' => $jadwal->id, 'jenis' => 'kegiatan']) }}" class="btn-edit">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
                                 Edit
                             </a>
-                            <button type="button" class="btn-danger" onclick="openDeleteModal({{ $jadwal['id'] }}, '{{ $jadwal['nama'] }}')">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/>
-                                </svg>
+                            <button type="button" class="btn-danger" onclick="openDeleteModal('{{ $jadwal->id }}', '{{ addslashes($jadwal->name) }}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
                                 Hapus
                             </button>
                         </div>
                     </div>
                 @empty
                     <p style="color: #5D4037; padding: 40px; text-align: center; grid-column: 1 / -1;">
-                        Belum ada jadwal kegiatan.
+                        Belum ada jadwal kegiatan untuk kelas ini.
                     </p>
                 @endforelse
             </div>
@@ -704,48 +723,15 @@
         
         <!-- Tab Content: Jadwal Pembelajaran -->
         <div id="tab-pembelajaran" class="tab-content">
-            @php
-                $rawPembelajaran = $jadwalPembelajaran ?? [
-                    // Senin
-                    ['id' =>  1, 'hari' => 'Senin',  'waktu' => '07:30 - 08:00', 'mapel' => 'Pembukaan & Doa',   'kelas' => 'Semua'],
-                    ['id' =>  2, 'hari' => 'Senin',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Balok',      'kelas' => 'TK A'],
-                    ['id' =>  3, 'hari' => 'Senin',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Alam',       'kelas' => 'TK B'],
-                    ['id' =>  4, 'hari' => 'Senin',  'waktu' => '09:00 - 10:00', 'mapel' => 'Motorik Halus',     'kelas' => 'Semua'],
-                    // Selasa
-                    ['id' =>  5, 'hari' => 'Selasa', 'waktu' => '07:30 - 08:00', 'mapel' => 'Senam Pagi',        'kelas' => 'Semua'],
-                    ['id' =>  6, 'hari' => 'Selasa', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Seni',       'kelas' => 'TK A'],
-                    ['id' =>  7, 'hari' => 'Selasa', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Peran',      'kelas' => 'TK B'],
-                    ['id' =>  8, 'hari' => 'Selasa', 'waktu' => '09:00 - 10:00', 'mapel' => 'Menggambar Bebas',  'kelas' => 'Semua'],
-                    // Rabu
-                    ['id' =>  9, 'hari' => 'Rabu',   'waktu' => '07:30 - 08:00', 'mapel' => 'Pembukaan & Doa',   'kelas' => 'Semua'],
-                    ['id' => 10, 'hari' => 'Rabu',   'waktu' => '08:00 - 09:00', 'mapel' => 'Agama Islam',       'kelas' => 'TK A'],
-                    ['id' => 11, 'hari' => 'Rabu',   'waktu' => '08:00 - 09:00', 'mapel' => 'Agama Islam',       'kelas' => 'TK B'],
-                    ['id' => 12, 'hari' => 'Rabu',   'waktu' => '09:00 - 10:00', 'mapel' => 'Berhitung',         'kelas' => 'Semua'],
-                    // Kamis
-                    ['id' => 13, 'hari' => 'Kamis',  'waktu' => '07:30 - 08:00', 'mapel' => 'Senam Pagi',        'kelas' => 'Semua'],
-                    ['id' => 14, 'hari' => 'Kamis',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Balok',      'kelas' => 'TK B'],
-                    ['id' => 15, 'hari' => 'Kamis',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Bahan Alam', 'kelas' => 'TK A'],
-                    ['id' => 16, 'hari' => 'Kamis',  'waktu' => '09:00 - 10:00', 'mapel' => 'Menyanyi & Musik',  'kelas' => 'Semua'],
-                    // Jumat
-                    ['id' => 17, 'hari' => 'Jumat',  'waktu' => '07:30 - 08:00', 'mapel' => 'Senam & Olahraga',  'kelas' => 'Semua'],
-                    ['id' => 18, 'hari' => 'Jumat',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Peran',      'kelas' => 'TK A'],
-                    ['id' => 19, 'hari' => 'Jumat',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Seni',       'kelas' => 'TK B'],
-                    ['id' => 20, 'hari' => 'Jumat',  'waktu' => '09:00 - 10:00', 'mapel' => 'Cerita & Literasi', 'kelas' => 'Semua'],
-                ];
-                $grouped = collect($rawPembelajaran)->groupBy('hari');
-                $hariOrder = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
-                $grouped = $grouped->sortKeysUsing(fn($a,$b) => array_search($a,$hariOrder) <=> array_search($b,$hariOrder));
-            @endphp
-
-            @if($grouped->isEmpty())
-                <p style="color:#5D4037;padding:40px;text-align:center;">Belum ada jadwal pembelajaran.</p>
+            @if($jadwalPembelajaran->isEmpty())
+                <p style="color:#5D4037;padding:40px;text-align:center;">Belum ada jadwal pembelajaran untuk kelas ini.</p>
             @else
             <div class="pembelajaran-grid">
-                @foreach($grouped as $hari => $items)
+                @foreach($jadwalPembelajaran as $dayInt => $items)
                 <div class="pembelajaran-card">
                     <div class="pembelajaran-card__header">
-                        <span class="pembelajaran-card__hari">{{ $hari }}</span>
-                        <span class="pembelajaran-card__count">{{ count($items) }} sesi</span>
+                        <span class="pembelajaran-card__hari">{{ $hariMap[$dayInt] ?? 'Hari '.$dayInt }}</span>
+                        <span class="pembelajaran-card__count">{{ $items->count() }} sesi</span>
                     </div>
                     <div class="pembelajaran-card__body">
                         @foreach($items as $jadwal)
@@ -753,16 +739,16 @@
                             <div class="pembelajaran-item__top">
                                 <span class="pembelajaran-item__waktu">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
-                                    {{ $jadwal['waktu'] }}
+                                    {{ \Carbon\Carbon::parse($jadwal->start_hour)->format('H:i') }}{{ $jadwal->end_hour ? ' – ' . \Carbon\Carbon::parse($jadwal->end_hour)->format('H:i') : '' }}
                                 </span>
                             </div>
-                            <div class="pembelajaran-item__mapel">{{ $jadwal['mapel'] }}</div>
+                            <div class="pembelajaran-item__mapel">{{ $jadwal->name }}</div>
                             <div class="pembelajaran-item__actions">
-                                <a href="{{ route('guru.jadwal.edit', ['id' => $jadwal['id'], 'jenis' => 'pembelajaran']) }}" class="btn-edit btn-edit--sm">
+                                <a href="{{ route('guru.jadwal.edit', ['id' => $jadwal->id, 'jenis' => 'pembelajaran']) }}" class="btn-edit btn-edit--sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="13" height="13"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
                                     Edit
                                 </a>
-                                <button type="button" class="btn-danger btn-danger--sm" onclick="openDeleteModal({{ $jadwal['id'] }}, '{{ $jadwal['mapel'] }}')">
+                                <button type="button" class="btn-danger btn-danger--sm" onclick="openDeleteModal('{{ $jadwal->id }}', '{{ addslashes($jadwal->name) }}')">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="13" height="13"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
                                     Hapus
                                 </button>
@@ -775,6 +761,15 @@
             </div>
             @endif
         </div>
+        @else
+        <div style="padding:48px 0;text-align:center;color:#9e9e9e;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width:40px;height:40px;fill:#bdbdbd;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;">
+                <path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/>
+            </svg>
+            <div style="font-size:14px;font-weight:600;color:#5D4037;margin-bottom:4px;">Pilih kelas terlebih dahulu</div>
+            <div style="font-size:13px;">Pilih kelas dari dropdown di atas untuk melihat jadwal.</div>
+        </div>
+        @endif
     </div>
 
     <!-- Delete Confirmation Modal -->
@@ -792,6 +787,7 @@
                 <form id="deleteForm" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
+                    <input type="hidden" id="deleteClassTermId" name="class_term_id" value="{{ $selectedClassTermId }}">
                     <button type="submit" class="modal-btn-delete">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;">
                             <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Z" clip-rule="evenodd"/>

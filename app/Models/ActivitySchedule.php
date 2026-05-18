@@ -14,7 +14,7 @@ class ActivitySchedule extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['class_term_id', 'name', 'date', 'hour', 'location', 'description'];
+    protected $fillable = ['class_term_id', 'name', 'date', 'start_hour', 'end_hour', 'location', 'description'];
 
     protected function casts(): array
     {

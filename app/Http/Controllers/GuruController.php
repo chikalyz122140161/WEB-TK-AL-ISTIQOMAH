@@ -6,6 +6,8 @@ use App\Models\Student;
 use App\Models\ClassTerm;
 use App\Models\StudentEnrollment;
 use App\Models\Presence;
+use App\Models\ClassSchedule;
+use App\Models\ActivitySchedule;
 
 class GuruController extends Controller
 {
@@ -978,44 +980,32 @@ class GuruController extends Controller
      */
     public function jadwalIndex(Request $request)
     {
-        // Dummy data jadwal kegiatan
-        $jadwalKegiatan = [
-            ['id' => 1, 'nama' => 'Upacara Bendera', 'tanggal' => 'Senin, 10 Mar 2026', 'waktu' => '07:00 - 08:00', 'lokasi' => 'Lapangan', 'kelas' => 'Semua'],
-            ['id' => 2, 'nama' => 'Senam Pagi', 'tanggal' => 'Selasa, 11 Mar 2026', 'waktu' => '07:30 - 08:00', 'lokasi' => 'Lapangan', 'kelas' => 'Semua'],
-            ['id' => 3, 'nama' => 'Outing Class', 'tanggal' => 'Rabu, 12 Mar 2026', 'waktu' => '08:00 - 12:00', 'lokasi' => 'Kebun Binatang', 'kelas' => 'TK B'],
-            ['id' => 4, 'nama' => 'Lomba Mewarnai', 'tanggal' => 'Kamis, 13 Mar 2026', 'waktu' => '09:00 - 11:00', 'lokasi' => 'Aula', 'kelas' => 'Semua'],
-        ];
+        $classTerms          = ClassTerm::with(['class', 'academicTerm'])->orderBy('created_at', 'desc')->get();
+        $selectedClassTermId = $request->input('class_term_id');
+        $selectedClassTerm   = null;
+        $jadwalKegiatan      = collect();
+        $jadwalPembelajaran  = collect();
 
-        // Dummy data jadwal pembelajaran
-        $jadwalPembelajaran = [
-            // Senin
-            ['id' =>  1, 'hari' => 'Senin',  'waktu' => '07:30 - 08:00', 'mapel' => 'Pembukaan & Doa',   'kelas' => 'Semua'],
-            ['id' =>  2, 'hari' => 'Senin',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Balok',      'kelas' => 'TK A'],
-            ['id' =>  3, 'hari' => 'Senin',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Alam',       'kelas' => 'TK B'],
-            ['id' =>  4, 'hari' => 'Senin',  'waktu' => '09:00 - 10:00', 'mapel' => 'Motorik Halus',     'kelas' => 'Semua'],
-            // Selasa
-            ['id' =>  5, 'hari' => 'Selasa', 'waktu' => '07:30 - 08:00', 'mapel' => 'Senam Pagi',        'kelas' => 'Semua'],
-            ['id' =>  6, 'hari' => 'Selasa', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Seni',       'kelas' => 'TK A'],
-            ['id' =>  7, 'hari' => 'Selasa', 'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Peran',      'kelas' => 'TK B'],
-            ['id' =>  8, 'hari' => 'Selasa', 'waktu' => '09:00 - 10:00', 'mapel' => 'Menggambar Bebas',  'kelas' => 'Semua'],
-            // Rabu
-            ['id' =>  9, 'hari' => 'Rabu',   'waktu' => '07:30 - 08:00', 'mapel' => 'Pembukaan & Doa',   'kelas' => 'Semua'],
-            ['id' => 10, 'hari' => 'Rabu',   'waktu' => '08:00 - 09:00', 'mapel' => 'Agama Islam',       'kelas' => 'TK A'],
-            ['id' => 11, 'hari' => 'Rabu',   'waktu' => '08:00 - 09:00', 'mapel' => 'Agama Islam',       'kelas' => 'TK B'],
-            ['id' => 12, 'hari' => 'Rabu',   'waktu' => '09:00 - 10:00', 'mapel' => 'Berhitung',         'kelas' => 'Semua'],
-            // Kamis
-            ['id' => 13, 'hari' => 'Kamis',  'waktu' => '07:30 - 08:00', 'mapel' => 'Senam Pagi',        'kelas' => 'Semua'],
-            ['id' => 14, 'hari' => 'Kamis',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Balok',      'kelas' => 'TK B'],
-            ['id' => 15, 'hari' => 'Kamis',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Bahan Alam', 'kelas' => 'TK A'],
-            ['id' => 16, 'hari' => 'Kamis',  'waktu' => '09:00 - 10:00', 'mapel' => 'Menyanyi & Musik',  'kelas' => 'Semua'],
-            // Jumat
-            ['id' => 17, 'hari' => 'Jumat',  'waktu' => '07:30 - 08:00', 'mapel' => 'Senam & Olahraga',  'kelas' => 'Semua'],
-            ['id' => 18, 'hari' => 'Jumat',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Peran',      'kelas' => 'TK A'],
-            ['id' => 19, 'hari' => 'Jumat',  'waktu' => '08:00 - 09:00', 'mapel' => 'Sentra Seni',       'kelas' => 'TK B'],
-            ['id' => 20, 'hari' => 'Jumat',  'waktu' => '09:00 - 10:00', 'mapel' => 'Cerita & Literasi', 'kelas' => 'Semua'],
-        ];
+        $hariMap = [1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu', 4 => 'Kamis', 5 => 'Jumat'];
 
-        return view('guru.jadwal.index', compact('jadwalKegiatan', 'jadwalPembelajaran'));
+        if ($selectedClassTermId) {
+            $selectedClassTerm = ClassTerm::with(['class', 'academicTerm'])->find($selectedClassTermId);
+
+            $jadwalKegiatan = ActivitySchedule::where('class_term_id', $selectedClassTermId)
+                ->orderBy('date')
+                ->get();
+
+            $jadwalPembelajaran = ClassSchedule::where('class_term_id', $selectedClassTermId)
+                ->orderBy('day')
+                ->orderBy('start_hour')
+                ->get()
+                ->groupBy('day');
+        }
+
+        return view('guru.jadwal.index', compact(
+            'classTerms', 'selectedClassTermId', 'selectedClassTerm',
+            'jadwalKegiatan', 'jadwalPembelajaran', 'hariMap'
+        ));
     }
 
     /**
@@ -1023,12 +1013,8 @@ class GuruController extends Controller
      */
     public function jadwalCreate()
     {
-        $kelasList = [
-            ['id' => 1, 'nama' => 'A1'],
-            ['id' => 2, 'nama' => 'B1'],
-            ['id' => 3, 'nama' => 'B2'],
-        ];
-        return view('guru.jadwal.create', compact('kelasList'));
+        $classTerms = ClassTerm::with(['class', 'academicTerm'])->orderBy('created_at', 'desc')->get();
+        return view('guru.jadwal.create', compact('classTerms'));
     }
 
     /**
@@ -1036,62 +1022,60 @@ class GuruController extends Controller
      */
     public function jadwalStore(Request $request)
     {
-        // Dummy - redirect with success
+        if ($request->jenis_jadwal === 'kegiatan') {
+            $request->validate([
+                'class_term_id' => 'required|exists:class_term,id',
+                'nama'          => 'required|string|max:255',
+                'tanggal'       => 'required|date',
+                'start_hour'    => 'nullable|date_format:H:i',
+                'end_hour'      => 'nullable|date_format:H:i',
+                'lokasi'        => 'nullable|string|max:255',
+                'deskripsi'     => 'nullable|string',
+            ]);
+            ActivitySchedule::create([
+                'class_term_id' => $request->class_term_id,
+                'name'          => $request->nama,
+                'date'          => $request->tanggal,
+                'start_hour'    => $request->start_hour ?: null,
+                'end_hour'      => $request->end_hour ?: null,
+                'location'      => $request->lokasi,
+                'description'   => $request->deskripsi,
+            ]);
+        } else {
+            $request->validate([
+                'class_term_id' => 'required|exists:class_term,id',
+                'nama'          => 'required|string|max:255',
+                'day'           => 'required|integer|between:1,5',
+                'start_hour'    => 'required|date_format:H:i',
+                'end_hour'      => 'nullable|date_format:H:i',
+            ]);
+            ClassSchedule::create([
+                'class_term_id' => $request->class_term_id,
+                'name'          => $request->nama,
+                'day'           => $request->day,
+                'start_hour'    => $request->start_hour,
+                'end_hour'      => $request->end_hour,
+            ]);
+        }
+
         return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil ditambahkan.');
     }
 
-/**
+    /**
      * Jadwal - Edit
      */
     public function jadwalEdit(Request $request, $id)
     {
-        $jenis = $request->query('jenis', 'kegiatan');
+        $jenis      = $request->query('jenis', 'kegiatan');
+        $classTerms = ClassTerm::with(['class', 'academicTerm'])->orderBy('created_at', 'desc')->get();
 
-        $kegiatanData = [
-            1 => ['id' => 1, 'jenis' => 'kegiatan', 'nama' => 'Upacara Bendera', 'tanggal_raw' => '2026-03-10', 'waktu' => '07:00 - 08:00', 'lokasi' => 'Lapangan', 'kelas' => 'Semua', 'deskripsi' => ''],
-            2 => ['id' => 2, 'jenis' => 'kegiatan', 'nama' => 'Senam Pagi', 'tanggal_raw' => '2026-03-11', 'waktu' => '07:30 - 08:00', 'lokasi' => 'Lapangan', 'kelas' => 'Semua', 'deskripsi' => ''],
-            3 => ['id' => 3, 'jenis' => 'kegiatan', 'nama' => 'Outing Class', 'tanggal_raw' => '2026-03-12', 'waktu' => '08:00 - 12:00', 'lokasi' => 'Kebun Binatang', 'kelas' => 'TK B', 'deskripsi' => ''],
-            4 => ['id' => 4, 'jenis' => 'kegiatan', 'nama' => 'Lomba Mewarnai', 'tanggal_raw' => '2026-03-13', 'waktu' => '09:00 - 11:00', 'lokasi' => 'Aula', 'kelas' => 'Semua', 'deskripsi' => ''],
-        ];
-
-        $pembelajaranData = [
-            1  => ['id' => 1,  'jenis' => 'pembelajaran', 'mapel' => 'Pembukaan & Doa',   'hari' => 'Senin',  'waktu' => '07:30 - 08:00', 'kelas' => 'Semua'],
-            2  => ['id' => 2,  'jenis' => 'pembelajaran', 'mapel' => 'Sentra Balok',      'hari' => 'Senin',  'waktu' => '08:00 - 09:00', 'kelas' => 'TK A'],
-            3  => ['id' => 3,  'jenis' => 'pembelajaran', 'mapel' => 'Sentra Alam',       'hari' => 'Senin',  'waktu' => '08:00 - 09:00', 'kelas' => 'TK B'],
-            4  => ['id' => 4,  'jenis' => 'pembelajaran', 'mapel' => 'Motorik Halus',     'hari' => 'Senin',  'waktu' => '09:00 - 10:00', 'kelas' => 'Semua'],
-            5  => ['id' => 5,  'jenis' => 'pembelajaran', 'mapel' => 'Senam Pagi',        'hari' => 'Selasa', 'waktu' => '07:30 - 08:00', 'kelas' => 'Semua'],
-            6  => ['id' => 6,  'jenis' => 'pembelajaran', 'mapel' => 'Sentra Seni',       'hari' => 'Selasa', 'waktu' => '08:00 - 09:00', 'kelas' => 'TK A'],
-            7  => ['id' => 7,  'jenis' => 'pembelajaran', 'mapel' => 'Sentra Peran',      'hari' => 'Selasa', 'waktu' => '08:00 - 09:00', 'kelas' => 'TK B'],
-            8  => ['id' => 8,  'jenis' => 'pembelajaran', 'mapel' => 'Menggambar Bebas',  'hari' => 'Selasa', 'waktu' => '09:00 - 10:00', 'kelas' => 'Semua'],
-            9  => ['id' => 9,  'jenis' => 'pembelajaran', 'mapel' => 'Pembukaan & Doa',   'hari' => 'Rabu',   'waktu' => '07:30 - 08:00', 'kelas' => 'Semua'],
-            10 => ['id' => 10, 'jenis' => 'pembelajaran', 'mapel' => 'Agama Islam',       'hari' => 'Rabu',   'waktu' => '08:00 - 09:00', 'kelas' => 'TK A'],
-            11 => ['id' => 11, 'jenis' => 'pembelajaran', 'mapel' => 'Agama Islam',       'hari' => 'Rabu',   'waktu' => '08:00 - 09:00', 'kelas' => 'TK B'],
-            12 => ['id' => 12, 'jenis' => 'pembelajaran', 'mapel' => 'Berhitung',         'hari' => 'Rabu',   'waktu' => '09:00 - 10:00', 'kelas' => 'Semua'],
-            13 => ['id' => 13, 'jenis' => 'pembelajaran', 'mapel' => 'Senam Pagi',        'hari' => 'Kamis',  'waktu' => '07:30 - 08:00', 'kelas' => 'Semua'],
-            14 => ['id' => 14, 'jenis' => 'pembelajaran', 'mapel' => 'Sentra Balok',      'hari' => 'Kamis',  'waktu' => '08:00 - 09:00', 'kelas' => 'TK B'],
-            15 => ['id' => 15, 'jenis' => 'pembelajaran', 'mapel' => 'Sentra Bahan Alam', 'hari' => 'Kamis',  'waktu' => '08:00 - 09:00', 'kelas' => 'TK A'],
-            16 => ['id' => 16, 'jenis' => 'pembelajaran', 'mapel' => 'Menyanyi & Musik',  'hari' => 'Kamis',  'waktu' => '09:00 - 10:00', 'kelas' => 'Semua'],
-            17 => ['id' => 17, 'jenis' => 'pembelajaran', 'mapel' => 'Senam & Olahraga',  'hari' => 'Jumat',  'waktu' => '07:30 - 08:00', 'kelas' => 'Semua'],
-            18 => ['id' => 18, 'jenis' => 'pembelajaran', 'mapel' => 'Sentra Peran',      'hari' => 'Jumat',  'waktu' => '08:00 - 09:00', 'kelas' => 'TK A'],
-            19 => ['id' => 19, 'jenis' => 'pembelajaran', 'mapel' => 'Sentra Seni',       'hari' => 'Jumat',  'waktu' => '08:00 - 09:00', 'kelas' => 'TK B'],
-            20 => ['id' => 20, 'jenis' => 'pembelajaran', 'mapel' => 'Cerita & Literasi', 'hari' => 'Jumat',  'waktu' => '09:00 - 10:00', 'kelas' => 'Semua'],
-        ];
-
-        $source = $jenis === 'pembelajaran' ? $pembelajaranData : $kegiatanData;
-
-        if (!isset($source[$id])) {
-            return redirect()->route('guru.jadwal.index')->with('error', 'Jadwal tidak ditemukan.');
+        if ($jenis === 'pembelajaran') {
+            $jadwal = ClassSchedule::findOrFail($id);
+        } else {
+            $jadwal = ActivitySchedule::findOrFail($id);
         }
 
-        $jadwal = $source[$id];
-
-        $kelasList = [
-            ['id' => 1, 'nama' => 'A1'],
-            ['id' => 2, 'nama' => 'B1'],
-            ['id' => 3, 'nama' => 'B2'],
-        ];
-
-        return view('guru.jadwal.edit', compact('jadwal', 'kelasList'));
+        return view('guru.jadwal.edit', compact('jadwal', 'classTerms', 'jenis'));
     }
 
     /**
@@ -1099,17 +1083,61 @@ class GuruController extends Controller
      */
     public function jadwalUpdate(Request $request, $id)
     {
-        // Dummy - redirect with success
+        $jenis = $request->input('jenis_jadwal', 'kegiatan');
+
+        if ($jenis === 'kegiatan') {
+            $request->validate([
+                'class_term_id' => 'required|exists:class_term,id',
+                'nama'          => 'required|string|max:255',
+                'tanggal'       => 'required|date',
+                'start_hour'    => 'nullable|date_format:H:i',
+                'end_hour'      => 'nullable|date_format:H:i',
+                'lokasi'        => 'nullable|string|max:255',
+                'deskripsi'     => 'nullable|string',
+            ]);
+            ActivitySchedule::findOrFail($id)->update([
+                'class_term_id' => $request->class_term_id,
+                'name'          => $request->nama,
+                'date'          => $request->tanggal,
+                'start_hour'    => $request->start_hour ?: null,
+                'end_hour'      => $request->end_hour ?: null,
+                'location'      => $request->lokasi,
+                'description'   => $request->deskripsi,
+            ]);
+        } else {
+            $request->validate([
+                'class_term_id' => 'required|exists:class_term,id',
+                'nama'          => 'required|string|max:255',
+                'day'           => 'required|integer|between:1,5',
+                'start_hour'    => 'required|date_format:H:i',
+                'end_hour'      => 'nullable|date_format:H:i',
+            ]);
+            ClassSchedule::findOrFail($id)->update([
+                'class_term_id' => $request->class_term_id,
+                'name'          => $request->nama,
+                'day'           => $request->day,
+                'start_hour'    => $request->start_hour,
+                'end_hour'      => $request->end_hour,
+            ]);
+        }
+
         return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil diperbarui.');
     }
 
     /**
      * Jadwal - Delete
      */
-    public function jadwalDestroy($id)
+    public function jadwalDestroy(Request $request, $id)
     {
-        // Dummy - redirect with success
-        return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil dihapus.');
+        $activity = ActivitySchedule::find($id);
+        if ($activity) {
+            $activity->delete();
+        } else {
+            ClassSchedule::findOrFail($id)->delete();
+        }
+        $classTermId = $request->input('class_term_id');
+        return redirect()->route('guru.jadwal.index', $classTermId ? ['class_term_id' => $classTermId] : [])
+            ->with('success', 'Jadwal berhasil dihapus.');
     }
 
     // ═══════════════════════════════════════════════════════

@@ -177,8 +177,6 @@
         </div>
     @endif
 
-    @php $jenis = $jadwal['jenis'] ?? 'kegiatan'; @endphp
-
     <div class="form-section">
         <div class="form-section__title">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -188,22 +186,15 @@
         </div>
 
         <div class="schedule-type-tabs">
-            @if ($jenis === 'kegiatan')
-                <label class="schedule-type-tab active" id="tab-kegiatan">
-                    <input type="radio" name="_tab" value="kegiatan" checked>
-                    Jadwal Kegiatan
-                </label>
-            @else
-                <label class="schedule-type-tab active" id="tab-pembelajaran">
-                    <input type="radio" name="_tab" value="pembelajaran" checked>
-                    Jadwal Pembelajaran
-                </label>
-            @endif
+            <label class="schedule-type-tab active">
+                <input type="radio" name="_tab" value="{{ $jenis }}" checked>
+                {{ $jenis === 'pembelajaran' ? 'Jadwal Pembelajaran' : 'Jadwal Kegiatan' }}
+            </label>
         </div>
 
         {{-- Form: Edit Kegiatan --}}
         <div class="tab-panel {{ $jenis === 'kegiatan' ? 'active' : '' }}" id="panel-kegiatan">
-            <form action="{{ route('guru.jadwal.update', $jadwal['id']) }}" method="POST">
+            <form action="{{ route('guru.jadwal.update', $jadwal->id) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="jenis_jadwal" value="kegiatan">
@@ -211,34 +202,40 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Nama Kegiatan</label>
-                        <input type="text" name="nama" value="{{ $jadwal['nama'] ?? '' }}" placeholder="Contoh: Upacara Bendera" required>
+                        <input type="text" name="nama" value="{{ $jadwal->name ?? '' }}" placeholder="Contoh: Upacara Bendera" required>
                     </div>
                     <div class="form-group">
                         <label>Tanggal</label>
-                        <input type="date" name="tanggal" value="{{ $jadwal['tanggal_raw'] ?? date('Y-m-d') }}" required>
+                        <input type="date" name="tanggal" value="{{ $jadwal->date?->format('Y-m-d') ?? date('Y-m-d') }}" required>
                     </div>
                     <div class="form-group">
-                        <label>Jam</label>
-                        <input type="text" name="hour" value="{{ $jadwal['waktu'] ?? '' }}" placeholder="contoh: 08:00 - 09:00">
+                        <label>Jam Mulai</label>
+                        <input type="time" name="start_hour" value="{{ $jadwal->start_hour ? \Carbon\Carbon::parse($jadwal->start_hour)->format('H:i') : '' }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Jam Selesai</label>
+                        <input type="time" name="end_hour" value="{{ $jadwal->end_hour ? \Carbon\Carbon::parse($jadwal->end_hour)->format('H:i') : '' }}">
                     </div>
                     <div class="form-group">
                         <label>Kelas</label>
-                        <select name="kelas">
-                            <option value="">Semua Kelas</option>
-                            @foreach($kelasList as $kelas)
-                                <option value="{{ $kelas['id'] }}" {{ ($jadwal['kelas'] ?? '') == $kelas['nama'] ? 'selected' : '' }}>{{ $kelas['nama'] }}</option>
+                        <select name="class_term_id" required>
+                            <option value="" disabled>-- Pilih Kelas --</option>
+                            @foreach($classTerms as $ct)
+                                <option value="{{ $ct->id }}" {{ $jadwal->class_term_id == $ct->id ? 'selected' : '' }}>
+                                    {{ $ct->class->name ?? '-' }} — {{ $ct->academicTerm->academic_year ?? '' }} {{ ucfirst($ct->academicTerm->semester ?? '') }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Lokasi</label>
-                        <input type="text" name="lokasi" value="{{ $jadwal['lokasi'] ?? '' }}" placeholder="Contoh: Lapangan, Aula">
+                        <input type="text" name="lokasi" value="{{ $jadwal->location ?? '' }}" placeholder="Contoh: Lapangan, Aula">
                     </div>
                 </div>
 
                 <div class="form-group" style="margin-top:4px;">
                     <label>Deskripsi (Opsional)</label>
-                    <textarea name="deskripsi" rows="3" placeholder="Tambahkan deskripsi kegiatan...">{{ $jadwal['deskripsi'] ?? '' }}</textarea>
+                    <textarea name="deskripsi" rows="3" placeholder="Tambahkan deskripsi kegiatan...">{{ $jadwal->description ?? '' }}</textarea>
                 </div>
 
                 <div class="btn-row">
@@ -256,22 +253,24 @@
 
         {{-- Form: Edit Pembelajaran --}}
         <div class="tab-panel {{ $jenis === 'pembelajaran' ? 'active' : '' }}" id="panel-pembelajaran">
-            <form action="{{ route('guru.jadwal.update', $jadwal['id']) }}" method="POST">
+            <form action="{{ route('guru.jadwal.update', $jadwal->id) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="jenis_jadwal" value="pembelajaran">
 
                 <div class="form-group">
                     <label>Nama Mata Pelajaran</label>
-                    <input type="text" name="nama" value="{{ $jadwal['mapel'] ?? $jadwal['nama'] ?? '' }}" placeholder="Contoh: Sentra Balok, Bahasa Indonesia">
+                    <input type="text" name="nama" value="{{ $jadwal->name ?? '' }}" placeholder="Contoh: Sentra Balok, Bahasa Indonesia">
                 </div>
 
                 <div class="form-group">
                     <label>Kelas</label>
-                    <select name="kelas" required>
+                    <select name="class_term_id" required>
                         <option value="" disabled>-- Pilih Kelas --</option>
-                        @foreach($kelasList as $kelas)
-                            <option value="{{ $kelas['id'] }}" {{ ($jadwal['kelas'] ?? '') == $kelas['nama'] ? 'selected' : '' }}>{{ $kelas['nama'] }}</option>
+                        @foreach($classTerms as $ct)
+                            <option value="{{ $ct->id }}" {{ $jadwal->class_term_id == $ct->id ? 'selected' : '' }}>
+                                {{ $ct->class->name ?? '-' }} — {{ $ct->academicTerm->academic_year ?? '' }} {{ ucfirst($ct->academicTerm->semester ?? '') }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -280,17 +279,23 @@
                     <label>Hari</label>
                     <select name="day" required>
                         <option value="" disabled>-- Pilih Hari --</option>
-                        <option value="1" {{ ($jadwal['hari'] ?? '') === 'Senin' ? 'selected' : '' }}>Senin</option>
-                        <option value="2" {{ ($jadwal['hari'] ?? '') === 'Selasa' ? 'selected' : '' }}>Selasa</option>
-                        <option value="3" {{ ($jadwal['hari'] ?? '') === 'Rabu' ? 'selected' : '' }}>Rabu</option>
-                        <option value="4" {{ ($jadwal['hari'] ?? '') === 'Kamis' ? 'selected' : '' }}>Kamis</option>
-                        <option value="5" {{ ($jadwal['hari'] ?? '') === 'Jumat' ? 'selected' : '' }}>Jumat</option>
+                        <option value="1" {{ ($jadwal->day ?? 0) == 1 ? 'selected' : '' }}>Senin</option>
+                        <option value="2" {{ ($jadwal->day ?? 0) == 2 ? 'selected' : '' }}>Selasa</option>
+                        <option value="3" {{ ($jadwal->day ?? 0) == 3 ? 'selected' : '' }}>Rabu</option>
+                        <option value="4" {{ ($jadwal->day ?? 0) == 4 ? 'selected' : '' }}>Kamis</option>
+                        <option value="5" {{ ($jadwal->day ?? 0) == 5 ? 'selected' : '' }}>Jumat</option>
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label>Jam</label>
-                    <input type="text" name="hour" value="{{ $jadwal['waktu'] ?? '' }}" placeholder="contoh: 08:00 - 09:00">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Jam Mulai</label>
+                        <input type="time" name="start_hour" value="{{ $jadwal->start_hour ? \Carbon\Carbon::parse($jadwal->start_hour)->format('H:i') : '' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Jam Selesai</label>
+                        <input type="time" name="end_hour" value="{{ $jadwal->end_hour ? \Carbon\Carbon::parse($jadwal->end_hour)->format('H:i') : '' }}">
+                    </div>
                 </div>
 
                 <div class="btn-row">

@@ -201,15 +201,19 @@
                         <input type="date" name="tanggal" value="{{ date('Y-m-d') }}" required>
                     </div>
                     <div class="form-group">
-                        <label>Jam</label>
-                        <input type="text" name="hour" placeholder="contoh: 08:00 - 09:00">
+                        <label>Jam Mulai</label>
+                        <input type="time" name="start_hour">
+                    </div>
+                    <div class="form-group">
+                        <label>Jam Selesai</label>
+                        <input type="time" name="end_hour">
                     </div>
                     <div class="form-group">
                         <label>Kelas</label>
-                        <select name="kelas">
-                            <option value="">Semua Kelas</option>
-                            @foreach($kelasList as $kelas)
-                                <option value="{{ $kelas['id'] }}">{{ $kelas['nama'] }}</option>
+                        <select name="class_term_id" required>
+                            <option value="" disabled selected>-- Pilih Kelas --</option>
+                            @foreach($classTerms as $ct)
+                                <option value="{{ $ct->id }}">{{ $ct->class->name ?? '-' }} — {{ $ct->academicTerm->academic_year ?? '' }} {{ ucfirst($ct->academicTerm->semester ?? '') }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -250,10 +254,10 @@
 
                 <div class="form-group">
                     <label>Kelas</label>
-                    <select name="kelas" required>
+                    <select name="class_term_id" required>
                         <option value="" disabled selected>-- Pilih Kelas --</option>
-                        @foreach($kelasList as $kelas)
-                            <option value="{{ $kelas['id'] }}">{{ $kelas['nama'] }}</option>
+                        @foreach($classTerms as $ct)
+                            <option value="{{ $ct->id }}">{{ $ct->class->name ?? '-' }} — {{ $ct->academicTerm->academic_year ?? '' }} {{ ucfirst($ct->academicTerm->semester ?? '') }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -270,9 +274,15 @@
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label>Jam</label>
-                    <input type="text" name="hour" placeholder="contoh: 08:00 - 09:00">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Jam Mulai</label>
+                        <input type="time" name="start_hour" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Jam Selesai</label>
+                        <input type="time" name="end_hour">
+                    </div>
                 </div>
 
                 <div class="btn-row">
