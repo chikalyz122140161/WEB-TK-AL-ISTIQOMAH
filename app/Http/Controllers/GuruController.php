@@ -592,71 +592,134 @@ class GuruController extends Controller
 
     public function grafik()
     {
-        $ds         = $this->dummyGrafikDataset();
-        $semesters  = $ds['semesters'];
-        $kelas      = $ds['kelas'];
-        $siswaByKelas = $ds['siswaByKelas'];
-        $konselings = $ds['konselings'];
-        $W = 12;
+        // ── 1. Load ClassTerms: semesters, kelas, siswa, counselings ───
+        $ctModels = ClassTerm::with([
+            'class',
+            'academicTerm',
+            'enrollments.student',
+            'counselings.counseling.assessments',
+        ])->get();
 
-        // Generate weekly scores: $raw[semId][siswaId][assessmentId][week] = level (1-4)
-        $raw = [];
-        foreach ($semesters as $sm) {
-            $smId = $sm['id'];
-            foreach ($kelas as $k) {
-                $siswas = $siswaByKelas[$k['id']] ?? [];
-                foreach ($siswas as $s) {
-                    foreach ($konselings as $con) {
-                        foreach ($con['assessments'] as $ca) {
-                            $seed = abs(crc32($smId . $s['id'] . $ca['id']));
-                            $cur  = ($seed % 2) + 2; // start MB or BSH
-                            for ($w = 1; $w <= $W; $w++) {
-                                $r = abs(crc32($smId . $s['id'] . $ca['id'] . $w)) % 10;
-                                if ($r >= 7 && $cur < 4) $cur++;
-                                elseif ($r <= 1 && $cur > 1) $cur--;
-                                $raw[$smId][$s['id']][$ca['id']][$w] = $cur;
-                            }
-                        }
-                    }
+        $semesterMap       = [];
+        $kelasMap          = [];
+        $siswaByKelas      = [];
+        $counselingMap     = [];
+        $seenStudents      = [];
+        $studentClassBySem = [];
+
+        foreach ($ctModels as $ct) {
+            $at    = $ct->academicTerm;
+            $class = $ct->class;
+            if (!$at || !$class) continue;
+
+            if (!isset($semesterMap[$at->id])) {
+                $semesterMap[$at->id] = [
+                    'id'    => $at->id,
+                    'label' => trim(($at->academic_year ?? '') . ' ' . ucfirst($at->semester ?? '')),
+                ];
+            }
+
+            if (!isset($kelasMap[$class->id])) {
+                $kelasMap[$class->id] = ['id' => $class->id, 'nama' => $class->name];
+            }
+
+            foreach ($ct->enrollments as $e) {
+                $s = $e->student;
+                if (!$s) continue;
+                $uniq = $class->id . '|' . $s->id;
+                if (!isset($seenStudents[$uniq])) {
+                    $seenStudents[$uniq]        = true;
+                    $siswaByKelas[$class->id][] = ['id' => $s->id, 'nama' => $s->name];
                 }
+                $studentClassBySem[$at->id][$s->id] = $class->id;
+            }
+
+            foreach ($ct->counselings as $ctc) {
+                $con = $ctc->counseling;
+                if (!$con || isset($counselingMap[$con->id])) continue;
+                $counselingMap[$con->id] = [
+                    'id'          => $con->id,
+                    'nama'        => $con->name,
+                    'assessments' => $con->assessments->map(fn($a) => [
+                        'id'   => $a->id,
+                        'nama' => $a->name,
+                    ])->toArray(),
+                ];
             }
         }
 
-        // Aggregation: average per (sem, konseling, kelas, week) â†’ rata2 semua siswa di kelas Ã— semua poin di konseling
+        $semesters  = array_values($semesterMap);
+        $kelas      = array_values($kelasMap);
+        $konselings = array_values($counselingMap);
+
+        // ── 2. Load scores → raw[semId][studentId][assessmentId][week] ─
+        $allScores = ReportCounselingScore::with([
+            'reportCounseling.report.studentEnrollment.classTerm',
+        ])->whereNotNull('week')->get();
+
+        $lvMap    = ['BB' => 1, 'MB' => 2, 'BSH' => 3, 'BSB' => 4];
+        $raw      = [];
+        $weeksSet = [];
+
+        foreach ($allScores as $score) {
+            $rc  = $score->reportCounseling;
+            if (!$rc) continue;
+            $rep = $rc->report;
+            if (!$rep) continue;
+            $enr = $rep->studentEnrollment;
+            if (!$enr) continue;
+            $ct  = $enr->classTerm;
+            if (!$ct) continue;
+
+            $semId = $ct->academic_term_id;
+            $sid   = $enr->student_id;
+            $aId   = $score->counseling_assessment_id;
+            $week  = (int) $score->week;
+            $lv    = $lvMap[$score->level] ?? null;
+            if (!$lv || !$week) continue;
+
+            $raw[$semId][$sid][$aId][$week] = $lv;
+            $weeksSet[$week]                = true;
+        }
+
+        $weeks = array_keys($weeksSet);
+        sort($weeks);
+
+        // ── 3. Aggregate byKelas and bySiswa ───────────────────────────
         $byKelas = [];
-        // Aggregation: average per (sem, konseling, siswa, week) â†’ rata2 semua poin di konseling untuk siswa itu
         $bySiswa = [];
 
-        foreach ($semesters as $sm) {
-            $smId = $sm['id'];
+        foreach ($raw as $semId => $byStudent) {
             foreach ($konselings as $con) {
                 $conId = $con['id'];
                 $aIds  = array_column($con['assessments'], 'id');
+                if (empty($aIds)) continue;
+
+                foreach ($byStudent as $sid => $byAssessment) {
+                    foreach ($weeks as $w) {
+                        $sum = 0; $cnt = 0;
+                        foreach ($aIds as $aId) {
+                            $val = $byAssessment[$aId][$w] ?? null;
+                            if ($val !== null) { $sum += $val; $cnt++; }
+                        }
+                        if ($cnt > 0) {
+                            $bySiswa[$semId][$conId][$sid][$w] = round($sum / $cnt, 2);
+                        }
+                    }
+                }
 
                 foreach ($kelas as $k) {
                     $kId = $k['id'];
-                    $siswas = $siswaByKelas[$kId] ?? [];
-
-                    for ($w = 1; $w <= $W; $w++) {
+                    foreach ($weeks as $w) {
                         $sum = 0; $cnt = 0;
-                        foreach ($siswas as $s) {
+                        foreach (($studentClassBySem[$semId] ?? []) as $sId => $cId) {
+                            if ($cId !== $kId) continue;
                             foreach ($aIds as $aId) {
-                                $val = $raw[$smId][$s['id']][$aId][$w] ?? null;
+                                $val = $raw[$semId][$sId][$aId][$w] ?? null;
                                 if ($val !== null) { $sum += $val; $cnt++; }
                             }
                         }
-                        $byKelas[$smId][$conId][$kId][$w] = $cnt ? round($sum / $cnt, 2) : 0;
-                    }
-
-                    foreach ($siswas as $s) {
-                        for ($w = 1; $w <= $W; $w++) {
-                            $sum = 0; $cnt = 0;
-                            foreach ($aIds as $aId) {
-                                $val = $raw[$smId][$s['id']][$aId][$w] ?? null;
-                                if ($val !== null) { $sum += $val; $cnt++; }
-                            }
-                            $bySiswa[$smId][$conId][$s['id']][$w] = $cnt ? round($sum / $cnt, 2) : 0;
-                        }
+                        $byKelas[$semId][$conId][$kId][$w] = $cnt ? round($sum / $cnt, 2) : null;
                     }
                 }
             }
@@ -667,155 +730,51 @@ class GuruController extends Controller
             'kelas'        => $kelas,
             'siswaByKelas' => $siswaByKelas,
             'konselings'   => $konselings,
-            'weeks'        => range(1, $W),
+            'weeks'        => $weeks,
             'byKelas'      => $byKelas,
             'bySiswa'      => $bySiswa,
             'raw'          => $raw,
         ];
 
-        // Variabel lama tetap dikembalikan agar tidak break view kalau ada referensi lama
-        $classTerms   = $this->dummyRapotClassTerms();
-        $studentsByCt = $this->dummyRapotStudents();
-        $subjectsByCt = $this->dummyRapotSubjectsAll();
-
-        $W = 12;
-        $levels     = ['BB', 'MB', 'BSH', 'BSB'];
-        $shortNames = [
-            'sub1' => 'NAM', 'sub2' => 'FM', 'sub3' => 'Kognitif',
-            'sub4' => 'Bahasa', 'sub5' => 'Sosem', 'sub6' => 'Seni',
-        ];
-
-        $grafikData = [];
-
-        foreach ($classTerms as $ct) {
-            $ctId     = $ct['id'];
-            $students = $studentsByCt[$ctId] ?? [];
-            $subjects = $subjectsByCt[$ctId] ?? [];
-
-            // Weekly scores per student per subject: 1â€“4
-            $raw = [];
-            foreach ($students as $s) {
-                foreach ($subjects as $sub) {
-                    $seed    = abs(crc32($ctId . $s['id'] . $sub['id']));
-                    $cur     = ($seed % 2) + 2; // start MB or BSH
-                    for ($w = 1; $w <= $W; $w++) {
-                        $r = abs(crc32($ctId . $s['id'] . $sub['id'] . $w)) % 10;
-                        if ($r >= 7 && $cur < 4) $cur++;
-                        elseif ($r <= 1 && $cur > 1) $cur--;
-                        $raw[$s['id']][$sub['id']][$w] = $cur;
-                    }
-                }
-            }
-
-            // Average per subject per week (class-level)
-            $subAvg = [];
-            foreach ($subjects as $sub) {
-                for ($w = 1; $w <= $W; $w++) {
-                    $vals = array_map(fn($s) => $raw[$s['id']][$sub['id']][$w] ?? 2, $students);
-                    $subAvg[$sub['id']][$w] = count($vals) ? round(array_sum($vals) / count($vals), 2) : 0;
-                }
-            }
-
-            // Overall class average per week
-            $classAvg = [];
-            for ($w = 1; $w <= $W; $w++) {
-                $all = array_map(fn($sub) => $subAvg[$sub['id']][$w], $subjects);
-                $classAvg[$w] = count($all) ? round(array_sum($all) / count($all), 2) : 0;
-            }
-
-            // Stats at current week (week = W) â€” hitung 4 level
-            $bb = $mb = $bsh = $bsb = 0;
-            foreach ($students as $s) {
-                foreach ($subjects as $sub) {
-                    $v = $raw[$s['id']][$sub['id']][$W] ?? 2;
-                    if ($v === 1) $bb++;
-                    elseif ($v === 2) $mb++;
-                    elseif ($v === 3) $bsh++;
-                    elseif ($v === 4) $bsb++;
-                }
-            }
-
-            // Table: per student, level per subject at current week
-            $table = [];
-            foreach ($students as $s) {
-                $scores = [];
-                $sum    = 0;
-                foreach ($subjects as $sub) {
-                    $v = $raw[$s['id']][$sub['id']][$W] ?? 2;
-                    $scores[$sub['id']] = $levels[$v - 1];
-                    $sum += $v;
-                }
-                $table[] = [
-                    'nama'   => $s['nama'],
-                    'scores' => $scores,
-                    'avg'    => count($subjects) ? round($sum / count($subjects), 1) : 0,
-                ];
-            }
-
-            // Distribution at current week per subject
-            $dist = [];
-            foreach ($subjects as $sub) {
-                $d = ['BB' => 0, 'MB' => 0, 'BSH' => 0, 'BSB' => 0];
-                foreach ($students as $s) {
-                    $v = $raw[$s['id']][$sub['id']][$W] ?? 2;
-                    $d[$levels[$v - 1]]++;
-                }
-                $dist[$sub['id']] = $d;
-            }
-
-            // Radar: class avg per subject at current week
-            $radar = [];
-            foreach ($subjects as $sub) {
-                $vals = array_map(fn($s) => $raw[$s['id']][$sub['id']][$W] ?? 2, $students);
-                $radar[$sub['id']] = count($vals) ? round(array_sum($vals) / count($vals), 2) : 0;
-            }
-
-            $grafikData[$ctId] = [
-                'class_term'   => ['kelas' => $ct['kelas_nama'], 'tahun_ajaran' => $ct['tahun_ajaran'], 'semester' => $ct['semester']],
-                'total_siswa'  => count($students),
-                'bsb_count'    => $bsb,
-                'bsh_count'    => $bsh,
-                'mb_count'     => $mb,
-                'bb_count'     => $bb,
-                'current_week' => $W,
-                'weeks'        => range(1, $W),
-                'subjects'     => array_map(fn($s) => [
-                    'id'    => $s['id'],
-                    'nama'  => $s['nama'],
-                    'short' => $shortNames[$s['id']] ?? $s['nama'],
-                ], $subjects),
-                'subject_avg'  => $subAvg,
-                'class_avg'    => $classAvg,
-                'table'        => $table,
-                'distribution' => $dist,
-                'radar'        => $radar,
-            ];
-        }
-
-        return view('guru.grafik', compact('classTerms', 'grafikData', 'grafikPayload'));
+        return view('guru.grafik', compact('grafikPayload'));
     }
 
     public function inputPerkembangan()
     {
-        $classTerms     = $this->dummyRapotClassTerms();
-        $studentsByCt   = $this->dummyRapotStudents();
-        $counselingByCt = $this->dummyRapotCounselingAll();
+        $ctModels = ClassTerm::with([
+            'class', 'academicTerm',
+            'enrollments.student',
+            'counselings.counseling.assessments',
+        ])->get();
 
-        // Siswa di-flatten dengan info class_term untuk label
+        $classTerms = $ctModels->map(fn($ct) => [
+            'id'           => $ct->id,
+            'kelas_nama'   => $ct->class->name ?? '-',
+            'tahun_ajaran' => $ct->academicTerm->academic_year ?? '-',
+            'semester'     => $ct->academicTerm->semester ?? '-',
+        ])->toArray();
+
         $daftarSiswa = [];
-        foreach ($studentsByCt as $ctId => $students) {
-            $ct = collect($classTerms)->firstWhere('id', $ctId);
-            $ctLabel = $ct
-                ? "Kelas {$ct['kelas_nama']} - {$ct['tahun_ajaran']} " . ucfirst($ct['semester'])
-                : '';
-            foreach ($students as $s) {
+        foreach ($ctModels as $ct) {
+            $ctLabel = "Kelas {$ct->class->name} - {$ct->academicTerm->academic_year} " . ucfirst($ct->academicTerm->semester ?? '');
+            foreach ($ct->enrollments as $e) {
                 $daftarSiswa[] = [
-                    'id'            => $s['id'],
-                    'nama'          => $s['nama'],
-                    'class_term_id' => $ctId,
+                    'id'               => $e->student->id,
+                    'nama'             => $e->student->name,
+                    'class_term_id'    => $ct->id,
                     'class_term_label' => $ctLabel,
                 ];
             }
+        }
+
+        $counselingByCt = [];
+        foreach ($ctModels as $ct) {
+            $counselingByCt[$ct->id] = $ct->counselings->map(fn($ctc) => [
+                'id'          => $ctc->counseling->id,
+                'nama'        => $ctc->counseling->name,
+                'assessments' => $ctc->counseling->assessments
+                    ->map(fn($a) => ['id' => $a->id, 'nama' => $a->name])->toArray(),
+            ])->toArray();
         }
 
         return view('guru.input_perkembangan', compact('daftarSiswa', 'classTerms', 'counselingByCt'));
@@ -823,9 +782,60 @@ class GuruController extends Controller
 
     public function storeInputPerkembangan(Request $request)
     {
-        // Dummy - redirect with success
+        $request->validate([
+            'class_term_id' => 'required|exists:class_term,id',
+            'siswa_id'      => 'required|exists:student,id',
+            'minggu_ke'     => 'required|integer|min:1|max:52',
+            'tanggal'       => 'required|date',
+        ]);
+
+        $classTermId = $request->class_term_id;
+        $studentId   = $request->siswa_id;
+        $week        = (int) $request->minggu_ke;
+        $date        = $request->tanggal;
+
+        $enrollment = StudentEnrollment::where('class_term_id', $classTermId)
+            ->where('student_id', $studentId)
+            ->firstOrFail();
+
+        $report = $enrollment->report
+            ?? Report::create(['student_enrollment_id' => $enrollment->id]);
+
+        // Block duplicate week for this student's report
+        $alreadyExists = ReportCounselingScore::whereHas(
+            'reportCounseling',
+            fn($q) => $q->where('report_id', $report->id)
+        )->where('week', $week)->exists();
+
+        if ($alreadyExists) {
+            return back()->withInput()
+                ->withErrors(['minggu_ke' => "Penilaian untuk minggu ke-{$week} sudah ada untuk siswa ini."]);
+        }
+
+        $counselingInput = $request->input('counseling.' . $classTermId, []);
+
+        foreach ($counselingInput as $assessmentId => $level) {
+            if (!$level) continue;
+
+            $assessment = CounselingAssessment::find($assessmentId);
+            if (!$assessment) continue;
+
+            $rc = ReportCounseling::firstOrCreate([
+                'report_id'     => $report->id,
+                'counseling_id' => $assessment->counseling_id,
+            ]);
+
+            ReportCounselingScore::create([
+                'report_counseling_id'     => $rc->id,
+                'counseling_assessment_id' => $assessmentId,
+                'level'                    => $level,
+                'week'                     => $week,
+                'date'                     => $date,
+            ]);
+        }
+
         return redirect()->route('guru.input_perkembangan')
-            ->with('success', 'Data perkembangan berhasil disimpan.');
+            ->with('success', "Perkembangan minggu ke-{$week} berhasil disimpan.");
     }
 
     public function dashboard()

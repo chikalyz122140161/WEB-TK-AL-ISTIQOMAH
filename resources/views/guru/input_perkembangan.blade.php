@@ -147,6 +147,17 @@
         </div>
     @endif
 
+    @if ($errors->any())
+        <div style="background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.25);color:#b91c1c;padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:13px;">
+            <strong>Terdapat kesalahan:</strong>
+            <ul style="margin:6px 0 0 16px;padding:0;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('guru.store_input_perkembangan') }}">
         @csrf
 
@@ -184,14 +195,19 @@
 
                     <div class="field-group">
                         <label class="field-label" for="minggu_ke">Minggu Ke *</label>
-                        <input class="field-control" type="number" id="minggu_ke" name="minggu_ke"
-                               min="1" max="52" placeholder="Contoh: 12" required>
+                        <input class="field-control @error('minggu_ke') is-invalid @enderror"
+                               type="number" id="minggu_ke" name="minggu_ke"
+                               min="1" max="52" placeholder="Contoh: 12"
+                               value="{{ old('minggu_ke') }}" required>
+                        @error('minggu_ke')
+                            <span style="color:#b91c1c;font-size:11px;margin-top:2px;">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="field-group">
                         <label class="field-label" for="tanggal">Tanggal *</label>
                         <input class="field-control" type="date" id="tanggal" name="tanggal"
-                               value="{{ date('Y-m-d') }}" required>
+                               value="{{ old('tanggal', date('Y-m-d')) }}" required>
                     </div>
                 </div>
             </div>
