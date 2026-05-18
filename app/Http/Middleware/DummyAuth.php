@@ -13,9 +13,14 @@ class DummyAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Check if user has dummy session
-        if (!session('dummy_role')) {
+        if (!auth()->check()) {
             return redirect()->route('login')->withErrors(['email' => 'Silakan login terlebih dahulu.']);
+        }
+
+        if (auth()->user()->status !== 'active') {
+            auth()->logout();
+            $request->session()->invalidate();
+            return redirect()->route('login')->withErrors(['email' => 'Akun Anda tidak aktif. Hubungi admin.']);
         }
 
         return $next($request);

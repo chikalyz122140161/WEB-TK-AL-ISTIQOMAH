@@ -741,17 +741,17 @@
                 <div class="demo-credentials">
                     <p class="demo-title">Demo Login:</p>
                     <div class="demo-list">
-                        <div class="demo-item" onclick="fillCredentials('admin@mail.com')">
+                        <div class="demo-item" onclick="fillCredentials('admin@tkalistiqomah.sch.id')">
                             <span class="demo-role admin">Admin</span>
-                            <span class="demo-email">admin@mail.com</span>
+                            <span class="demo-email">admin@tkalistiqomah.sch.id</span>
                         </div>
-                        <div class="demo-item" onclick="fillCredentials('guru@mail.com')">
+                        <div class="demo-item" onclick="fillCredentials('reita.wigianti@tkalistiqomah.sch.id')">
                             <span class="demo-role guru">Guru</span>
-                            <span class="demo-email">guru@mail.com</span>
+                            <span class="demo-email">reita.wigianti@tkalistiqomah.sch.id</span>
                         </div>
-                        <div class="demo-item" onclick="fillCredentials('ortu@mail.com')">
+                        <div class="demo-item" onclick="fillCredentials('ortu1@tkalistiqomah.sch.id')">
                             <span class="demo-role ortu">Ortu</span>
-                            <span class="demo-email">ortu@mail.com</span>
+                            <span class="demo-email">ortu1@tkalistiqomah.sch.id</span>
                         </div>
                     </div>
                     <p class="demo-password">Password: <strong>password</strong></p>

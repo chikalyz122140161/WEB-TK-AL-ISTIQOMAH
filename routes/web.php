@@ -22,11 +22,12 @@ Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pend
 Route::get('/pendaftaran/success', [PendaftaranController::class, 'success'])->name('pendaftaran.success');
 Route::get('/pendaftaran/cek-status', [PendaftaranController::class, 'cekStatus'])->name('pendaftaran.cek-status');
 
-// DASHBOARD (butuh login dengan dummy auth) 
-Route::middleware('dummy.auth')->group(function () {
-    // ═══════════════════════════════════════════════════════
-    // ADMIN ROUTES
-    // ═══════════════════════════════════════════════════════
+// DASHBOARD (butuh login + role check)
+
+// ═══════════════════════════════════════════════════════
+// ADMIN ROUTES
+// ═══════════════════════════════════════════════════════
+Route::middleware(['dummy.auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     
     // Admin - Kelola Pengguna
@@ -122,9 +123,12 @@ Route::middleware('dummy.auth')->group(function () {
         ->where('filename', '.*\\.sql')
         ->name('admin.backup.delete');
 
-    // ═══════════════════════════════════════════════════════
-    // GURU ROUTES
-    // ═══════════════════════════════════════════════════════
+});
+
+// ═══════════════════════════════════════════════════════
+// GURU ROUTES
+// ═══════════════════════════════════════════════════════
+Route::middleware(['dummy.auth', 'role:guru'])->group(function () {
     Route::get('/guru/dashboard', [GuruController::class, 'dashboard'])->name('guru.dashboard');
 
     // Guru - Administrasi: Kehadiran
@@ -176,21 +180,23 @@ Route::middleware('dummy.auth')->group(function () {
     Route::delete('/guru/rapot/{id}', [GuruController::class, 'rapotDestroy'])->name('guru.rapot.destroy');
     Route::get('/guru/rapot/{classTermId}/siswa/{studentId}', [GuruController::class, 'rapotSiswaForm'])->name('guru.rapot.siswa.form');
     Route::post('/guru/rapot/{classTermId}/siswa/{studentId}', [GuruController::class, 'rapotSiswaSave'])->name('guru.rapot.siswa.save');
+});
 
-    // ═══════════════════════════════════════════════════════
-    // ORANG TUA ROUTES
-    // ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
+// ORANG TUA ROUTES
+// ═══════════════════════════════════════════════════════
+Route::middleware(['dummy.auth', 'role:orangtua'])->group(function () {
     // Administrasi
     Route::get('/orangtua/dashboard', [OrangTuaController::class, 'dashboard'])->name('orangtua.dashboard');
     Route::get('/orangtua/presensi', [OrangTuaController::class, 'presensi'])->name('orangtua.presensi');
     Route::get('/orangtua/laporan', [OrangTuaController::class, 'laporan'])->name('orangtua.laporan');
     Route::get('/orangtua/laporan/{id}', [OrangTuaController::class, 'laporanDetail'])->name('orangtua.laporan.detail');
-    
+
     // Rapot Semester
     Route::get('/orangtua/rapot', [OrangTuaController::class, 'rapot'])->name('orangtua.rapot');
     Route::get('/orangtua/rapot/{id}', [OrangTuaController::class, 'rapotDetail'])->name('orangtua.rapot.detail');
     Route::get('/orangtua/rapot/{id}/download', [OrangTuaController::class, 'rapotDownload'])->name('orangtua.rapot.download');
-    
+
     // Jadwal (dengan sub-fitur)
     Route::get('/orangtua/jadwal', [OrangTuaController::class, 'jadwal'])->name('orangtua.jadwal');
     Route::get('/orangtua/jadwal/pembelajaran', [OrangTuaController::class, 'jadwalPembelajaran'])->name('orangtua.jadwal.pembelajaran');
