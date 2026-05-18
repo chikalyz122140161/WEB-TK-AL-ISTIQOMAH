@@ -111,7 +111,7 @@ class AdminController extends Controller
     {
         $request->validate([
             'nama'                  => 'required|string|max:255',
-            'email'                 => 'required|email|unique:users,email',
+            'email'                 => 'required|email|unique:user,email',
             'role'                  => 'required|in:admin,guru,orangtua',
             'password'              => 'required|min:6|confirmed',
             'siswa_id'              => 'nullable|exists:students,id',

@@ -1197,10 +1197,20 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M5.25 9a6.75 6.75 0 0 1 13.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 0 1-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 1 1-7.48 0 24.585 24.585 0 0 1-4.831-1.244.75.75 0 0 1-.298-1.205A8.217 8.217 0 0 0 5.25 9.75V9Zm4.502 8.9a2.25 2.25 0 1 0 4.496 0 25.057 25.057 0 0 1-4.496 0Z" clip-rule="evenodd"/></svg>
                         <span class="notif-dot"></span>
                     </button>
-                    <div class="header-avatar">{{ strtoupper(substr($userName ?? 'P', 0, 1)) }}</div>
+                    <div class="header-avatar">{{ strtoupper(substr(auth()->user()->name ?? 'P', 0, 1)) }}</div>
                     <div class="header-account">
-                        <div class="header-account__name">{{ $userName ?? 'Pengguna' }}</div>
-                        <div class="header-account__role">{{ $userRole ?? 'Guru' }}</div>
+                        <div class="header-account__name">{{ auth()->user()->name ?? 'Pengguna' }}</div>
+                        <div class="header-account__role">
+                            @php
+                                $roleLabel = match(auth()->user()->role ?? '') {
+                                    'admin'    => 'Admin',
+                                    'guru'     => 'Guru',
+                                    'orangtua' => 'Orang Tua',
+                                    default    => ucfirst(auth()->user()->role ?? ''),
+                                };
+                            @endphp
+                            {{ $roleLabel }}
+                        </div>
                     </div>
                     <a href="{{ url('/logout') }}" class="sidebar__logout" title="Logout">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>

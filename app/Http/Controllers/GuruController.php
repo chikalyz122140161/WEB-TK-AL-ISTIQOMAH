@@ -814,7 +814,7 @@ class GuruController extends Controller
     public function dashboard()
     {
         $data = [
-            'userName'         => 'Guru',
+            'userName'         => auth()->user()->name,
             'totalSiswa'       => Student::count(),
             'konselingBulanIni' => 15,
             'pengajuanJadwal'  => 3,
