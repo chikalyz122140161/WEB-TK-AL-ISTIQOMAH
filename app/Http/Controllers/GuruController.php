@@ -20,6 +20,9 @@ use App\Models\ReportCounseling;
 use App\Models\ReportCounselingScore;
 use App\Models\ExtracurricularAssessment;
 use App\Models\CounselingAssessment;
+use App\Models\ChatRoom;
+use App\Models\ChatMessage;
+use Illuminate\Support\Str;
 
 class GuruController extends Controller
 {
@@ -243,48 +246,110 @@ class GuruController extends Controller
 
     public function chat(Request $request)
     {
-        $kontak = [
-            ['id' => 1, 'nama' => 'Ibu Siti',    'anak' => 'Ahmad Fauzi',   'kelas' => 'TK A', 'preview' => 'Terima kasih Bu...'],
-            ['id' => 2, 'nama' => 'Bapak Budi',  'anak' => 'Siti Nurhaliza','kelas' => 'TK A', 'preview' => 'Baik Bu, saya akan...'],
-            ['id' => 3, 'nama' => 'Ibu Dewi',    'anak' => 'Eko Prasetyo',  'kelas' => 'TK B', 'preview' => 'Kapan jadwal konseling...'],
-            ['id' => 4, 'nama' => 'Bapak Ahmad', 'anak' => 'Rina Sudanti',  'kelas' => 'TK B', 'preview' => 'Mohon informasi...'],
-        ];
+        $me     = auth()->user();
+        $roomId = $request->get('room');
 
-        $aktifId = (int) $request->get('kontak_id', 1);
-        $aktif   = collect($kontak)->firstWhere('id', $aktifId) ?? $kontak[0];
+        // All rooms for current user, sorted by latest message
+        $rooms = ChatRoom::with(['userA', 'userB', 'latestMessage'])
+            ->where('user_a_id', $me->id)
+            ->orWhere('user_b_id', $me->id)
+            ->get()
+            ->sortByDesc(fn($r) => optional($r->latestMessage)->created_at ?? $r->created_at)
+            ->values();
 
-        // Dummy pesan â€” nanti ganti dengan query database
-        $semuaPesan = [
-            1 => [
-                ['dari' => 'ortu', 'teks' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua', 'waktu' => '10:20'],
-                ['dari' => 'guru', 'teks' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua', 'waktu' => '10:25'],
-                ['dari' => 'ortu', 'teks' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt', 'waktu' => '10:40'],
-                ['dari' => 'guru', 'teks' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua', 'waktu' => '10:45'],
-                ['dari' => 'ortu', 'teks' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua', 'waktu' => '10:50'],
-            ],
-            2 => [
-                ['dari' => 'ortu', 'teks' => 'Selamat siang Bu, saya mau tanya perkembangan anak saya.', 'waktu' => '09:00'],
-                ['dari' => 'guru', 'teks' => 'Selamat siang Bapak Budi. Siti berkembang dengan baik minggu ini.', 'waktu' => '09:05'],
-            ],
-            3 => [
-                ['dari' => 'ortu', 'teks' => 'Bu, kapan jadwal konseling bulan ini?', 'waktu' => '11:00'],
-                ['dari' => 'guru', 'teks' => 'Jadwal konseling akan diumumkan minggu depan ya Bu Dewi.', 'waktu' => '11:10'],
-            ],
-            4 => [
-                ['dari' => 'ortu', 'teks' => 'Mohon informasi terkait perkembangan Rina bu.', 'waktu' => '08:30'],
-                ['dari' => 'guru', 'teks' => 'Baik Bapak Ahmad, saya akan kirimkan laporan lengkapnya segera.', 'waktu' => '08:45'],
-            ],
-        ];
+        $kontak = $rooms->map(function ($room) use ($me) {
+            $other  = $room->otherUser($me->id);
+            $latest = $room->latestMessage;
+            return [
+                'room_id' => $room->id,
+                'nama'    => $other?->name ?? '-',
+                'initial' => strtoupper(mb_substr($other?->name ?? '?', 0, 1)),
+                'sub'     => ucfirst($other?->role ?? 'orangtua'),
+                'preview' => $latest ? Str::limit($latest->message, 35) : 'Belum ada pesan',
+                'waktu'   => $latest ? $latest->created_at->format('H:i') : '',
+            ];
+        })->toArray();
 
-        $pesan = $semuaPesan[$aktifId] ?? [];
+        // Active room
+        $aktif   = null;
+        $aktifId = $roomId;
+        $pesan   = [];
 
-        return view('guru.chat', compact('kontak', 'aktif', 'aktifId', 'pesan'));
+        if ($roomId) {
+            $activeRoom = ChatRoom::with(['messages.sender', 'userA', 'userB'])->find($roomId);
+            if ($activeRoom) {
+                $other = $activeRoom->otherUser($me->id);
+                $aktif = [
+                    'room_id' => $activeRoom->id,
+                    'nama'    => $other?->name ?? '-',
+                    'initial' => strtoupper(mb_substr($other?->name ?? '?', 0, 1)),
+                    'sub'     => ucfirst($other?->role ?? 'orangtua'),
+                ];
+                $pesan = $activeRoom->messages->map(fn($msg) => [
+                    'is_mine' => $msg->sender_id === $me->id,
+                    'teks'    => $msg->message,
+                    'waktu'   => $msg->created_at->format('H:i'),
+                    'initial' => strtoupper(mb_substr($msg->sender?->name ?? '?', 0, 1)),
+                ])->toArray();
+            }
+        }
+
+        // All active users not yet in a room with current user
+        $existingPartners = ChatRoom::where('user_a_id', $me->id)->pluck('user_b_id')
+            ->merge(ChatRoom::where('user_b_id', $me->id)->pluck('user_a_id'));
+
+        $orangtua = \App\Models\User::where('id', '!=', $me->id)
+            ->whereNotIn('id', $existingPartners)
+            ->orderBy('name')
+            ->get()
+            ->map(fn($u) => [
+                'id'      => $u->id,
+                'nama'    => $u->name,
+                'initial' => strtoupper(mb_substr($u->name, 0, 1)),
+                'role'    => ucfirst($u->role ?? ''),
+            ])->toArray();
+
+        return view('guru.chat', compact('kontak', 'aktif', 'aktifId', 'pesan', 'orangtua'));
+    }
+
+    public function openOrCreateRoom(Request $request)
+    {
+        $request->validate(['target_user_id' => 'required|exists:user,id']);
+        $me       = auth()->id();
+        $targetId = $request->target_user_id;
+
+        $room = ChatRoom::where(function ($q) use ($me, $targetId) {
+            $q->where('user_a_id', $me)->where('user_b_id', $targetId);
+        })->orWhere(function ($q) use ($me, $targetId) {
+            $q->where('user_a_id', $targetId)->where('user_b_id', $me);
+        })->first();
+
+        if (!$room) {
+            $room = ChatRoom::create(['user_a_id' => $me, 'user_b_id' => $targetId]);
+        }
+
+        return redirect()->route('guru.chat', ['room' => $room->id]);
     }
 
     public function kirimChat(Request $request)
     {
-        // Dummy - redirect with success
-        return redirect()->route('guru.chat', ['kontak_id' => $request->kontak_id ?? 1]);
+        $request->validate([
+            'room_id' => 'required|exists:chat_room,id',
+            'pesan'   => 'required|string|max:2000',
+        ]);
+
+        $me = auth()->id();
+        $room = ChatRoom::where('id', $request->room_id)
+            ->where(fn($q) => $q->where('user_a_id', $me)->orWhere('user_b_id', $me))
+            ->firstOrFail();
+
+        ChatMessage::create([
+            'chat_room_id' => $room->id,
+            'sender_id'    => $me,
+            'message'      => $request->pesan,
+        ]);
+
+        return redirect()->route('guru.chat', ['room' => $room->id]);
     }
 
     /**

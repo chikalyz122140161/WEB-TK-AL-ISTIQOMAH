@@ -158,6 +158,7 @@ Route::middleware(['dummy.auth', 'role:guru'])->group(function () {
     Route::get('/guru/laporan-bk/{id}/edit', [GuruController::class, 'laporanBkEdit'])->name('guru.laporan_bk.edit');
     Route::put('/guru/laporan-bk/{id}', [GuruController::class, 'laporanBkUpdate'])->name('guru.laporan_bk.update');
     Route::get('/guru/chat', [GuruController::class, 'chat'])->name('guru.chat');
+    Route::post('/guru/chat/room', [GuruController::class, 'openOrCreateRoom'])->name('guru.open_chat_room');
     Route::post('/guru/chat', [GuruController::class, 'kirimChat'])->name('guru.kirim_chat');
     Route::get('/guru/jadwal-konseling', [GuruController::class, 'jadwalKonseling'])->name('guru.jadwal_konseling');
     Route::get('/guru/jadwal-konseling/buat/siswa', [GuruController::class, 'jadwalKonselingCreateSiswa'])->name('guru.jadwal_konseling.create_siswa');
