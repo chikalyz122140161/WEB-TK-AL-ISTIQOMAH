@@ -37,8 +37,9 @@
                 <label for="kelas">Kelas</label>
                 <select id="kelas" class="form-select">
                     <option value="">Semua Kelas</option>
-                    <option value="TK A">TK A</option>
-                    <option value="TK B">TK B</option>
+                    @foreach($kelasList as $kelasName)
+                        <option value="{{ $kelasName }}">Kelas {{ $kelasName }}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="filter-group">
@@ -53,7 +54,9 @@
                 <label for="status">Status</label>
                 <select id="status" class="form-select">
                     <option value="">Semua Status</option>
-                    <option value="aktif">Aktif</option>
+                    <option value="active">Aktif</option>
+                    <option value="pending">Pending</option>
+                    <option value="inactive">Nonaktif</option>
                 </select>
             </div>
         </div>
@@ -111,9 +114,10 @@
                         <td>
                             @php
                                 $statusClass = match($s['status']) {
-                                    'Pending' => 'warning',
-                                    'Aktif' => 'success',
-                                    default => 'secondary'
+                                    'Aktif'    => 'success',
+                                    'Pending'  => 'warning',
+                                    'Nonaktif' => 'danger',
+                                    default    => 'secondary'
                                 };
                             @endphp
                             <span class="badge badge--{{ $statusClass }}">{{ $s['status'] }}</span>
@@ -300,8 +304,13 @@
 }
 
 .badge--warning {
-    background: rgba(76, 175, 130, 0.15);
-    color: #3E2723;
+    background: #FFF176;
+    color: #5D4037;
+}
+
+.badge--danger {
+    background: #F0629220;
+    color: #d81b72;
 }
 
 /* Action Buttons */

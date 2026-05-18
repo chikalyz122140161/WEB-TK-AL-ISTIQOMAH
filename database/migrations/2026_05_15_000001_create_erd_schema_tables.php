@@ -95,7 +95,7 @@ return new class extends Migration {
             $t->string('password');
             $t->string('phone')->nullable();
             $t->enum('role', ['admin', 'guru', 'orangtua']);
-            $t->enum('status', ['pending', 'aktif', 'nonaktif'])->default('aktif');
+            $t->enum('status', ['active', 'pending', 'inactive'])->default('active');
             $t->boolean('isGraduate')->default(false);
             $t->string('remember_token', 100)->nullable();
             $t->timestamps();

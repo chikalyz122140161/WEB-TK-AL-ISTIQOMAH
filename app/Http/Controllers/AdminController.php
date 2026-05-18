@@ -198,6 +198,13 @@ class AdminController extends Controller
                 $activeEnrollment = $s->enrollments->where('status', 'aktif')->sortByDesc('created_at')->first();
                 $ct = $activeEnrollment?->classTerm;
 
+                $accountStatus = $s->user?->status ?? 'pending';
+                $statusMap = [
+                    'active'   => 'Aktif',
+                    'pending'  => 'Pending',
+                    'inactive' => 'Nonaktif',
+                ];
+
                 return [
                     'id'              => $s->id,
                     'nis'             => $s->nis ?? '-',
@@ -209,8 +216,8 @@ class AdminController extends Controller
                     'enrollment_id'   => $activeEnrollment?->id,
                     'jk'              => $s->gender,
                     'jk_raw'          => $s->gender,
-                    'status'          => 'Aktif',
-                    'status_raw'      => 'aktif',
+                    'status'          => $statusMap[$accountStatus] ?? ucfirst($accountStatus),
+                    'status_raw'      => $accountStatus,
                     'nama_ortu'       => $namaOrtu ?: '-',
                     'email_ortu'      => $s->user?->email ?? '-',
                 ];
@@ -225,7 +232,9 @@ class AdminController extends Controller
                 'label' => 'Kelas ' . ($ct->class?->name ?? '-') . ' — ' . ($ct->academicTerm?->academic_year ?? '-') . ' ' . ucfirst($ct->academicTerm?->semester ?? ''),
             ]);
 
-        return view('admin.siswa.index', compact('siswa', 'classTermOptions'));
+        $kelasList = Classroom::orderBy('name')->pluck('name');
+
+        return view('admin.siswa.index', compact('siswa', 'classTermOptions', 'kelasList'));
     }
 
     public function siswaUpdateClassTerm(Request $request, $id)
