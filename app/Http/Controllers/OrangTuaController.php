@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Student;
 use App\Models\Presence;
+use App\Models\Report;
+use App\Models\StudentEnrollment;
 
 class OrangTuaController extends Controller
 {
@@ -264,146 +266,118 @@ class OrangTuaController extends Controller
     
     public function rapot(Request $request)
     {
-        $student = $this->getStudentData();
+        $user    = auth()->user();
+        $student = Student::where('user_id', $user->id)->first();
 
-        $rapotList = [
-            [
-                'id' => 1,
-                'tahun_ajaran' => '2025/2026',
-                'semester' => 'Ganjil',
-                'kelas' => 'TK A',
-                'tanggal_terbit' => '20 Des 2025',
-            ],
-            [
-                'id' => 2,
-                'tahun_ajaran' => '2024/2025',
-                'semester' => 'Genap',
-                'kelas' => 'Kelompok Bermain',
-                'tanggal_terbit' => '15 Jun 2025',
-            ],
-            [
-                'id' => 3,
-                'tahun_ajaran' => '2024/2025',
-                'semester' => 'Ganjil',
-                'kelas' => 'Kelompok Bermain',
-                'tanggal_terbit' => '18 Des 2024',
-            ],
-        ];
+        $rapotList = [];
+
+        if ($student) {
+            $enrollments = StudentEnrollment::where('student_id', $student->id)
+                ->whereHas('report')
+                ->with([
+                    'classTerm.class',
+                    'classTerm.academicTerm',
+                    'report',
+                ])
+                ->get();
+
+            foreach ($enrollments as $enrollment) {
+                $ct  = $enrollment->classTerm;
+                $at  = $ct?->academicTerm;
+                $rapotList[] = [
+                    'id'             => $enrollment->report->id,
+                    'tahun_ajaran'   => $at?->academic_year ?? '-',
+                    'semester'       => ucfirst($at?->semester ?? '-'),
+                    'kelas'          => $ct?->class?->name ?? '-',
+                    'tanggal_terbit' => $enrollment->report->created_at->translatedFormat('d M Y'),
+                ];
+            }
+        }
 
         return view('orangtua.rapot', compact('student', 'rapotList'));
     }
     
     public function rapotDetail($id)
     {
-        // Dummy mata pelajaran (deskripsi + foto opsional) — sesuai input guru
-        $mataPelajaran = [
-            [
-                'id'        => 'mp1',
-                'nama'      => 'Nilai Agama & Moral',
-                'deskripsi' => 'Ahmad memahami nilai-nilai agama dengan baik. Ia selalu berdoa sebelum dan sesudah kegiatan serta menunjukkan sikap sopan santun kepada teman dan guru.',
-                'foto'      => null,
-            ],
-            [
-                'id'        => 'mp2',
-                'nama'      => 'Fisik & Motorik',
-                'deskripsi' => 'Perkembangan fisik dan motorik Ahmad sangat baik. Ia sangat aktif dalam kegiatan gerak tubuh, mampu berlari, melompat, dan menangkap bola dengan koordinasi yang baik.',
-                'foto'      => 'https://placehold.co/600x400/4CAF82/ffffff?text=Foto+Olahraga',
-            ],
-            [
-                'id'        => 'mp3',
-                'nama'      => 'Kognitif',
-                'deskripsi' => 'Ahmad mampu mengenali bentuk, warna, dan angka sederhana. Ia menunjukkan kemampuan berpikir logis yang sesuai dengan usianya.',
-                'foto'      => null,
-            ],
-            [
-                'id'        => 'mp4',
-                'nama'      => 'Bahasa',
-                'deskripsi' => 'Ahmad mulai berkembang dalam kemampuan berbahasa. Ia mampu berkomunikasi dengan teman-temannya, namun masih perlu latihan dalam mengungkapkan ide secara runtut.',
-                'foto'      => null,
-            ],
-            [
-                'id'        => 'mp5',
-                'nama'      => 'Sosial Emosional',
-                'deskripsi' => 'Ahmad menunjukkan kemampuan bersosialisasi yang baik. Ia senang bermain bersama teman, mampu berbagi, dan menunjukkan empati kepada temannya.',
-                'foto'      => null,
-            ],
-            [
-                'id'        => 'mp6',
-                'nama'      => 'Seni',
-                'deskripsi' => 'Ahmad memiliki bakat seni yang menonjol. Ia sangat antusias dalam kegiatan menggambar dan mewarnai, serta menunjukkan kreativitas yang tinggi.',
-                'foto'      => 'https://placehold.co/600x400/F59E0B/ffffff?text=Karya+Seni+Ahmad',
-            ],
-        ];
+        $report = Report::with([
+            'subjects.subject',
+            'subjects.images',
+            'extracurriculars.extracurricular',
+            'extracurriculars.scores.assessment',
+            'counselings.counseling',
+            'counselings.scores.assessment',
+            'studentEnrollment.student',
+            'studentEnrollment.classTerm.class',
+            'studentEnrollment.classTerm.academicTerm',
+        ])->findOrFail($id);
 
-        // Dummy ekstrakurikuler — group dengan poin penilaian level
-        $ekstrakurikuler = [
-            [
-                'id' => 'ek1', 'nama' => 'Menari',
-                'assessments' => [
-                    ['nama' => 'Kelenturan',       'level' => 'BSH'],
-                    ['nama' => 'Ekspresi',         'level' => 'BSB'],
-                    ['nama' => 'Hafalan Gerakan',  'level' => 'BSH'],
-                ],
-            ],
-            [
-                'id' => 'ek2', 'nama' => 'Mewarnai',
-                'assessments' => [
-                    ['nama' => 'Kerapian',          'level' => 'BSB'],
-                    ['nama' => 'Kreativitas Warna', 'level' => 'BSB'],
-                    ['nama' => 'Ketepatan Bidang',  'level' => 'BSH'],
-                ],
-            ],
-        ];
+        $enrollment = $report->studentEnrollment;
+        $student    = $enrollment->student;
+        $ct         = $enrollment->classTerm;
+        $at         = $ct?->academicTerm;
 
-        // Dummy konseling — diambil dari input perkembangan (aggregate / latest)
-        $konseling = [
-            [
-                'id' => 'con1', 'nama' => 'Perkembangan Sosial',
-                'assessments' => [
-                    ['nama' => 'Interaksi dengan teman', 'level' => 'BSH'],
-                    ['nama' => 'Kemampuan berbagi',      'level' => 'BSB'],
-                    ['nama' => 'Kepatuhan aturan',       'level' => 'BSH'],
-                ],
-            ],
-            [
-                'id' => 'con2', 'nama' => 'Perkembangan Emosi',
-                'assessments' => [
-                    ['nama' => 'Mengelola emosi',      'level' => 'BSH'],
-                    ['nama' => 'Empati terhadap teman','level' => 'MB'],
-                ],
-            ],
-            [
-                'id' => 'con3', 'nama' => 'Perkembangan Kognitif',
-                'assessments' => [
-                    ['nama' => 'Daya tangkap',         'level' => 'BSH'],
-                    ['nama' => 'Kreativitas berpikir', 'level' => 'BSB'],
-                ],
-            ],
+        // Mata Pelajaran
+        $mataPelajaran = $report->subjects->map(function ($rs) {
+            $img = $rs->images->first();
+            return [
+                'id'        => $rs->id,
+                'nama'      => $rs->subject->name ?? '-',
+                'deskripsi' => $rs->description ?? '',
+                'foto'      => $img ? asset('storage/' . $img->description) : null,
+                'foto_list' => $rs->images->map(fn($i) => asset('storage/' . $i->description))->toArray(),
+            ];
+        })->toArray();
+
+        // Ekstrakurikuler
+        $ekstrakurikuler = $report->extracurriculars->map(function ($re) {
+            return [
+                'id'          => $re->id,
+                'nama'        => $re->extracurricular->name ?? '-',
+                'assessments' => $re->scores->map(fn($s) => [
+                    'nama'  => $s->assessment->name ?? '-',
+                    'level' => $s->level,
+                ])->toArray(),
+            ];
+        })->toArray();
+
+        // Konseling / BK
+        $konseling = $report->counselings->map(function ($rc) {
+            $latestScores = $rc->scores
+                ->sortByDesc('date')
+                ->unique('counseling_assessment_id');
+            return [
+                'id'          => $rc->id,
+                'nama'        => $rc->counseling->name ?? '-',
+                'assessments' => $latestScores->map(fn($s) => [
+                    'nama'  => $s->assessment->name ?? '-',
+                    'level' => $s->level,
+                ])->values()->toArray(),
+            ];
+        })->toArray();
+
+        // Kehadiran dari tabel presence
+        $presences = Presence::where('student_class_id', $enrollment->id)->get();
+        $kehadiran = [
+            'hadir' => $presences->where('attendance', 'hadir')->count(),
+            'izin'  => $presences->where('attendance', 'izin')->count(),
+            'sakit' => $presences->where('attendance', 'sakit')->count(),
+            'alpa'  => $presences->where('attendance', 'alpa')->count(),
         ];
 
         $rapot = [
-            'id'             => $id,
-            'tahun_ajaran'   => '2025/2026',
-            'semester'       => 'Ganjil',
-            'kelas'          => 'TK A',
-            'tanggal_terbit' => '20 Desember 2025',
-            'status'         => 'Terbit',
+            'id'             => $report->id,
+            'tahun_ajaran'   => $at?->academic_year ?? '-',
+            'semester'       => ucfirst($at?->semester ?? '-'),
+            'kelas'          => $ct?->class?->name ?? '-',
+            'tanggal_terbit' => $report->created_at->translatedFormat('d F Y'),
             'siswa'          => [
-                'nama' => 'Ahmad Fauzi',
-                'nis'  => '20240001',
+                'nama' => $student->name ?? '-',
+                'nis'  => $student->nis  ?? '-',
             ],
-            'guru'             => 'Bu Siti, S.Pd',
-            'mata_pelajaran'   => $mataPelajaran,
-            'ekstrakurikuler'  => $ekstrakurikuler,
-            'konseling'        => $konseling,
-            'kehadiran'      => [
-                'hadir' => 78,
-                'izin'  => 3,
-                'sakit' => 2,
-                'alpa'  => 1,
-            ],
-            'catatan_guru'   => 'Ahmad menunjukkan perkembangan yang sangat membanggakan selama semester ini. Ia rajin, semangat belajar tinggi, dan memiliki interaksi sosial yang baik dengan teman-temannya.',
-            'rekomendasi'    => 'Diharapkan orang tua terus mendukung kebiasaan membaca dan bercerita di rumah untuk meningkatkan kemampuan bahasa. Pertahankan kegiatan olah raga dan seni yang Ahmad sukai.',
+            'mata_pelajaran'  => $mataPelajaran,
+            'ekstrakurikuler' => $ekstrakurikuler,
+            'konseling'       => $konseling,
+            'kehadiran'       => $kehadiran,
         ];
 
         return view('orangtua.rapot_detail', compact('rapot'));

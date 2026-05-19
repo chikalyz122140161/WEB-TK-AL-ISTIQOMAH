@@ -258,7 +258,14 @@
                 <div class="mapel-card__desc">
                     {{ $mp['deskripsi'] }}
                 </div>
-                @if (!empty($mp['foto']))
+                @if (!empty($mp['foto_list']) && count($mp['foto_list']) > 0)
+                    <div class="mapel-card__foto">
+                        <div class="mapel-card__foto-label">Lampiran Foto</div>
+                        @foreach($mp['foto_list'] as $fotoUrl)
+                            <img src="{{ $fotoUrl }}" alt="Foto {{ $mp['nama'] }}" style="margin-bottom:8px;">
+                        @endforeach
+                    </div>
+                @elseif (!empty($mp['foto']))
                     <div class="mapel-card__foto">
                         <div class="mapel-card__foto-label">Lampiran Foto</div>
                         <img src="{{ $mp['foto'] }}" alt="Foto {{ $mp['nama'] }}">
