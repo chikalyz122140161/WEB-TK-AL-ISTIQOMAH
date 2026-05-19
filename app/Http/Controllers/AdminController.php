@@ -101,7 +101,7 @@ class AdminController extends Controller
     
     public function penggunaCreate()
     {
-        $siswaOrphan = Student::whereNull('parent_id')
+        $siswaOrphan = Student::whereNull('user_id')
             ->orderBy('kelas')->orderBy('name')
             ->get(['id', 'name', 'kelas', 'nomor_induk', 'nama_ibu', 'nama_ayah']);
         return view('admin.pengguna.create', compact('siswaOrphan'));
@@ -114,7 +114,7 @@ class AdminController extends Controller
             'email'                 => 'required|email|unique:user,email',
             'role'                  => 'required|in:admin,guru,orangtua',
             'password'              => 'required|min:6|confirmed',
-            'siswa_id'              => 'nullable|exists:students,id',
+            'siswa_id'              => 'nullable|exists:student,id',
         ], [
             'email.unique'          => 'Email sudah digunakan.',
             'password.confirmed'    => 'Konfirmasi password tidak cocok.',
@@ -129,7 +129,7 @@ class AdminController extends Controller
         ]);
 
         if ($request->role === 'orangtua' && $request->filled('siswa_id')) {
-            Student::where('id', $request->siswa_id)->update(['parent_id' => $user->id]);
+            Student::where('id', $request->siswa_id)->update(['user_id' => $user->id]);
         }
 
         return redirect()->route('admin.pengguna.index')
@@ -148,13 +148,13 @@ class AdminController extends Controller
             'nomor_telepon' => $user->phone,
         ];
 
-        $siswaTerhubung = Student::where('parent_id', $user->id)->first(['id', 'name', 'kelas', 'nomor_induk', 'nama_ibu', 'nama_ayah']);
+        $siswaTerhubung = Student::where('user_id', $user->id)->first(['id', 'name', 'kelas', 'nomor_induk', 'nama_ibu', 'nama_ayah']);
 
         $siswaList = Student::where(function ($q) use ($user) {
-                $q->whereNull('parent_id')->orWhere('parent_id', $user->id);
+                $q->whereNull('user_id')->orWhere('user_id', $user->id);
             })
             ->orderBy('kelas')->orderBy('name')
-            ->get(['id', 'name', 'kelas', 'nomor_induk', 'nama_ibu', 'nama_ayah', 'parent_id']);
+            ->get(['id', 'name', 'kelas', 'nomor_induk', 'nama_ibu', 'nama_ayah', 'user_id']);
 
         return view('admin.pengguna.edit', compact('pengguna', 'siswaTerhubung', 'siswaList'));
     }
@@ -188,11 +188,11 @@ class AdminController extends Controller
         }
 
         // Lepas relasi siswa lama
-        Student::where('parent_id', $user->id)->update(['parent_id' => null]);
+        Student::where('user_id', $user->id)->update(['user_id' => null]);
 
         // Hubungkan siswa baru jika role orangtua dan siswa dipilih
         if ($request->input('role') === 'orangtua' && $request->filled('siswa_id')) {
-            Student::where('id', $request->input('siswa_id'))->update(['parent_id' => $user->id]);
+            Student::where('id', $request->input('siswa_id'))->update(['user_id' => $user->id]);
         }
 
         return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil diupdate!');

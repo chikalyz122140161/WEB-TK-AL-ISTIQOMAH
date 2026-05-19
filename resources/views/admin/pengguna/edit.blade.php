@@ -123,7 +123,7 @@
                                         @if($s->nomor_induk)
                                             <span class="combobox__item-nis">No. {{ $s->nomor_induk }}</span>
                                         @endif
-                                        @if($s->parent_id)
+                                        @if($s->user_id)
                                             <span class="combobox__item-badge">Terhubung</span>
                                         @endif
                                     </div>
