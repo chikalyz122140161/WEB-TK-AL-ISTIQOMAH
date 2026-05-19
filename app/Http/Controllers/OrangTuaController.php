@@ -441,9 +441,108 @@ class OrangTuaController extends Controller
     // BIMBINGAN KONSELING
     // ═══════════════════════════════════════════════════════
 
-    public function reportMingguan()
+    public function reportMingguan(Request $request)
     {
-        return view('orangtua.report_mingguan');
+        $user    = auth()->user();
+        $student = Student::where('user_id', $user->id)
+            ->with(['enrollments.classTerm.class', 'enrollments.classTerm.academicTerm', 'enrollments.report'])
+            ->first();
+
+        if (!$student) {
+            return view('orangtua.report_mingguan', [
+                'student'     => null,
+                'classTerms'  => [],
+                'classTermId' => null,
+                'weeks'       => [],
+                'week'        => null,
+                'konseling'   => [],
+                'studentInfo' => null,
+            ]);
+        }
+
+        // Build class terms dari enrollment yang punya report
+        $classTerms = $student->enrollments
+            ->filter(fn($e) => $e->report !== null)
+            ->map(function ($e) {
+                $ct = $e->classTerm;
+                $at = $ct?->academicTerm;
+                return [
+                    'id'    => $ct->id,
+                    'label' => ($ct->class?->name ?? '-') . ' — ' . ($at?->academic_year ?? '') . ' ' . ucfirst($at?->semester ?? ''),
+                    'kelas' => $ct->class?->name ?? '-',
+                    'semester' => ucfirst($at?->semester ?? ''),
+                    'tahun_ajaran' => $at?->academic_year ?? '-',
+                    'report_id' => $e->report->id,
+                ];
+            })->values()->toArray();
+
+        if (empty($classTerms)) {
+            return view('orangtua.report_mingguan', [
+                'student'     => $student,
+                'classTerms'  => [],
+                'classTermId' => null,
+                'weeks'       => [],
+                'week'        => null,
+                'konseling'   => [],
+                'studentInfo' => null,
+            ]);
+        }
+
+        $classTermId = $request->input('class_term_id', $classTerms[0]['id']);
+        $activeCt    = collect($classTerms)->firstWhere('id', $classTermId) ?? $classTerms[0];
+        $classTermId = $activeCt['id'];
+        $reportId    = $activeCt['report_id'];
+
+        // Ambil minggu yang tersedia dari report_counseling_score
+        $weeks = \DB::table('report_counseling_score as rcs')
+            ->join('report_counseling as rc', 'rc.id', '=', 'rcs.report_counseling_id')
+            ->where('rc.report_id', $reportId)
+            ->whereNull('rcs.deleted_at')
+            ->whereNull('rc.deleted_at')
+            ->whereNotNull('rcs.week')
+            ->where('rcs.week', '>', 0)
+            ->distinct()
+            ->orderBy('rcs.week')
+            ->pluck('rcs.week')
+            ->toArray();
+
+        $week = (int) $request->input('week', end($weeks) ?: 1);
+        if (!in_array($week, $weeks) && !empty($weeks)) {
+            $week = end($weeks);
+        }
+
+        // Ambil data konseling beserta scores untuk minggu terpilih
+        $reportCounselings = \App\Models\ReportCounseling::with([
+                'counseling.assessments',
+                'scores' => fn($q) => $q->where('week', $week)->whereNull('deleted_at'),
+                'scores.assessment',
+            ])
+            ->where('report_id', $reportId)
+            ->whereNull('deleted_at')
+            ->get();
+
+        $konseling = $reportCounselings->map(function ($rc) {
+            $scoreMap = $rc->scores->keyBy('counseling_assessment_id');
+            return [
+                'nama'        => $rc->counseling->name ?? '-',
+                'assessments' => ($rc->counseling->assessments ?? collect())->map(fn($a) => [
+                    'nama'  => $a->name,
+                    'level' => $scoreMap[$a->id]->level ?? '-',
+                ])->toArray(),
+            ];
+        })->toArray();
+
+        $studentInfo = [
+            'nama'         => $student->name,
+            'nis'          => $student->nis ?? '-',
+            'kelas'        => $activeCt['kelas'],
+            'semester'     => $activeCt['semester'] . ' ' . $activeCt['tahun_ajaran'],
+            'tahun_ajaran' => $activeCt['tahun_ajaran'],
+        ];
+
+        return view('orangtua.report_mingguan', compact(
+            'student', 'classTerms', 'classTermId', 'weeks', 'week', 'konseling', 'studentInfo'
+        ));
     }
 
     public function grafik()

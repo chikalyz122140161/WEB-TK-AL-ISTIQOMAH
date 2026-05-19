@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\CounselingAssessment;
-use App\Models\ExtracurricularAssessment;
 use App\Models\Report;
 use App\Models\ReportCounseling;
 use App\Models\ReportCounselingScore;
@@ -21,7 +19,6 @@ class RapotSeeder extends Seeder
 {
     private array $levels = ['BB', 'MB', 'BSH', 'BSB'];
 
-    // Deskripsi template per mata pelajaran, diindex per level kecakapan siswa
     private array $descTemplates = [
         'Nilai Agama & Moral' => [
             'high'   => '{nama} memahami nilai-nilai agama dengan baik. Ia selalu berdoa sebelum dan sesudah kegiatan serta menunjukkan sikap sopan santun kepada teman dan guru.',
@@ -55,30 +52,29 @@ class RapotSeeder extends Seeder
         ],
     ];
 
+    private array $targetNames = [
+        'ALVARO ATHAYA ARIYUN',
+        'M. RAFFA ALFATIH AFRIYADI',
+        'MAHENDRA ANDRIAN',
+        'YUKI MAHARANI',
+        'ABIL ALTAIR ERDHAFEN',
+        'AKSYAHRA VYANTA HUMAIRA MECCA',
+        'AISYAH PUTRI INAYAH',
+        'ATHALLA MAHER',
+        'ANDHANU RHADITYA',
+        'NAUFAL RAMADHAN',
+        'NAYLA NANDA PUTRI',
+        'RENATA ARSY SUSILO',
+    ];
+
     public function run(): void
     {
-        $subjects      = Subject::all()->keyBy('name');
-        $extracurriculars = Extracurricular::with('assessments')->get();
-        $counselings   = Counseling::with('assessments')->get();
+        // Bersihkan data rapot lama untuk siswa target agar bisa re-seed
+        $this->cleanOldReports();
 
-        // Ambil enrollments ganjil 2025/2026 — 4 siswa per kelas (A, B1, B2)
-        $targetNames = [
-            // Kelas A
-            'ALVARO ATHAYA ARIYUN',
-            'M. RAFFA ALFATIH AFRIYADI',
-            'MAHENDRA ANDRIAN',
-            'YUKI MAHARANI',
-            // Kelas B1
-            'ABIL ALTAIR ERDHAFEN',
-            'AKSYAHRA VYANTA HUMAIRA MECCA',
-            'AISYAH PUTRI INAYAH',
-            'ATHALLA MAHER',
-            // Kelas B2
-            'ANDHANU RHADITYA',
-            'NAUFAL RAMADHAN',
-            'NAYLA NANDA PUTRI',
-            'RENATA ARSY SUSILO',
-        ];
+        $subjects         = Subject::all()->keyBy('name');
+        $extracurriculars = Extracurricular::with('assessments')->get();
+        $counselings      = Counseling::with('assessments')->get();
 
         $enrollments = StudentEnrollment::with([
                 'student',
@@ -86,31 +82,27 @@ class RapotSeeder extends Seeder
                 'classTerm.extracurriculars',
             ])
             ->whereHas('classTerm.academicTerm', fn($q) => $q->where('semester', 'ganjil'))
-            ->whereHas('student', fn($q) => $q->whereIn('name', $targetNames))
+            ->whereHas('student', fn($q) => $q->whereIn('name', $this->targetNames))
             ->whereDoesntHave('report')
             ->get();
 
         foreach ($enrollments as $enrollment) {
             $student = $enrollment->student;
             $nama    = ucwords(strtolower($student->name));
-
-            // Pilih "level kecakapan" pseudo-random tapi deterministik per siswa
-            $seed   = crc32($student->name);
-            $high   = ($seed % 3 === 0) ? 'high' : (($seed % 3 === 1) ? 'medium' : 'high');
+            $seed    = abs(crc32($student->name));
+            $quality = ($seed % 3 === 0) ? 'high' : (($seed % 3 === 1) ? 'medium' : 'high');
 
             $report = Report::create([
                 'student_enrollment_id' => $enrollment->id,
             ]);
-
-            // Buat created_at mundur ke Desember 2025 agar terlihat "sudah terbit"
             $report->created_at = Carbon::create(2025, 12, 20, 8, 0, 0);
             $report->save();
 
-            // ── Mata Pelajaran ─────────────────────────────────
+            // ── Mata Pelajaran ──────────────────────────────────
             foreach ($subjects as $subjectName => $subject) {
                 $template = $this->descTemplates[$subjectName] ?? null;
                 $desc = $template
-                    ? str_replace('{nama}', $nama, $template[$high])
+                    ? str_replace('{nama}', $nama, $template[$quality])
                     : "{$nama} menunjukkan perkembangan yang baik dalam {$subjectName}.";
 
                 ReportSubject::create([
@@ -120,45 +112,88 @@ class RapotSeeder extends Seeder
                 ]);
             }
 
-            // ── Ekstrakurikuler (2 dari 3, variatif per siswa) ─
+            // ── Ekstrakurikuler (2 dari yang ada) ───────────────
             $ekList = $extracurriculars->shuffle()->take(2);
             foreach ($ekList as $ek) {
                 $re = ReportExtracurricular::create([
-                    'report_id'           => $report->id,
-                    'extracurricular_id'  => $ek->id,
+                    'report_id'          => $report->id,
+                    'extracurricular_id' => $ek->id,
                 ]);
-
                 foreach ($ek->assessments as $i => $assessment) {
-                    $levelIndex = ($seed + $i) % 4;
                     ReportExtracurricularScore::create([
-                        'report_extracurricular_id'   => $re->id,
+                        'report_extracurricular_id'     => $re->id,
                         'extracurricular_assessment_id' => $assessment->id,
-                        'level' => $this->levels[$levelIndex],
+                        'level'                         => $this->levels[($seed + $i) % 4],
                     ]);
                 }
             }
 
-            // ── Konseling (semua kategori, 1 entry per assessment) ─
-            $baseDate = Carbon::create(2025, 12, 1);
-            foreach ($counselings as $ci => $counseling) {
+            // ── Konseling: 12 minggu per kategori ───────────────
+            // Level berkembang dari BB/MB di minggu awal ke BSH/BSB di minggu akhir
+            $baseDate   = Carbon::create(2025, 7, 7); // Minggu pertama semester ganjil
+            $startLevel = ($seed % 2);                // 0=BB atau 1=MB sebagai titik awal
+
+            foreach ($counselings as $counseling) {
                 $rc = ReportCounseling::create([
-                    'report_id'    => $report->id,
+                    'report_id'     => $report->id,
                     'counseling_id' => $counseling->id,
                 ]);
 
-                foreach ($counseling->assessments as $ai => $assessment) {
-                    $levelIndex = ($seed + $ci + $ai) % 4;
-                    ReportCounselingScore::create([
-                        'report_counseling_id'      => $rc->id,
-                        'counseling_assessment_id'  => $assessment->id,
-                        'level' => $this->levels[$levelIndex],
-                        'week'  => $ci + 1,
-                        'date'  => $baseDate->copy()->addWeeks($ci)->toDateString(),
-                    ]);
+                for ($week = 1; $week <= 12; $week++) {
+                    // Level meningkat seiring minggu: mulai dari startLevel, naik tiap ~3 minggu
+                    $progress = $startLevel + intval(($week - 1) / 3);
+
+                    foreach ($counseling->assessments as $ai => $assessment) {
+                        // Sedikit variasi antar assessment agar tidak semua sama
+                        $variation = ($seed + $ai) % 2 === 0 ? 0 : 0;
+                        $lvIdx     = min(3, $progress + $variation);
+
+                        ReportCounselingScore::create([
+                            'report_counseling_id'     => $rc->id,
+                            'counseling_assessment_id' => $assessment->id,
+                            'level'                    => $this->levels[$lvIdx],
+                            'week'                     => $week,
+                            'date'                     => $baseDate->copy()->addWeeks($week - 1)->toDateString(),
+                        ]);
+                    }
                 }
             }
         }
 
         $this->command->info('RapotSeeder: rapot berhasil dibuat untuk ' . $enrollments->count() . ' siswa.');
+    }
+
+    private function cleanOldReports(): void
+    {
+        $enrollmentIds = StudentEnrollment::whereHas(
+            'student', fn($q) => $q->whereIn('name', $this->targetNames)
+        )->pluck('id');
+
+        $reportIds = Report::whereIn('student_enrollment_id', $enrollmentIds)->pluck('id');
+
+        if ($reportIds->isEmpty()) return;
+
+        // Hapus dari tabel paling dalam dulu (hard delete agar bersih)
+        \DB::table('report_counseling_score')
+            ->whereIn('report_counseling_id', function ($q) use ($reportIds) {
+                $q->select('id')->from('report_counseling')->whereIn('report_id', $reportIds);
+            })->delete();
+
+        \DB::table('report_extracurricular_score')
+            ->whereIn('report_extracurricular_id', function ($q) use ($reportIds) {
+                $q->select('id')->from('report_extracurricular')->whereIn('report_id', $reportIds);
+            })->delete();
+
+        \DB::table('report_subject_image')
+            ->whereIn('report_subject_id', function ($q) use ($reportIds) {
+                $q->select('id')->from('report_subject')->whereIn('report_id', $reportIds);
+            })->delete();
+
+        \DB::table('report_counseling')->whereIn('report_id', $reportIds)->delete();
+        \DB::table('report_extracurricular')->whereIn('report_id', $reportIds)->delete();
+        \DB::table('report_subject')->whereIn('report_id', $reportIds)->delete();
+        \DB::table('report')->whereIn('id', $reportIds)->delete();
+
+        $this->command->info('RapotSeeder: membersihkan ' . $reportIds->count() . ' rapot lama.');
     }
 }
