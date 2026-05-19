@@ -207,6 +207,7 @@ Route::middleware(['dummy.auth', 'role:orangtua'])->group(function () {
     Route::get('/orangtua/report-mingguan', [OrangTuaController::class, 'reportMingguan'])->name('orangtua.report_mingguan');
     Route::get('/orangtua/grafik', [OrangTuaController::class, 'grafik'])->name('orangtua.grafik');
     Route::get('/orangtua/chat', [OrangTuaController::class, 'chat'])->name('orangtua.chat');
+    Route::post('/orangtua/chat/room', [OrangTuaController::class, 'openOrCreateRoom'])->name('orangtua.open_chat_room');
     Route::post('/orangtua/chat', [OrangTuaController::class, 'kirimChat'])->name('orangtua.kirim_chat');
     Route::get('/orangtua/konseling', [OrangTuaController::class, 'konseling'])->name('orangtua.konseling');
     Route::get('/orangtua/konseling/ajukan', [OrangTuaController::class, 'konselingAjukanForm'])->name('orangtua.konseling.ajukan_form');

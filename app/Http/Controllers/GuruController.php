@@ -328,6 +328,7 @@ class GuruController extends Controller
             ->merge(ChatRoom::where('user_b_id', $me->id)->pluck('user_a_id'));
 
         $orangtua = \App\Models\User::where('id', '!=', $me->id)
+            ->where('role', '!=', 'admin')
             ->whereNotIn('id', $existingPartners)
             ->orderBy('name')
             ->get()

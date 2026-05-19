@@ -10,6 +10,9 @@ use App\Models\StudentEnrollment;
 use App\Models\ClassSchedule;
 use App\Models\ActivitySchedule;
 use App\Models\ClassTerm;
+use App\Models\ChatRoom;
+use App\Models\ChatMessage;
+use Illuminate\Support\Str;
 
 class OrangTuaController extends Controller
 {
@@ -628,15 +631,115 @@ class OrangTuaController extends Controller
         return view('orangtua.grafik', compact('payload'));
     }
 
-    public function chat()
+    public function chat(Request $request)
     {
-        return view('orangtua.chat');
+        $me     = auth()->user();
+        $roomId = $request->get('room');
+
+        $rooms = ChatRoom::with(['userA', 'userB', 'latestMessage'])
+            ->where('user_a_id', $me->id)
+            ->orWhere('user_b_id', $me->id)
+            ->get()
+            ->sortByDesc(fn($r) => optional($r->latestMessage)->created_at ?? $r->created_at)
+            ->values();
+
+        $kontak = $rooms->map(function ($room) use ($me) {
+            $other  = $room->otherUser($me->id);
+            $latest = $room->latestMessage;
+            return [
+                'room_id' => $room->id,
+                'nama'    => $other?->name ?? '-',
+                'initial' => strtoupper(mb_substr($other?->name ?? '?', 0, 1)),
+                'sub'     => ucfirst($other?->role ?? ''),
+                'preview' => $latest ? Str::limit($latest->message, 35) : 'Belum ada pesan',
+                'waktu'   => $latest ? $latest->created_at->format('H:i') : '',
+            ];
+        })->toArray();
+
+        $aktif   = null;
+        $aktifId = $roomId;
+        $pesan   = [];
+
+        if ($roomId) {
+            $activeRoom = ChatRoom::with(['messages.sender', 'userA', 'userB'])->find($roomId);
+            if ($activeRoom) {
+                $other = $activeRoom->otherUser($me->id);
+                $aktif = [
+                    'room_id' => $activeRoom->id,
+                    'nama'    => $other?->name ?? '-',
+                    'initial' => strtoupper(mb_substr($other?->name ?? '?', 0, 1)),
+                    'sub'     => ucfirst($other?->role ?? ''),
+                ];
+                $pesan = $activeRoom->messages->map(fn($msg) => [
+                    'is_mine' => $msg->sender_id === $me->id,
+                    'teks'    => $msg->message,
+                    'waktu'   => $msg->created_at->format('H:i'),
+                    'initial' => strtoupper(mb_substr($msg->sender?->name ?? '?', 0, 1)),
+                ])->toArray();
+            }
+        }
+
+        // Untuk "chat baru": hanya guru dan admin, yang belum punya room dengan user ini
+        $existingPartners = ChatRoom::where('user_a_id', $me->id)->pluck('user_b_id')
+            ->merge(ChatRoom::where('user_b_id', $me->id)->pluck('user_a_id'));
+
+        $targetUsers = \App\Models\User::where('id', '!=', $me->id)
+            ->where('role', 'guru')
+            ->whereNotIn('id', $existingPartners)
+            ->orderBy('name')
+            ->get()
+            ->map(fn($u) => [
+                'id'      => $u->id,
+                'nama'    => $u->name,
+                'initial' => strtoupper(mb_substr($u->name, 0, 1)),
+                'role'    => ucfirst($u->role ?? ''),
+            ])->toArray();
+
+        return view('orangtua.chat', compact('kontak', 'aktif', 'aktifId', 'pesan', 'targetUsers'));
+    }
+
+    public function openOrCreateRoom(Request $request)
+    {
+        $request->validate(['target_user_id' => 'required|exists:user,id']);
+        $me       = auth()->id();
+        $targetId = $request->target_user_id;
+
+        // Pastikan target adalah guru atau admin
+        $target = \App\Models\User::where('role', 'guru')->find($targetId);
+        abort_if(!$target, 403);
+
+        $room = ChatRoom::where(function ($q) use ($me, $targetId) {
+            $q->where('user_a_id', $me)->where('user_b_id', $targetId);
+        })->orWhere(function ($q) use ($me, $targetId) {
+            $q->where('user_a_id', $targetId)->where('user_b_id', $me);
+        })->first();
+
+        if (!$room) {
+            $room = ChatRoom::create(['user_a_id' => $me, 'user_b_id' => $targetId]);
+        }
+
+        return redirect()->route('orangtua.chat', ['room' => $room->id]);
     }
 
     public function kirimChat(Request $request)
     {
-        // Hanya redirect dengan pesan sukses (dummy)
-        return redirect()->route('orangtua.chat')->with('success', 'Pesan berhasil dikirim!');
+        $request->validate([
+            'room_id' => 'required|exists:chat_room,id',
+            'pesan'   => 'required|string|max:2000',
+        ]);
+
+        $me   = auth()->id();
+        $room = ChatRoom::where('id', $request->room_id)
+            ->where(fn($q) => $q->where('user_a_id', $me)->orWhere('user_b_id', $me))
+            ->firstOrFail();
+
+        ChatMessage::create([
+            'chat_room_id' => $room->id,
+            'sender_id'    => $me,
+            'message'      => $request->pesan,
+        ]);
+
+        return redirect()->route('orangtua.chat', ['room' => $room->id]);
     }
 
     private function dummyJadwalKonselingOrangtua(): array
