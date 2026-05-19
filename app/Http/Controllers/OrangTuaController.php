@@ -12,6 +12,8 @@ use App\Models\ActivitySchedule;
 use App\Models\ClassTerm;
 use App\Models\ChatRoom;
 use App\Models\ChatMessage;
+use App\Models\PrivateCounselingSchedule;
+use App\Models\User;
 use Illuminate\Support\Str;
 
 class OrangTuaController extends Controller
@@ -742,152 +744,183 @@ class OrangTuaController extends Controller
         return redirect()->route('orangtua.chat', ['room' => $room->id]);
     }
 
-    private function dummyJadwalKonselingOrangtua(): array
-    {
-        // Gabungan jadwal untuk Ahmad Fauzi (anak dari Ibu Siti)
-        // sumber = 'guru' (jadwal dari guru) atau 'pengajuan' (diajukan orang tua)
-        return [
-            // ── Pending / Upcoming ────────────────────────────────────────────────
-            [
-                'id'           => 501,
-                'tanggal'      => '19 Mei 2026',
-                'tanggal_sort' => '2026-05-19',
-                'waktu'        => '10:00 - 11:00',
-                'guru'         => 'Bu Siti, S.Pd',
-                'topik'        => 'Tindak Lanjut Asesmen April',
-                'status'       => 'pending',
-                'sumber'       => 'guru',
-                'catatan'      => 'Akan membahas hasil asesmen bulan April.',
-            ],
-            [
-                'id'           => 502,
-                'tanggal'      => '27 Mar 2026',
-                'tanggal_sort' => '2026-03-27',
-                'waktu'        => '09:00 - 10:00',
-                'guru'         => 'Bu Siti, S.Pd',
-                'topik'        => 'Perkembangan Sosial-Emosional',
-                'status'       => 'disetujui',
-                'sumber'       => 'guru',
-                'catatan'      => 'Hadir tepat waktu di ruang BK lantai 2.',
-            ],
-            [
-                'id'           => 503,
-                'tanggal'      => '18 Mar 2026',
-                'tanggal_sort' => '2026-03-18',
-                'waktu'        => '14:00 - 15:00',
-                'guru'         => 'Bu Siti, S.Pd',
-                'topik'        => 'Konsultasi Perilaku & Kebiasaan',
-                'status'       => 'disetujui',
-                'sumber'       => 'pengajuan',
-                'catatan'      => '-',
-            ],
-            [
-                'id'           => 504,
-                'tanggal'      => '15 Mar 2026',
-                'tanggal_sort' => '2026-03-15',
-                'waktu'        => '11:00 - 12:00',
-                'guru'         => 'Bu Siti, S.Pd',
-                'topik'        => 'Diskusi Pola Belajar di Rumah',
-                'status'       => 'pending',
-                'sumber'       => 'pengajuan',
-                'catatan'      => '-',
-            ],
-            // ── Selesai ───────────────────────────────────────────────────────────
-            [
-                'id'           => 505,
-                'tanggal'      => '05 Mar 2026',
-                'tanggal_sort' => '2026-03-05',
-                'waktu'        => '09:00 - 10:00',
-                'guru'         => 'Bu Siti, S.Pd',
-                'topik'        => 'Perkembangan Sosial Semester Genap',
-                'status'       => 'selesai',
-                'sumber'       => 'guru',
-                'catatan'      => 'Ahmad menunjukkan perkembangan sosial yang sangat baik.',
-            ],
-            [
-                'id'           => 506,
-                'tanggal'      => '20 Feb 2026',
-                'tanggal_sort' => '2026-02-20',
-                'waktu'        => '13:00 - 14:00',
-                'guru'         => 'Bu Siti, S.Pd',
-                'topik'        => 'Kesulitan Konsentrasi Belajar di Rumah',
-                'status'       => 'selesai',
-                'sumber'       => 'pengajuan',
-                'catatan'      => 'Guru memberikan tips kegiatan belajar yang menyenangkan.',
-            ],
-            [
-                'id'           => 507,
-                'tanggal'      => '22 Jan 2026',
-                'tanggal_sort' => '2026-01-22',
-                'waktu'        => '10:00 - 11:00',
-                'guru'         => 'Bu Siti, S.Pd',
-                'topik'        => 'Tindak Lanjut Asesmen Semester Ganjil',
-                'status'       => 'selesai',
-                'sumber'       => 'guru',
-                'catatan'      => 'Ahmad telah menunjukkan perkembangan signifikan. Program dilanjutkan.',
-            ],
-            [
-                'id'           => 508,
-                'tanggal'      => '29 Nov 2024',
-                'tanggal_sort' => '2024-11-29',
-                'waktu'        => '10:00 - 11:00',
-                'guru'         => 'Bu Siti, S.Pd',
-                'topik'        => 'Perkembangan Sosial-Emosional',
-                'status'       => 'selesai',
-                'sumber'       => 'guru',
-                'catatan'      => 'Anak menunjukkan kemajuan dalam interaksi dengan teman sebaya.',
-            ],
-        ];
-    }
-
     public function konseling()
     {
-        $jadwalKonseling = $this->dummyJadwalKonselingOrangtua();
-        $student         = $this->getStudentData();
+        $user    = auth()->user();
+        $student = Student::where('user_id', $user->id)->first();
+
+        $jadwalKonseling = [];
+
+        if ($student) {
+            $schedules = PrivateCounselingSchedule::with('teacher')
+                ->where('student_id', $student->id)
+                ->orderByDesc('date')
+                ->get();
+
+            $jadwalKonseling = $schedules->map(function ($s) {
+                $start = substr($s->start_hour ?? '', 0, 5);
+                $end   = $s->end_hour ? ' - ' . substr($s->end_hour, 0, 5) : '';
+                return [
+                    'id'           => $s->id,
+                    'tanggal'      => $s->date?->translatedFormat('d M Y') ?? '-',
+                    'tanggal_sort' => $s->date?->format('Y-m-d') ?? '',
+                    'waktu'        => $start . $end,
+                    'guru'         => $s->teacher?->name ?? '-',
+                    'teacher_id'   => $s->teacher_id,
+                    'topik'        => $s->topic ?? '-',
+                    'status'       => $s->status,
+                ];
+            })->toArray();
+        }
 
         return view('orangtua.konseling', compact('jadwalKonseling', 'student'));
     }
 
+    private function getActiveClassTerm(Student $student): array
+    {
+        $enrollment = \App\Models\StudentEnrollment::where('student_id', $student->id)
+            ->whereHas('classTerm', fn($q) => $q->where('isPass', false))
+            ->with(['classTerm.class', 'classTerm.academicTerm'])
+            ->latest()
+            ->first();
+
+        $ct = $enrollment?->classTerm;
+        $at = $ct?->academicTerm;
+        $label = $ct
+            ? ($ct->class?->name ?? '-') . ' — ' . ($at?->academic_year ?? '') . ' ' . ucfirst($at?->semester ?? '')
+            : '-';
+
+        return ['id' => $ct?->id, 'label' => $label];
+    }
+
     public function konselingAjukanForm()
     {
-        $guruBK = [
-            ['id' => 1, 'nama' => 'Pak Ahmad - Konselor'],
-            ['id' => 2, 'nama' => 'Bu Siti, S.Pd - Guru Kelas TK A'],
-        ];
-        $student = $this->getStudentData();
+        $user    = auth()->user();
+        $student = Student::where('user_id', $user->id)->first();
 
-        return view('orangtua.konseling_ajukan', compact('guruBK', 'student'));
+        $activeCt = $student ? $this->getActiveClassTerm($student) : ['id' => null, 'label' => '-'];
+
+        $guruBK = User::where('role', 'guru')
+            ->orderBy('name')
+            ->get()
+            ->map(fn($u) => ['id' => $u->id, 'nama' => $u->name])
+            ->toArray();
+
+        return view('orangtua.konseling_ajukan', compact('guruBK', 'student', 'activeCt'));
     }
 
     public function ajukanKonseling(Request $request)
     {
+        $request->validate([
+            'teacher_id'    => 'required|exists:user,id',
+            'class_term_id' => 'nullable|exists:class_term,id',
+            'tanggal'       => 'required|date|after_or_equal:today',
+            'waktu_mulai'   => 'required',
+            'waktu_selesai' => 'required',
+            'topik'         => 'required|string|max:1000',
+        ]);
+
+        $user    = auth()->user();
+        $student = Student::where('user_id', $user->id)->firstOrFail();
+
+        abort_if(!User::where('role', 'guru')->where('id', $request->teacher_id)->exists(), 403);
+
+        PrivateCounselingSchedule::create([
+            'student_id'    => $student->id,
+            'teacher_id'    => $request->teacher_id,
+            'class_term_id' => $request->class_term_id,
+            'status'        => 'pending',
+            'date'          => $request->tanggal,
+            'start_hour'    => $request->waktu_mulai,
+            'end_hour'      => $request->waktu_selesai,
+            'topic'         => $request->topik,
+        ]);
+
         return redirect()->route('orangtua.konseling')->with('success', 'Konseling berhasil diajukan!');
     }
 
     public function konselingEditForm($id)
     {
-        $jadwal = collect($this->dummyJadwalKonselingOrangtua())->firstWhere('id', (int) $id);
+        $user    = auth()->user();
+        $student = Student::where('user_id', $user->id)->firstOrFail();
 
-        if (!$jadwal || $jadwal['sumber'] !== 'pengajuan' || $jadwal['status'] !== 'pending') {
-            return redirect()->route('orangtua.konseling')->with('error', 'Jadwal tidak dapat diedit.');
+        $schedule = PrivateCounselingSchedule::with('teacher')
+            ->where('id', $id)
+            ->where('student_id', $student->id)
+            ->firstOrFail();
+
+        if ($schedule->status !== 'pending') {
+            return redirect()->route('orangtua.konseling')->with('error', 'Jadwal tidak dapat diedit karena status bukan pending.');
         }
 
-        $guruBK = [
-            ['id' => 1, 'nama' => 'Pak Ahmad - Konselor'],
-            ['id' => 2, 'nama' => 'Bu Siti, S.Pd - Guru Kelas TK A'],
-        ];
-        $student = $this->getStudentData();
+        $start = substr($schedule->start_hour ?? '', 0, 5);
+        $end   = substr($schedule->end_hour ?? '', 0, 5);
 
-        return view('orangtua.konseling_edit', compact('jadwal', 'guruBK', 'student'));
+        $jadwal = [
+            'id'           => $schedule->id,
+            'tanggal_sort' => $schedule->date?->format('Y-m-d') ?? '',
+            'waktu'        => $start . ($end ? ' - ' . $end : ''),
+            'guru'         => $schedule->teacher?->name ?? '-',
+            'teacher_id'   => $schedule->teacher_id,
+            'topik'        => $schedule->topic ?? '',
+            'status'       => $schedule->status,
+        ];
+
+        $guruBK = User::where('role', 'guru')
+            ->orderBy('name')
+            ->get()
+            ->map(fn($u) => ['id' => $u->id, 'nama' => $u->name])
+            ->toArray();
+
+        $activeCt = $this->getActiveClassTerm($student);
+
+        return view('orangtua.konseling_edit', compact('jadwal', 'guruBK', 'student', 'activeCt'));
     }
 
     public function konselingUpdate(Request $request, $id)
     {
+        $request->validate([
+            'teacher_id'    => 'required|exists:user,id',
+            'tanggal'       => 'required|date|after_or_equal:today',
+            'waktu_mulai'   => 'required',
+            'waktu_selesai' => 'required',
+            'topik'         => 'required|string|max:1000',
+        ]);
+
+        $user    = auth()->user();
+        $student = Student::where('user_id', $user->id)->firstOrFail();
+
+        $schedule = PrivateCounselingSchedule::where('id', $id)
+            ->where('student_id', $student->id)
+            ->firstOrFail();
+
+        abort_if($schedule->status !== 'pending', 403, 'Jadwal tidak dapat diedit.');
+        abort_if(!User::where('role', 'guru')->where('id', $request->teacher_id)->exists(), 403);
+
+        $schedule->update([
+            'teacher_id' => $request->teacher_id,
+            'date'       => $request->tanggal,
+            'start_hour' => $request->waktu_mulai,
+            'end_hour'   => $request->waktu_selesai,
+            'topic'      => $request->topik,
+        ]);
+
         return redirect()->route('orangtua.konseling')->with('success', 'Pengajuan konseling berhasil diperbarui!');
     }
 
     public function konselingBatal($id)
     {
+        $user    = auth()->user();
+        $student = Student::where('user_id', $user->id)->firstOrFail();
+
+        $schedule = PrivateCounselingSchedule::where('id', $id)
+            ->where('student_id', $student->id)
+            ->firstOrFail();
+
+        abort_if($schedule->status !== 'pending', 403, 'Jadwal tidak dapat dibatalkan.');
+
+        $schedule->update(['status' => 'canceled']);
+
         return redirect()->route('orangtua.konseling')->with('success', 'Pengajuan konseling berhasil dibatalkan.');
     }
 }

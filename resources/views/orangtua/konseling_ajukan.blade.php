@@ -118,22 +118,23 @@
     <div class="form-grid">
         <div class="form-group">
             <label>Nama Anak</label>
-            <input type="text" value="{{ $student['nama'] ?? 'Ahmad Fauzi' }}" readonly>
+            <input type="text" value="{{ $student?->name ?? '-' }}" readonly>
         </div>
         <div class="form-group">
             <label>Kelas</label>
-            <input type="text" value="{{ $student['class'] ?? 'TK A' }}" readonly>
+            <input type="text" value="{{ $activeCt['label'] ?? '-' }}" readonly>
+            <input type="hidden" name="class_term_id" value="{{ $activeCt['id'] ?? '' }}">
         </div>
         <div class="form-group">
             <label>Pilih Tanggal <span class="req">*</span></label>
-            <input type="date" name="tanggal" required min="{{ date('Y-m-d') }}">
+            <input type="date" name="tanggal" required min="{{ date('Y-m-d') }}" value="{{ old('tanggal') }}">
         </div>
         <div class="form-group">
             <label>Guru BK <span class="req">*</span></label>
-            <select name="guru_id" required>
+            <select name="teacher_id" required>
                 <option value="" disabled selected>-- Pilih Guru BK --</option>
                 @foreach ($guruBK as $g)
-                    <option value="{{ $g['id'] }}">{{ $g['nama'] }}</option>
+                    <option value="{{ $g['id'] }}" {{ old('teacher_id') == $g['id'] ? 'selected' : '' }}>{{ $g['nama'] }}</option>
                 @endforeach
             </select>
         </div>

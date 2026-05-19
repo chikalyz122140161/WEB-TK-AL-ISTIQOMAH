@@ -147,7 +147,7 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Orang Tua</label>
+                        <label>Email Orang Tua</label>
                         <input type="text" value="{{ $jadwal['orang_tua'] }}" disabled>
                     </div>
                     <div class="form-group">

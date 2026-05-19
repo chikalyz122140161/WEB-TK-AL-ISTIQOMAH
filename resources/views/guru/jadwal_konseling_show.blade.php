@@ -80,10 +80,10 @@
         letter-spacing: .3px;
         text-transform: uppercase;
     }
-    .badge--disetujui { background: #ffedd5; color: #3E2723; }
+    .badge--approved  { background: #ffedd5; color: #3E2723; }
     .badge--pending   { background: #FFFDE7; color: #5D4037; border: 1px solid #3E272330; }
-    .badge--selesai   { background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%); color: #fff; }
-    .badge--tolak     { background: #F0629220; color: #d81b72; }
+    .badge--rejected  { background: #F0629220; color: #d81b72; }
+    .badge--canceled  { background: #f3f4f6; color: #6b7280; }
 
     .detail-actions {
         display: flex;
@@ -138,16 +138,6 @@
     .btn-tolak:hover, .btn-batalkan:hover { background: #e91e8c; }
 
     /* Modal */
-    .modal-overlay {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.4);
-        z-index: 200;
-        align-items: center;
-        justify-content: center;
-    }
-    .modal-overlay.open { display: flex; }
     .modal {
         background: #fff;
         border-radius: 12px;
@@ -258,14 +248,14 @@
             <div class="info-row">
                 <div class="info-row__label">Status</div>
                 <div class="info-row__value">
-                    @if ($jadwal['status'] === 'disetujui')
-                        <span class="badge badge--disetujui">Disetujui</span>
+                    @if ($jadwal['status'] === 'approved')
+                        <span class="badge badge--approved">Disetujui</span>
                     @elseif ($jadwal['status'] === 'pending')
                         <span class="badge badge--pending">Pending</span>
-                    @elseif ($jadwal['status'] === 'selesai')
-                        <span class="badge badge--selesai">Selesai</span>
+                    @elseif ($jadwal['status'] === 'rejected')
+                        <span class="badge badge--rejected">Ditolak</span>
                     @else
-                        <span class="badge badge--tolak">Ditolak</span>
+                        <span class="badge badge--canceled">Dibatalkan</span>
                     @endif
                 </div>
             </div>
@@ -282,17 +272,17 @@
                     Edit
                 </a>
                 @if ($jadwal['status'] === 'pending')
-                    <button class="btn-setuju" onclick="document.getElementById('modalSetuju').classList.add('open')">Setujui</button>
-                    <button class="btn-tolak" onclick="document.getElementById('modalTolak').classList.add('open')">Tolak</button>
-                @elseif ($jadwal['status'] === 'disetujui')
-                    <button class="btn-batalkan" onclick="document.getElementById('modalBatalkan').classList.add('open')">Batalkan</button>
+                    <button class="btn-setuju" onclick="document.getElementById('modalSetuju').classList.add('active')">Setujui</button>
+                    <button class="btn-tolak" onclick="document.getElementById('modalTolak').classList.add('active')">Tolak</button>
+                @elseif ($jadwal['status'] === 'approved')
+                    <button class="btn-batalkan" onclick="document.getElementById('modalBatalkan').classList.add('active')">Batalkan</button>
                 @endif
             </div>
         </div>
     </div>
 
     {{-- Modal Setujui --}}
-    <div class="modal-overlay" id="modalSetuju" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="modal-overlay" id="modalSetuju" onclick="if(event.target===this)this.classList.remove('active')">
         <div class="modal">
             <div class="modal__icon">✅</div>
             <div class="modal__title">Setujui Jadwal Konseling?</div>
@@ -302,13 +292,13 @@
                     @csrf
                     <button type="submit" class="btn-modal-confirm green" style="width:100%;">Ya, Setujui</button>
                 </form>
-                <button class="btn-modal-cancel" onclick="document.getElementById('modalSetuju').classList.remove('open')">Batal</button>
+                <button class="btn-modal-cancel" onclick="document.getElementById('modalSetuju').classList.remove('active')">Batal</button>
             </div>
         </div>
     </div>
 
     {{-- Modal Tolak --}}
-    <div class="modal-overlay" id="modalTolak" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="modal-overlay" id="modalTolak" onclick="if(event.target===this)this.classList.remove('active')">
         <div class="modal">
             <div class="modal__icon">❌</div>
             <div class="modal__title">Tolak Jadwal Konseling?</div>
@@ -318,13 +308,13 @@
                     @csrf
                     <button type="submit" class="btn-modal-confirm red" style="width:100%;">Ya, Tolak</button>
                 </form>
-                <button class="btn-modal-cancel" onclick="document.getElementById('modalTolak').classList.remove('open')">Batal</button>
+                <button class="btn-modal-cancel" onclick="document.getElementById('modalTolak').classList.remove('active')">Batal</button>
             </div>
         </div>
     </div>
 
     {{-- Modal Batalkan --}}
-    <div class="modal-overlay" id="modalBatalkan" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="modal-overlay" id="modalBatalkan" onclick="if(event.target===this)this.classList.remove('active')">
         <div class="modal">
             <div class="modal__icon">⚠️</div>
             <div class="modal__title">Batalkan Jadwal Konseling?</div>
@@ -334,7 +324,7 @@
                     @csrf
                     <button type="submit" class="btn-modal-confirm red" style="width:100%;">Ya, Batalkan</button>
                 </form>
-                <button class="btn-modal-cancel" onclick="document.getElementById('modalBatalkan').classList.remove('open')">Batal</button>
+                <button class="btn-modal-cancel" onclick="document.getElementById('modalBatalkan').classList.remove('active')">Batal</button>
             </div>
         </div>
     </div>

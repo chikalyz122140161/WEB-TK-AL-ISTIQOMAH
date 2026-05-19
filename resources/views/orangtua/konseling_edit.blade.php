@@ -123,25 +123,25 @@
     <div class="form-grid">
         <div class="form-group">
             <label>Nama Anak</label>
-            <input type="text" value="{{ $student['nama'] ?? 'Ahmad Fauzi' }}" readonly>
+            <input type="text" value="{{ $student?->name ?? '-' }}" readonly>
         </div>
         <div class="form-group">
             <label>Kelas</label>
-            <input type="text" value="{{ $student['class'] ?? 'TK A' }}" readonly>
+            <input type="text" value="{{ $activeCt['label'] ?? '-' }}" readonly>
         </div>
         <div class="form-group">
             <label>Pilih Tanggal <span class="req">*</span></label>
             <input type="date" name="tanggal" required
-                   value="{{ $jadwal['tanggal_sort'] ?? '' }}"
+                   value="{{ old('tanggal', $jadwal['tanggal_sort'] ?? '') }}"
                    min="{{ date('Y-m-d') }}">
         </div>
         <div class="form-group">
             <label>Guru BK <span class="req">*</span></label>
-            <select name="guru_id" required>
+            <select name="teacher_id" required>
                 <option value="" disabled>-- Pilih Guru BK --</option>
                 @foreach ($guruBK as $g)
                     <option value="{{ $g['id'] }}"
-                        {{ $jadwal['guru'] === $g['nama'] || str_contains($g['nama'], explode(',', $jadwal['guru'])[0]) ? 'selected' : '' }}>
+                        {{ old('teacher_id', $jadwal['teacher_id'] ?? '') == $g['id'] ? 'selected' : '' }}>
                         {{ $g['nama'] }}
                     </option>
                 @endforeach
@@ -149,15 +149,15 @@
         </div>
         <div class="form-group">
             <label>Jam Mulai <span class="req">*</span></label>
-            <input type="time" name="waktu_mulai" required value="{{ $wMulai }}">
+            <input type="time" name="waktu_mulai" required value="{{ old('waktu_mulai', $wMulai) }}">
         </div>
         <div class="form-group">
             <label>Jam Selesai <span class="req">*</span></label>
-            <input type="time" name="waktu_selesai" required value="{{ $wSelesai }}">
+            <input type="time" name="waktu_selesai" required value="{{ old('waktu_selesai', $wSelesai) }}">
         </div>
         <div class="form-group form-group--full">
             <label>Topik / Permasalahan yang Ingin Dibahas <span class="req">*</span></label>
-            <textarea name="topik" placeholder="Jelaskan topik atau permasalahan yang ingin dikonsultasikan..." required>{{ $jadwal['topik'] }}</textarea>
+            <textarea name="topik" placeholder="Jelaskan topik atau permasalahan yang ingin dikonsultasikan..." required>{{ old('topik', $jadwal['topik']) }}</textarea>
             <div class="form-hint">Deskripsikan secara singkat agar guru BK dapat mempersiapkan materi konseling.</div>
         </div>
     </div>

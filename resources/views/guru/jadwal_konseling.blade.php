@@ -97,10 +97,10 @@
         text-transform: uppercase;
         white-space: nowrap;
     }
-    .badge--disetujui { background: #ffedd5; color: #3E2723; }
+    .badge--approved  { background: #ffedd5; color: #3E2723; }
     .badge--pending   { background: #FFFDE7; color: #5D4037; border: 1px solid #3E272330; }
-    .badge--selesai   { background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%); color: #fff; }
-    .badge--tolak     { background: #F0629220; color: #d81b72; }
+    .badge--rejected  { background: #F0629220; color: #d81b72; }
+    .badge--canceled  { background: #f3f4f6; color: #6b7280; }
 
     /* ── Aksi links ───────────────────────────────────── */
     .aksi-links {
@@ -233,14 +233,14 @@
                     </td>
                     <td>{{ $row['topik'] }}</td>
                     <td>
-                        @if ($row['status'] === 'disetujui')
-                            <span class="badge badge--disetujui">Disetujui</span>
+                        @if ($row['status'] === 'approved')
+                            <span class="badge badge--approved">Disetujui</span>
                         @elseif ($row['status'] === 'pending')
                             <span class="badge badge--pending">Pending</span>
-                        @elseif ($row['status'] === 'selesai')
-                            <span class="badge badge--selesai">Selesai</span>
+                        @elseif ($row['status'] === 'rejected')
+                            <span class="badge badge--rejected">Ditolak</span>
                         @else
-                            <span class="badge badge--tolak">Ditolak</span>
+                            <span class="badge badge--canceled">Dibatalkan</span>
                         @endif
                     </td>
                     <td style="text-align:center;">
@@ -249,7 +249,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd"/></svg>
                                 Lihat
                             </a>
-                            @if ($row['status'] === 'disetujui')
+                            @if ($row['status'] === 'approved')
                                 <a href="{{ route('guru.jadwal_konseling.edit', $row['id']) }}" class="aksi-edit">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
                                     Edit
@@ -284,11 +284,6 @@
                                         Tolak
                                     </button>
                                 @endif
-                            @elseif ($row['status'] === 'selesai')
-                                <a href="{{ route('guru.jadwal_konseling.show', $row['id']) }}" class="aksi-catatan">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path fill-rule="evenodd" d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625ZM7.5 15a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 7.5 15Zm.75-6.75a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H8.25Z" clip-rule="evenodd"/><path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z"/></svg>
-                                    Catatan
-                                </a>
                             @endif
                         </div>
                     </td>

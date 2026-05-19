@@ -69,7 +69,7 @@ class GuruController extends Controller
             'tanggal_raw' => $s->date?->format('Y-m-d') ?? '',
             'tanggal_sort'=> $s->date?->format('Y-m-d') ?? '',
             'waktu'       => ($s->start_hour ?? '') . ' - ' . ($s->end_hour ?? ''),
-            'orang_tua'   => '-',
+            'orang_tua'   => $s->student?->user?->email ?? '-',
             'siswa'       => $siswa,
             'class_term'  => ($classTerm?->class?->name ?? '-') . ' — ' . $semLabel,
             'kelas'       => $classTerm?->class?->name ?? '-',
@@ -88,7 +88,7 @@ class GuruController extends Controller
         $bulanTahun = $request->get('bulan_tahun', date('Y-m'));
         [$tahunFilter, $bulan] = array_map('intval', explode('-', $bulanTahun));
 
-        $jadwal = PrivateCounselingSchedule::with(['student', 'classTerm.class', 'classTerm.academicTerm'])
+        $jadwal = PrivateCounselingSchedule::with(['student.user', 'classTerm.class', 'classTerm.academicTerm'])
             ->whereYear('date', $tahunFilter)
             ->whereMonth('date', $bulan)
             ->orderByDesc('date')
@@ -224,7 +224,7 @@ class GuruController extends Controller
 
     public function jadwalKonselingShow($id)
     {
-        $s = PrivateCounselingSchedule::with(['student', 'classTerm.class', 'classTerm.academicTerm'])
+        $s = PrivateCounselingSchedule::with(['student.user', 'classTerm.class', 'classTerm.academicTerm'])
             ->findOrFail($id);
         $jadwal = $this->scheduleToArray($s);
         return view('guru.jadwal_konseling_show', compact('jadwal'));
@@ -232,7 +232,7 @@ class GuruController extends Controller
 
     public function jadwalKonselingEdit($id)
     {
-        $s = PrivateCounselingSchedule::with(['student', 'classTerm.class', 'classTerm.academicTerm'])
+        $s = PrivateCounselingSchedule::with(['student.user', 'classTerm.class', 'classTerm.academicTerm'])
             ->findOrFail($id);
         $jadwal = $this->scheduleToArray($s);
         return view('guru.jadwal_konseling_edit', compact('jadwal'));
@@ -257,19 +257,19 @@ class GuruController extends Controller
 
     public function jadwalKonselingSetuju(Request $request, $id)
     {
-        PrivateCounselingSchedule::findOrFail($id)->update(['status' => 'disetujui']);
+        PrivateCounselingSchedule::findOrFail($id)->update(['status' => 'approved']);
         return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal konseling disetujui.');
     }
 
     public function jadwalKonselingTolak(Request $request, $id)
     {
-        PrivateCounselingSchedule::findOrFail($id)->update(['status' => 'tolak']);
+        PrivateCounselingSchedule::findOrFail($id)->update(['status' => 'rejected']);
         return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal konseling ditolak.');
     }
 
     public function jadwalKonselingBatalkan(Request $request, $id)
     {
-        PrivateCounselingSchedule::findOrFail($id)->delete();
+        PrivateCounselingSchedule::findOrFail($id)->update(['status' => 'canceled']);
         return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal konseling dibatalkan.');
     }
 

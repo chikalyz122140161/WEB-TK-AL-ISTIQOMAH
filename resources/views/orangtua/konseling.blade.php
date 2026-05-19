@@ -245,11 +245,7 @@
     .history-table th:nth-child(5),
     .history-table td:nth-child(5) { min-width: 90px; white-space: nowrap; }   /* Status */
     .history-table th:nth-child(6),
-    .history-table td:nth-child(6) { min-width: 80px; white-space: nowrap; }   /* Sumber */
-    .history-table th:nth-child(7),
-    .history-table td:nth-child(7) { min-width: 140px; }                       /* Catatan */
-    .history-table th:nth-child(8),
-    .history-table td:nth-child(8) { min-width: 130px; text-align: center; }   /* Aksi */
+    .history-table td:nth-child(6) { min-width: 130px; text-align: center; }   /* Aksi */
 
     /* Status Badge */
     .status-badge {
@@ -339,6 +335,20 @@
         </a>
     </div>
 
+    {{-- Flash Messages --}}
+    @if (session('success'))
+    <div style="background:rgba(76,175,130,0.12);border:1px solid rgba(76,175,130,0.3);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#2E8B60;display:flex;align-items:center;gap:10px;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
+        {{ session('success') }}
+    </div>
+    @endif
+    @if (session('error'))
+    <div style="background:#F0629220;border:1px solid #F0629240;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#d81b72;display:flex;align-items:center;gap:10px;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-.988-1.129c1.454-1.272 3.776-1.272 5.23 0 1.454 1.272 1.454 3.329 0 4.601-.42.368-.903.622-1.41.749V14.25a.75.75 0 0 1-1.5 0v-1.5a.75.75 0 0 1 .75-.75 1.5 1.5 0 0 0 1.183-2.417ZM12 18a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd"/></svg>
+        {{ session('error') }}
+    </div>
+    @endif
+
     {{-- Info Alert --}}
     <div class="info-alert">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd"/></svg>
@@ -367,8 +377,6 @@
                     <th>Guru BK</th>
                     <th>Topik</th>
                     <th>Status</th>
-                    <th>Sumber</th>
-                    <th>Catatan</th>
                     <th style="text-align:center;">Aksi</th>
                 </tr>
             </thead>
@@ -376,13 +384,12 @@
                 @forelse ($jadwalKonseling ?? [] as $jadwal)
                     @php
                         $statusMap = [
-                            'pending'   => ['cls' => 'pending',   'label' => 'Menunggu'],
-                            'disetujui' => ['cls' => 'approved',  'label' => 'Disetujui'],
-                            'selesai'   => ['cls' => 'completed', 'label' => 'Selesai'],
-                            'ditolak'   => ['cls' => 'cancelled', 'label' => 'Ditolak'],
+                            'pending'  => ['cls' => 'pending',   'label' => 'Menunggu'],
+                            'approved' => ['cls' => 'approved',  'label' => 'Disetujui'],
+                            'rejected' => ['cls' => 'cancelled', 'label' => 'Ditolak'],
+                            'canceled' => ['cls' => 'cancelled', 'label' => 'Dibatalkan'],
                         ];
                         $st = $statusMap[$jadwal['status']] ?? ['cls' => 'pending', 'label' => $jadwal['status']];
-                        $sumberLabel = $jadwal['sumber'] === 'guru' ? 'Dari Guru' : 'Pengajuan';
                     @endphp
                     <tr>
                         <td>{{ $jadwal['tanggal'] }}</td>
@@ -390,10 +397,8 @@
                         <td>{{ $jadwal['guru'] }}</td>
                         <td>{{ $jadwal['topik'] }}</td>
                         <td><span class="status-badge status-badge--{{ $st['cls'] }}">{{ $st['label'] }}</span></td>
-                        <td style="font-size:12px;color:#5D4037;">{{ $sumberLabel }}</td>
-                        <td style="font-size:12px;color:#5D4037;">{{ $jadwal['catatan'] ?: '—' }}</td>
                         <td style="text-align:center;">
-                            @if ($jadwal['sumber'] === 'pengajuan' && $jadwal['status'] === 'pending')
+                            @if ($jadwal['status'] === 'pending')
                             <div class="aksi-btns" style="justify-content:center;">
                                 <a href="{{ route('orangtua.konseling.edit', $jadwal['id']) }}" class="btn-edit">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z"/></svg>
@@ -414,7 +419,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" style="text-align:center;padding:30px;color:#9ca3af;font-style:italic;">
+                        <td colspan="6" style="text-align:center;padding:30px;color:#9ca3af;font-style:italic;">
                             Belum ada jadwal konseling.
                         </td>
                     </tr>
