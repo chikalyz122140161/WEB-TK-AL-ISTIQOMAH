@@ -7,6 +7,9 @@ use App\Models\Student;
 use App\Models\Presence;
 use App\Models\Report;
 use App\Models\StudentEnrollment;
+use App\Models\ClassSchedule;
+use App\Models\ActivitySchedule;
+use App\Models\ClassTerm;
 
 class OrangTuaController extends Controller
 {
@@ -159,104 +162,110 @@ class OrangTuaController extends Controller
     
     public function jadwal(Request $request)
     {
-        // Redirect ke halaman jadwal pembelajaran sebagai default
         return redirect()->route('orangtua.jadwal.pembelajaran');
     }
-    
+
+    private function getStudentClassTerms(): array
+    {
+        $user    = auth()->user();
+        $student = Student::where('user_id', $user->id)
+            ->with(['enrollments.classTerm.class', 'enrollments.classTerm.academicTerm'])
+            ->first();
+
+        if (!$student) return ['student' => null, 'classTerms' => []];
+
+        $classTerms = $student->enrollments->map(function ($e) {
+            $ct = $e->classTerm;
+            $at = $ct?->academicTerm;
+            return [
+                'id'    => $ct->id,
+                'label' => ($ct->class?->name ?? '-') . ' — ' . ($at?->academic_year ?? '') . ' ' . ucfirst($at?->semester ?? ''),
+                'kelas' => $ct->class?->name ?? '-',
+            ];
+        })->values()->toArray();
+
+        return ['student' => $student, 'classTerms' => $classTerms];
+    }
+
     public function jadwalPembelajaran(Request $request)
     {
-        $student = $this->getStudentData();
-        $kelas = 'TK A';
-        
-        // Jadwal pembelajaran harian (dummy data - bisa diganti dengan data dari database)
-        $jadwalPembelajaran = [
-            'Senin' => [
-                ['waktu' => '07:30 - 08:00', 'kegiatan' => 'Upacara & Senam Pagi', 'keterangan' => 'Lapangan'],
-                ['waktu' => '08:00 - 08:30', 'kegiatan' => 'Berdoa & Muroja\'ah', 'keterangan' => 'Kelas'],
-                ['waktu' => '08:30 - 09:30', 'kegiatan' => 'Kegiatan Inti 1', 'keterangan' => 'Tema: Keluargaku'],
-                ['waktu' => '09:30 - 10:00', 'kegiatan' => 'Istirahat & Snack', 'keterangan' => '-'],
-                ['waktu' => '10:00 - 11:00', 'kegiatan' => 'Kegiatan Inti 2', 'keterangan' => 'Mewarnai'],
-                ['waktu' => '11:00 - 11:30', 'kegiatan' => 'Pulang', 'keterangan' => '-'],
-            ],
-            'Selasa' => [
-                ['waktu' => '07:30 - 08:00', 'kegiatan' => 'Senam Pagi', 'keterangan' => 'Lapangan'],
-                ['waktu' => '08:00 - 08:30', 'kegiatan' => 'Berdoa & Muroja\'ah', 'keterangan' => 'Kelas'],
-                ['waktu' => '08:30 - 09:30', 'kegiatan' => 'Kegiatan Inti 1', 'keterangan' => 'Mengenal Angka'],
-                ['waktu' => '09:30 - 10:00', 'kegiatan' => 'Istirahat & Snack', 'keterangan' => '-'],
-                ['waktu' => '10:00 - 11:00', 'kegiatan' => 'Kegiatan Inti 2', 'keterangan' => 'Bermain Balok'],
-                ['waktu' => '11:00 - 11:30', 'kegiatan' => 'Pulang', 'keterangan' => '-'],
-            ],
-            'Rabu' => [
-                ['waktu' => '07:30 - 08:00', 'kegiatan' => 'Senam Pagi', 'keterangan' => 'Lapangan'],
-                ['waktu' => '08:00 - 08:30', 'kegiatan' => 'Berdoa & Muroja\'ah', 'keterangan' => 'Kelas'],
-                ['waktu' => '08:30 - 09:30', 'kegiatan' => 'Kegiatan Inti 1', 'keterangan' => 'Mengenal Huruf'],
-                ['waktu' => '09:30 - 10:00', 'kegiatan' => 'Istirahat & Snack', 'keterangan' => '-'],
-                ['waktu' => '10:00 - 11:00', 'kegiatan' => 'Kegiatan Inti 2', 'keterangan' => 'Prakarya'],
-                ['waktu' => '11:00 - 11:30', 'kegiatan' => 'Pulang', 'keterangan' => '-'],
-            ],
-            'Kamis' => [
-                ['waktu' => '07:30 - 08:00', 'kegiatan' => 'Senam Pagi', 'keterangan' => 'Lapangan'],
-                ['waktu' => '08:00 - 08:30', 'kegiatan' => 'Berdoa & Muroja\'ah', 'keterangan' => 'Kelas'],
-                ['waktu' => '08:30 - 09:30', 'kegiatan' => 'Kegiatan Inti 1', 'keterangan' => 'Seni & Musik'],
-                ['waktu' => '09:30 - 10:00', 'kegiatan' => 'Istirahat & Snack', 'keterangan' => '-'],
-                ['waktu' => '10:00 - 11:00', 'kegiatan' => 'Kegiatan Inti 2', 'keterangan' => 'Motorik Halus'],
-                ['waktu' => '11:00 - 11:30', 'kegiatan' => 'Pulang', 'keterangan' => '-'],
-            ],
-            'Jumat' => [
-                ['waktu' => '07:30 - 08:00', 'kegiatan' => 'Senam Pagi', 'keterangan' => 'Lapangan'],
-                ['waktu' => '08:00 - 08:30', 'kegiatan' => 'Berdoa & Sholat Dhuha', 'keterangan' => 'Mushola'],
-                ['waktu' => '08:30 - 09:30', 'kegiatan' => 'Kegiatan Inti', 'keterangan' => 'Praktik Ibadah'],
-                ['waktu' => '09:30 - 10:00', 'kegiatan' => 'Istirahat & Snack', 'keterangan' => '-'],
-                ['waktu' => '10:00 - 10:30', 'kegiatan' => 'Pulang', 'keterangan' => '-'],
-            ],
-        ];
-        
+        ['student' => $student, 'classTerms' => $classTerms] = $this->getStudentClassTerms();
+
+        $classTermId = $request->input('class_term_id', $classTerms[0]['id'] ?? null);
+        $activeCt    = collect($classTerms)->firstWhere('id', $classTermId) ?? ($classTerms[0] ?? null);
+        $classTermId = $activeCt['id'] ?? null;
+        $kelas       = $activeCt['kelas'] ?? '-';
+
+        $dayNames = [1=>'Senin',2=>'Selasa',3=>'Rabu',4=>'Kamis',5=>'Jumat',6=>'Sabtu',7=>'Minggu'];
+        $jadwalPembelajaran = [];
+
+        if ($classTermId) {
+            $schedules = ClassSchedule::where('class_term_id', $classTermId)
+                ->orderBy('day')->orderBy('start_hour')
+                ->get();
+
+            foreach ($schedules as $s) {
+                $day = $dayNames[$s->day] ?? "Hari {$s->day}";
+                $start = substr($s->start_hour ?? '', 0, 5);
+                $end   = $s->end_hour ? ' - ' . substr($s->end_hour, 0, 5) : '';
+                $jadwalPembelajaran[$day][] = [
+                    'waktu'      => $start . $end,
+                    'kegiatan'   => $s->name,
+                    'keterangan' => $s->description ?? '',
+                ];
+            }
+        }
+
         $activeTab = 'pembelajaran';
-        
-        return view('orangtua.jadwal', compact('jadwalPembelajaran', 'student', 'kelas', 'activeTab'));
+
+        return view('orangtua.jadwal', compact(
+            'jadwalPembelajaran', 'student', 'kelas', 'activeTab', 'classTerms', 'classTermId'
+        ));
     }
-    
+
     public function jadwalKegiatan(Request $request)
     {
-        $bulan = $request->input('bulan', now()->month);
-        $tahun = $request->input('tahun', now()->year);
+        ['student' => $student, 'classTerms' => $classTerms] = $this->getStudentClassTerms();
 
-        $student = $this->getStudentData();
+        $classTermId = $request->input('class_term_id', $classTerms[0]['id'] ?? null);
+        $activeCt    = collect($classTerms)->firstWhere('id', $classTermId) ?? ($classTerms[0] ?? null);
+        $classTermId = $activeCt['id'] ?? null;
 
-        $jadwalKegiatan = [
-            [
-                'nama' => 'Upacara Bendera',
-                'tanggal' => 'Senin, 16 Maret 2026',
-                'waktu' => '07:00 - 09:00',
-                'tempat' => 'Lapangan',
-                'kelas' => 'Semua Kelas',
-            ],
-            [
-                'nama' => 'Outing Class ke Kebun Binatang',
-                'tanggal' => 'Sabtu, 21 Maret 2026',
-                'waktu' => '08:00 - 12:00',
-                'tempat' => 'Kebun Binatang',
-                'kelas' => 'TK A & TK B',
-            ],
-            [
-                'nama' => 'Lomba Mewarnai',
-                'tanggal' => 'Kamis, 26 Maret 2026',
-                'waktu' => '09:00 - 11:00',
-                'tempat' => 'Aula TK',
-                'kelas' => 'TK A & TK B',
-            ],
-            [
-                'nama' => 'Pentas Seni Akhir Bulan',
-                'tanggal' => 'Sabtu, 28 Maret 2026',
-                'waktu' => '08:00 - 11:00',
-                'tempat' => 'Aula TK',
-                'kelas' => 'Semua Kelas',
-            ],
-        ];
-        
+        $bulan = (int) $request->input('bulan', now()->month);
+
+        // Tahun diambil dari academic year class term yang dipilih
+        $classTerm = $classTermId ? ClassTerm::with('academicTerm')->find($classTermId) : null;
+        $academicYear = $classTerm?->academicTerm?->academic_year ?? now()->year . '/' . (now()->year + 1);
+        [$yearStart, $yearEnd] = array_map('intval', explode('/', $academicYear) + [now()->year, now()->year + 1]);
+        $tahun = ($bulan >= 7) ? $yearStart : $yearEnd;
+
+        $jadwalKegiatan = [];
+
+        if ($classTermId) {
+            $activities = ActivitySchedule::where('class_term_id', $classTermId)
+                ->whereYear('date', $tahun)
+                ->whereMonth('date', $bulan)
+                ->orderBy('date')->orderBy('start_hour')
+                ->get();
+
+            foreach ($activities as $a) {
+                $start = substr($a->start_hour ?? '', 0, 5);
+                $end   = $a->end_hour ? ' - ' . substr($a->end_hour, 0, 5) : '';
+                $jadwalKegiatan[] = [
+                    'nama'        => $a->name,
+                    'tanggal'     => \Carbon\Carbon::parse($a->date)->translatedFormat('l, d F Y'),
+                    'waktu'       => $start . $end,
+                    'tempat'      => $a->location ?? '-',
+                    'deskripsi'   => $a->description ?? '',
+                ];
+            }
+        }
+
         $activeTab = 'kegiatan';
-        
-        return view('orangtua.jadwal', compact('jadwalKegiatan', 'student', 'bulan', 'tahun', 'activeTab'));
+
+        return view('orangtua.jadwal', compact(
+            'jadwalKegiatan', 'student', 'bulan', 'tahun', 'activeTab', 'classTerms', 'classTermId'
+        ));
     }
 
 

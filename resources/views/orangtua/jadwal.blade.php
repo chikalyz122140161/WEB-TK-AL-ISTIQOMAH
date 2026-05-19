@@ -363,13 +363,46 @@
 
 @section('content')
 
+    {{-- Class Term Selector --}}
+    @if(!empty($classTerms))
+    <form method="GET"
+          action="{{ ($activeTab ?? 'pembelajaran') == 'pembelajaran' ? route('orangtua.jadwal.pembelajaran') : route('orangtua.jadwal.kegiatan') }}"
+          class="filter-bar" style="margin-bottom:20px;">
+        <div class="filter-group">
+            <label>Pilih Kelas</label>
+            <select name="class_term_id" onchange="this.form.submit()">
+                @foreach($classTerms as $ct)
+                    <option value="{{ $ct['id'] }}" {{ $classTermId === $ct['id'] ? 'selected' : '' }}>
+                        {{ $ct['label'] }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        @if(($activeTab ?? '') === 'kegiatan')
+            <div class="filter-group">
+                <label>Pilih Bulan</label>
+                <select name="bulan">
+                    @for($m = 1; $m <= 12; $m++)
+                        <option value="{{ $m }}" {{ ($bulan ?? now()->month) == $m ? 'selected' : '' }}>
+                            {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
+                        </option>
+                    @endfor
+                </select>
+            </div>
+            <button type="submit" class="btn-tampilkan">TAMPILKAN</button>
+        @endif
+    </form>
+    @endif
+
     {{-- Tab Navigation --}}
     <div class="tab-navigation">
-        <a href="{{ route('orangtua.jadwal.pembelajaran') }}" class="tab-btn {{ ($activeTab ?? 'pembelajaran') == 'pembelajaran' ? 'active' : '' }}">
+        <a href="{{ route('orangtua.jadwal.pembelajaran', ['class_term_id' => $classTermId ?? '']) }}"
+           class="tab-btn {{ ($activeTab ?? 'pembelajaran') == 'pembelajaran' ? 'active' : '' }}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 4.8 11.06a.75.75 0 0 1-.231-1.337A60.65 60.65 0 0 1 11.7 2.805Z"/><path d="M13.06 15.473a48.45 48.45 0 0 1 7.666-3.282c.134 1.414.22 2.843.255 4.284a.75.75 0 0 1-.46.711 47.87 47.87 0 0 0-8.105 4.342.75.75 0 0 1-.833 0 47.87 47.87 0 0 0-8.104-4.342.75.75 0 0 1-.461-.71c.035-1.442.121-2.87.255-4.286a48.45 48.45 0 0 1 7.667 3.282.75.75 0 0 0 1.12 0Z"/></svg>
             Jadwal Pembelajaran
         </a>
-        <a href="{{ route('orangtua.jadwal.kegiatan') }}" class="tab-btn tab-btn--kegiatan {{ ($activeTab ?? '') == 'kegiatan' ? 'active' : '' }}">
+        <a href="{{ route('orangtua.jadwal.kegiatan', ['class_term_id' => $classTermId ?? '']) }}"
+           class="tab-btn tab-btn--kegiatan {{ ($activeTab ?? '') == 'kegiatan' ? 'active' : '' }}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/></svg>
             Jadwal Kegiatan
         </a>
@@ -384,7 +417,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 4.8 11.06a.75.75 0 0 1-.231-1.337A60.65 60.65 0 0 1 11.7 2.805Z"/></svg>
             </div>
             <div class="info-banner__content">
-                <h3>Jadwal Pembelajaran {{ $student['nama'] ?? 'Anak Anda' }}</h3>
+                <h3>Jadwal Pembelajaran {{ $student?->name ?? 'Anak Anda' }}</h3>
                 <p>Kelas: {{ $kelas ?? ($student['class'] ?? '-') }} | Tahun Ajaran 2025/2026</p>
             </div>
         </div>
@@ -427,34 +460,9 @@
 
     @else
         {{-- JADWAL KEGIATAN --}}
-        
-        {{-- Filter --}}
-        <form action="{{ route('orangtua.jadwal.kegiatan') }}" method="GET" class="filter-bar">
-            <div class="filter-group">
-                <label>Pilih Bulan</label>
-                <select name="bulan">
-                    @for ($m = 1; $m <= 12; $m++)
-                        <option value="{{ $m }}" {{ (request('bulan', now()->month) == $m) ? 'selected' : '' }}>
-                            {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
-                        </option>
-                    @endfor
-                </select>
-            </div>
-            <div class="filter-group">
-                <label>Pilih Tahun</label>
-                <select name="tahun">
-                    @for ($y = now()->year; $y >= now()->year - 2; $y--)
-                        <option value="{{ $y }}" {{ (request('tahun', now()->year) == $y) ? 'selected' : '' }}>{{ $y }}</option>
-                    @endfor
-                </select>
-            </div>
-            <button type="submit" class="btn-tampilkan">TAMPILKAN</button>
-        </form>
 
         @php
-            $bulan = request('bulan', now()->month);
-            $tahun = request('tahun', now()->year);
-            $namaBulan = \Carbon\Carbon::create()->month($bulan)->translatedFormat('F');
+            $namaBulan = \Carbon\Carbon::create()->month($bulan ?? now()->month)->translatedFormat('F');
         @endphp
 
         {{-- Info Banner --}}
@@ -492,10 +500,12 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd"/></svg>
                                     <span>{{ $kegiatan['tempat'] }}</span>
                                 </div>
+                                @if(!empty($kegiatan['deskripsi']))
                                 <div class="kegiatan-info__item">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z" clip-rule="evenodd"/></svg>
-                                    <span class="kegiatan-badge">{{ $kegiatan['kelas'] }}</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M4.848 2.771A49.144 49.144 0 0 1 12 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 0 1-3.476.383.39.39 0 0 0-.297.17l-2.755 4.133a.75.75 0 0 1-1.248 0l-2.755-4.133a.39.39 0 0 0-.297-.17 48.9 48.9 0 0 1-3.476-.384c-1.978-.29-3.348-2.024-3.348-3.97V6.741c0-1.946 1.37-3.68 3.348-3.97Z" clip-rule="evenodd"/></svg>
+                                    <span>{{ $kegiatan['deskripsi'] }}</span>
                                 </div>
+                                @endif
                             </div>
                         </div>
                     </div>
