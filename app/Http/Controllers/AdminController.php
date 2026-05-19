@@ -148,7 +148,15 @@ class AdminController extends Controller
             'nomor_telepon' => $user->phone,
         ];
 
-        return view('admin.pengguna.edit', compact('pengguna'));
+        $siswaTerhubung = Student::where('parent_id', $user->id)->first(['id', 'name', 'kelas', 'nomor_induk', 'nama_ibu', 'nama_ayah']);
+
+        $siswaList = Student::where(function ($q) use ($user) {
+                $q->whereNull('parent_id')->orWhere('parent_id', $user->id);
+            })
+            ->orderBy('kelas')->orderBy('name')
+            ->get(['id', 'name', 'kelas', 'nomor_induk', 'nama_ibu', 'nama_ayah', 'parent_id']);
+
+        return view('admin.pengguna.edit', compact('pengguna', 'siswaTerhubung', 'siswaList'));
     }
 
     public function penggunaUpdate(Request $request, $id)
@@ -156,10 +164,15 @@ class AdminController extends Controller
         $user = User::findOrFail($id);
 
         $request->validate([
-            'nama'   => 'required|string|max:255',
-            'email'  => 'required|email|unique:user,email,' . $id,
-            'role'   => 'required|in:admin,guru,orangtua',
-            'status' => 'nullable|in:active,pending,inactive',
+            'nama'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:user,email,' . $id,
+            'role'     => 'required|in:admin,guru,orangtua',
+            'status'   => 'nullable|in:active,pending,inactive',
+            'siswa_id' => 'nullable|exists:student,id',
+            'password' => 'nullable|min:6|confirmed',
+        ], [
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+            'password.min'       => 'Password minimal 6 karakter.',
         ]);
 
         $user->update([
@@ -172,6 +185,14 @@ class AdminController extends Controller
 
         if ($request->filled('password')) {
             $user->update(['password' => Hash::make($request->input('password'))]);
+        }
+
+        // Lepas relasi siswa lama
+        Student::where('parent_id', $user->id)->update(['parent_id' => null]);
+
+        // Hubungkan siswa baru jika role orangtua dan siswa dipilih
+        if ($request->input('role') === 'orangtua' && $request->filled('siswa_id')) {
+            Student::where('id', $request->input('siswa_id'))->update(['parent_id' => $user->id]);
         }
 
         return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil diupdate!');
