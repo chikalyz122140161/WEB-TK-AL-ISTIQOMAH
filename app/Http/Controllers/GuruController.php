@@ -1072,7 +1072,6 @@ class GuruController extends Controller
 
             $enrollments = StudentEnrollment::with('student')
                 ->where('class_term_id', $selectedClassTermId)
-                ->where('status', 'aktif')
                 ->orderBy('created_at')
                 ->get();
 

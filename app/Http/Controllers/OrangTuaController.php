@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Student;
+use App\Models\Presence;
 
 class OrangTuaController extends Controller
 {
@@ -22,74 +23,100 @@ class OrangTuaController extends Controller
         return view('orangtua.dashboard');
     }
 
-    private function dummyClassTermsForPresensi(): array
-    {
-        return [
-            [
-                'id'           => 'ct1',
-                'label'        => 'Kelas A1 — 2025/2026 Ganjil',
-                'tahun_ajaran' => '2025/2026',
-                'semester'     => 'Ganjil',
-                'kelas'        => 'A1',
-                'bulan_aktif'  => [7, 8, 9, 10, 11, 12], // Juli – Desember
-            ],
-            [
-                'id'           => 'ct2',
-                'label'        => 'Kelas A1 — 2024/2025 Genap',
-                'tahun_ajaran' => '2024/2025',
-                'semester'     => 'Genap',
-                'kelas'        => 'A1',
-                'bulan_aktif'  => [1, 2, 3, 4, 5, 6], // Januari – Juni
-            ],
-        ];
-    }
-
     public function presensi(Request $request)
     {
-        $student     = $this->getStudentData();
-        $classTerms  = $this->dummyClassTermsForPresensi();
+        $user    = auth()->user();
+        $student = Student::where('user_id', $user->id)
+            ->with(['enrollments.classTerm.class', 'enrollments.classTerm.academicTerm'])
+            ->first();
+
+        $empty = [
+            'student'        => ['id' => null, 'nama' => '-'],
+            'presensiData'   => ['hadir' => 0, 'izin' => 0, 'sakit' => 0, 'alpa' => 0],
+            'detailPresensi' => [],
+            'classTerms'     => [],
+            'classTermId'    => null,
+            'bulan'          => now()->month,
+            'activeCt'       => ['id' => null, 'label' => '-', 'tahun_ajaran' => '', 'bulan_aktif' => range(1, 12)],
+            'namaBulan'      => now()->translatedFormat('F'),
+            'tahun'          => now()->year,
+        ];
+
+        if (!$student) {
+            return view('orangtua.presensi', $empty);
+        }
+
+        $classTerms = $student->enrollments->map(function ($e) {
+            $ct  = $e->classTerm;
+            $at  = $ct?->academicTerm;
+            $sem = ucfirst($at?->semester ?? '');
+            $yr  = $at?->academic_year ?? '';
+            $months = range(1, 12);
+            return [
+                'id'            => $ct->id,
+                'enrollment_id' => $e->id,
+                'label'         => ($ct?->class?->name ?? '-') . ' — ' . $yr . ' ' . $sem,
+                'tahun_ajaran'  => $yr,
+                'semester'      => $sem,
+                'kelas'         => $ct?->class?->name ?? '-',
+                'bulan_aktif'   => $months,
+            ];
+        })->values()->toArray();
+
+        if (empty($classTerms)) {
+            return view('orangtua.presensi', array_merge($empty, ['student' => ['id' => $student->id, 'nama' => $student->name]]));
+        }
 
         $classTermId = $request->input('class_term_id', $classTerms[0]['id']);
-        $bulan       = (int) $request->input('bulan', now()->month);
+        $activeCt    = collect($classTerms)->firstWhere('id', $classTermId) ?? $classTerms[0];
+        $classTermId = $activeCt['id'];
+        $bulan       = (int) $request->input('bulan', $activeCt['bulan_aktif'][0] ?? now()->month);
 
-        $activeCt = collect($classTerms)->firstWhere('id', $classTermId) ?? $classTerms[0];
+        $enrollment = $student->enrollments->first(fn($e) => $e->classTerm?->id === $classTermId);
 
-        // Dummy presensi yang berbeda per (class_term, bulan) untuk simulasi
-        $seed = abs(crc32($classTermId . '_' . $bulan));
-        $hadir = 14 + ($seed % 6);
-        $izin  = ($seed >> 3) % 3;
-        $sakit = ($seed >> 5) % 3;
-        $alpa  = ($seed >> 7) % 2;
-        $presensiData = compact('hadir', 'izin', 'sakit', 'alpa');
-
-        // Detail presensi dummy untuk bulan terpilih
         $namaBulan = \Carbon\Carbon::create()->month($bulan)->translatedFormat('F');
-        $tahun     = explode('/', $activeCt['tahun_ajaran'])[$bulan <= 6 ? 1 : 0];
+        $tahun     = $this->yearForMonth($bulan, $activeCt['tahun_ajaran']);
 
+        $presences      = collect();
         $detailPresensi = [];
-        $statusPool = ['hadir', 'hadir', 'hadir', 'hadir', 'hadir', 'izin', 'sakit'];
-        $hariNames  = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
-        for ($i = 1; $i <= 8; $i++) {
-            $tgl = sprintf('%02d', $i + 1);
-            $idx = ($seed + $i) % count($statusPool);
-            $status = $statusPool[$idx];
-            $ket = match ($status) {
-                'izin'  => 'Acara keluarga',
-                'sakit' => 'Demam',
-                default => '-',
-            };
-            $detailPresensi[] = [
-                'tanggal'    => "$tgl " . substr($namaBulan, 0, 3) . " $tahun",
-                'hari'       => $hariNames[($i - 1) % 5],
-                'status'     => $status,
-                'keterangan' => $ket,
-            ];
+        $hadir = $izin = $sakit = $alpa = 0;
+
+        if ($enrollment) {
+            $presences = Presence::where('student_class_id', $enrollment->id)
+                ->whereYear('date', $tahun)
+                ->whereMonth('date', $bulan)
+                ->orderBy('date')
+                ->get();
+
+            $hadir = $presences->where('attendance', 'hadir')->count();
+            $izin  = $presences->where('attendance', 'izin')->count();
+            $sakit = $presences->where('attendance', 'sakit')->count();
+            $alpa  = $presences->where('attendance', 'alpa')->count();
+
+            $detailPresensi = $presences->map(fn($p) => [
+                'tanggal'    => $p->date->translatedFormat('d M Y'),
+                'hari'       => $p->date->translatedFormat('l'),
+                'status'     => $p->attendance,
+                'keterangan' => $p->description ?? '-',
+            ])->toArray();
         }
+
+        $presensiData = compact('hadir', 'izin', 'sakit', 'alpa');
+        $student      = ['id' => $student->id, 'nama' => $student->name];
 
         return view('orangtua.presensi', compact(
             'student', 'presensiData', 'detailPresensi',
             'classTerms', 'classTermId', 'bulan', 'activeCt', 'namaBulan', 'tahun'
         ));
+    }
+
+    private function yearForMonth(int $month, string $academicYear): int
+    {
+        $parts = explode('/', $academicYear);
+        if (count($parts) === 2) {
+            return $month >= 7 ? (int) $parts[0] : (int) $parts[1];
+        }
+        return now()->year;
     }
 
     public function laporan(Request $request)
