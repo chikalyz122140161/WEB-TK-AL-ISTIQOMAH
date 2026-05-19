@@ -141,8 +141,8 @@
     {{-- Filters --}}
     <div class="gp-filter-card">
         <div class="gp-field">
-            <label class="gp-field__label">Semester</label>
-            <select class="gp-select" id="selSemester"></select>
+            <label class="gp-field__label">Kelas / Semester</label>
+            <select class="gp-select" id="selClassTerm"></select>
         </div>
         <div class="gp-field">
             <label class="gp-field__label">Minggu</label>
@@ -213,67 +213,19 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-/* ── Dummy data ── */
-const PAYLOAD = {
-    student: { id: 'siswa_1', nama: 'Ahmad Fauzi', nis: '2024001' },
-    semesters: [
-        { id: 'sem1_2025', label: 'Semester 1 — 2025/2026' },
-        { id: 'sem2_2024', label: 'Semester 2 — 2024/2025' },
-    ],
-    weeks: [1,2,3,4,5,6,7,8,9,10,11,12],
-    konselings: [
-        {
-            id: 'kon1', nama: 'Nilai Agama & Moral',
-            assessments: [{id:'a1'},{id:'a2'},{id:'a3'}]
-        },
-        {
-            id: 'kon2', nama: 'Fisik Motorik',
-            assessments: [{id:'b1'},{id:'b2'},{id:'b3'}]
-        },
-        {
-            id: 'kon3', nama: 'Kognitif',
-            assessments: [{id:'c1'},{id:'c2'},{id:'c3'}]
-        },
-        {
-            id: 'kon4', nama: 'Bahasa',
-            assessments: [{id:'d1'},{id:'d2'},{id:'d3'}]
-        },
-        {
-            id: 'kon5', nama: 'Sosial Emosional',
-            assessments: [{id:'e1'},{id:'e2'},{id:'e3'}]
-        },
-        {
-            id: 'kon6', nama: 'Seni',
-            assessments: [{id:'f1'},{id:'f2'},{id:'f3'}]
-        },
-    ],
-    /* scores[sem][konseling_id][week] = avg score (1-4) */
-    scores: {
-        'sem1_2025': {
-            kon1: { 1:2, 2:2, 3:3, 4:3, 5:3, 6:3, 7:4, 8:4, 9:4, 10:4, 11:4, 12:4 },
-            kon2: { 1:2, 2:2, 3:2, 4:3, 5:3, 6:3, 7:3, 8:4, 9:4, 10:4, 11:4, 12:4 },
-            kon3: { 1:1, 2:2, 3:2, 4:2, 5:3, 6:3, 7:3, 8:3, 9:4, 10:4, 11:4, 12:4 },
-            kon4: { 1:2, 2:3, 3:3, 4:3, 5:3, 6:4, 7:4, 8:4, 9:4, 10:4, 11:4, 12:4 },
-            kon5: { 1:1, 2:1, 3:2, 4:2, 5:3, 6:3, 7:3, 8:3, 9:3, 10:4, 11:4, 12:4 },
-            kon6: { 1:2, 2:2, 3:2, 4:3, 5:3, 6:3, 7:3, 8:4, 9:4, 10:4, 11:4, 12:4 },
-        },
-        'sem2_2024': {
-            kon1: { 1:1, 2:2, 3:2, 4:2, 5:3, 6:3, 7:3, 8:3, 9:4, 10:4, 11:4, 12:4 },
-            kon2: { 1:1, 2:1, 3:2, 4:2, 5:2, 6:3, 7:3, 8:3, 9:3, 10:4, 11:4, 12:4 },
-            kon3: { 1:1, 2:1, 3:1, 4:2, 5:2, 6:2, 7:3, 8:3, 9:3, 10:3, 11:4, 12:4 },
-            kon4: { 1:2, 2:2, 3:2, 4:3, 5:3, 6:3, 7:3, 8:3, 9:4, 10:4, 11:4, 12:4 },
-            kon5: { 1:1, 2:2, 3:2, 4:2, 5:2, 6:3, 7:3, 8:3, 9:3, 10:3, 11:4, 12:4 },
-            kon6: { 1:2, 2:2, 3:3, 4:3, 5:3, 6:3, 7:4, 8:4, 9:4, 10:4, 11:4, 12:4 },
-        },
-    },
-};
+const PAYLOAD = @json($payload ?? null);
+
+if (!PAYLOAD) {
+    document.getElementById('chartGrid').innerHTML =
+        '<div class="gp-empty" style="display:block">Tidak ada data rapot yang tersedia.</div>';
+}
 
 const PALETTE = ['#3D9B72', '#F59E0B', '#3B82F6', '#EC4899', '#8B5CF6', '#06B6D4'];
 const LV      = {1:'BB', 2:'MB', 3:'BSH', 4:'BSB'};
 const TICK    = '#5D4037';
 const GRID    = 'rgba(62,39,35,0.06)';
 
-const selSemester  = document.getElementById('selSemester');
+const selCT        = document.getElementById('selClassTerm');
 const selMinggu    = document.getElementById('selMinggu');
 const selKonseling = document.getElementById('selKonseling');
 const chartGrid    = document.getElementById('chartGrid');
@@ -281,34 +233,46 @@ const emptyState   = document.getElementById('emptyState');
 
 let charts = [];
 
-/* ── Populate dropdowns ── */
-PAYLOAD.semesters.forEach(sm => {
-    const o = document.createElement('option');
-    o.value = sm.id; o.textContent = sm.label;
-    selSemester.appendChild(o);
-});
+if (PAYLOAD) {
+    /* ── Populate class term dropdown ── */
+    PAYLOAD.classTerms.forEach(ct => {
+        const o = document.createElement('option');
+        o.value = ct.id; o.textContent = ct.label;
+        selCT.appendChild(o);
+    });
 
-const optAll = document.createElement('option');
-optAll.value = '__all__'; optAll.textContent = 'Semua Minggu';
-selMinggu.appendChild(optAll);
-PAYLOAD.weeks.forEach(w => {
-    const o = document.createElement('option');
-    o.value = w; o.textContent = 'Minggu ' + w;
-    selMinggu.appendChild(o);
-});
+    /* ── Populate konseling dropdown ── */
+    const optAllK = document.createElement('option');
+    optAllK.value = '__all__'; optAllK.textContent = 'Semua Konseling';
+    selKonseling.appendChild(optAllK);
+    PAYLOAD.konselings.forEach(con => {
+        const o = document.createElement('option');
+        o.value = con.id; o.textContent = con.nama;
+        selKonseling.appendChild(o);
+    });
 
-const optAllK = document.createElement('option');
-optAllK.value = '__all__'; optAllK.textContent = 'Semua Konseling';
-selKonseling.appendChild(optAllK);
-PAYLOAD.konselings.forEach(con => {
-    const o = document.createElement('option');
-    o.value = con.id; o.textContent = con.nama;
-    selKonseling.appendChild(o);
-});
+    /* ── On class term change: rebuild weeks ── */
+    function rebuildWeeks(ctId) {
+        selMinggu.innerHTML = '';
+        const optAll = document.createElement('option');
+        optAll.value = '__all__'; optAll.textContent = 'Semua Minggu';
+        selMinggu.appendChild(optAll);
+        const weeks = PAYLOAD.weeks[ctId] || [];
+        weeks.forEach(w => {
+            const o = document.createElement('option');
+            o.value = w; o.textContent = 'Minggu ' + w;
+            selMinggu.appendChild(o);
+        });
+    }
 
-[selSemester, selMinggu, selKonseling].forEach(sel => {
-    sel.addEventListener('change', render);
-});
+    selCT.addEventListener('change', () => { rebuildWeeks(selCT.value); render(); });
+    selMinggu.addEventListener('change', render);
+    selKonseling.addEventListener('change', render);
+
+    /* Init weeks for first class term */
+    rebuildWeeks(PAYLOAD.classTerms[0]?.id || '');
+    render();
+}
 
 function hexA(hex, a) {
     const r = parseInt(hex.slice(1,3),16),
@@ -317,37 +281,38 @@ function hexA(hex, a) {
     return `rgba(${r},${g},${b},${a})`;
 }
 
-function destroyCharts() {
-    charts.forEach(c => c.destroy());
-    charts = [];
+function destroyCharts() { charts.forEach(c => c.destroy()); charts = []; }
+
+function currentWeeks() {
+    return PAYLOAD.weeks[selCT.value] || [];
 }
 
-function getKonselingsInScope(f) {
-    return f.kons === '__all__'
+function getKonselingsInScope() {
+    return selKonseling.value === '__all__'
         ? PAYLOAD.konselings
-        : PAYLOAD.konselings.filter(c => c.id === f.kons);
+        : PAYLOAD.konselings.filter(c => c.id === selKonseling.value);
 }
 
 function render() {
-    const f = {
-        sem:  selSemester.value,
-        week: selMinggu.value,
-        kons: selKonseling.value,
-    };
-    renderStats(f);
-    renderCharts(f);
+    if (!PAYLOAD) return;
+    const ctId  = selCT.value;
+    const week  = selMinggu.value;
+    const weeks = currentWeeks();
+
+    renderStats(ctId, week, weeks);
+    renderCharts(ctId, week, weeks);
 }
 
-function renderStats(f) {
-    const counts = {1:0, 2:0, 3:0, 4:0};
-    const konselings = getKonselingsInScope(f);
-    const weeks = f.week === '__all__' ? PAYLOAD.weeks : [parseInt(f.week, 10)];
-    const semScores = PAYLOAD.scores[f.sem] || {};
+function renderStats(ctId, week, weeks) {
+    const counts   = {1:0, 2:0, 3:0, 4:0};
+    const kons     = getKonselingsInScope();
+    const ctScores = PAYLOAD.scores[ctId] || {};
+    const wList    = week === '__all__' ? weeks : [parseInt(week, 10)];
 
-    konselings.forEach(con => {
-        weeks.forEach(w => {
-            const v = (semScores[con.id] || {})[w];
-            if (v !== undefined && counts[v] !== undefined) counts[v]++;
+    kons.forEach(con => {
+        wList.forEach(w => {
+            const v = Math.round((ctScores[con.id] || {})[w]);
+            if (v >= 1 && v <= 4) counts[v]++;
         });
     });
 
@@ -357,20 +322,24 @@ function renderStats(f) {
     document.getElementById('sBb').textContent  = counts[1];
 }
 
-function renderCharts(f) {
+function renderCharts(ctId, week, weeks) {
     destroyCharts();
     chartGrid.innerHTML = '';
 
-    const konselings = getKonselingsInScope(f);
-    chartGrid.classList.toggle('is-single', konselings.length === 1);
+    const kons = getKonselingsInScope();
+    chartGrid.classList.toggle('is-single', kons.length === 1);
 
-    if (konselings.length === 0) {
+    if (kons.length === 0 || weeks.length === 0) {
         emptyState.style.display = 'block';
         return;
     }
     emptyState.style.display = 'none';
 
-    konselings.forEach((con, idx) => {
+    const safeId = id => id.replace(/[^a-zA-Z0-9_-]/g, '_');
+    const ctScores = PAYLOAD.scores[ctId] || {};
+
+    kons.forEach((con, idx) => {
+        const sid  = safeId(con.id);
         const card = document.createElement('div');
         card.className = 'gp-chart-card';
         card.innerHTML = `
@@ -379,107 +348,97 @@ function renderCharts(f) {
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2.25 13.5a8.25 8.25 0 0 1 8.25-8.25.75.75 0 0 1 .75.75v6.75H18a.75.75 0 0 1 .75.75 8.25 8.25 0 0 1-16.5 0Z" clip-rule="evenodd"/><path fill-rule="evenodd" d="M12.75 3a.75.75 0 0 1 .75-.75 8.25 8.25 0 0 1 8.25 8.25.75.75 0 0 1-.75.75h-7.5a.75.75 0 0 1-.75-.75V3Z" clip-rule="evenodd"/></svg>
                     ${con.nama}
                 </h3>
-                <span class="gp-chart-card__count">${con.assessments.length} poin</span>
+                <span class="gp-chart-card__count">${con.assessments_count} poin</span>
             </div>
-            <p class="gp-chart-card__sub" id="sub-${con.id}">Skor perkembangan ${PAYLOAD.student.nama} — ${con.nama}</p>
-            <div class="gp-chart-wrap"><canvas id="canvas-${con.id}"></canvas></div>
-            <div class="gp-legend" id="legend-${con.id}"></div>
+            <p class="gp-chart-card__sub">Skor perkembangan ${PAYLOAD.student.nama} — ${con.nama}</p>
+            <div class="gp-chart-wrap"><canvas id="canvas-${sid}"></canvas></div>
+            <div class="gp-legend" id="legend-${sid}"></div>
         `;
         chartGrid.appendChild(card);
 
-        buildKonselingChart(con, f, idx);
-    });
-}
+        const labels = weeks.map(w => 'Mg' + w);
+        const data   = weeks.map(w => (ctScores[con.id] || {})[w] ?? null);
+        const color  = PALETTE[idx % PALETTE.length];
 
-function buildKonselingChart(con, f, idx) {
-    const labels    = PAYLOAD.weeks.map(w => 'Mg' + w);
-    const semScores = PAYLOAD.scores[f.sem] || {};
-    const data      = semScores[con.id] || {};
-    const arr       = PAYLOAD.weeks.map(w => data[w] ?? null);
-    const color     = PALETTE[idx % PALETTE.length];
+        document.getElementById('legend-' + sid).innerHTML = `
+            <span class="gp-legend__item">
+                <span class="gp-legend__dot" style="background:${color}"></span>
+                ${PAYLOAD.student.nama}
+            </span>`;
 
-    const datasets = [{
-        label: PAYLOAD.student.nama,
-        data: arr,
-        borderColor: color,
-        backgroundColor: hexA(color, 0.15),
-        borderWidth: 2.5,
-        pointRadius: 4,
-        tension: 0.35,
-        fill: true,
-    }];
+        const wIdx = week === '__all__' ? null : weeks.indexOf(parseInt(week, 10));
+        const ctx  = document.getElementById('canvas-' + sid).getContext('2d');
 
-    const legendEl = document.getElementById('legend-' + con.id);
-    legendEl.innerHTML = `
-        <span class="gp-legend__item">
-            <span class="gp-legend__dot" style="background:${color}"></span>
-            ${PAYLOAD.student.nama}
-        </span>
-    `;
-
-    const wIndex = f.week === '__all__' ? null : (PAYLOAD.weeks.indexOf(parseInt(f.week, 10)));
-    const ctx    = document.getElementById('canvas-' + con.id).getContext('2d');
-
-    const chart = new Chart(ctx, {
-        type: 'line',
-        data: { labels, datasets },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { mode: 'nearest', intersect: false },
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: '#fff',
-                    titleColor: '#3E2723',
-                    bodyColor: '#5D4037',
-                    borderColor: 'rgba(62,39,35,0.15)',
-                    borderWidth: 1,
-                    callbacks: {
-                        label: item => {
-                            const v = item.raw;
-                            if (v == null) return ' ' + item.dataset.label + ': -';
-                            const tag = LV[Math.round(v)] ? ` (${LV[Math.round(v)]})` : '';
-                            return ` ${item.dataset.label}: ${v}${tag}`;
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [{
+                    label: PAYLOAD.student.nama,
+                    data,
+                    borderColor: color,
+                    backgroundColor: hexA(color, 0.15),
+                    borderWidth: 2.5,
+                    pointRadius: 4,
+                    tension: 0.35,
+                    fill: true,
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'nearest', intersect: false },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#fff',
+                        titleColor: '#3E2723',
+                        bodyColor: '#5D4037',
+                        borderColor: 'rgba(62,39,35,0.15)',
+                        borderWidth: 1,
+                        callbacks: {
+                            label: item => {
+                                const v = item.raw;
+                                if (v == null) return ' ' + item.dataset.label + ': -';
+                                const tag = LV[Math.round(v)] ? ` (${LV[Math.round(v)]})` : '';
+                                return ` ${item.dataset.label}: ${v}${tag}`;
+                            }
                         }
-                    }
+                    },
+                },
+                scales: {
+                    y: {
+                        min: 1, max: 4,
+                        ticks: { stepSize: 1, callback: v => LV[v] || '', color: TICK, font: { size: 11 } },
+                        grid: { color: GRID },
+                    },
+                    x: {
+                        ticks: { color: TICK, font: { size: 11 } },
+                        grid: { display: false },
+                    },
                 },
             },
-            scales: {
-                y: {
-                    min: 1, max: 4,
-                    ticks: { stepSize: 1, callback: v => LV[v] || '', color: TICK, font: { size: 11 } },
-                    grid: { color: GRID },
-                },
-                x: {
-                    ticks: { color: TICK, font: { size: 11 } },
-                    grid: { display: false },
-                },
-            },
-        },
-        plugins: wIndex !== null ? [{
-            id: 'weekHighlight',
-            afterDraw(chart) {
-                const x   = chart.scales.x.getPixelForValue(wIndex);
-                const ctx = chart.ctx;
-                const top = chart.chartArea.top;
-                const bot = chart.chartArea.bottom;
-                ctx.save();
-                ctx.strokeStyle = 'rgba(220,38,38,0.5)';
-                ctx.lineWidth   = 1.5;
-                ctx.setLineDash([4, 3]);
-                ctx.beginPath();
-                ctx.moveTo(x, top);
-                ctx.lineTo(x, bot);
-                ctx.stroke();
-                ctx.restore();
-            }
-        }] : [],
+            plugins: wIdx !== null ? [{
+                id: 'weekHighlight',
+                afterDraw(chart) {
+                    const x   = chart.scales.x.getPixelForValue(wIdx);
+                    const c   = chart.ctx;
+                    const top = chart.chartArea.top;
+                    const bot = chart.chartArea.bottom;
+                    c.save();
+                    c.strokeStyle = 'rgba(220,38,38,0.5)';
+                    c.lineWidth   = 1.5;
+                    c.setLineDash([4, 3]);
+                    c.beginPath();
+                    c.moveTo(x, top);
+                    c.lineTo(x, bot);
+                    c.stroke();
+                    c.restore();
+                }
+            }] : [],
+        });
+        charts.push(chart);
     });
-    charts.push(chart);
 }
-
-// Init
-render();
 </script>
 @endpush

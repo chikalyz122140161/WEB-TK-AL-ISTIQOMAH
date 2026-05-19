@@ -547,73 +547,85 @@ class OrangTuaController extends Controller
 
     public function grafik()
     {
-        $W      = 12;
-        $levels = ['BB', 'MB', 'BSH', 'BSB'];
+        $user    = auth()->user();
+        $student = Student::where('user_id', $user->id)
+            ->with(['enrollments.classTerm.class', 'enrollments.classTerm.academicTerm', 'enrollments.report'])
+            ->first();
 
-        $student   = ['id' => 's1', 'nama' => 'Ahmad Faruq', 'nis' => '2025001'];
-        $classTerm = ['kelas' => 'A1', 'tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil'];
+        if (!$student) {
+            return view('orangtua.grafik', ['payload' => null]);
+        }
 
-        $subjects = [
-            ['id' => 'sub1', 'nama' => 'Nilai Agama & Moral', 'short' => 'NAM'],
-            ['id' => 'sub2', 'nama' => 'Fisik Motorik',       'short' => 'FM'],
-            ['id' => 'sub3', 'nama' => 'Kognitif',            'short' => 'Kognitif'],
-            ['id' => 'sub4', 'nama' => 'Bahasa',              'short' => 'Bahasa'],
-            ['id' => 'sub5', 'nama' => 'Sosial Emosional',    'short' => 'Sosem'],
-            ['id' => 'sub6', 'nama' => 'Seni',                'short' => 'Seni'],
-        ];
+        $enrollmentsWithReport = $student->enrollments->filter(fn($e) => $e->report !== null);
 
-        // Deterministic weekly scores per subject
-        $raw = [];
-        foreach ($subjects as $sub) {
-            $seed = abs(crc32('ct1' . $student['id'] . $sub['id']));
-            $cur  = ($seed % 2) + 2;
-            for ($w = 1; $w <= $W; $w++) {
-                $r = abs(crc32('ct1' . $student['id'] . $sub['id'] . $w)) % 10;
-                if ($r >= 7 && $cur < 4) $cur++;
-                elseif ($r <= 1 && $cur > 1) $cur--;
-                $raw[$sub['id']][$w] = $cur;
+        $classTerms = $enrollmentsWithReport->map(function ($e) {
+            $ct = $e->classTerm;
+            $at = $ct?->academicTerm;
+            return [
+                'id'        => $ct->id,
+                'label'     => ($ct->class?->name ?? '-') . ' — ' . ($at?->academic_year ?? '') . ' ' . ucfirst($at?->semester ?? ''),
+                'report_id' => $e->report->id,
+            ];
+        })->values()->toArray();
+
+        if (empty($classTerms)) {
+            return view('orangtua.grafik', ['payload' => null]);
+        }
+
+        $levelMap  = ['BB' => 1, 'MB' => 2, 'BSH' => 3, 'BSB' => 4];
+        $konselings = [];
+        $allScores  = [];
+        $allWeeks   = [];
+
+        foreach ($classTerms as $ct) {
+            $reportId = $ct['report_id'];
+
+            $weeks = \DB::table('report_counseling_score as rcs')
+                ->join('report_counseling as rc', 'rc.id', '=', 'rcs.report_counseling_id')
+                ->where('rc.report_id', $reportId)
+                ->whereNull('rcs.deleted_at')->whereNull('rc.deleted_at')
+                ->whereNotNull('rcs.week')->where('rcs.week', '>', 0)
+                ->distinct()->orderBy('rcs.week')
+                ->pluck('rcs.week')->toArray();
+
+            $allWeeks[$ct['id']] = $weeks;
+
+            $reportCounselings = \App\Models\ReportCounseling::with([
+                'counseling.assessments',
+                'scores' => fn($q) => $q->whereNotNull('week')->where('week', '>', 0)->whereNull('deleted_at'),
+            ])
+            ->where('report_id', $reportId)->whereNull('deleted_at')->get();
+
+            if (empty($konselings)) {
+                $konselings = $reportCounselings->map(fn($rc) => [
+                    'id'                => $rc->counseling_id,
+                    'nama'              => $rc->counseling->name ?? '-',
+                    'assessments_count' => $rc->counseling->assessments->count(),
+                ])->values()->toArray();
             }
+
+            $ctScores = [];
+            foreach ($reportCounselings as $rc) {
+                $conId      = $rc->counseling_id;
+                $weekGroups = $rc->scores->groupBy('week');
+                foreach ($weekGroups as $week => $scores) {
+                    $vals = $scores->map(fn($s) => $levelMap[$s->level] ?? 0)->filter();
+                    $ctScores[$conId][$week] = $vals->isNotEmpty() ? round($vals->avg(), 2) : null;
+                }
+            }
+
+            $allScores[$ct['id']] = $ctScores;
         }
 
-        // Current week stats
-        $bsb = $bsh = $mb = $bb = 0;
-        foreach ($subjects as $sub) {
-            $v = $raw[$sub['id']][$W];
-            if ($v === 4)      $bsb++;
-            elseif ($v === 3)  $bsh++;
-            elseif ($v === 2)  $mb++;
-            else               $bb++;
-        }
-
-        // Radar: score per subject at current week
-        $radar = [];
-        foreach ($subjects as $sub) {
-            $radar[$sub['id']] = $raw[$sub['id']][$W];
-        }
-
-        // Weekly summary: avg across all subjects per week
-        $weekAvg = [];
-        for ($w = 1; $w <= $W; $w++) {
-            $vals = array_map(fn($s) => $raw[$s['id']][$w], $subjects);
-            $weekAvg[$w] = round(array_sum($vals) / count($vals), 2);
-        }
-
-        $grafikData = [
-            'student'      => $student,
-            'class_term'   => $classTerm,
-            'bsb'          => $bsb,
-            'bsh'          => $bsh,
-            'mb'           => $mb,
-            'bb'           => $bb,
-            'current_week' => $W,
-            'weeks'        => range(1, $W),
-            'subjects'     => $subjects,
-            'scores'       => $raw,
-            'radar'        => $radar,
-            'week_avg'     => $weekAvg,
+        $payload = [
+            'student'    => ['nama' => $student->name, 'nis' => $student->nis ?? '-'],
+            'classTerms' => $classTerms,
+            'konselings' => $konselings,
+            'scores'     => $allScores,
+            'weeks'      => $allWeeks,
         ];
 
-        return view('orangtua.grafik', compact('grafikData'));
+        return view('orangtua.grafik', compact('payload'));
     }
 
     public function chat()
