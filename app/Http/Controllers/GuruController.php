@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Activity;
 use App\Models\Student;
 use App\Models\ClassTerm;
 use App\Models\StudentEnrollment;
@@ -123,10 +124,13 @@ class GuruController extends Controller
         if ($request->mode === 'kelas') {
             PrivateCounselingSchedule::create(array_merge($base, ['student_id' => null]));
             $msg = 'Jadwal konseling per kelas berhasil dibuat.';
+            Activity::log("membuat jadwal konseling per kelas pada {$request->tanggal}");
         } else {
             $request->validate(['siswa_id' => 'required|exists:student,id']);
             PrivateCounselingSchedule::create(array_merge($base, ['student_id' => $request->siswa_id]));
             $msg = 'Jadwal konseling berhasil dibuat.';
+            $studentName = Student::find($request->siswa_id)?->name ?? '-';
+            Activity::log("membuat jadwal konseling untuk {$studentName} pada {$request->tanggal}");
         }
 
         return redirect()->route('guru.jadwal_konseling')->with('success', $msg);
@@ -713,6 +717,9 @@ class GuruController extends Controller
             }
         }
 
+        $studentName = $report->studentEnrollment?->student?->name ?? '-';
+        Activity::log("mengedit laporan perkembangan minggu ke-{$week} untuk siswa {$studentName}");
+
         return redirect()->route('guru.laporan_bk')->with('success', 'Laporan perkembangan berhasil diperbarui.');
     }
 
@@ -1021,6 +1028,9 @@ class GuruController extends Controller
             ]);
         }
 
+        $studentName = Student::find($studentId)?->name ?? '-';
+        Activity::log("membuat laporan perkembangan minggu ke-{$week} untuk siswa {$studentName}");
+
         return redirect()->route('guru.input_perkembangan')
             ->with('success', "Perkembangan minggu ke-{$week} berhasil disimpan.");
     }
@@ -1111,6 +1121,10 @@ class GuruController extends Controller
                 ]
             );
         }
+
+        $ct = ClassTerm::with('class', 'academicTerm')->find($request->class_term_id);
+        $label = $ct ? ('kelas ' . ($ct->class?->name ?? '-')) : 'kelas';
+        Activity::log("mencatat presensi {$label} untuk tanggal {$request->tanggal}");
 
         return redirect()->route('guru.kehadiran.index', [
             'class_term_id' => $request->class_term_id,
@@ -1266,6 +1280,9 @@ class GuruController extends Controller
             ]);
         }
 
+        $jenisLabel = $request->jenis_jadwal === 'kegiatan' ? 'kegiatan' : 'pembelajaran';
+        Activity::log("membuat jadwal {$jenisLabel}: {$request->nama}");
+
         return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil ditambahkan.');
     }
 
@@ -1329,6 +1346,9 @@ class GuruController extends Controller
             ]);
         }
 
+        $jenisLabel = $jenis === 'kegiatan' ? 'kegiatan' : 'pembelajaran';
+        Activity::log("mengedit jadwal {$jenisLabel}: {$request->nama}");
+
         return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil diperbarui.');
     }
 
@@ -1339,9 +1359,14 @@ class GuruController extends Controller
     {
         $activity = ActivitySchedule::find($id);
         if ($activity) {
+            $namaJadwal = $activity->name ?? '-';
             $activity->delete();
+            Activity::log("menghapus jadwal kegiatan: {$namaJadwal}");
         } else {
-            ClassSchedule::findOrFail($id)->delete();
+            $cs = ClassSchedule::findOrFail($id);
+            $namaJadwal = $cs->name ?? '-';
+            $cs->delete();
+            Activity::log("menghapus jadwal pembelajaran: {$namaJadwal}");
         }
         $classTermId = $request->input('class_term_id');
         return redirect()->route('guru.jadwal.index', $classTermId ? ['class_term_id' => $classTermId] : [])
@@ -1541,6 +1566,10 @@ class GuruController extends Controller
                 ['level' => $level]
             );
         }
+
+        $studentName = Student::find($studentId)?->name ?? '-';
+        $verb = $report->wasRecentlyCreated ? 'menginput' : 'mengedit';
+        Activity::log("{$verb} rapot untuk siswa {$studentName}");
 
         return redirect()->route('guru.rapot.show', $classTermId)
             ->with('success', 'Nilai rapot berhasil disimpan.');

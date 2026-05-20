@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Activity;
 use App\Models\Student;
 use App\Models\Presence;
 use App\Models\Report;
@@ -835,6 +836,8 @@ class OrangTuaController extends Controller
             'end_hour'      => $request->waktu_selesai,
             'topic'         => $request->topik,
         ]);
+
+        Activity::log("mengajukan jadwal konseling untuk siswa {$student->name} pada {$request->tanggal}");
 
         return redirect()->route('orangtua.konseling')->with('success', 'Konseling berhasil diajukan!');
     }

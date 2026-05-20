@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Activity;
 use App\Models\AcademicTerm;
 use App\Models\ClassTerm;
 use App\Models\Classroom;
@@ -27,21 +28,25 @@ use Illuminate\Support\Facades\Storage;
 class AdminController extends Controller
 {
     // DASHBOARD
-    public function dashboard()
+    public function dashboard(\App\Services\ActivityFeedService $activityFeed)
     {
-        $totalSiswa      = Student::count();
-        $totalGuru       = User::where('role', 'guru')->count();
-        $orangTerdaftar  = User::where('role', 'orangtua')->count();
-        $totalKelas      = Classroom::count();
+        // Total Siswa = student yang akun user-nya sudah diterima (active)
+        $totalSiswa = Student::whereHas('user', fn($q) => $q->where('status', 'active'))->count();
 
-        $aktivitas = [
-            ['title' => 'Data Siswa Baru Ditambahkan', 'time' => '2 jam yang lalu'],
-            ['title' => 'Pengguna Baru Terdaftar', 'time' => '5 jam yang lalu'],
-            ['title' => 'Backup Database Berhasil', 'time' => 'Kemarin'],
-        ];
+        // Guru = user dengan role guru
+        $totalGuru = User::where('role', 'guru')->count();
 
-        // Statistik siswa per kelas — via student_enrollment → class_term → class
-        $statistik = Classroom::with('classTerms')->get()->map(function ($k) {
+        // Orang Terdaftar = student yang sudah diproses pendaftarannya (diterima atau ditolak — bukan pending)
+        $orangTerdaftar = Student::whereHas('user', fn($q) => $q->whereIn('status', ['active', 'inactive']))->count();
+
+        // Total Kelas = jumlah class
+        $totalKelas = Classroom::count();
+
+        // Aktivitas terbaru dari tabel activity
+        $aktivitas = $activityFeed->recent(5);
+
+        // Statistik siswa per kelas — distinct student via student_enrollment → class_term → class
+        $statistik = Classroom::with('classTerms')->orderBy('name')->get()->map(function ($k) {
             $classTermIds = $k->classTerms->pluck('id');
             $jumlah = StudentEnrollment::whereIn('class_term_id', $classTermIds)
                 ->where('status', 'aktif')
@@ -132,6 +137,8 @@ class AdminController extends Controller
             Student::where('id', $request->siswa_id)->update(['user_id' => $user->id]);
         }
 
+        Activity::log("menambah pengguna {$user->name} ({$user->role})");
+
         return redirect()->route('admin.pengguna.index')
             ->with('success', 'Pengguna berhasil ditambahkan!');
     }
@@ -195,13 +202,18 @@ class AdminController extends Controller
             Student::where('id', $request->input('siswa_id'))->update(['user_id' => $user->id]);
         }
 
+        Activity::log("mengedit pengguna {$user->name}");
+
         return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil diupdate!');
     }
 
     public function penggunaDestroy($id)
     {
         $user = User::findOrFail($id);
+        $nama = $user->name;
         $user->delete();
+
+        Activity::log("menghapus pengguna {$nama}");
 
         return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil dihapus!');
     }
@@ -340,6 +352,8 @@ class AdminController extends Controller
             }
         });
 
+        Activity::log("menambah siswa {$request->nama}");
+
         return redirect()->route('admin.siswa.index')->with('success', 'Data siswa berhasil ditambahkan!');
     }
 
@@ -476,6 +490,8 @@ class AdminController extends Controller
             }
         });
 
+        Activity::log("mengedit siswa {$student->name}");
+
         return redirect()->route('admin.siswa.index')
             ->with('success', "Data siswa {$student->name} berhasil diperbarui!");
     }
@@ -491,6 +507,8 @@ class AdminController extends Controller
             $student->enrollments()->delete();
             $student->delete();
         });
+
+        Activity::log("menghapus siswa {$nama}");
 
         return redirect()->route('admin.siswa.index')
             ->with('success', "Data siswa {$nama} berhasil dihapus!");
@@ -517,6 +535,7 @@ class AdminController extends Controller
     {
         try {
             $filename = $service->create('manual');
+            Activity::log("melakukan backup database ({$filename})");
             return redirect()->route('admin.backup.index')
                 ->with('success', "Backup berhasil dibuat: {$filename}");
         } catch (\Throwable $e) {
@@ -722,6 +741,8 @@ class AdminController extends Controller
             }
         });
 
+        Activity::log("menerima pendaftaran siswa " . ($user->student?->name ?? '-'));
+
         return redirect()->route('admin.pendaftaran.index')
             ->with('success', "Pendaftaran {$user->student?->name} telah diterima. Akun orang tua sekarang aktif.");
     }
@@ -730,6 +751,8 @@ class AdminController extends Controller
     {
         $user = User::findOrFail($id);
         $user->update(['status' => 'inactive']);
+
+        Activity::log("menolak pendaftaran siswa " . ($user->student?->name ?? '-'));
 
         return redirect()->route('admin.pendaftaran.index')
             ->with('success', "Pendaftaran {$user->student?->name} telah ditolak.");
@@ -818,6 +841,8 @@ class AdminController extends Controller
             'status'        => $request->status,
         ]);
 
+        Activity::log("menambah tahun ajaran {$request->academic_year} " . ucfirst($request->semester));
+
         return redirect()->route('admin.tahun_ajaran.index')
             ->with('success', "Tahun Ajaran {$request->academic_year} Semester " . ucfirst($request->semester) . " berhasil ditambahkan.");
     }
@@ -843,6 +868,8 @@ class AdminController extends Controller
             'status'        => $request->status,
         ]);
 
+        Activity::log("mengedit tahun ajaran {$item->academic_year} " . ucfirst($item->semester));
+
         return redirect()->route('admin.tahun_ajaran.index')
             ->with('success', "Tahun Ajaran {$item->academic_year} Semester " . ucfirst($item->semester) . " berhasil diperbarui.");
     }
@@ -852,6 +879,8 @@ class AdminController extends Controller
         $item = AcademicTerm::findOrFail($id);
         $label = "{$item->academic_year} " . ucfirst($item->semester);
         $item->delete();
+
+        Activity::log("menghapus tahun ajaran {$label}");
 
         return redirect()->route('admin.tahun_ajaran.index')
             ->with('success', "Tahun Ajaran {$label} berhasil dihapus.");
@@ -883,6 +912,8 @@ class AdminController extends Controller
             'maximum' => $request->jumlah_maksimum,
         ]);
 
+        Activity::log("menambah kelas {$request->nama}");
+
         return redirect()->route('admin.kelas.index')
             ->with('success', "Kelas {$request->nama} berhasil ditambahkan.");
     }
@@ -907,6 +938,8 @@ class AdminController extends Controller
             'maximum' => $request->jumlah_maksimum,
         ]);
 
+        Activity::log("mengedit kelas {$request->nama}");
+
         return redirect()->route('admin.kelas.index')
             ->with('success', "Kelas {$request->nama} berhasil diperbarui.");
     }
@@ -916,6 +949,8 @@ class AdminController extends Controller
         $kelas = Classroom::findOrFail($id);
         $nama  = $kelas->name;
         $kelas->delete();
+
+        Activity::log("menghapus kelas {$nama}");
 
         return redirect()->route('admin.kelas.index')
             ->with('success', "Kelas {$nama} berhasil dihapus.");
@@ -994,6 +1029,8 @@ class AdminController extends Controller
             }
         });
 
+        Activity::log("menambah ekstrakurikuler {$request->nama}");
+
         return redirect()->route('admin.ekstrakurikuler.index')
             ->with('success', "Ekstrakurikuler {$request->nama} berhasil ditambahkan.");
     }
@@ -1025,6 +1062,8 @@ class AdminController extends Controller
             }
         });
 
+        Activity::log("mengedit ekstrakurikuler {$request->nama}");
+
         return redirect()->route('admin.ekstrakurikuler.index')
             ->with('success', "Ekstrakurikuler {$request->nama} berhasil diperbarui.");
     }
@@ -1038,6 +1077,8 @@ class AdminController extends Controller
             $ekskul->assessments()->delete();
             $ekskul->delete();
         });
+
+        Activity::log("menghapus ekstrakurikuler {$nama}");
 
         return redirect()->route('admin.ekstrakurikuler.index')
             ->with('success', "Ekstrakurikuler {$nama} berhasil dihapus.");
@@ -1075,6 +1116,8 @@ class AdminController extends Controller
             }
         });
 
+        Activity::log("menambah konseling {$request->nama}");
+
         return redirect()->route('admin.konseling.index')
             ->with('success', "Konseling {$request->nama} berhasil ditambahkan.");
     }
@@ -1106,6 +1149,8 @@ class AdminController extends Controller
             }
         });
 
+        Activity::log("mengedit konseling {$request->nama}");
+
         return redirect()->route('admin.konseling.index')
             ->with('success', "Konseling {$request->nama} berhasil diperbarui.");
     }
@@ -1119,6 +1164,8 @@ class AdminController extends Controller
             $konseling->assessments()->delete();
             $konseling->delete();
         });
+
+        Activity::log("menghapus konseling {$nama}");
 
         return redirect()->route('admin.konseling.index')
             ->with('success', "Konseling {$nama} berhasil dihapus.");
@@ -1146,6 +1193,8 @@ class AdminController extends Controller
 
         Subject::create(['name' => $request->nama]);
 
+        Activity::log("menambah mata pelajaran {$request->nama}");
+
         return redirect()->route('admin.mata_pelajaran.index')
             ->with('success', "Mata pelajaran {$request->nama} berhasil ditambahkan.");
     }
@@ -1166,6 +1215,8 @@ class AdminController extends Controller
 
         $mataPelajaran->update(['name' => $request->nama]);
 
+        Activity::log("mengedit mata pelajaran {$request->nama}");
+
         return redirect()->route('admin.mata_pelajaran.index')
             ->with('success', "Mata pelajaran {$request->nama} berhasil diperbarui.");
     }
@@ -1175,6 +1226,8 @@ class AdminController extends Controller
         $mataPelajaran = Subject::findOrFail($id);
         $nama = $mataPelajaran->name;
         $mataPelajaran->delete();
+
+        Activity::log("menghapus mata pelajaran {$nama}");
 
         return redirect()->route('admin.mata_pelajaran.index')
             ->with('success', "Mata pelajaran {$nama} berhasil dihapus.");
@@ -1255,6 +1308,9 @@ class AdminController extends Controller
                 ClassTermCounseling::create(['class_term_id' => $classTerm->id, 'counseling_id' => $kid]);
             }
         });
+
+        Activity::log("mengedit aktivitas tahun ajaran untuk kelas " . ($classTerm->class?->name ?? '-')
+            . ' — ' . ($classTerm->academicTerm?->academic_year ?? '-') . ' ' . ucfirst($classTerm->academicTerm?->semester ?? ''));
 
         return redirect()->route('admin.aktivitas_tahun_ajaran.show', $classTerm->academic_term_id)
             ->with('success', "Aktivitas kelas {$classTerm->class?->name} berhasil diperbarui.");

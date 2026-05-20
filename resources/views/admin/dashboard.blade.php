@@ -65,17 +65,53 @@
             </h3>
         </div>
         <div class="card__body">
-            <ul class="activity-list">
-                @foreach($aktivitas as $item)
-                <li class="activity-list__item">
-                    <div class="activity-list__dot"></div>
-                    <div class="activity-list__content">
-                        <span class="activity-list__title">{{ $item['title'] }}</span>
-                        <span class="activity-list__time">{{ $item['time'] }}</span>
-                    </div>
-                </li>
-                @endforeach
-            </ul>
+            @if(empty($aktivitas))
+                <p style="color:#5D4037;text-align:center;padding:24px 0;font-size:13px;">Belum ada aktivitas.</p>
+            @else
+                <ul class="activity-list">
+                    @foreach($aktivitas as $item)
+                        @php
+                            $color = $item['color'] ?? 'green';
+                            $dotColor = match($color) {
+                                'green'  => '#4CAF82',
+                                'yellow' => '#e6db00',
+                                'pink'   => '#d81b72',
+                                'gray'   => '#9ca3af',
+                                default  => '#4CAF82',
+                            };
+                            $iconPath = match($item['icon'] ?? 'inbox') {
+                                'check'    => 'M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
+                                'user'     => 'M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z',
+                                'graduate' => 'M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342',
+                                'calendar' => 'M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75',
+                                'home'     => 'm2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75',
+                                'star'     => 'M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z',
+                                'book'     => 'M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25',
+                                'chat'     => 'M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z',
+                                'list'     => 'M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z',
+                                'database' => 'M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375',
+                                'clipboard'=> 'M9 12h6m-6 3h6m2.25-9h.375a1.125 1.125 0 0 1 1.125 1.125v15.75a1.125 1.125 0 0 1-1.125 1.125H6.375a1.125 1.125 0 0 1-1.125-1.125V7.125A1.125 1.125 0 0 1 6.375 6h.375M11.25 3.75h1.5a1.5 1.5 0 0 1 1.5 1.5v.75a1.5 1.5 0 0 1-1.5 1.5h-1.5a1.5 1.5 0 0 1-1.5-1.5v-.75a1.5 1.5 0 0 1 1.5-1.5Z',
+                                'document' => 'M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z',
+                                default    => 'M2.25 13.5h3.86a2.25 2.25 0 0 1 2.012 1.244l.256.512a2.25 2.25 0 0 0 2.013 1.244h3.218a2.25 2.25 0 0 0 2.013-1.244l.256-.512a2.25 2.25 0 0 1 2.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 0 0-2.15-1.588H6.911a2.25 2.25 0 0 0-2.15 1.588L2.35 13.177a2.25 2.25 0 0 0-.1.661Z',
+                            };
+                        @endphp
+                        <li class="activity-list__item">
+                            <div class="activity-list__icon" style="background: {{ $dotColor }}20; color: {{ $dotColor }};">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="16" height="16">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="{{ $iconPath }}" />
+                                </svg>
+                            </div>
+                            <div class="activity-list__content">
+                                <span class="activity-list__title">{{ $item['title'] }}</span>
+                                @if(! empty($item['subtitle']))
+                                    <span class="activity-list__subtitle">{{ $item['subtitle'] }}</span>
+                                @endif
+                                <span class="activity-list__time">{{ $item['time'] }}</span>
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
     </div>
     
@@ -238,28 +274,43 @@
     border-bottom: none;
 }
 
-.activity-list__dot {
-    width: 10px;
-    height: 10px;
-    background: #4CAF82;
-    border-radius: 50%;
-    margin-top: 4px;
+.activity-list__dot { display: none; }
+
+.activity-list__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
 }
 
-.activity-list__content {
-    flex: 1;
-}
+.activity-list__content { flex: 1; min-width: 0; }
 
 .activity-list__title {
     display: block;
-    font-weight: 500;
+    font-weight: 600;
     color: #3E2723;
+    font-size: 0.875rem;
+}
+
+.activity-list__subtitle {
+    display: block;
+    font-size: 0.78rem;
+    color: #5D4037;
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .activity-list__time {
-    font-size: 0.8rem;
-    color: #5D4037;
+    display: block;
+    font-size: 0.72rem;
+    color: #9ca3af;
+    margin-top: 3px;
+    font-weight: 500;
 }
 
 /* Stats Info */
