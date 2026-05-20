@@ -1035,29 +1035,95 @@ class GuruController extends Controller
             ->with('success', "Perkembangan minggu ke-{$week} berhasil disimpan.");
     }
 
-    public function dashboard()
+    public function dashboard(Request $request)
     {
-        $data = [
-            'userName'         => auth()->user()->name,
-            'totalSiswa'       => Student::count(),
-            'konselingBulanIni' => 15,
-            'pengajuanJadwal'  => 3,
-            'semester'         => 'Ganjil 2025/2026',
-            'updates'          => [
-                ['title' => 'Konseling Selesai - Muhammad',    'time' => '2 jam yang lalu'],
-                ['title' => 'Input Perkembangan - Anisa',      'time' => '1 hari yang lalu'],
-                ['title' => 'Pesan Baru dari Orang Tua Tika',  'time' => '2 hari yang lalu'],
-            ],
-            'jadwalMendatang'  => [
-                [
-                    'tanggal' => 'Jumat, 29 November 2024',
-                    'waktu'   => '10:00 - 11:00 WIB',
-                    'topik'   => 'Perkembangan Sosial Ahmad',
-                ],
-            ],
-        ];
+        $now = now();
 
-        return view('guru.dashboard', $data);
+        // Class terms untuk selector
+        $classTerms = ClassTerm::with(['class', 'academicTerm'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        // Default: class term yang isPass = false (sedang berjalan), fallback ke terbaru
+        $defaultClassTermId = ClassTerm::whereHas('academicTerm')
+            ->where('isPass', false)
+            ->orderByDesc('created_at')
+            ->value('id');
+
+        $selectedClassTermId = $request->input('class_term_id', $defaultClassTermId);
+        $selectedClassTerm   = $classTerms->firstWhere('id', $selectedClassTermId);
+
+        // Total siswa di class term terpilih
+        $enrollmentIds = StudentEnrollment::where('class_term_id', $selectedClassTermId)
+            ->pluck('id');
+        $totalSiswa = $enrollmentIds->count();
+
+        // Hadir hari ini
+        $hadirHariIni = Presence::whereIn('student_class_id', $enrollmentIds)
+            ->where('date', $now->toDateString())
+            ->whereIn('attendance', ['hadir', 'izin']) // hadir = masuk
+            ->count();
+
+        // Konseling bulan ini: milik guru yang login, bulan ini, disetujui
+        $konselingBulanIni = PrivateCounselingSchedule::where('teacher_id', auth()->id())
+            ->whereYear('date', $now->year)
+            ->whereMonth('date', $now->month)
+            ->where('status', 'approved')
+            ->count();
+
+        // Konseling menunggu persetujuan
+        $konselingPending = PrivateCounselingSchedule::where('teacher_id', auth()->id())
+            ->where('status', 'pending')
+            ->count();
+
+        // Jadwal kegiatan bulan ini (count)
+        $jadwalKegiatanCount = ActivitySchedule::whereYear('date', $now->year)
+            ->whereMonth('date', $now->month)
+            ->count();
+
+        // List jadwal kegiatan bulan ini
+        $jadwalKegiatan = ActivitySchedule::with('classTerm.class')
+            ->whereYear('date', $now->year)
+            ->whereMonth('date', $now->month)
+            ->orderBy('date')
+            ->orderBy('start_hour')
+            ->get()
+            ->map(fn($a) => [
+                'tanggal'   => \Carbon\Carbon::parse($a->date)->translatedFormat('l, j F Y'),
+                'waktu'     => substr($a->start_hour, 0, 5) . ' - ' . substr($a->end_hour, 0, 5) . ' WIB',
+                'topik'     => $a->name,
+                'lokasi'    => $a->location,
+            ]);
+
+        // List jadwal konseling bulan ini
+        $jadwalKonselingMendatang = PrivateCounselingSchedule::with(['student', 'teacher'])
+            ->whereYear('date', $now->year)
+            ->whereMonth('date', $now->month)
+            ->whereNotIn('status', ['canceled', 'rejected'])
+            ->orderBy('date')
+            ->orderBy('start_hour')
+            ->get()
+            ->map(fn($s) => [
+                'tanggal' => \Carbon\Carbon::parse($s->date)->translatedFormat('l, j F Y'),
+                'waktu'   => substr($s->start_hour, 0, 5) . ' - ' . substr($s->end_hour, 0, 5) . ' WIB',
+                'topik'   => $s->topic,
+                'siswa'   => $s->student?->name ?? '-',
+                'status'  => $s->status,
+            ]);
+
+        // Label hero
+        $ct = $selectedClassTerm;
+        $heroSub = $ct
+            ? ($ct->academicTerm?->academic_year ?? '') . ' ' . ucfirst($ct->academicTerm?->semester ?? '') . ' &middot; Kelas ' . ($ct->class?->name ?? '')
+            : 'Pilih Kelas Term';
+
+        return view('guru.dashboard', compact(
+            'classTerms', 'selectedClassTermId', 'selectedClassTerm',
+            'totalSiswa', 'hadirHariIni',
+            'konselingBulanIni', 'konselingPending', 'jadwalKegiatanCount',
+            'jadwalKegiatan', 'jadwalKonselingMendatang',
+            'heroSub'
+        ));
     }
 
     // ==================== ADMINISTRASI ====================

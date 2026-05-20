@@ -31,7 +31,68 @@ class OrangTuaController extends Controller
 
     public function dashboard()
     {
-        return view('orangtua.dashboard');
+        $user    = auth()->user();
+        $student = $user->student;
+        $now     = now();
+
+        // Enrollment aktif (class term yang isPass = false)
+        $enrollment = $student
+            ? StudentEnrollment::where('student_id', $student->id)
+                ->whereHas('classTerm', fn($q) => $q->where('isPass', false))
+                ->with(['classTerm.class', 'classTerm.academicTerm'])
+                ->latest()->first()
+            : null;
+
+        $classTerm   = $enrollment?->classTerm;
+        $namaAnak    = $student?->name ?? '-';
+        $kelasAnak   = $classTerm?->class?->name ?? '-';
+        $tahunAjaran = ($classTerm?->academicTerm?->academic_year ?? '') . ' ' . ucfirst($classTerm?->academicTerm?->semester ?? '');
+
+        // Hadir bulan ini dari presence
+        $enrollmentId  = $enrollment?->id;
+        $hadirBulanIni = $enrollmentId
+            ? Presence::where('student_class_id', $enrollmentId)
+                ->whereYear('date', $now->year)
+                ->whereMonth('date', $now->month)
+                ->where('attendance', 'hadir')
+                ->count()
+            : 0;
+
+        // Target = total hari yang ada presensi bulan ini
+        $targetHadir = $enrollmentId
+            ? Presence::where('student_class_id', $enrollmentId)
+                ->whereYear('date', $now->year)
+                ->whereMonth('date', $now->month)
+                ->distinct('date')->count('date')
+            : 0;
+
+        // Total report tersedia untuk student
+        $totalReport = $student
+            ? Report::whereHas('studentEnrollment', fn($q) => $q->where('student_id', $student->id))
+                ->count()
+            : 0;
+
+        // Konseling mendatang (approved, belum lewat)
+        $konselingMendatang = $student
+            ? PrivateCounselingSchedule::where('student_id', $student->id)
+                ->where('status', 'approved')
+                ->where('date', '>=', $now->toDateString())
+                ->count()
+            : 0;
+
+        // Konseling menunggu persetujuan (pending)
+        $konselingPending = $student
+            ? PrivateCounselingSchedule::where('student_id', $student->id)
+                ->where('status', 'pending')
+                ->count()
+            : 0;
+
+        return view('orangtua.dashboard', compact(
+            'namaAnak', 'kelasAnak', 'tahunAjaran',
+            'hadirBulanIni', 'targetHadir',
+            'totalReport',
+            'konselingMendatang', 'konselingPending'
+        ));
     }
 
     public function presensi(Request $request)

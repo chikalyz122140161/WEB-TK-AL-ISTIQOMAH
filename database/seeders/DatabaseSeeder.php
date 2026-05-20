@@ -10,7 +10,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             ErdSeeder::class,
-            ActivitySeeder::class,
         ]);
     }
 }

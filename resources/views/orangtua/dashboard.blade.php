@@ -112,11 +112,10 @@
     /* ─── Bottom Grid ─── */
     .db-bottom {
         display: grid;
-        grid-template-columns: 1fr 340px;
+        grid-template-columns: 1fr;
         gap: 16px;
         align-items: start;
     }
-    @media (max-width: 1100px) { .db-bottom { grid-template-columns: 1fr; } }
 
     /* ─── Quick Action Cards ─── */
     .quick-actions {
@@ -160,24 +159,16 @@
 @section('content')
 
 @php
-    $namaAnak    = $student->nama ?? 'Ahmad Fauzi';
-    $kelasAnak   = $student->kelas ?? 'TK A';
-    $tahunAjaran = $student->tahun_ajaran ?? '2024/2025';
-    $hadir       = $kehadiranBulanIni ?? 18;
-    $totalReport = $totalReport ?? 12;
-    $avgScore    = $avgScore ?? '3.8';
-    $pesanBaru   = $pesanBaru ?? 2;
-    $targetHadir = 22;
-    $pct         = $targetHadir > 0 ? round($hadir / $targetHadir * 100) : 0;
+    $hadir = $hadirBulanIni ?? 0;
 @endphp
 
 {{-- ═══════════ HERO BANNER ═══════════ --}}
 <div class="db-hero">
     <div class="db-hero__left">
-        <div class="db-hero__av">{{ substr($namaAnak, 0, 1) }}</div>
+        <div class="db-hero__av">{{ substr($namaAnak ?? '-', 0, 1) }}</div>
         <div>
-            <p class="db-hero__title">{{ $namaAnak }}</p>
-            <p class="db-hero__sub">Kelas: {{ $kelasAnak }} &nbsp;&middot;&nbsp; Tahun Ajaran: {{ $tahunAjaran }}</p>
+            <p class="db-hero__title">{{ $namaAnak ?? '-' }}</p>
+            <p class="db-hero__sub">Kelas: {{ $kelasAnak ?? '-' }} &nbsp;&middot;&nbsp; {{ $tahunAjaran ?? '-' }}</p>
         </div>
     </div>
 </div>
@@ -186,142 +177,55 @@
 <div class="db-stat-row">
 
     {{-- GREEN: Kehadiran --}}
-    <div class="dbs-green">
-        <div class="dbs-green__top">
-            <div>
-                <div class="dbs-label">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.49 4.49 0 0 1-3.498-1.306 4.491 4.491 0 0 1-1.307-3.498A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 0 1 1.307-3.497 4.49 4.49 0 0 1 3.497-1.307Zm7.007 6.387a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
-                    Hadir Bulan Ini
-                </div>
-            </div>
-            <div><div class="dbs-label">Target</div></div>
+    <div class="dbs-green" style="display:flex;flex-direction:column;justify-content:center;">
+        <div class="dbs-label">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.49 4.49 0 0 1-3.498-1.306 4.491 4.491 0 0 1-1.307-3.498A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 0 1 1.307-3.497 4.49 4.49 0 0 1 3.497-1.307Zm7.007 6.387a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
+            Hadir Bulan Ini
         </div>
-        <div class="dbs-green__values">
-            <div>
-                <div class="dbs-val">{{ $hadir }}</div>
-                <div class="dbs-sub">Hari hadir</div>
-            </div>
-            <div>
-                <div class="dbs-val">{{ $targetHadir }}</div>
-                <div class="dbs-sub">Hari aktif</div>
-            </div>
-        </div>
-        <div class="dbs-green__bar-wrap">
-            <div class="dbs-green__bar-fill" style="width:{{ $pct }}%"></div>
-        </div>
-        <div class="dbs-green__bar-label">{{ $hadir }} dari {{ $targetHadir }} hari ({{ $pct }}%)</div>
+        <div class="dbs-val">{{ $hadir }}</div>
+        <div class="dbs-sub">Hari hadir</div>
     </div>
 
-    {{-- YELLOW: Report + Rata-rata --}}
+    {{-- YELLOW: Report Tersedia --}}
     <div class="dbs-yellow">
-        <div class="dbs-yellow__item">
+        <div class="dbs-yellow__item" style="display:flex;flex-direction:column;justify-content:center;">
             <div class="dbs-label dbs-label--dark">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625ZM7.5 15a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 7.5 15Zm.75 2.25a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H8.25Z" clip-rule="evenodd"/><path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z"/></svg>
                 Report Tersedia
             </div>
-            <div class="dbs-val dbs-val--dark">{{ $totalReport }}</div>
+            <div class="dbs-val dbs-val--dark">{{ $totalReport ?? 0 }}</div>
             <div class="dbs-sub dbs-sub--dark">Laporan perkembangan</div>
-        </div>
-        <div class="dbs-sep"></div>
-        <div class="dbs-yellow__item">
-            <div class="dbs-label dbs-label--dark">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd"/></svg>
-                Rata-rata Nilai
-            </div>
-            <div class="dbs-val dbs-val--dark">{{ $avgScore }}</div>
-            <div class="dbs-sub dbs-sub--dark">Semester ini</div>
         </div>
     </div>
 
-    {{-- PINK: Pesan Baru + Konseling --}}
+    {{-- PINK: Konseling Mendatang + Menunggu --}}
     <div class="dbs-pink">
         <div class="dbs-pink__item">
             <div class="dbs-label">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4.913 2.658c2.075-.27 4.19-.408 6.337-.408 2.147 0 4.262.139 6.337.408 1.922.25 3.291 1.861 3.405 3.727a4.403 4.403 0 0 0-1.032-.211 50.89 50.89 0 0 0-8.42 0c-2.358.196-4.04 2.19-4.04 4.434v4.286a4.47 4.47 0 0 0 2.433 3.984L7.28 21.53A.75.75 0 0 1 6 21v-4.03a48.527 48.527 0 0 1-1.087-.128C2.905 16.58 1.5 14.833 1.5 12.862V6.638c0-1.97 1.405-3.718 3.413-3.979Z"/><path d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 0 0 1.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0 0 15.75 7.5Z"/></svg>
-                Pesan Baru
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.49 4.49 0 0 1-3.498-1.306 4.491 4.491 0 0 1-1.307-3.498A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 0 1 1.307-3.497 4.49 4.49 0 0 1 3.497-1.307Zm7.007 6.387a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
+                Konseling Mendatang
             </div>
-            <div class="dbs-val">{{ $pesanBaru }}</div>
-            <div class="dbs-sub">Dari guru</div>
+            <div class="dbs-val">{{ $konselingMendatang ?? 0 }}</div>
+            <div class="dbs-sub">Sesi disetujui</div>
         </div>
         <div class="dbs-sep dbs-sep--light"></div>
         <div class="dbs-pink__item">
             <div class="dbs-label">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/></svg>
-                Konseling Aktif
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
+                Menunggu Persetujuan
             </div>
-            <div class="dbs-val">{{ $konselingAktif ?? 1 }}</div>
-            <div class="dbs-sub">Jadwal mendatang</div>
+            <div class="dbs-val">{{ $konselingPending ?? 0 }}</div>
+            <div class="dbs-sub">Pengajuan konseling</div>
         </div>
     </div>
 
 </div>
 
-{{-- ═══════════ BOTTOM: ACTIVITY + SIDEBAR ═══════════ --}}
+{{-- ═══════════ BOTTOM: AKSES CEPAT ═══════════ --}}
 <div class="db-bottom">
 
-    {{-- Aktivitas Terbaru --}}
-    <div class="update-list">
-        <div class="update-list__header">
-            <span class="update-list__title">Aktivitas Terbaru</span>
-            <span class="update-list__count">Update terkini tentang anak Anda</span>
-        </div>
-
-        <a href="{{ route('orangtua.laporan') }}" class="update-item" style="text-decoration:none;display:flex;">
-            <div class="update-item__avatar">L</div>
-            <div class="update-item__body">
-                <div class="update-item__title">Report Minggu 12 Tersedia</div>
-                <div class="update-item__subtitle">Perkembangan anak periode 18-22 November 2024 telah diupdate</div>
-            </div>
-            <div class="update-item__meta">
-                <span class="update-item__time">2 jam lalu</span>
-                <span class="update-item__badge update-item__badge--done">Laporan</span>
-            </div>
-            <svg class="update-item__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
-        </a>
-
-        <a href="{{ route('orangtua.presensi') }}" class="update-item" style="text-decoration:none;display:flex;">
-            <div class="update-item__avatar">K</div>
-            <div class="update-item__body">
-                <div class="update-item__title">Kehadiran Tercatat</div>
-                <div class="update-item__subtitle">{{ $namaAnak }} hadir di sekolah hari ini</div>
-            </div>
-            <div class="update-item__meta">
-                <span class="update-item__time">5 jam lalu</span>
-                <span class="update-item__badge update-item__badge--new">Hadir</span>
-            </div>
-            <svg class="update-item__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
-        </a>
-
-        <a href="{{ route('orangtua.chat') }}" class="update-item" style="text-decoration:none;display:flex;">
-            <div class="update-item__avatar">P</div>
-            <div class="update-item__body">
-                <div class="update-item__title">Pesan dari Guru</div>
-                <div class="update-item__subtitle">Bu Siti mengirimkan pesan tentang kegiatan outdoor minggu depan</div>
-            </div>
-            <div class="update-item__meta">
-                <span class="update-item__time">Kemarin</span>
-                <span class="update-item__badge update-item__badge--info">Pesan</span>
-            </div>
-            <svg class="update-item__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
-        </a>
-
-        <a href="{{ route('orangtua.laporan') }}" class="update-item" style="text-decoration:none;display:flex;">
-            <div class="update-item__avatar">L</div>
-            <div class="update-item__body">
-                <div class="update-item__title">Report Minggu 11 Tersedia</div>
-                <div class="update-item__subtitle">Perkembangan anak periode 11-15 November 2024</div>
-            </div>
-            <div class="update-item__meta">
-                <span class="update-item__time">1 minggu lalu</span>
-                <span class="update-item__badge update-item__badge--done">Laporan</span>
-            </div>
-            <svg class="update-item__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
-        </a>
-    </div>
-
-    {{-- Kanan: Akses Cepat --}}
-    <div class="db-right-stack">
-        <div class="card">
+    {{-- Akses Cepat --}}
+    <div class="card">
             <div class="card__header">
                 <span class="card__title">Akses Cepat</span>
                 <span class="card__badge">Menu utama</span>
@@ -362,7 +266,6 @@
                 </div>
             </div>
         </div>
-    </div>
 
 </div>{{-- end db-bottom --}}
 
