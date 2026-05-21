@@ -14,7 +14,9 @@ class ChatMessage extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['chat_room_id', 'sender_id', 'message'];
+    protected $fillable = ['chat_room_id', 'sender_id', 'message', 'isRead'];
+
+    protected $casts = ['isRead' => 'boolean'];
 
     public function chatRoom()
     {

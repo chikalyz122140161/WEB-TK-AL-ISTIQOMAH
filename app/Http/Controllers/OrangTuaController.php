@@ -727,6 +727,12 @@ class OrangTuaController extends Controller
         if ($roomId) {
             $activeRoom = ChatRoom::with(['messages.sender', 'userA', 'userB'])->find($roomId);
             if ($activeRoom) {
+                // Mark unread messages from the other user as read
+                ChatMessage::where('chat_room_id', $activeRoom->id)
+                    ->where('sender_id', '!=', $me->id)
+                    ->where('isRead', false)
+                    ->update(['isRead' => true]);
+
                 $other = $activeRoom->otherUser($me->id);
                 $aktif = [
                     'room_id' => $activeRoom->id,

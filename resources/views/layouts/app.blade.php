@@ -251,6 +251,72 @@
             background: var(--yellow);
             border: 1.5px solid var(--green);
         }
+        .notif-wrapper { position: relative; }
+        .notif-badge {
+            position: absolute; top: -4px; right: -4px;
+            min-width: 18px; height: 18px; padding: 0 4px;
+            border-radius: 9px;
+            background: #e53935;
+            color: #fff;
+            font-size: 10px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid var(--green);
+            pointer-events: none;
+        }
+        .notif-dropdown {
+            position: absolute; top: calc(100% + 10px); right: 0;
+            width: 280px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 999;
+            overflow: hidden;
+            display: none;
+        }
+        .notif-dropdown.open { display: block; }
+        .notif-dropdown__header {
+            padding: 12px 16px 10px;
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #888;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .notif-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 16px;
+            text-decoration: none;
+            color: inherit;
+            border-bottom: 1px solid #f7f7f7;
+            transition: background 0.15s;
+        }
+        .notif-item:last-child { border-bottom: none; }
+        .notif-item:hover { background: #f5faf7; }
+        .notif-item__avatar {
+            width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+            background: var(--green); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 700;
+        }
+        .notif-item__body { flex: 1; min-width: 0; }
+        .notif-item__name {
+            display: flex; align-items: center; justify-content: space-between;
+            font-size: 13px; font-weight: 600; color: #2d2d2d;
+        }
+        .notif-item__count {
+            background: #e53935; color: #fff;
+            font-size: 10px; font-weight: 700;
+            padding: 1px 6px; border-radius: 8px; flex-shrink: 0;
+        }
+        .notif-item__preview {
+            font-size: 12px; color: #888;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            margin-top: 2px;
+        }
+        .notif-empty {
+            padding: 20px 16px;
+            text-align: center;
+            font-size: 13px; color: #aaa;
+        }
 
         /* Header avatar */
         .header-avatar {
@@ -1193,10 +1259,57 @@
                     <strong>@yield('page_title', 'Dashboard')</strong>
                 </div>
                 <div class="content-header__right">
-                    <button class="icon-btn" title="Notifikasi">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M5.25 9a6.75 6.75 0 0 1 13.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 0 1-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 1 1-7.48 0 24.585 24.585 0 0 1-4.831-1.244.75.75 0 0 1-.298-1.205A8.217 8.217 0 0 0 5.25 9.75V9Zm4.502 8.9a2.25 2.25 0 1 0 4.496 0 25.057 25.057 0 0 1-4.496 0Z" clip-rule="evenodd"/></svg>
-                        <span class="notif-dot"></span>
-                    </button>
+                    @if(auth()->user()->role !== 'admin')
+                    @php
+                        $notifUserId  = auth()->id();
+                        $notifRoomIds = \App\Models\ChatRoom::where('user_a_id', $notifUserId)
+                            ->orWhere('user_b_id', $notifUserId)->pluck('id');
+                        $notifMsgs = \App\Models\ChatMessage::whereIn('chat_room_id', $notifRoomIds)
+                            ->where('sender_id', '!=', $notifUserId)
+                            ->where('isRead', false)
+                            ->with('sender')
+                            ->latest()
+                            ->get();
+                        $notifCount = $notifMsgs->count();
+                        $notifGroups = $notifMsgs->groupBy('sender_id')->map(function ($msgs) {
+                            $first = $msgs->first();
+                            return [
+                                'nama'    => $first->sender?->name ?? '-',
+                                'initial' => strtoupper(mb_substr($first->sender?->name ?? '?', 0, 1)),
+                                'count'   => $msgs->count(),
+                                'preview' => \Illuminate\Support\Str::limit($first->message, 42),
+                                'room_id' => $first->chat_room_id,
+                            ];
+                        })->values();
+                        $notifChatRoute = auth()->user()->role === 'guru' ? 'guru.chat' : 'orangtua.chat';
+                    @endphp
+                    <div class="notif-wrapper">
+                        <button class="icon-btn" id="notifBtn" title="Notifikasi">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M5.25 9a6.75 6.75 0 0 1 13.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 0 1-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 1 1-7.48 0 24.585 24.585 0 0 1-4.831-1.244.75.75 0 0 1-.298-1.205A8.217 8.217 0 0 0 5.25 9.75V9Zm4.502 8.9a2.25 2.25 0 1 0 4.496 0 25.057 25.057 0 0 1-4.496 0Z" clip-rule="evenodd"/></svg>
+                            @if($notifCount > 0)
+                                <span class="notif-badge">{{ $notifCount > 99 ? '99+' : $notifCount }}</span>
+                            @endif
+                        </button>
+                        <div class="notif-dropdown" id="notifDropdown">
+                            <div class="notif-dropdown__header">Notifikasi</div>
+                            @if($notifCount > 0)
+                                @foreach($notifGroups as $group)
+                                <a href="{{ route($notifChatRoute, ['room' => $group['room_id']]) }}" class="notif-item">
+                                    <div class="notif-item__avatar">{{ $group['initial'] }}</div>
+                                    <div class="notif-item__body">
+                                        <div class="notif-item__name">
+                                            {{ $group['nama'] }}
+                                            <span class="notif-item__count">{{ $group['count'] }}</span>
+                                        </div>
+                                    </div>
+                                </a>
+                                @endforeach
+                            @else
+                                <div class="notif-empty">Tidak ada notifikasi terbaru</div>
+                            @endif
+                        </div>
+                    </div>
+                    @endif
                     <div class="header-avatar">{{ strtoupper(substr(auth()->user()->name ?? 'P', 0, 1)) }}</div>
                     <div class="header-account">
                         <div class="header-account__name">{{ auth()->user()->name ?? 'Pengguna' }}</div>
@@ -1226,5 +1339,22 @@
     </div>
 
     @stack('scripts')
+    <script>
+        (function () {
+            var btn = document.getElementById('notifBtn');
+            var dropdown = document.getElementById('notifDropdown');
+            if (!btn || !dropdown) return;
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                dropdown.classList.toggle('open');
+            });
+            document.addEventListener('click', function () {
+                dropdown.classList.remove('open');
+            });
+            dropdown.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
+        })();
+    </script>
 </body>
 </html>
