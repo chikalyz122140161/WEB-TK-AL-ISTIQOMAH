@@ -84,6 +84,7 @@ class GuruController extends Controller
         ];
     }
 
+    // Jadwal Konseling
     public function jadwalKonseling(Request $request)
     {
         $bulanTahun = $request->get('bulan_tahun', date('Y-m'));
@@ -277,6 +278,7 @@ class GuruController extends Controller
         return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal konseling dibatalkan.');
     }
 
+    // Chat
     public function chat(Request $request)
     {
         $me     = auth()->user();
@@ -469,6 +471,7 @@ class GuruController extends Controller
         return $rows;
     }
 
+    // Laporan Perkembangan BK
     public function laporan(Request $request)
     {
         $classTerms = ClassTerm::with(['class', 'academicTerm'])->get()->map(fn($ct) => [
@@ -790,6 +793,7 @@ class GuruController extends Controller
         ];
     }
 
+    // Grafik Perkembangan
     public function grafik()
     {
         // ── 1. Load ClassTerms: semesters, kelas, siswa, counselings ───
@@ -939,6 +943,7 @@ class GuruController extends Controller
         return view('guru.grafik', compact('grafikPayload'));
     }
 
+    // Input Perkembangan
     public function inputPerkembangan()
     {
         $ctModels = ClassTerm::with([
@@ -1041,6 +1046,7 @@ class GuruController extends Controller
             ->with('success', "Perkembangan minggu ke-{$week} berhasil disimpan.");
     }
 
+    // Dashboard Guru
     public function dashboard(Request $request)
     {
         $now = now();
@@ -1132,11 +1138,7 @@ class GuruController extends Controller
         ));
     }
 
-    // ==================== ADMINISTRASI ====================
-
-    /**
-     * Kehadiran - Index (Form & List)
-     */
+    // Kehadiran Siswa
     public function kehadiranIndex(Request $request)
     {
         $classTerms = ClassTerm::with(['class', 'academicTerm'])
@@ -1234,9 +1236,7 @@ class GuruController extends Controller
         ])->with('success', 'Kehadiran berhasil diperbarui.');
     }
 
-    /**
-     * Laporan Administrasi - Index (Form & List)
-     */
+    // Laporan Administrasi
     public function laporanIndex(Request $request)
     {
         // Dummy data siswa
@@ -1260,18 +1260,13 @@ class GuruController extends Controller
         return view('guru.laporan.index', compact('siswaList', 'laporanList'));
     }
 
-    /**
-     * Laporan Administrasi - Generate
-     */
     public function laporanGenerate(Request $request)
     {
         // Dummy - redirect with success
         return redirect()->route('guru.laporan.index')->with('success', 'Laporan berhasil di-generate.');
     }
 
-    /**
-     * Jadwal - Index (Form & List)
-     */
+    // Kelola Jadwal
     public function jadwalIndex(Request $request)
     {
         $classTerms          = ClassTerm::with(['class', 'academicTerm'])->orderBy('created_at', 'desc')->get();
@@ -1302,18 +1297,12 @@ class GuruController extends Controller
         ));
     }
 
-    /**
-     * Jadwal - Create
-     */
     public function jadwalCreate()
     {
         $classTerms = ClassTerm::with(['class', 'academicTerm'])->orderBy('created_at', 'desc')->get();
         return view('guru.jadwal.create', compact('classTerms'));
     }
 
-    /**
-     * Jadwal - Store
-     */
     public function jadwalStore(Request $request)
     {
         if ($request->jenis_jadwal === 'kegiatan') {
@@ -1358,9 +1347,6 @@ class GuruController extends Controller
         return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil ditambahkan.');
     }
 
-    /**
-     * Jadwal - Edit
-     */
     public function jadwalEdit(Request $request, $id)
     {
         $jenis      = $request->query('jenis', 'kegiatan');
@@ -1375,9 +1361,6 @@ class GuruController extends Controller
         return view('guru.jadwal.edit', compact('jadwal', 'classTerms', 'jenis'));
     }
 
-    /**
-     * Jadwal - Update
-     */
     public function jadwalUpdate(Request $request, $id)
     {
         $jenis = $request->input('jenis_jadwal', 'kegiatan');
@@ -1424,9 +1407,6 @@ class GuruController extends Controller
         return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil diperbarui.');
     }
 
-    /**
-     * Jadwal - Delete
-     */
     public function jadwalDestroy(Request $request, $id)
     {
         $activity = ActivitySchedule::find($id);
@@ -1445,10 +1425,7 @@ class GuruController extends Controller
             ->with('success', 'Jadwal berhasil dihapus.');
     }
 
-    // ═══════════════════════════════════════════════════════
-    // RAPOT SEMESTER
-    // ═══════════════════════════════════════════════════════
-
+    // Rapot Semester
     public function rapotIndex()
     {
         $classTerms = ClassTerm::with(['class', 'academicTerm', 'enrollments.report'])->get();
