@@ -820,8 +820,21 @@ class OrangTuaController extends Controller
         $jadwalKonseling = [];
 
         if ($student) {
+            $activeClassTermId = \App\Models\StudentEnrollment::where('student_id', $student->id)
+                ->whereHas('classTerm', fn($q) => $q->where('isPass', false))
+                ->latest()
+                ->value('class_term_id');
+
             $schedules = PrivateCounselingSchedule::with('teacher')
-                ->where('student_id', $student->id)
+                ->where(function ($q) use ($user, $activeClassTermId) {
+                    $q->where('student_id', $user->id);
+                    if ($activeClassTermId) {
+                        $q->orWhere(function ($q2) use ($activeClassTermId) {
+                            $q2->whereNull('student_id')
+                               ->where('class_term_id', $activeClassTermId);
+                        });
+                    }
+                })
                 ->orderByDesc('date')
                 ->get();
 
@@ -894,7 +907,7 @@ class OrangTuaController extends Controller
         abort_if(!User::where('role', 'guru')->where('id', $request->teacher_id)->exists(), 403);
 
         PrivateCounselingSchedule::create([
-            'student_id'    => $student->id,
+            'student_id'    => $user->id,
             'teacher_id'    => $request->teacher_id,
             'class_term_id' => $request->class_term_id,
             'status'        => 'pending',

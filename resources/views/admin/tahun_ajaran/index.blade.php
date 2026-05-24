@@ -9,6 +9,38 @@
 
 @push('styles')
 <style>
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+.modal-overlay.active { display: flex; }
+.modal-box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,.2);
+    text-align: center;
+}
+.modal-icon {
+    width: 56px; height: 56px;
+    background: #fee2e2;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.25rem;
+}
+.modal-icon svg { color: #ef4444; }
+.modal-title { font-size: 1.1rem; font-weight: 700; color: #111827; margin-bottom: .5rem; }
+.modal-desc  { font-size: .9rem; color: #6b7280; margin-bottom: 1.5rem; line-height: 1.5; }
+.modal-actions { display: flex; gap: .75rem; justify-content: center; }
+</style>
+<style>
 .ta-table {
     width: 100%;
     border-collapse: collapse;
@@ -153,15 +185,15 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
                                     Edit
                                 </a>
-                                <form action="{{ route('admin.tahun_ajaran.destroy', $item->id) }}" method="POST"
-                                      onsubmit="return confirm('Hapus Tahun Ajaran {{ $item->academic_year }} Semester {{ ucfirst($item->semester) }}?')">
+                                <form id="del-form-{{ $item->id }}" action="{{ route('admin.tahun_ajaran.destroy', $item->id) }}" method="POST" style="display:none;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn--danger btn--sm">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
-                                        Hapus
-                                    </button>
                                 </form>
+                                <button type="button" class="btn btn--danger btn--sm"
+                                    onclick="confirmHapus('{{ $item->id }}', '{{ $item->academic_year }}', '{{ ucfirst($item->semester) }}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
+                                    Hapus
+                                </button>
                             @endif
                         </div>
                     </td>
@@ -172,4 +204,47 @@
         @endif
     </div>
 </div>
+
+{{-- Modal Konfirmasi Hapus --}}
+<div class="modal-overlay" id="hapusModal">
+    <div class="modal-box">
+        <div class="modal-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/>
+            </svg>
+        </div>
+        <p class="modal-title">Hapus Tahun Ajaran?</p>
+        <p class="modal-desc" id="hapusModalDesc"></p>
+        <div class="modal-actions">
+            <button type="button" class="btn btn--secondary" onclick="closeHapusModal()">Batal</button>
+            <button type="button" class="btn btn--danger" id="hapusConfirmBtn">Ya, Hapus</button>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+let _hapusFormId = null;
+
+function confirmHapus(id, tahun, semester) {
+    _hapusFormId = id;
+    document.getElementById('hapusModalDesc').textContent =
+        'Tahun Ajaran ' + tahun + ' Semester ' + semester + ' akan dihapus secara permanen.';
+    document.getElementById('hapusModal').classList.add('active');
+}
+
+function closeHapusModal() {
+    document.getElementById('hapusModal').classList.remove('active');
+    _hapusFormId = null;
+}
+
+document.getElementById('hapusConfirmBtn').addEventListener('click', function () {
+    if (_hapusFormId) document.getElementById('del-form-' + _hapusFormId).submit();
+});
+
+document.getElementById('hapusModal').addEventListener('click', function (e) {
+    if (e.target === this) closeHapusModal();
+});
+</script>
+@endpush
 @endsection

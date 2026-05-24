@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Models\Activity;
 use App\Models\AcademicTerm;
 use App\Models\ClassTerm;
@@ -903,7 +904,7 @@ class AdminController extends Controller
     public function kelasStore(Request $request)
     {
         $request->validate([
-            'nama'            => 'required|string|max:20|unique:class,name',
+            'nama'            => ['required', 'string', 'max:20', Rule::unique('class', 'name')->whereNull('deleted_at')],
             'jumlah_maksimum' => 'required|integer|min:1|max:50',
         ]);
 
@@ -929,7 +930,7 @@ class AdminController extends Controller
         $kelas = Classroom::findOrFail($id);
 
         $request->validate([
-            'nama'            => 'required|string|max:20|unique:class,name,' . $id,
+            'nama'            => ['required', 'string', 'max:20', Rule::unique('class', 'name')->ignore($id)->whereNull('deleted_at')],
             'jumlah_maksimum' => 'required|integer|min:1|max:50',
         ]);
 
