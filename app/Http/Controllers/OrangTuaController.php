@@ -73,20 +73,25 @@ class OrangTuaController extends Controller
                 ->count()
             : 0;
 
-        // Konseling mendatang (approved, belum lewat)
-        $konselingMendatang = $student
-            ? PrivateCounselingSchedule::where('student_id', $student->id)
-                ->where('status', 'approved')
-                ->where('date', '>=', $now->toDateString())
-                ->count()
-            : 0;
+        $activeClassTermId = $enrollment?->class_term_id;
 
-        // Konseling menunggu persetujuan (pending)
-        $konselingPending = $student
-            ? PrivateCounselingSchedule::where('student_id', $student->id)
-                ->where('status', 'pending')
-                ->count()
-            : 0;
+        // Konseling mendatang (approved, belum lewat) — per siswa + per kelas
+        $konselingMendatang = PrivateCounselingSchedule::where(function ($q) use ($user, $activeClassTermId) {
+                $q->where('student_id', $user->id);
+                if ($activeClassTermId) {
+                    $q->orWhere(function ($q2) use ($activeClassTermId) {
+                        $q2->whereNull('student_id')->where('class_term_id', $activeClassTermId);
+                    });
+                }
+            })
+            ->where('status', 'approved')
+            ->where('date', '>=', $now->toDateString())
+            ->count();
+
+        // Konseling menunggu persetujuan (pending) — pengajuan orang tua
+        $konselingPending = PrivateCounselingSchedule::where('student_id', $user->id)
+            ->where('status', 'pending')
+            ->count();
 
         return view('orangtua.dashboard', compact(
             'namaAnak', 'kelasAnak', 'tahunAjaran',
@@ -912,6 +917,7 @@ class OrangTuaController extends Controller
             'start_hour'    => $request->waktu_mulai,
             'end_hour'      => $request->waktu_selesai,
             'topic'         => $request->topik,
+            'source'        => 'orangtua',
         ]);
 
         Activity::log("mengajukan jadwal konseling untuk siswa {$student->name} pada {$request->tanggal}");
@@ -926,7 +932,7 @@ class OrangTuaController extends Controller
 
         $schedule = PrivateCounselingSchedule::with('teacher')
             ->where('id', $id)
-            ->where('student_id', $student->id)
+            ->where('student_id', $user->id)
             ->firstOrFail();
 
         if ($schedule->status !== 'pending') {
@@ -971,7 +977,7 @@ class OrangTuaController extends Controller
         $student = Student::where('user_id', $user->id)->firstOrFail();
 
         $schedule = PrivateCounselingSchedule::where('id', $id)
-            ->where('student_id', $student->id)
+            ->where('student_id', $user->id)
             ->firstOrFail();
 
         abort_if($schedule->status !== 'pending', 403, 'Jadwal tidak dapat diedit.');
@@ -994,7 +1000,7 @@ class OrangTuaController extends Controller
         $student = Student::where('user_id', $user->id)->firstOrFail();
 
         $schedule = PrivateCounselingSchedule::where('id', $id)
-            ->where('student_id', $student->id)
+            ->where('student_id', $user->id)
             ->firstOrFail();
 
         abort_if($schedule->status !== 'pending', 403, 'Jadwal tidak dapat dibatalkan.');
