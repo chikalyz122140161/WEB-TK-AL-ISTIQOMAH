@@ -29,6 +29,7 @@ class OrangTuaController extends Controller
         ] : ['id' => 1, 'nama' => '-', 'class' => '-'];
     }
 
+    // Dashboard Orang Tua
     public function dashboard()
     {
         $user    = auth()->user();
@@ -95,6 +96,7 @@ class OrangTuaController extends Controller
         ));
     }
 
+    // Presensi Siswa
     public function presensi(Request $request)
     {
         $user    = auth()->user();
@@ -191,6 +193,7 @@ class OrangTuaController extends Controller
         return now()->year;
     }
 
+    // Laporan Perkembangan
     public function laporan(Request $request)
     {
         $student = $this->getStudentData();
@@ -223,10 +226,7 @@ class OrangTuaController extends Controller
         return view('orangtua.laporan_detail', compact('report', 'student', 'teacher'));
     }
 
-    // ═══════════════════════════════════════════════════════
-    // JADWAL (dengan sub-fitur)
-    // ═══════════════════════════════════════════════════════
-    
+    // Jadwal
     public function jadwal(Request $request)
     {
         return redirect()->route('orangtua.jadwal.pembelajaran');
@@ -336,10 +336,7 @@ class OrangTuaController extends Controller
     }
 
 
-    // ═══════════════════════════════════════════════════════
-    // RAPOT SEMESTER
-    // ═══════════════════════════════════════════════════════
-    
+    // Rapot Semester
     public function rapot(Request $request)
     {
         $user    = auth()->user();
@@ -504,10 +501,7 @@ class OrangTuaController extends Controller
         return $pdf->download($filename);
     }
 
-    // ═══════════════════════════════════════════════════════
-    // BIMBINGAN KONSELING
-    // ═══════════════════════════════════════════════════════
-
+    // Laporan Mingguan BK
     public function reportMingguan(Request $request)
     {
         $user    = auth()->user();
@@ -612,6 +606,7 @@ class OrangTuaController extends Controller
         ));
     }
 
+    // Grafik Perkembangan
     public function grafik()
     {
         $user    = auth()->user();
@@ -695,6 +690,7 @@ class OrangTuaController extends Controller
         return view('orangtua.grafik', compact('payload'));
     }
 
+    // Chat
     public function chat(Request $request)
     {
         $me     = auth()->user();
@@ -812,6 +808,7 @@ class OrangTuaController extends Controller
         return redirect()->route('orangtua.chat', ['room' => $room->id]);
     }
 
+    // Konseling
     public function konseling()
     {
         $user    = auth()->user();
