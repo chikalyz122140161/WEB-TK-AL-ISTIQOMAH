@@ -60,9 +60,10 @@ class GuruController extends Controller
         $isKelas   = is_null($s->student_id);
         $classTerm = $s->classTerm;
         $count     = $isKelas ? ($classTerm ? $classTerm->enrollments()->count() : 0) : 0;
+        // student() now returns the parent User; childStudent() returns the actual Student record
         $siswa     = $isKelas
             ? ($classTerm?->class?->name ?? 'Kelas') . ' (' . $count . ' siswa)'
-            : ($s->student?->name ?? '-');
+            : ($s->childStudent?->name ?? $s->student?->name ?? '-');
         $semLabel = $this->academicTermLabel($classTerm?->academicTerm);
         return [
             'id'          => $s->id,
@@ -70,12 +71,12 @@ class GuruController extends Controller
             'tanggal_raw' => $s->date?->format('Y-m-d') ?? '',
             'tanggal_sort'=> $s->date?->format('Y-m-d') ?? '',
             'waktu'       => ($s->start_hour ?? '') . ' - ' . ($s->end_hour ?? ''),
-            'orang_tua'   => $s->student?->user?->email ?? '-',
+            'orang_tua'   => $s->student?->email ?? '-',
             'siswa'       => $siswa,
             'class_term'  => ($classTerm?->class?->name ?? '-') . ' — ' . $semLabel,
             'kelas'       => $classTerm?->class?->name ?? '-',
-            'tipe'        => $isKelas ? 'per_kelas' : 'per_siswa',
-            'dari'        => 'guru',
+            'tipe'        => $isKelas ? 'per_kelas' : ($s->source === 'orangtua' ? 'pengajuan' : 'per_siswa'),
+            'dari'        => $s->source === 'orangtua' ? 'orang_tua' : 'guru',
             'topik'       => $s->topic ?? '',
             'status'      => $s->status ?? 'pending',
             'bulan'       => (int) ($s->date?->format('n') ?? 0),
@@ -90,7 +91,7 @@ class GuruController extends Controller
         $bulanTahun = $request->get('bulan_tahun', date('Y-m'));
         [$tahunFilter, $bulan] = array_map('intval', explode('-', $bulanTahun));
 
-        $jadwal = PrivateCounselingSchedule::with(['student.user', 'classTerm.class', 'classTerm.academicTerm'])
+        $jadwal = PrivateCounselingSchedule::with(['student', 'childStudent', 'classTerm.class', 'classTerm.academicTerm'])
             ->whereYear('date', $tahunFilter)
             ->whereMonth('date', $bulan)
             ->orderByDesc('date')
@@ -128,10 +129,11 @@ class GuruController extends Controller
             Activity::log("membuat jadwal konseling per kelas pada {$request->tanggal}");
         } else {
             $request->validate(['siswa_id' => 'required|exists:student,id']);
-            PrivateCounselingSchedule::create(array_merge($base, ['student_id' => $request->siswa_id]));
+            $studentRecord = Student::findOrFail($request->siswa_id);
+            abort_if(!$studentRecord->user_id, 422, 'Siswa tidak memiliki akun orang tua.');
+            PrivateCounselingSchedule::create(array_merge($base, ['student_id' => $studentRecord->user_id]));
             $msg = 'Jadwal konseling berhasil dibuat.';
-            $studentName = Student::find($request->siswa_id)?->name ?? '-';
-            Activity::log("membuat jadwal konseling untuk {$studentName} pada {$request->tanggal}");
+            Activity::log("membuat jadwal konseling untuk {$studentRecord->name} pada {$request->tanggal}");
         }
 
         return redirect()->route('guru.jadwal_konseling')->with('success', $msg);
@@ -229,7 +231,7 @@ class GuruController extends Controller
 
     public function jadwalKonselingShow($id)
     {
-        $s = PrivateCounselingSchedule::with(['student.user', 'classTerm.class', 'classTerm.academicTerm'])
+        $s = PrivateCounselingSchedule::with(['student', 'childStudent', 'classTerm.class', 'classTerm.academicTerm'])
             ->findOrFail($id);
         $jadwal = $this->scheduleToArray($s);
         return view('guru.jadwal_konseling_show', compact('jadwal'));
@@ -237,7 +239,7 @@ class GuruController extends Controller
 
     public function jadwalKonselingEdit($id)
     {
-        $s = PrivateCounselingSchedule::with(['student.user', 'classTerm.class', 'classTerm.academicTerm'])
+        $s = PrivateCounselingSchedule::with(['student', 'childStudent', 'classTerm.class', 'classTerm.academicTerm'])
             ->findOrFail($id);
         $jadwal = $this->scheduleToArray($s);
         return view('guru.jadwal_konseling_edit', compact('jadwal'));

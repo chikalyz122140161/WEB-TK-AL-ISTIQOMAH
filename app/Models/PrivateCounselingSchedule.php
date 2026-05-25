@@ -23,6 +23,7 @@ class PrivateCounselingSchedule extends Model
         'start_hour',
         'end_hour',
         'topic',
+        'source',
     ];
 
     protected function casts(): array
@@ -30,9 +31,16 @@ class PrivateCounselingSchedule extends Model
         return ['date' => 'date'];
     }
 
+    // student_id FK references user.id (the orang tua's user account)
     public function student()
     {
-        return $this->belongsTo(Student::class, 'student_id');
+        return $this->belongsTo(User::class, 'student_id');
+    }
+
+    // actual child/student record found via user_id = student_id
+    public function childStudent()
+    {
+        return $this->hasOne(Student::class, 'user_id', 'student_id');
     }
 
     public function teacher()
