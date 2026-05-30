@@ -82,7 +82,16 @@ class DatabaseBackupService
         try {
             foreach ($statements as $statement) {
                 $trimmed = trim($statement);
-                if ($trimmed === '' || str_starts_with($trimmed, '--')) {
+                if ($trimmed === '') {
+                    continue;
+                }
+                // Strip leading comment lines so a comment before DROP TABLE isn't mistaken for a comment-only block
+                $lines = array_filter(
+                    explode("\n", $trimmed),
+                    fn($line) => ! str_starts_with(trim($line), '--')
+                );
+                $trimmed = trim(implode("\n", $lines));
+                if ($trimmed === '') {
                     continue;
                 }
                 DB::unprepared($trimmed);
