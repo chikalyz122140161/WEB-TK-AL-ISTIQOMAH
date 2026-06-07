@@ -14,8 +14,8 @@
     border-collapse: collapse;
 }
 .konseling-table thead tr {
-    background: #FFFDE7;
-    border-bottom: 2px solid #e6db00;
+    background: #f8fafb;
+    border-bottom: 2px solid #e5e7eb;
 }
 .konseling-table th {
     padding: 14px 20px;
@@ -144,6 +144,9 @@
     justify-content: center;
 }
 .modal-actions .btn { min-width: 100px; }
+.card__body {
+    overflow-x: scroll;
+}
 </style>
 @endpush
 

@@ -174,7 +174,8 @@
 }
 .avatar--female { background: linear-gradient(135deg, #F06292, #e91e8c); }
 
-.empty-state { text-align: center; padding: 40px 20px; color: #a8a29e; }
+.empty-state { text-align: center; padding: 40px 20px; color: #a8a29e;         cursor: not-allowed;
+}
 .empty-state svg { width: 40px; height: 40px; fill: #d6d3d1; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto; }
 </style>
 @endpush

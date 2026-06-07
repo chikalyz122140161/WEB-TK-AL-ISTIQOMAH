@@ -126,6 +126,9 @@
     align-items: center;
     gap: .5rem;
 }
+.card__body {
+    overflow-x: scroll;
+}
 </style>
 @endpush
 

@@ -108,6 +108,9 @@
 .modal-title { font-size: 1.1rem; font-weight: 700; color: #111827; margin-bottom: .5rem; }
 .modal-desc  { font-size: .9rem; color: #6b7280; margin-bottom: 1.5rem; line-height: 1.5; }
 .modal-actions { display: flex; gap: .75rem; justify-content: center; }
+.card__body {
+    overflow-x: scroll;
+}
 </style>
 @endpush
 

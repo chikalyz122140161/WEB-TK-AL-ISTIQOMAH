@@ -75,7 +75,8 @@
 }
 .assign-row__count--filled { background: rgba(76,175,130,0.15); color: #2E8B60; }
 
-.empty-state { text-align: center; padding: 40px 20px; color: #a8a29e; }
+.empty-state { text-align: center; padding: 40px 20px; color: #a8a29e;         cursor: not-allowed;
+ }
 </style>
 @endpush
 

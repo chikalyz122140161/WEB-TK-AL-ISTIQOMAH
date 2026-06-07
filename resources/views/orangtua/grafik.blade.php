@@ -8,132 +8,235 @@
 @endsection
 
 @push('styles')
-<style>
-    /* ── Filter ─────────────────────────────── */
-    .gp-filter-card {
-        background: #fff;
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 14px 16px;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 12px;
-        margin-bottom: 16px;
-        box-shadow: var(--shadow-xs);
-    }
-    .gp-field { display: flex; flex-direction: column; gap: 4px; }
-    .gp-field__label {
-        font-size: 11px; font-weight: 600;
-        color: var(--text-mid); text-transform: uppercase;
-        letter-spacing: 0.04em;
-    }
-    .gp-select {
-        padding: 9px 13px; font-size: 13px;
-        border: 1px solid var(--border); border-radius: 7px;
-        background: #fff; color: var(--text); outline: none;
-        cursor: pointer; font-family: inherit;
-        transition: border-color .15s;
-        appearance: none;
-    }
-    .gp-select:focus  { border-color: var(--green); box-shadow: 0 0 0 3px var(--green-12); }
-    .gp-select:disabled { background: #f9fafb; color: #9ca3af; cursor: default; }
+    <style>
+        /* ── Filter ─────────────────────────────── */
+        .gp-filter-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-xs);
+        }
 
-    /* ── Stats ───────────────────────────────── */
-    .gp-stats {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 12px; margin-bottom: 16px;
-    }
-    @media (max-width: 640px) { .gp-stats { grid-template-columns: repeat(2, 1fr); } }
+        .gp-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
 
-    /* ── Chart card grid ─────────────────────── */
-    .gp-chart-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
-    }
-    .gp-chart-grid.is-single { grid-template-columns: 1fr; }
-    @media (max-width: 900px) { .gp-chart-grid { grid-template-columns: 1fr; } }
+        .gp-field__label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-mid);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
 
-    .gp-chart-card {
-        background: #fff;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 16px 18px 14px;
-        box-shadow: var(--shadow-xs);
-    }
-    .gp-chart-card__head {
-        display: flex; justify-content: space-between; align-items: center;
-        gap: 10px; margin-bottom: 8px;
-    }
-    .gp-chart-card__title {
-        font-size: 14px; font-weight: 700;
-        color: var(--text); margin: 0;
-        display: flex; align-items: center; gap: 8px;
-    }
-    .gp-chart-card__title svg { width: 16px; height: 16px; fill: var(--green-dark); }
-    .gp-chart-card__sub {
-        font-size: 11px; color: var(--text-mid);
-    }
-    .gp-chart-card__count {
-        background: #f3f4f6; color: #374151;
-        border-radius: 99px; padding: 2px 9px;
-        font-size: 11px; font-weight: 600;
-    }
-    .gp-chart-wrap { position: relative; height: 260px; }
-    .gp-chart-grid.is-single .gp-chart-wrap { height: 320px; }
+        .gp-select {
+            padding: 9px 13px;
+            font-size: 13px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            background: #fff;
+            color: var(--text);
+            outline: none;
+            cursor: pointer;
+            font-family: inherit;
+            transition: border-color .15s;
+            appearance: none;
+        }
 
-    /* ── Legend ──────────────────────────────── */
-    .gp-legend {
-        display: flex; flex-wrap: wrap; gap: 10px;
-        margin-top: 10px; padding-top: 8px;
-        border-top: 1px solid var(--border-subtle);
-    }
-    .gp-legend__item {
-        display: inline-flex; align-items: center; gap: 5px;
-        font-size: 11px; color: var(--text-mid);
-    }
-    .gp-legend__dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .gp-select:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px var(--green-12);
+        }
 
-    /* ── Skala ──────────────────────────────── */
-    .gp-skala {
-        background: #fff;
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 12px 16px;
-        margin-top: 14px;
-        font-size: 12px;
-    }
-    .gp-skala__title {
-        font-size: 11px; font-weight: 700; color: var(--text);
-        text-transform: uppercase; letter-spacing: 0.04em; margin: 0 0 8px;
-    }
-    .gp-skala__list {
-        list-style: none; margin: 0; padding: 0;
-        display: flex; flex-wrap: wrap; gap: 14px;
-    }
-    .gp-skala__list li {
-        display: flex; align-items: center; gap: 6px;
-        color: var(--text-mid);
-    }
-    .gp-skala__list li strong { color: var(--text); }
-    .gp-skala__dot { width: 10px; height: 10px; border-radius: 50%; }
+        .gp-select:disabled {
+            background: #f9fafb;
+            color: #9ca3af;
+            cursor: default;
+        }
 
-    /* ── Empty ───────────────────────────────── */
-    .gp-empty {
-        text-align: center; padding: 50px 20px;
-        color: #a8a29e; font-size: 13px;
-        background: #fff; border: 1px dashed var(--border);
-        border-radius: 12px;
-    }
-</style>
+        /* ── Stats ───────────────────────────────── */
+        .gp-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 640px) {
+            .gp-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ── Chart card grid ─────────────────────── */
+        .gp-chart-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .gp-chart-grid.is-single {
+            grid-template-columns: 1fr;
+        }
+
+        @media (max-width: 900px) {
+            .gp-chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .gp-chart-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 18px 14px;
+            box-shadow: var(--shadow-xs);
+        }
+
+        .gp-chart-card__head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .gp-chart-card__title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .gp-chart-card__title svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--green-dark);
+        }
+
+        .gp-chart-card__sub {
+            font-size: 11px;
+            color: var(--text-mid);
+        }
+
+        .gp-chart-card__count {
+            background: #f3f4f6;
+            color: #374151;
+            border-radius: 99px;
+            padding: 2px 9px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .gp-chart-wrap {
+            position: relative;
+            height: 260px;
+        }
+
+        .gp-chart-grid.is-single .gp-chart-wrap {
+            height: 320px;
+        }
+
+        /* ── Legend ──────────────────────────────── */
+        .gp-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .gp-legend__item {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: var(--text-mid);
+        }
+
+        .gp-legend__dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ── Skala ──────────────────────────────── */
+        .gp-skala {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-top: 14px;
+            font-size: 12px;
+        }
+
+        .gp-skala__title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin: 0 0 8px;
+        }
+
+        .gp-skala__list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .gp-skala__list li {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-mid);
+        }
+
+        .gp-skala__list li strong {
+            color: var(--text);
+        }
+
+        .gp-skala__dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* ── Empty ───────────────────────────────── */
+        .gp-empty {
+            text-align: center;
+            padding: 50px 20px;
+            color: #a8a29e;
+            font-size: 13px;
+            background: #fff;
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+        }
+    </style>
 @endpush
 
 @section('content')
 
     {{-- Header --}}
     <div style="margin-bottom:16px">
-        <span style="background:linear-gradient(135deg,var(--green),var(--green-dark));color:#fff;padding:7px 16px;border-radius:8px;font-size:14px;font-weight:700;box-shadow:0 2px 8px var(--green-20);">
+        <span
+            style="background:linear-gradient(135deg,var(--green),var(--green-dark));color:#fff;padding:7px 16px;border-radius:8px;font-size:14px;font-weight:700;box-shadow:0 2px 8px var(--green-20);">
             Grafik Perkembangan Konseling
         </span>
     </div>
@@ -159,7 +262,11 @@
         <div class="stat-card stat-card--primary">
             <div class="stat-card__header">
                 <span class="stat-card__label">BSB</span>
-                <svg class="stat-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd"/></svg>
+                <svg class="stat-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd"
+                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
+                        clip-rule="evenodd" />
+                </svg>
             </div>
             <div class="stat-card__value" id="sBsb">0</div>
             <div class="stat-card__sub">Berkembang Sangat Baik</div>
@@ -167,7 +274,11 @@
         <div class="stat-card">
             <div class="stat-card__header">
                 <span class="stat-card__label">BSH</span>
-                <svg class="stat-card__icon stat-card__icon--green" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
+                <svg class="stat-card__icon stat-card__icon--green" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd"
+                        d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
+                        clip-rule="evenodd" />
+                </svg>
             </div>
             <div class="stat-card__value" id="sBsh">0</div>
             <div class="stat-card__sub">Berkembang Sesuai Harapan</div>
@@ -175,7 +286,11 @@
         <div class="stat-card stat-card--secondary">
             <div class="stat-card__header">
                 <span class="stat-card__label">MB</span>
-                <svg class="stat-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
+                <svg class="stat-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd"
+                        d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z"
+                        clip-rule="evenodd" />
+                </svg>
             </div>
             <div class="stat-card__value" id="sMb">0</div>
             <div class="stat-card__sub">Mulai Berkembang</div>
@@ -183,7 +298,11 @@
         <div class="stat-card stat-card--accent">
             <div class="stat-card__header">
                 <span class="stat-card__label">BB</span>
-                <svg class="stat-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd"/></svg>
+                <svg class="stat-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd"
+                        d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
+                        clip-rule="evenodd" />
+                </svg>
             </div>
             <div class="stat-card__value" id="sBb">0</div>
             <div class="stat-card__sub">Belum Berkembang</div>
@@ -201,148 +320,173 @@
     <div class="gp-skala">
         <p class="gp-skala__title">Keterangan Skala</p>
         <ul class="gp-skala__list">
-            <li><span class="gp-skala__dot" style="background:#d81b72"></span> <strong>1 (BB)</strong> — Belum Berkembang</li>
-            <li><span class="gp-skala__dot" style="background:#e6db00"></span> <strong>2 (MB)</strong> — Mulai Berkembang</li>
-            <li><span class="gp-skala__dot" style="background:#4CAF82"></span> <strong>3 (BSH)</strong> — Berkembang Sesuai Harapan</li>
-            <li><span class="gp-skala__dot" style="background:#2E8B60"></span> <strong>4 (BSB)</strong> — Berkembang Sangat Baik</li>
+            <li><span class="gp-skala__dot" style="background:#d81b72"></span> <strong>1 (BB)</strong> — Belum Berkembang
+            </li>
+            <li><span class="gp-skala__dot" style="background:#e6db00"></span> <strong>2 (MB)</strong> — Mulai Berkembang
+            </li>
+            <li><span class="gp-skala__dot" style="background:#4CAF82"></span> <strong>3 (BSH)</strong> — Berkembang Sesuai
+                Harapan</li>
+            <li><span class="gp-skala__dot" style="background:#2E8B60"></span> <strong>4 (BSB)</strong> — Berkembang Sangat
+                Baik</li>
         </ul>
     </div>
 
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script>
-const PAYLOAD = @json($payload ?? null);
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        const PAYLOAD = @json($payload ?? null);
 
-if (!PAYLOAD) {
-    document.getElementById('chartGrid').innerHTML =
-        '<div class="gp-empty" style="display:block">Tidak ada data rapot yang tersedia.</div>';
-}
+        if (!PAYLOAD) {
+            document.getElementById('chartGrid').innerHTML =
+                '<div class="gp-empty" style="display:block">Tidak ada data rapot yang tersedia.</div>';
+        }
 
-const PALETTE = ['#3D9B72', '#F59E0B', '#3B82F6', '#EC4899', '#8B5CF6', '#06B6D4'];
-const LV      = {1:'BB', 2:'MB', 3:'BSH', 4:'BSB'};
-const TICK    = '#5D4037';
-const GRID    = 'rgba(62,39,35,0.06)';
+        const PALETTE = ['#3D9B72', '#F59E0B', '#3B82F6', '#EC4899', '#8B5CF6', '#06B6D4'];
+        const LV = {
+            1: 'BB',
+            2: 'MB',
+            3: 'BSH',
+            4: 'BSB'
+        };
+        const TICK = '#5D4037';
+        const GRID = 'rgba(62,39,35,0.06)';
 
-const selCT        = document.getElementById('selClassTerm');
-const selMinggu    = document.getElementById('selMinggu');
-const selKonseling = document.getElementById('selKonseling');
-const chartGrid    = document.getElementById('chartGrid');
-const emptyState   = document.getElementById('emptyState');
+        const selCT = document.getElementById('selClassTerm');
+        const selMinggu = document.getElementById('selMinggu');
+        const selKonseling = document.getElementById('selKonseling');
+        const chartGrid = document.getElementById('chartGrid');
+        const emptyState = document.getElementById('emptyState');
 
-let charts = [];
+        let charts = [];
 
-if (PAYLOAD) {
-    /* ── Populate class term dropdown ── */
-    PAYLOAD.classTerms.forEach(ct => {
-        const o = document.createElement('option');
-        o.value = ct.id; o.textContent = ct.label;
-        selCT.appendChild(o);
-    });
+        if (PAYLOAD) {
+            /* ── Populate class term dropdown ── */
+            PAYLOAD.classTerms.forEach(ct => {
+                const o = document.createElement('option');
+                o.value = ct.id;
+                o.textContent = ct.label;
+                selCT.appendChild(o);
+            });
 
-    /* ── Populate konseling dropdown ── */
-    const optAllK = document.createElement('option');
-    optAllK.value = '__all__'; optAllK.textContent = 'Semua Konseling';
-    selKonseling.appendChild(optAllK);
-    PAYLOAD.konselings.forEach(con => {
-        const o = document.createElement('option');
-        o.value = con.id; o.textContent = con.nama;
-        selKonseling.appendChild(o);
-    });
+            /* ── Populate konseling dropdown ── */
+            const optAllK = document.createElement('option');
+            optAllK.value = '__all__';
+            optAllK.textContent = 'Semua Konseling';
+            selKonseling.appendChild(optAllK);
+            PAYLOAD.konselings.forEach(con => {
+                const o = document.createElement('option');
+                o.value = con.id;
+                o.textContent = con.nama;
+                selKonseling.appendChild(o);
+            });
 
-    /* ── On class term change: rebuild weeks ── */
-    function rebuildWeeks(ctId) {
-        selMinggu.innerHTML = '';
-        const optAll = document.createElement('option');
-        optAll.value = '__all__'; optAll.textContent = 'Semua Minggu';
-        selMinggu.appendChild(optAll);
-        const weeks = PAYLOAD.weeks[ctId] || [];
-        weeks.forEach(w => {
-            const o = document.createElement('option');
-            o.value = w; o.textContent = 'Minggu ' + w;
-            selMinggu.appendChild(o);
-        });
-    }
+            /* ── On class term change: rebuild weeks ── */
+            function rebuildWeeks(ctId) {
+                selMinggu.innerHTML = '';
+                const optAll = document.createElement('option');
+                optAll.value = '__all__';
+                optAll.textContent = 'Semua Minggu';
+                selMinggu.appendChild(optAll);
+                const weeks = PAYLOAD.weeks[ctId] || [];
+                weeks.forEach(w => {
+                    const o = document.createElement('option');
+                    o.value = w;
+                    o.textContent = 'Minggu ' + w;
+                    selMinggu.appendChild(o);
+                });
+            }
 
-    selCT.addEventListener('change', () => { rebuildWeeks(selCT.value); render(); });
-    selMinggu.addEventListener('change', render);
-    selKonseling.addEventListener('change', render);
+            selCT.addEventListener('change', () => {
+                rebuildWeeks(selCT.value);
+                render();
+            });
+            selMinggu.addEventListener('change', render);
+            selKonseling.addEventListener('change', render);
 
-    /* Init weeks for first class term */
-    rebuildWeeks(PAYLOAD.classTerms[0]?.id || '');
-    render();
-}
+            /* Init weeks for first class term */
+            rebuildWeeks(PAYLOAD.classTerms[0]?.id || '');
+            render();
+        }
 
-function hexA(hex, a) {
-    const r = parseInt(hex.slice(1,3),16),
-          g = parseInt(hex.slice(3,5),16),
-          b = parseInt(hex.slice(5,7),16);
-    return `rgba(${r},${g},${b},${a})`;
-}
+        function hexA(hex, a) {
+            const r = parseInt(hex.slice(1, 3), 16),
+                g = parseInt(hex.slice(3, 5), 16),
+                b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r},${g},${b},${a})`;
+        }
 
-function destroyCharts() { charts.forEach(c => c.destroy()); charts = []; }
+        function destroyCharts() {
+            charts.forEach(c => c.destroy());
+            charts = [];
+        }
 
-function currentWeeks() {
-    return PAYLOAD.weeks[selCT.value] || [];
-}
+        function currentWeeks() {
+            return PAYLOAD.weeks[selCT.value] || [];
+        }
 
-function getKonselingsInScope() {
-    return selKonseling.value === '__all__'
-        ? PAYLOAD.konselings
-        : PAYLOAD.konselings.filter(c => c.id === selKonseling.value);
-}
+        function getKonselingsInScope() {
+            return selKonseling.value === '__all__' ?
+                PAYLOAD.konselings :
+                PAYLOAD.konselings.filter(c => c.id === selKonseling.value);
+        }
 
-function render() {
-    if (!PAYLOAD) return;
-    const ctId  = selCT.value;
-    const week  = selMinggu.value;
-    const weeks = currentWeeks();
+        function render() {
+            if (!PAYLOAD) return;
+            const ctId = selCT.value;
+            const week = selMinggu.value;
+            const weeks = currentWeeks();
 
-    renderStats(ctId, week, weeks);
-    renderCharts(ctId, week, weeks);
-}
+            renderStats(ctId, week, weeks);
+            renderCharts(ctId, week, weeks);
+        }
 
-function renderStats(ctId, week, weeks) {
-    const counts   = {1:0, 2:0, 3:0, 4:0};
-    const kons     = getKonselingsInScope();
-    const ctScores = PAYLOAD.scores[ctId] || {};
-    const wList    = week === '__all__' ? weeks : [parseInt(week, 10)];
+        function renderStats(ctId, week, weeks) {
+            const counts = {
+                1: 0,
+                2: 0,
+                3: 0,
+                4: 0
+            };
+            const kons = getKonselingsInScope();
+            const ctScores = PAYLOAD.scores[ctId] || {};
+            const wList = week === '__all__' ? weeks : [parseInt(week, 10)];
 
-    kons.forEach(con => {
-        wList.forEach(w => {
-            const v = Math.round((ctScores[con.id] || {})[w]);
-            if (v >= 1 && v <= 4) counts[v]++;
-        });
-    });
+            kons.forEach(con => {
+                wList.forEach(w => {
+                    const v = Math.round((ctScores[con.id] || {})[w]);
+                    if (v >= 1 && v <= 4) counts[v]++;
+                });
+            });
 
-    document.getElementById('sBsb').textContent = counts[4];
-    document.getElementById('sBsh').textContent = counts[3];
-    document.getElementById('sMb').textContent  = counts[2];
-    document.getElementById('sBb').textContent  = counts[1];
-}
+            document.getElementById('sBsb').textContent = counts[4];
+            document.getElementById('sBsh').textContent = counts[3];
+            document.getElementById('sMb').textContent = counts[2];
+            document.getElementById('sBb').textContent = counts[1];
+        }
 
-function renderCharts(ctId, week, weeks) {
-    destroyCharts();
-    chartGrid.innerHTML = '';
+        function renderCharts(ctId, week, weeks) {
+            destroyCharts();
+            chartGrid.innerHTML = '';
 
-    const kons = getKonselingsInScope();
-    chartGrid.classList.toggle('is-single', kons.length === 1);
+            const kons = getKonselingsInScope();
+            chartGrid.classList.toggle('is-single', kons.length === 1);
 
-    if (kons.length === 0 || weeks.length === 0) {
-        emptyState.style.display = 'block';
-        return;
-    }
-    emptyState.style.display = 'none';
+            if (kons.length === 0 || weeks.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            emptyState.style.display = 'none';
 
-    const safeId = id => id.replace(/[^a-zA-Z0-9_-]/g, '_');
-    const ctScores = PAYLOAD.scores[ctId] || {};
+            const safeId = id => id.replace(/[^a-zA-Z0-9_-]/g, '_');
+            const ctScores = PAYLOAD.scores[ctId] || {};
 
-    kons.forEach((con, idx) => {
-        const sid  = safeId(con.id);
-        const card = document.createElement('div');
-        card.className = 'gp-chart-card';
-        card.innerHTML = `
+            kons.forEach((con, idx) => {
+                const sid = safeId(con.id);
+                const card = document.createElement('div');
+                card.className = 'gp-chart-card';
+                card.innerHTML = `
             <div class="gp-chart-card__head">
                 <h3 class="gp-chart-card__title">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2.25 13.5a8.25 8.25 0 0 1 8.25-8.25.75.75 0 0 1 .75.75v6.75H18a.75.75 0 0 1 .75.75 8.25 8.25 0 0 1-16.5 0Z" clip-rule="evenodd"/><path fill-rule="evenodd" d="M12.75 3a.75.75 0 0 1 .75-.75 8.25 8.25 0 0 1 8.25 8.25.75.75 0 0 1-.75.75h-7.5a.75.75 0 0 1-.75-.75V3Z" clip-rule="evenodd"/></svg>
@@ -354,91 +498,113 @@ function renderCharts(ctId, week, weeks) {
             <div class="gp-chart-wrap"><canvas id="canvas-${sid}"></canvas></div>
             <div class="gp-legend" id="legend-${sid}"></div>
         `;
-        chartGrid.appendChild(card);
+                chartGrid.appendChild(card);
 
-        const labels = weeks.map(w => 'Mg' + w);
-        const data   = weeks.map(w => (ctScores[con.id] || {})[w] ?? null);
-        const color  = PALETTE[idx % PALETTE.length];
+                const labels = weeks.map(w => 'Mg' + w);
+                const data = weeks.map(w => (ctScores[con.id] || {})[w] ?? null);
+                const color = PALETTE[idx % PALETTE.length];
 
-        document.getElementById('legend-' + sid).innerHTML = `
+                document.getElementById('legend-' + sid).innerHTML = `
             <span class="gp-legend__item">
                 <span class="gp-legend__dot" style="background:${color}"></span>
                 ${PAYLOAD.student.nama}
             </span>`;
 
-        const wIdx = week === '__all__' ? null : weeks.indexOf(parseInt(week, 10));
-        const ctx  = document.getElementById('canvas-' + sid).getContext('2d');
+                const wIdx = week === '__all__' ? null : weeks.indexOf(parseInt(week, 10));
+                const ctx = document.getElementById('canvas-' + sid).getContext('2d');
 
-        const chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels,
-                datasets: [{
-                    label: PAYLOAD.student.nama,
-                    data,
-                    borderColor: color,
-                    backgroundColor: hexA(color, 0.15),
-                    borderWidth: 2.5,
-                    pointRadius: 4,
-                    tension: 0.35,
-                    fill: true,
-                }],
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: { mode: 'nearest', intersect: false },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: '#fff',
-                        titleColor: '#3E2723',
-                        bodyColor: '#5D4037',
-                        borderColor: 'rgba(62,39,35,0.15)',
-                        borderWidth: 1,
-                        callbacks: {
-                            label: item => {
-                                const v = item.raw;
-                                if (v == null) return ' ' + item.dataset.label + ': -';
-                                const tag = LV[Math.round(v)] ? ` (${LV[Math.round(v)]})` : '';
-                                return ` ${item.dataset.label}: ${v}${tag}`;
-                            }
+                const chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: PAYLOAD.student.nama,
+                            data,
+                            borderColor: color,
+                            backgroundColor: hexA(color, 0.15),
+                            borderWidth: 2.5,
+                            pointRadius: 4,
+                            tension: 0.35,
+                            fill: true,
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'nearest',
+                            intersect: false
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: '#fff',
+                                titleColor: '#3E2723',
+                                bodyColor: '#5D4037',
+                                borderColor: 'rgba(62,39,35,0.15)',
+                                borderWidth: 1,
+                                callbacks: {
+                                    label: item => {
+                                        const v = item.raw;
+                                        if (v == null) return ' ' + item.dataset.label + ': -';
+                                        const tag = LV[Math.round(v)] ? ` (${LV[Math.round(v)]})` : '';
+                                        return ` ${item.dataset.label}: ${v}${tag}`;
+                                    }
+                                }
+                            },
+                        },
+                        scales: {
+                            y: {
+                                min: 1,
+                                max: 4.3,
+                                ticks: {
+                                    stepSize: 1,
+                                    callback: v => LV[v] || '',
+                                    color: TICK,
+                                    font: {
+                                        size: 11
+                                    }
+                                },
+                                grid: {
+                                    color: GRID
+                                },
+                            },
+                            x: {
+                                ticks: {
+                                    color: TICK,
+                                    font: {
+                                        size: 11
+                                    }
+                                },
+                                grid: {
+                                    display: false
+                                },
+                            },
+                        },
+                    },
+                    plugins: wIdx !== null ? [{
+                        id: 'weekHighlight',
+                        afterDraw(chart) {
+                            const x = chart.scales.x.getPixelForValue(wIdx);
+                            const c = chart.ctx;
+                            const top = chart.chartArea.top;
+                            const bot = chart.chartArea.bottom;
+                            c.save();
+                            c.strokeStyle = 'rgba(220,38,38,0.5)';
+                            c.lineWidth = 1.5;
+                            c.setLineDash([4, 3]);
+                            c.beginPath();
+                            c.moveTo(x, top);
+                            c.lineTo(x, bot);
+                            c.stroke();
+                            c.restore();
                         }
-                    },
-                },
-                scales: {
-                    y: {
-                        min: 1, max: 4,
-                        ticks: { stepSize: 1, callback: v => LV[v] || '', color: TICK, font: { size: 11 } },
-                        grid: { color: GRID },
-                    },
-                    x: {
-                        ticks: { color: TICK, font: { size: 11 } },
-                        grid: { display: false },
-                    },
-                },
-            },
-            plugins: wIdx !== null ? [{
-                id: 'weekHighlight',
-                afterDraw(chart) {
-                    const x   = chart.scales.x.getPixelForValue(wIdx);
-                    const c   = chart.ctx;
-                    const top = chart.chartArea.top;
-                    const bot = chart.chartArea.bottom;
-                    c.save();
-                    c.strokeStyle = 'rgba(220,38,38,0.5)';
-                    c.lineWidth   = 1.5;
-                    c.setLineDash([4, 3]);
-                    c.beginPath();
-                    c.moveTo(x, top);
-                    c.lineTo(x, bot);
-                    c.stroke();
-                    c.restore();
-                }
-            }] : [],
-        });
-        charts.push(chart);
-    });
-}
-</script>
+                    }] : [],
+                });
+                charts.push(chart);
+            });
+        }
+    </script>
 @endpush

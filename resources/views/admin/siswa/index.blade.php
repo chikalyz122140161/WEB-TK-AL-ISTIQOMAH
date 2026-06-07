@@ -193,6 +193,18 @@
     background: white;
 }
 
+@media (max-width: 800px) {
+    .filter-group {
+        flex: 1 1 calc(50% - 1rem); /* tablet: 2 kolom */
+    }
+}
+
+@media (max-width: 500px) {
+    .filter-group {
+        flex: 1 1 100%; /* mobile: 1 kolom full */
+    }
+}
+
 .form-input:focus, .form-select:focus {
     outline: none;
     border-color: #3E2723;
@@ -237,16 +249,17 @@
 }
 
 .student-cell__avatar {
-    width: 36px;
-    height: 36px;
-    background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
     color: white;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 600;
-    font-size: 0.875rem;
+    font-size: 14px;
+    flex-shrink: 0;
 }
 
 .student-cell__avatar--female {

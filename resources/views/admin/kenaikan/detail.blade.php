@@ -135,7 +135,8 @@
         color: #a8a29e;
     }
     .empty-state svg { width: 40px; height: 40px; fill: #d6d3d1; margin-bottom: 10px; }
-    .empty-state p { font-size: 14px; margin: 0; }
+    .empty-state p { font-size: 14px; margin: 0;         cursor: not-allowed;
+ }
 </style>
 @endpush
 

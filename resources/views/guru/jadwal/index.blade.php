@@ -8,613 +8,722 @@
 @endsection
 
 @push('styles')
-<style>
-    /* Orange Theme Colors */
-    .form-section {
-        background: #fff;
-        border: 1px solid #3E272320;
-        border-radius: 8px;
-        padding: 20px;
-        margin-bottom: 20px;
-    }
-    .form-section__title {
-        font-size: 16px;
-        font-weight: 600;
-        color: #3E2723;
-        margin-bottom: 16px;
-        padding-bottom: 12px;
-        border-bottom: 2px solid #3D9B72;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .form-section__title svg {
-        width: 20px;
-        height: 20px;
-        fill: #3D9B72;
-    }
-    .form-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 16px;
-    }
-    .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-    }
-    .form-group label {
-        font-size: 13px;
-        font-weight: 500;
-        color: #3E2723;
-    }
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        padding: 10px 12px;
-        border: 1px solid #3E272320;
-        border-radius: 6px;
-        font-size: 14px;
-        color: #3E2723;
-        background: #FFFDE7;
-        transition: all 0.2s;
-        font-family: inherit;
-    }
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-        outline: none;
-        border-color: #3D9B72;
-        background: #fff;
-        box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.1);
-    }
-    .btn-orange {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
-        color: white;
-        padding: 10px 20px;
-        font-size: 14px;
-        font-weight: 600;
-        border: none;
-        cursor: pointer;
-        border-radius: 8px;
-        box-shadow: 0 4px 14px rgba(76, 175, 130, 0.3);
-        transition: all 0.3s;
-    }
-    .btn-orange:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(76, 175, 130, 0.4);
-    }
-    .btn-orange svg {
-        width: 16px;
-        height: 16px;
-        fill: currentColor;
-    }
-    .btn-secondary {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
-        color: #fff;
-        padding: 10px 20px;
-        font-size: 14px;
-        font-weight: 600;
-        border: none;
-        cursor: pointer;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(61,155,114,0.25);
-        transition: all 0.2s;
-    }
-    .btn-secondary:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(61,155,114,0.35);
-    }
-    .btn-danger {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: #F06292;
-        color: #fff;
-        padding: 7px 14px;
-        font-size: 13px;
-        font-weight: 700;
-        border: none;
-        cursor: pointer;
-        border-radius: 8px;
-        transition: background .15s, transform .15s;
-        font-family: inherit;
-    }
-    .btn-danger:hover {
-        background: #d81b72;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(240,98,146,0.35);
-    }
-    .btn-danger svg { width: 14px; height: 14px; fill: #fff; }
-
-    .btn-edit {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: #FFF176;
-        color: #3E2723;
-        padding: 7px 14px;
-        font-size: 13px;
-        font-weight: 700;
-        border: 1.5px solid #e6db00;
-        cursor: pointer;
-        border-radius: 8px;
-        text-decoration: none;
-        transition: background .15s, transform .15s;
-        font-family: inherit;
-    }
-    .btn-edit:hover {
-        background: #f5e800;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(230,219,0,0.35);
-    }
-    .btn-edit svg { width: 14px; height: 14px; fill: #3E2723; }
-    .btn-row {
-        display: flex;
-        gap: 12px;
-        margin-top: 16px;
-    }
-    
-    /* Table */
-    .data-table {
-        width: 100%;
-        border-collapse: collapse;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-    .data-table th {
-        padding: 14px 18px;
-        text-align: left;
-        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
-        font-size: 11px;
-        font-weight: 700;
-        color: #ffffff;
-        text-transform: uppercase;
-        letter-spacing: 0.6px;
-        white-space: nowrap;
-    }
-    .data-table td {
-        padding: 14px 18px;
-        font-size: 14px;
-        color: #3E2723;
-        border-bottom: 1px solid #f3f4f6;
-        vertical-align: middle;
-    }
-    .data-table tbody tr:last-child td {
-        border-bottom: none;
-    }
-    .data-table tbody tr:nth-child(even) td {
-        background: #fafafa;
-    }
-    .data-table tbody tr:hover td {
-        background: #FFFDE7;
-    }
-    .data-table th:last-child,
-    .data-table td:last-child {
-        text-align: center;
-    }
-    
-    /* Schedule Type Badge */
-    .type-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-    .type-badge--kegiatan {
-        background: #FFF176;
-        color: #5D4037;
-    }
-    .type-badge--pembelajaran {
-        background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
-        color: #2E8B60;
-    }
-    .type-badge--lainnya {
-        background: linear-gradient(135deg, #3E272320 0%, #3E272330 100%);
-        color: #5D4037;
-    }
-    
-    /* Pembelajaran Cards */
-    .pembelajaran-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 18px;
-        margin-top: 4px;
-    }
-    .pembelajaran-card {
-        background: #fff;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .pembelajaran-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    }
-    .pembelajaran-card__header {
-        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
-        padding: 14px 18px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .pembelajaran-card__hari {
-        color: #fff;
-        font-size: 15px;
-        font-weight: 700;
-    }
-    .pembelajaran-card__count {
-        color: rgba(255,255,255,0.65);
-        font-size: 12px;
-    }
-    .pembelajaran-card__body {
-        padding: 12px 16px;
-    }
-    .pembelajaran-item {
-        padding: 10px 0;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-    }
-    .pembelajaran-item--border {
-        border-bottom: 1px dashed #e5e7eb;
-    }
-    .pembelajaran-item__top {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-    }
-    .pembelajaran-item__waktu {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 12px;
-        font-weight: 500;
-        color: #5D4037;
-        background: rgba(0,71,62,0.08);
-        padding: 4px 8px;
-        border-radius: 6px;
-    }
-    .pembelajaran-item__mapel {
-        font-size: 14px;
-        font-weight: 600;
-        color: #1f2937;
-    }
-    .pembelajaran-item__actions {
-        display: flex;
-        gap: 6px;
-        margin-top: 2px;
-    }
-    .btn-edit--sm,
-    .btn-danger--sm {
-        font-size: 12px;
-        padding: 4px 10px;
-    }
-
-    /* Filter Row */
-    .filter-row {
-        display: flex;
-        align-items: flex-end;
-        gap: 12px;
-        margin-bottom: 20px;
-        flex-wrap: nowrap;
-    }
-    .filter-row .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        margin: 0;
-    }
-    .filter-row .form-group:nth-child(1) { flex: 0 0 300px; }
-    .filter-row .form-group:nth-child(2) { flex: 0 0 auto; }
-    .filter-row .form-group label {
-        font-size: 13px;
-        font-weight: 600;
-        color: #5D4037;
-    }
-    .filter-row .form-group select {
-        height: 40px;
-        padding: 0 12px;
-        font-size: 13px;
-        border-radius: 8px;
-        border: 1.5px solid #3E272320;
-        background: #FFFDE7;
-        color: #3E2723;
-        font-family: inherit;
-    }
-    .filter-row .form-group select:focus {
-        outline: none;
-        border-color: #3D9B72;
-        background: #fff;
-        box-shadow: 0 0 0 3px rgba(76,175,130,0.10);
-    }
-    .filter-row .btn-secondary {
-        height: 40px;
-        padding: 0 20px;
-        font-size: 13px;
-        border-radius: 8px;
-        white-space: nowrap;
-        background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
-        color: #fff;
-        border: none;
-        cursor: pointer;
-        font-weight: 600;
-        font-family: inherit;
-    }
-    
-    /* Alert */
-    .alert-success {
-        background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
-        border: 1px solid rgba(76,175,130,0.35);
-        color: #2E8B60;
-        padding: 12px 16px;
-        border-radius: 8px;
-        margin-bottom: 16px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 14px;
-    }
-    
-    /* Schedule Type Selector */
-    .schedule-type-tabs {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 20px;
-    }
-    .schedule-type-tab {
-        padding: 10px 20px;
-        border: 2px solid #3E272320;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s;
-        background: white;
-        color: #5D4037;
-    }
-    .schedule-type-tab:hover {
-        border-color: #3D9B72;
-        color: #3D9B72;
-    }
-    .schedule-type-tab.active {
-        border-color: #3D9B72;
-        background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
-        color: #3E2723;
-    }
-    .schedule-type-tab input {
-        display: none;
-    }
-    
-    /* Action buttons */
-    .action-buttons {
-        display: flex;
-        gap: 8px;
-    }
-
-    /* Delete Modal */
-    .modal-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 9999;
-        justify-content: center;
-        align-items: center;
-        animation: fadeIn 0.2s ease;
-    }
-    .modal-overlay.show {
-        display: flex;
-        opacity: 1;
-        visibility: visible;
-    }
-    .modal-box {
-        background: white;
-        border-radius: 16px;
-        padding: 32px;
-        max-width: 420px;
-        width: 90%;
-        text-align: center;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        animation: slideUp 0.3s ease;
-    }
-    .modal-icon {
-        width: 56px;
-        height: 56px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #F0629220 0%, #F0629220 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 16px;
-    }
-    .modal-icon svg {
-        width: 28px;
-        height: 28px;
-        fill: #d81b60;
-    }
-    .modal-title {
-        font-size: 18px;
-        font-weight: 700;
-        color: #3E2723;
-        margin-bottom: 8px;
-    }
-    .modal-desc {
-        font-size: 14px;
-        color: #5D4037;
-        margin-bottom: 24px;
-        line-height: 1.5;
-    }
-    .modal-actions {
-        display: flex;
-        gap: 12px;
-        justify-content: center;
-    }
-    .modal-btn-cancel {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 10px 24px;
-        background: #3E272320;
-        color: #3E2723;
-        font-size: 14px;
-        font-weight: 600;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    .modal-btn-cancel:hover {
-        background: #3E272330;
-    }
-    .modal-btn-delete {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 10px 24px;
-        background: linear-gradient(135deg, #F06292 0%, #d81b60 100%);
-        color: white;
-        font-size: 14px;
-        font-weight: 600;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.2s;
-        box-shadow: 0 4px 12px rgba(240, 98, 146, 0.3);
-    }
-    .modal-btn-delete:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 16px rgba(240, 98, 146, 0.4);
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    @keyframes slideUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    /* Tabs for List */
-    .list-tabs {
-        display: flex;
-        gap: 0;
-        margin-bottom: 20px;
-        border-bottom: 2px solid #3E272320;
-    }
-    .list-tab {
-        padding: 12px 24px;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s;
-        background: transparent;
-        color: #5D4037;
-        border: none;
-        border-bottom: 2px solid transparent;
-        margin-bottom: -2px;
-    }
-    .list-tab:hover {
-        color: #3D9B72;
-    }
-    .list-tab.active {
-        color: #3D9B72;
-        border-bottom-color: #3D9B72;
-    }
-    
-    /* Tab Content */
-    .tab-content {
-        display: none;
-    }
-    .tab-content.active {
-        display: block;
-    }
-    
-    /* Schedule Card */
-    .schedule-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 16px;
-    }
-    .schedule-card {
-        background: white;
-        border: 1px solid #3E272320;
-        border-radius: 12px;
-        padding: 16px;
-        transition: all 0.2s;
-    }
-    .schedule-card:hover {
-        border-color: #fdba74;
-        box-shadow: 0 4px 12px rgba(76, 175, 130, 0.1);
-    }
-    .schedule-card__header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 12px;
-    }
-    .schedule-card__title {
-        font-size: 15px;
-        font-weight: 600;
-        color: #3E2723;
-    }
-    .schedule-card__row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 13px;
-        color: #5D4037;
-        margin-bottom: 8px;
-    }
-    .schedule-card__row svg {
-        width: 16px;
-        height: 16px;
-        fill: #5D4037;
-    }
-    .schedule-card__actions {
-        display: flex;
-        gap: 8px;
-        margin-top: 12px;
-        padding-top: 12px;
-        border-top: 1px solid #3E272320;
-    }
-    
-    @media (max-width: 768px) {
-        .filter-row {
-            flex-direction: column;
+    <style>
+        /* Orange Theme Colors */
+        .form-section {
+            background: #fff;
+            border: 1px solid #3E272320;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
-        .filter-row .form-group {
+
+        .form-section__title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #3E2723;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #3D9B72;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-section__title svg {
+            width: 20px;
+            height: 20px;
+            fill: #3D9B72;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #3E2723;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px 12px;
+            border: 1px solid #3E272320;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #3E2723;
+            background: #FFFDE7;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3D9B72;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.1);
+        }
+
+        .btn-orange {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
+            color: white;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 4px 14px rgba(76, 175, 130, 0.3);
+            transition: all 0.3s;
+        }
+
+        .btn-orange:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(76, 175, 130, 0.4);
+        }
+
+        .btn-orange svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(61, 155, 114, 0.25);
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(61, 155, 114, 0.35);
+        }
+
+        .btn-danger {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #F06292;
+            color: #fff;
+            padding: 7px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background .15s, transform .15s;
+            font-family: inherit;
+        }
+
+        .btn-danger:hover {
+            background: #d81b72;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(240, 98, 146, 0.35);
+        }
+
+        .btn-danger svg {
+            width: 14px;
+            height: 14px;
+            fill: #fff;
+        }
+
+        .btn-edit {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #FFF176;
+            color: #3E2723;
+            padding: 7px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            border: 1.5px solid #e6db00;
+            cursor: pointer;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background .15s, transform .15s;
+            font-family: inherit;
+        }
+
+        .btn-edit:hover {
+            background: #f5e800;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(230, 219, 0, 0.35);
+        }
+
+        .btn-edit svg {
+            width: 14px;
+            height: 14px;
+            fill: #3E2723;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        /* Table */
+        .data-table {
             width: 100%;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
         }
-        .schedule-type-tabs {
+
+        .data-table th {
+            padding: 14px 18px;
+            text-align: left;
+            background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+            font-size: 11px;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 14px 18px;
+            font-size: 14px;
+            color: #3E2723;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tbody tr:nth-child(even) td {
+            background: #fafafa;
+        }
+
+        .data-table tbody tr:hover td {
+            background: #FFFDE7;
+        }
+
+        .data-table th:last-child,
+        .data-table td:last-child {
+            text-align: center;
+        }
+
+        /* Schedule Type Badge */
+        .type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .type-badge--kegiatan {
+            background: #FFF176;
+            color: #5D4037;
+        }
+
+        .type-badge--pembelajaran {
+            background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
+            color: #2E8B60;
+        }
+
+        .type-badge--lainnya {
+            background: linear-gradient(135deg, #3E272320 0%, #3E272330 100%);
+            color: #5D4037;
+        }
+
+        /* Pembelajaran Cards */
+        .pembelajaran-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
+            margin-top: 4px;
+        }
+
+        .pembelajaran-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .pembelajaran-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .pembelajaran-card__header {
+            background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .pembelajaran-card__hari {
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .pembelajaran-card__count {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 12px;
+        }
+
+        .pembelajaran-card__body {
+            padding: 12px 16px;
+        }
+
+        .pembelajaran-item {
+            padding: 10px 0;
+            display: flex;
             flex-direction: column;
+            gap: 6px;
         }
+
+        .pembelajaran-item--border {
+            border-bottom: 1px dashed #e5e7eb;
+        }
+
+        .pembelajaran-item__top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .pembelajaran-item__waktu {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #5D4037;
+            background: rgba(0, 71, 62, 0.08);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .pembelajaran-item__mapel {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .pembelajaran-item__actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
+        .btn-edit--sm,
+        .btn-danger--sm {
+            font-size: 12px;
+            padding: 4px 10px;
+        }
+
+        /* Filter Row */
+        .filter-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: nowrap;
+        }
+
+        .filter-row .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin: 0;
+        }
+
+        .filter-row .form-group:nth-child(1) {
+            flex: 0 0 300px;
+        }
+
+        .filter-row .form-group:nth-child(2) {
+            flex: 0 0 auto;
+        }
+
+        .filter-row .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #5D4037;
+        }
+
+        .filter-row .form-group select {
+            height: 40px;
+            padding: 0 12px;
+            font-size: 13px;
+            border-radius: 8px;
+            border: 1.5px solid #3E272320;
+            background: #FFFDE7;
+            color: #3E2723;
+            font-family: inherit;
+        }
+
+        .filter-row .form-group select:focus {
+            outline: none;
+            border-color: #3D9B72;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.10);
+        }
+
+        .filter-row .btn-secondary {
+            height: 40px;
+            padding: 0 20px;
+            font-size: 13px;
+            border-radius: 8px;
+            white-space: nowrap;
+            background: linear-gradient(135deg, #3D9B72 0%, #2E8B60 100%);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        /* Alert */
+        .alert-success {
+            background: linear-gradient(135deg, #4CAF8230 0%, #4CAF8230 100%);
+            border: 1px solid rgba(76, 175, 130, 0.35);
+            color: #2E8B60;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        /* Schedule Type Selector */
+        .schedule-type-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .schedule-type-tab {
+            padding: 10px 20px;
+            border: 2px solid #3E272320;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+            color: #5D4037;
+        }
+
+        .schedule-type-tab:hover {
+            border-color: #3D9B72;
+            color: #3D9B72;
+        }
+
+        .schedule-type-tab.active {
+            border-color: #3D9B72;
+            background: linear-gradient(135deg, #4CAF82 0%, #3D9B72 100%);
+            color: #3E2723;
+        }
+
+        .schedule-type-tab input {
+            display: none;
+        }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Delete Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-box {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #F0629220 0%, #F0629220 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .modal-icon svg {
+            width: 28px;
+            height: 28px;
+            fill: #d81b60;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #3E2723;
+            margin-bottom: 8px;
+        }
+
+        .modal-desc {
+            font-size: 14px;
+            color: #5D4037;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .modal-btn-cancel {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 24px;
+            background: #3E272320;
+            color: #3E2723;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-btn-cancel:hover {
+            background: #3E272330;
+        }
+
+        .modal-btn-delete {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #F06292 0%, #d81b60 100%);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(240, 98, 146, 0.3);
+        }
+
+        .modal-btn-delete:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(240, 98, 146, 0.4);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Tabs for List */
+        .list-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #3E272320;
+        }
+
+        .list-tab {
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            color: #5D4037;
+            border: none;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .list-tab:hover {
+            color: #3D9B72;
+        }
+
+        .list-tab.active {
+            color: #3D9B72;
+            border-bottom-color: #3D9B72;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Schedule Card */
         .schedule-cards {
-            grid-template-columns: 1fr;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
         }
-    }
-</style>
+
+        .schedule-card {
+            background: white;
+            border: 1px solid #3E272320;
+            border-radius: 12px;
+            padding: 16px;
+            transition: all 0.2s;
+        }
+
+        .schedule-card:hover {
+            border-color: #fdba74;
+            box-shadow: 0 4px 12px rgba(76, 175, 130, 0.1);
+        }
+
+        .schedule-card__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .schedule-card__title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #3E2723;
+        }
+
+        .schedule-card__row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #5D4037;
+            margin-bottom: 8px;
+        }
+
+        .schedule-card__row svg {
+            width: 16px;
+            height: 16px;
+            fill: #5D4037;
+        }
+
+        .schedule-card__actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #3E272320;
+        }
+
+        @media (max-width: 768px) {
+            .filter-row {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+
+            .filter-row .form-group:nth-child(1) {
+                flex: 0 0 0px;
+            }
+
+            /* .filter-row .form-group {
+                            width: 100%;
+                        } */
+
+            .schedule-type-tabs {
+                flex-direction: column;
+            }
+
+            .schedule-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 @endpush
 
 @section('content')
     @if (session('success'))
         <div class="alert-success">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
-                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
+                <path fill-rule="evenodd"
+                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
+                    clip-rule="evenodd" />
             </svg>
             {{ session('success') }}
         </div>
@@ -623,7 +732,9 @@
     <div style="margin-bottom:16px;">
         <a href="{{ route('guru.jadwal.create') }}" class="btn-orange">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
-                <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/>
+                <path fill-rule="evenodd"
+                    d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z"
+                    clip-rule="evenodd" />
             </svg>
             Tambah Jadwal
         </a>
@@ -633,19 +744,22 @@
     <div class="form-section">
         <div class="form-section__title">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/>
+                <path fill-rule="evenodd"
+                    d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z"
+                    clip-rule="evenodd" />
             </svg>
             List Jadwal
         </div>
-        
+
         <form action="{{ route('guru.jadwal.index') }}" method="GET" class="filter-row">
             <div class="form-group">
                 <label for="class_term_id">Kelas</label>
                 <select name="class_term_id" id="class_term_id" onchange="this.form.submit()">
                     <option value="">-- Pilih Kelas --</option>
-                    @foreach($classTerms as $ct)
+                    @foreach ($classTerms as $ct)
                         <option value="{{ $ct->id }}" {{ $selectedClassTermId == $ct->id ? 'selected' : '' }}>
-                            {{ $ct->class->name ?? '-' }} — {{ $ct->academicTerm->academic_year ?? '' }} {{ ucfirst($ct->academicTerm->semester ?? '') }}
+                            {{ $ct->class->name ?? '-' }} — {{ $ct->academicTerm->academic_year ?? '' }}
+                            {{ ucfirst($ct->academicTerm->semester ?? '') }}
                         </option>
                     @endforeach
                 </select>
@@ -656,119 +770,160 @@
             </div>
         </form>
 
-        @if($selectedClassTermId)
-        <!-- Tabs -->
-        <div class="list-tabs">
-            <button class="list-tab active" data-tab="kegiatan">Jadwal Kegiatan</button>
-            <button class="list-tab" data-tab="pembelajaran">Jadwal Pembelajaran</button>
-        </div>
-        
-        <!-- Tab Content: Jadwal Kegiatan -->
-        <div id="tab-kegiatan" class="tab-content active">
-            <div class="schedule-cards">
-                @forelse ($jadwalKegiatan as $jadwal)
-                    <div class="schedule-card">
-                        <div class="schedule-card__header">
-                            <div class="schedule-card__title">{{ $jadwal->name }}</div>
-                            <span class="type-badge type-badge--kegiatan">Kegiatan</span>
-                        </div>
-                        <div class="schedule-card__row">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/>
-                            </svg>
-                            {{ $jadwal->date->translatedFormat('l, d F Y') }}
-                        </div>
-                        @if($jadwal->start_hour)
-                        <div class="schedule-card__row">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/>
-                            </svg>
-                            {{ \Carbon\Carbon::parse($jadwal->start_hour)->format('H:i') }}{{ $jadwal->end_hour ? ' – ' . \Carbon\Carbon::parse($jadwal->end_hour)->format('H:i') : '' }}
-                        </div>
-                        @endif
-                        @if($jadwal->location)
-                        <div class="schedule-card__row">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd"/>
-                            </svg>
-                            {{ $jadwal->location }}
-                        </div>
-                        @endif
-                        @if($jadwal->description)
-                        <div class="schedule-card__row" style="color:#78716c;font-size:12.5px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:15px;height:15px;fill:#78716c;flex-shrink:0;">
-                                <path fill-rule="evenodd" d="M4.848 2.771A49.144 49.144 0 0 1 12 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 0 1-3.476.383.39.39 0 0 0-.297.17l-2.755 4.133a.75.75 0 0 1-1.248 0l-2.755-4.133a.39.39 0 0 0-.297-.17 48.9 48.9 0 0 1-3.476-.384c-1.978-.29-3.348-2.024-3.348-3.97V6.741c0-1.946 1.37-3.68 3.348-3.97Z" clip-rule="evenodd"/>
-                            </svg>
-                            {{ Str::limit($jadwal->description, 80) }}
-                        </div>
-                        @endif
-                        <div class="schedule-card__actions">
-                            <a href="{{ route('guru.jadwal.edit', ['id' => $jadwal->id, 'jenis' => 'kegiatan']) }}" class="btn-edit">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
-                                Edit
-                            </a>
-                            <button type="button" class="btn-danger" onclick="openDeleteModal('{{ $jadwal->id }}', '{{ addslashes($jadwal->name) }}')">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
-                                Hapus
-                            </button>
-                        </div>
-                    </div>
-                @empty
-                    <p style="color: #5D4037; padding: 40px; text-align: center; grid-column: 1 / -1;">
-                        Belum ada jadwal kegiatan untuk kelas ini.
-                    </p>
-                @endforelse
+        @if ($selectedClassTermId)
+            <!-- Tabs -->
+            <div class="list-tabs">
+                <button class="list-tab active" data-tab="kegiatan">Jadwal Kegiatan</button>
+                <button class="list-tab" data-tab="pembelajaran">Jadwal Pembelajaran</button>
             </div>
-        </div>
-        
-        <!-- Tab Content: Jadwal Pembelajaran -->
-        <div id="tab-pembelajaran" class="tab-content">
-            @if($jadwalPembelajaran->isEmpty())
-                <p style="color:#5D4037;padding:40px;text-align:center;">Belum ada jadwal pembelajaran untuk kelas ini.</p>
-            @else
-            <div class="pembelajaran-grid">
-                @foreach($jadwalPembelajaran as $dayInt => $items)
-                <div class="pembelajaran-card">
-                    <div class="pembelajaran-card__header">
-                        <span class="pembelajaran-card__hari">{{ $hariMap[$dayInt] ?? 'Hari '.$dayInt }}</span>
-                        <span class="pembelajaran-card__count">{{ $items->count() }} sesi</span>
-                    </div>
-                    <div class="pembelajaran-card__body">
-                        @foreach($items as $jadwal)
-                        <div class="pembelajaran-item {{ !$loop->last ? 'pembelajaran-item--border' : '' }}">
-                            <div class="pembelajaran-item__top">
-                                <span class="pembelajaran-item__waktu">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
-                                    {{ \Carbon\Carbon::parse($jadwal->start_hour)->format('H:i') }}{{ $jadwal->end_hour ? ' – ' . \Carbon\Carbon::parse($jadwal->end_hour)->format('H:i') : '' }}
-                                </span>
+
+            <!-- Tab Content: Jadwal Kegiatan -->
+            <div id="tab-kegiatan" class="tab-content active">
+                <div class="schedule-cards">
+                    @forelse ($jadwalKegiatan as $jadwal)
+                        <div class="schedule-card">
+                            <div class="schedule-card__header">
+                                <div class="schedule-card__title">{{ $jadwal->name }}</div>
+                                <span class="type-badge type-badge--kegiatan">Kegiatan</span>
                             </div>
-                            <div class="pembelajaran-item__mapel">{{ $jadwal->name }}</div>
-                            <div class="pembelajaran-item__actions">
-                                <a href="{{ route('guru.jadwal.edit', ['id' => $jadwal->id, 'jenis' => 'pembelajaran']) }}" class="btn-edit btn-edit--sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="13" height="13"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
+                            <div class="schedule-card__row">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd"
+                                        d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                {{ $jadwal->date->translatedFormat('l, d F Y') }}
+                            </div>
+                            @if ($jadwal->start_hour)
+                                <div class="schedule-card__row">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path fill-rule="evenodd"
+                                            d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ \Carbon\Carbon::parse($jadwal->start_hour)->format('H:i') }}{{ $jadwal->end_hour ? ' – ' . \Carbon\Carbon::parse($jadwal->end_hour)->format('H:i') : '' }}
+                                </div>
+                            @endif
+                            @if ($jadwal->location)
+                                <div class="schedule-card__row">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path fill-rule="evenodd"
+                                            d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ $jadwal->location }}
+                                </div>
+                            @endif
+                            @if ($jadwal->description)
+                                <div class="schedule-card__row" style="color:#78716c;font-size:12.5px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        style="width:15px;height:15px;fill:#78716c;flex-shrink:0;">
+                                        <path fill-rule="evenodd"
+                                            d="M4.848 2.771A49.144 49.144 0 0 1 12 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 0 1-3.476.383.39.39 0 0 0-.297.17l-2.755 4.133a.75.75 0 0 1-1.248 0l-2.755-4.133a.39.39 0 0 0-.297-.17 48.9 48.9 0 0 1-3.476-.384c-1.978-.29-3.348-2.024-3.348-3.97V6.741c0-1.946 1.37-3.68 3.348-3.97Z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ Str::limit($jadwal->description, 80) }}
+                                </div>
+                            @endif
+                            <div class="schedule-card__actions">
+                                <a href="{{ route('guru.jadwal.edit', ['id' => $jadwal->id, 'jenis' => 'kegiatan']) }}"
+                                    class="btn-edit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path
+                                            d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
+                                    </svg>
                                     Edit
                                 </a>
-                                <button type="button" class="btn-danger btn-danger--sm" onclick="openDeleteModal('{{ $jadwal->id }}', '{{ addslashes($jadwal->name) }}')">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="13" height="13"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
+                                <button type="button" class="btn-danger"
+                                    onclick="openDeleteModal('{{ $jadwal->id }}', '{{ addslashes($jadwal->name) }}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path fill-rule="evenodd"
+                                            d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+                                            clip-rule="evenodd" />
+                                    </svg>
                                     Hapus
                                 </button>
                             </div>
                         </div>
+                    @empty
+                        <p style="color: #5D4037; padding: 40px; text-align: center; grid-column: 1 / -1;">
+                            Belum ada jadwal kegiatan untuk kelas ini.
+                        </p>
+                    @endforelse
+                </div>
+            </div>
+
+            <!-- Tab Content: Jadwal Pembelajaran -->
+            <div id="tab-pembelajaran" class="tab-content">
+                @if ($jadwalPembelajaran->isEmpty())
+                    <p style="color:#5D4037;padding:40px;text-align:center;">Belum ada jadwal pembelajaran untuk kelas ini.
+                    </p>
+                @else
+                    <div class="pembelajaran-grid">
+                        @foreach ($jadwalPembelajaran as $dayInt => $items)
+                            <div class="pembelajaran-card">
+                                <div class="pembelajaran-card__header">
+                                    <span
+                                        class="pembelajaran-card__hari">{{ $hariMap[$dayInt] ?? 'Hari ' . $dayInt }}</span>
+                                    <span class="pembelajaran-card__count">{{ $items->count() }} sesi</span>
+                                </div>
+                                <div class="pembelajaran-card__body">
+                                    @foreach ($items as $jadwal)
+                                        <div
+                                            class="pembelajaran-item {{ !$loop->last ? 'pembelajaran-item--border' : '' }}">
+                                            <div class="pembelajaran-item__top">
+                                                <span class="pembelajaran-item__waktu">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                        fill="currentColor" width="13" height="13">
+                                                        <path fill-rule="evenodd"
+                                                            d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                    {{ \Carbon\Carbon::parse($jadwal->start_hour)->format('H:i') }}{{ $jadwal->end_hour ? ' – ' . \Carbon\Carbon::parse($jadwal->end_hour)->format('H:i') : '' }}
+                                                </span>
+                                            </div>
+                                            <div class="pembelajaran-item__mapel">{{ $jadwal->name }}</div>
+                                            <div class="pembelajaran-item__actions">
+                                                <a href="{{ route('guru.jadwal.edit', ['id' => $jadwal->id, 'jenis' => 'pembelajaran']) }}"
+                                                    class="btn-edit btn-edit--sm">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                        width="13" height="13">
+                                                        <path
+                                                            d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
+                                                    </svg>
+                                                    Edit
+                                                </a>
+                                                <button type="button" class="btn-danger btn-danger--sm"
+                                                    onclick="openDeleteModal('{{ $jadwal->id }}', '{{ addslashes($jadwal->name) }}')">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                        width="13" height="13">
+                                                        <path fill-rule="evenodd"
+                                                            d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                    Hapus
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
                         @endforeach
                     </div>
-                </div>
-                @endforeach
+                @endif
             </div>
-            @endif
-        </div>
         @else
-        <div style="padding:48px 0;text-align:center;color:#9e9e9e;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width:40px;height:40px;fill:#bdbdbd;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;">
-                <path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/>
-            </svg>
-            <div style="font-size:14px;font-weight:600;color:#5D4037;margin-bottom:4px;">Pilih kelas terlebih dahulu</div>
-            <div style="font-size:13px;">Pilih kelas dari dropdown di atas untuk melihat jadwal.</div>
-        </div>
+            <div style="padding:48px 0;text-align:center;color:#9e9e9e;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                    style="width:40px;height:40px;fill:#bdbdbd;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;">
+                    <path fill-rule="evenodd"
+                        d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3a.75.75 0 0 1 1.5 0v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z"
+                        clip-rule="evenodd" />
+                </svg>
+                <div style="font-size:14px;font-weight:600;color:#5D4037;margin-bottom:4px;">Pilih kelas terlebih dahulu
+                </div>
+                <div style="font-size:13px;">Pilih kelas dari dropdown di atas untuk melihat jadwal.</div>
+            </div>
         @endif
     </div>
 
@@ -777,20 +932,27 @@
         <div class="modal-box">
             <div class="modal-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/>
+                    <path fill-rule="evenodd"
+                        d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+                        clip-rule="evenodd" />
                 </svg>
             </div>
             <div class="modal-title">Hapus Jadwal?</div>
-            <div class="modal-desc">Apakah Anda yakin ingin menghapus jadwal <strong id="deleteItemName"></strong>? Tindakan ini tidak dapat dibatalkan.</div>
+            <div class="modal-desc">Apakah Anda yakin ingin menghapus jadwal <strong id="deleteItemName"></strong>?
+                Tindakan ini tidak dapat dibatalkan.</div>
             <div class="modal-actions">
                 <button type="button" class="modal-btn-cancel" onclick="closeDeleteModal()">Batal</button>
                 <form id="deleteForm" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
-                    <input type="hidden" id="deleteClassTermId" name="class_term_id" value="{{ $selectedClassTermId }}">
+                    <input type="hidden" id="deleteClassTermId" name="class_term_id"
+                        value="{{ $selectedClassTermId }}">
                     <button type="submit" class="modal-btn-delete">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;">
-                            <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Z" clip-rule="evenodd"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                            style="width:16px;height:16px;fill:currentColor;">
+                            <path fill-rule="evenodd"
+                                d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Z"
+                                clip-rule="evenodd" />
                         </svg>
                         Ya, Hapus
                     </button>
@@ -801,54 +963,55 @@
 @endsection
 
 @push('scripts')
-<script>
-    // Toggle schedule type tab active state
-    document.querySelectorAll('.schedule-type-tab').forEach(function(tab) {
-        tab.addEventListener('click', function() {
-            document.querySelectorAll('.schedule-type-tab').forEach(function(t) {
-                t.classList.remove('active');
+    <script>
+        // Toggle schedule type tab active state
+        document.querySelectorAll('.schedule-type-tab').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.schedule-type-tab').forEach(function(t) {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
             });
-            this.classList.add('active');
         });
-    });
-    
-    // Delete modal functions
-    function openDeleteModal(id, nama) {
-        document.getElementById('deleteItemName').textContent = nama;
-        document.getElementById('deleteForm').action = '/guru/jadwal/' + id;
-        document.getElementById('deleteModal').classList.add('show');
-    }
-    function closeDeleteModal() {
-        document.getElementById('deleteModal').classList.remove('show');
-    }
-    // Close modal on overlay click
-    document.getElementById('deleteModal').addEventListener('click', function(e) {
-        if (e.target === this) closeDeleteModal();
-    });
-    // Close modal on Escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeDeleteModal();
-    });
 
-    // List tabs functionality
-    document.querySelectorAll('.list-tab').forEach(function(tab) {
-        tab.addEventListener('click', function() {
-            // Remove active from all tabs
-            document.querySelectorAll('.list-tab').forEach(function(t) {
-                t.classList.remove('active');
-            });
-            // Add active to clicked tab
-            this.classList.add('active');
-            
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(function(content) {
-                content.classList.remove('active');
-            });
-            
-            // Show corresponding tab content
-            var tabId = this.getAttribute('data-tab');
-            document.getElementById('tab-' + tabId).classList.add('active');
+        // Delete modal functions
+        function openDeleteModal(id, nama) {
+            document.getElementById('deleteItemName').textContent = nama;
+            document.getElementById('deleteForm').action = '/guru/jadwal/' + id;
+            document.getElementById('deleteModal').classList.add('show');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('show');
+        }
+        // Close modal on overlay click
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDeleteModal();
         });
-    });
-</script>
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeDeleteModal();
+        });
+
+        // List tabs functionality
+        document.querySelectorAll('.list-tab').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                // Remove active from all tabs
+                document.querySelectorAll('.list-tab').forEach(function(t) {
+                    t.classList.remove('active');
+                });
+                // Add active to clicked tab
+                this.classList.add('active');
+
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(function(content) {
+                    content.classList.remove('active');
+                });
+
+                // Show corresponding tab content
+                var tabId = this.getAttribute('data-tab');
+                document.getElementById('tab-' + tabId).classList.add('active');
+            });
+        });
+    </script>
 @endpush

@@ -143,6 +143,9 @@
     justify-content: center;
 }
 .modal-actions .btn { min-width: 100px; }
+.card__body {
+    overflow-x: scroll;
+}
 </style>
 @endpush
 

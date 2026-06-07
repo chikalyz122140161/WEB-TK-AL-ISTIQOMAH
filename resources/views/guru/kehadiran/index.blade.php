@@ -34,10 +34,10 @@
         gap: 14px;
         align-items: flex-start;
         margin-bottom: 20px;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
     }
-    .filter-grid .form-group:nth-child(1) { flex: 0 0 280px; min-width: 0; }
-    .filter-grid .form-group:nth-child(2) { flex: 0 0 180px; min-width: 0; }
+    .filter-grid .form-group:nth-child(1) { flex: 0 0 150px; min-width: 0; }
+    .filter-grid .form-group:nth-child(2) { flex: 0 0 150px; min-width: 0; }
     .filter-grid .form-group:nth-child(3) { flex: 0 0 auto; }
     .form-group {
         display: flex;

@@ -35,7 +35,7 @@
         </div>
         <div class="card__body">
             <p class="text-muted mb-4">Buat backup database untuk menyimpan semua data sistem saat ini.</p>
-            
+
             <form action="{{ route('admin.backup.create') }}" method="POST">
                 @csrf
                 <button type="submit" class="btn btn--primary btn--lg" onclick="return confirm('Buat backup database sekarang?')">
@@ -50,7 +50,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Restore Backup -->
     <div class="card">
         <div class="card__header">
@@ -61,7 +61,7 @@
         </div>
         <div class="card__body">
             <p class="text-muted mb-4">Pulihkan database dari file backup sebelumnya.</p>
-            
+
             <form action="{{ route('admin.backup.restore') }}" method="POST" id="restoreForm">
                 @csrf
                 <div class="form-group mb-4">
@@ -73,17 +73,17 @@
                         @endforeach
                     </select>
                 </div>
-                
+
                 <div class="form-group mb-4">
                     <label for="konfirmasi" class="form-label required">Konfirmasi</label>
                     <input type="text" id="konfirmasi" name="konfirmasi" class="form-input" placeholder="Ketik RESTORE untuk konfirmasi" required>
                     <small class="form-help">Ketik RESTORE untuk mengkonfirmasi restore database</small>
                 </div>
-                
+
                 <div class="alert alert--warning mb-4">
                     <strong>Peringatan!</strong> Proses restore akan mengganti semua data saat ini dengan data dari backup. Tindakan ini tidak dapat dibatalkan.
                 </div>
-                
+
                 <button type="submit" class="btn btn--warning btn--lg">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-.53 14.03a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V8.25a.75.75 0 0 0-1.5 0v5.69l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3Z" clip-rule="evenodd"/></svg>
                     Restore Database
@@ -135,7 +135,7 @@
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <a href="{{ route('admin.backup.download', $backup['filename']) }}" class="btn btn--icon btn--secondary" title="Download">
+                                <a href="{{ route('admin.backup.download', ['backup_file' => $backup['filename']]) }}" class="btn btn--icon btn--secondary" title="Download">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M12 2.25a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V3a.75.75 0 0 1 .75-.75Zm-9 13.5a.75.75 0 0 1 .75.75v2.25a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5V16.5a.75.75 0 0 1 1.5 0v2.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V16.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
                                 </a>
                                 <button type="button" class="btn btn--danger btn--sm" onclick="showDeleteBackupModal('{{ $backup['filename'] }}', '{{ addslashes($backup['filename']) }}')">

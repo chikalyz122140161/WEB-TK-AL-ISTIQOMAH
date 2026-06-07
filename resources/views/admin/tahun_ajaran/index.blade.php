@@ -8,243 +8,336 @@
 @endsection
 
 @push('styles')
-<style>
-.modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.45);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-}
-.modal-overlay.active { display: flex; }
-.modal-box {
-    background: #fff;
-    border-radius: 12px;
-    padding: 2rem;
-    max-width: 420px;
-    width: 90%;
-    box-shadow: 0 20px 60px rgba(0,0,0,.2);
-    text-align: center;
-}
-.modal-icon {
-    width: 56px; height: 56px;
-    background: #fee2e2;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 1.25rem;
-}
-.modal-icon svg { color: #ef4444; }
-.modal-title { font-size: 1.1rem; font-weight: 700; color: #111827; margin-bottom: .5rem; }
-.modal-desc  { font-size: .9rem; color: #6b7280; margin-bottom: 1.5rem; line-height: 1.5; }
-.modal-actions { display: flex; gap: .75rem; justify-content: center; }
-</style>
-<style>
-.ta-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-.ta-table thead tr {
-    background: #f8fafb;
-    border-bottom: 2px solid #e5e7eb;
-}
-.ta-table th {
-    padding: 14px 20px;
-    font-size: .8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .05em;
-    color: #6b7280;
-    text-align: left;
-    white-space: nowrap;
-}
-.ta-table td {
-    padding: 16px 20px;
-    font-size: .95rem;
-    color: #374151;
-    border-bottom: 1px solid #f3f4f6;
-    vertical-align: middle;
-}
-.ta-table tbody tr:last-child td {
-    border-bottom: none;
-}
-.ta-table tbody tr:hover td {
-    background: #f9fafb;
-}
-.semester-pill {
-    display: inline-block;
-    border-radius: 99px;
-    padding: .3rem 1rem;
-    font-size: .82rem;
-    font-weight: 600;
-    text-transform: capitalize;
-}
-.semester-pill--ganjil {
-    background: #FFF176;
-    color: #5D4037;
-}
-.semester-pill--genap {
-    background: rgba(76,175,130,0.15);
-    color: #2E8B60;
-}
-.status-pill {
-    display: inline-block;
-    border-radius: 99px;
-    padding: .3rem 1rem;
-    font-size: .82rem;
-    font-weight: 600;
-    text-transform: capitalize;
-}
-.status-pill--selesai  { background: rgba(62,39,35,0.08); color: #5D4037; }
-.status-pill--aktif    { background: rgba(76,175,130,0.15); color: #2E8B60; }
-.status-pill--menunggu { background: #FFF176; color: #5D4037; }
-.tahun-text {
-    font-weight: 600;
-    font-size: 1rem;
-    color: #111827;
-}
-.row-no {
-    color: #9ca3af;
-    font-size: .875rem;
-    font-weight: 500;
-}
-.btn-row {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-}
-</style>
+    <style>
+        .btn--kelola-kelas {
+            background: rgba(76, 175, 130, 0.15);
+            color: #2E8B60;
+            border: 1.5px solid rgba(76, 175, 130, 0.4);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .45);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
+            text-align: center;
+        }
+
+        .modal-icon {
+            width: 56px;
+            height: 56px;
+            background: #fee2e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem;
+        }
+
+        .modal-icon svg {
+            color: #ef4444;
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: .5rem;
+        }
+
+        .modal-desc {
+            font-size: .9rem;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: .75rem;
+            justify-content: center;
+        }
+
+        .ta-table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow-x: scroll;
+        }
+
+        .ta-table thead tr {
+            background: #f8fafb;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .ta-table th {
+            padding: 14px 20px;
+            font-size: .8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: #6b7280;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .ta-table td {
+            padding: 16px 20px;
+            font-size: .95rem;
+            color: #374151;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .ta-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ta-table tbody tr:hover td {
+            background: #f9fafb;
+        }
+
+        .semester-pill {
+            display: inline-block;
+            border-radius: 99px;
+            padding: .3rem 1rem;
+            font-size: .82rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .semester-pill--ganjil {
+            background: #FFF176;
+            color: #5D4037;
+        }
+
+        .semester-pill--genap {
+            background: rgba(76, 175, 130, 0.15);
+            color: #2E8B60;
+        }
+
+        .status-pill {
+            display: inline-block;
+            border-radius: 99px;
+            padding: .3rem 1rem;
+            font-size: .82rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .status-pill--selesai {
+            background: rgba(62, 39, 35, 0.08);
+            color: #5D4037;
+        }
+
+        .status-pill--aktif {
+            background: rgba(76, 175, 130, 0.15);
+            color: #2E8B60;
+        }
+
+        .status-pill--menunggu {
+            background: #FFF176;
+            color: #5D4037;
+        }
+
+        .tahun-text {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #111827;
+        }
+
+        .row-no {
+            color: #9ca3af;
+            font-size: .875rem;
+            font-weight: 500;
+        }
+
+        .btn-row {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .card__body {
+            overflow-x: scroll;
+        }
+    </style>
 @endpush
 
 @section('content')
-<div class="page-header">
-    <div class="page-header__left">
-    </div>
-    <div class="page-header__actions">
-        <a href="{{ route('admin.tahun_ajaran.create') }}" class="btn btn--primary">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
-            Tambah Tahun Ajaran
-        </a>
-    </div>
-</div>
-
-@if(session('success'))
-<div class="alert alert--success">{{ session('success') }}</div>
-@endif
-@if(session('error'))
-<div class="alert alert--danger">{{ session('error') }}</div>
-@endif
-
-<div class="card">
-    <div class="card__header">
-        <h3 class="card__title">Daftar Tahun Ajaran</h3>
-        <span class="badge badge--primary">{{ count($data) }} Data</span>
-    </div>
-    <div class="card__body p-0">
-        @if(count($data) === 0)
-        <div style="padding:3rem;text-align:center;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="48" height="48" style="color:#d1d5db;margin-bottom:1rem;"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3A.75.75 0 0 1 18 3v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd"/></svg>
-            <p style="color:#6b7280;margin-bottom:1rem;">Belum ada data tahun ajaran.</p>
-            <a href="{{ route('admin.tahun_ajaran.create') }}" class="btn btn--primary">Tambah Sekarang</a>
+    <div class="page-header">
+        <div class="page-header__left">
         </div>
-        @else
-        <table class="ta-table">
-            <thead>
-                <tr>
-                    <th style="width:60px;">No</th>
-                    <th>Tahun Ajaran</th>
-                    <th>Semester</th>
-                    <th>Status</th>
-                    <th style="width:200px;">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($data as $i => $item)
-                <tr>
-                    <td class="row-no">{{ $i + 1 }}</td>
-                    <td class="tahun-text">{{ $item->academic_year }}</td>
-                    <td>
-                        <span class="semester-pill semester-pill--{{ $item->semester }}">
-                            {{ ucfirst($item->semester) }}
-                        </span>
-                    </td>
-                    <td>
-                        <span class="status-pill status-pill--{{ $item->status }}">
-                            {{ ucfirst($item->status) }}
-                        </span>
-                    </td>
-                    <td>
-                        <div class="btn-row">
-                            <a href="{{ route('admin.tahun_ajaran.show', $item->id) }}" class="btn btn--secondary btn--sm">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd"/></svg>
-                                Kelola Kelas
-                            </a>
-                            @if ($item->status !== 'selesai')
-                                <a href="{{ route('admin.tahun_ajaran.edit', $item->id) }}" class="btn btn--secondary btn--sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/></svg>
-                                    Edit
-                                </a>
-                                <form id="del-form-{{ $item->id }}" action="{{ route('admin.tahun_ajaran.destroy', $item->id) }}" method="POST" style="display:none;">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
-                                <button type="button" class="btn btn--danger btn--sm"
-                                    onclick="confirmHapus('{{ $item->id }}', '{{ $item->academic_year }}', '{{ ucfirst($item->semester) }}')">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
-                                    Hapus
-                                </button>
-                            @endif
-                        </div>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-        @endif
-    </div>
-</div>
-
-{{-- Modal Konfirmasi Hapus --}}
-<div class="modal-overlay" id="hapusModal">
-    <div class="modal-box">
-        <div class="modal-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
-                <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/>
-            </svg>
-        </div>
-        <p class="modal-title">Hapus Tahun Ajaran?</p>
-        <p class="modal-desc" id="hapusModalDesc"></p>
-        <div class="modal-actions">
-            <button type="button" class="btn btn--secondary" onclick="closeHapusModal()">Batal</button>
-            <button type="button" class="btn btn--danger" id="hapusConfirmBtn">Ya, Hapus</button>
+        <div class="page-header__actions">
+            <a href="{{ route('admin.tahun_ajaran.create') }}" class="btn btn--primary">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                    <path fill-rule="evenodd"
+                        d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z"
+                        clip-rule="evenodd" />
+                </svg>
+                Tambah Tahun Ajaran
+            </a>
         </div>
     </div>
-</div>
 
-@push('scripts')
-<script>
-let _hapusFormId = null;
+    @if (session('success'))
+        <div class="alert alert--success">{{ session('success') }}</div>
+    @endif
+    @if (session('error'))
+        <div class="alert alert--danger">{{ session('error') }}</div>
+    @endif
 
-function confirmHapus(id, tahun, semester) {
-    _hapusFormId = id;
-    document.getElementById('hapusModalDesc').textContent =
-        'Tahun Ajaran ' + tahun + ' Semester ' + semester + ' akan dihapus secara permanen.';
-    document.getElementById('hapusModal').classList.add('active');
-}
+    <div class="card">
+        <div class="card__header">
+            <h3 class="card__title">Daftar Tahun Ajaran</h3>
+            <span class="badge badge--primary">{{ count($data) }} Data</span>
+        </div>
+        <div class="card__body p-0">
+            @if (count($data) === 0)
+                <div style="padding:3rem;text-align:center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="48"
+                        height="48" style="color:#d1d5db;margin-bottom:1rem;">
+                        <path fill-rule="evenodd"
+                            d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3A.75.75 0 0 1 18 3v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <p style="color:#6b7280;margin-bottom:1rem;">Belum ada data tahun ajaran.</p>
+                    <a href="{{ route('admin.tahun_ajaran.create') }}" class="btn btn--primary">Tambah Sekarang</a>
+                </div>
+            @else
+                <table class="ta-table">
+                    <thead>
+                        <tr>
+                            <th style="width:60px;">No</th>
+                            <th>Tahun Ajaran</th>
+                            <th>Semester</th>
+                            <th>Status</th>
+                            <th style="width:200px;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($data as $i => $item)
+                            <tr>
+                                <td class="row-no">{{ $i + 1 }}</td>
+                                <td class="tahun-text">{{ $item->academic_year }}</td>
+                                <td>
+                                    <span class="semester-pill semester-pill--{{ $item->semester }}">
+                                        {{ ucfirst($item->semester) }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="status-pill status-pill--{{ $item->status }}">
+                                        {{ ucfirst($item->status) }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-row">
+                                        <a href="{{ route('admin.tahun_ajaran.show', $item->id) }}"
+                                            class="btn btn--kelola-kelas btn--sm">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                                width="15" height="15">
+                                                <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                                                <path fill-rule="evenodd"
+                                                    d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            Kelola Kelas
+                                        </a>
+                                        @if ($item->status !== 'selesai')
+                                            <a href="{{ route('admin.tahun_ajaran.edit', $item->id) }}"
+                                                class="btn btn--secondary btn--sm">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                    fill="currentColor" width="15" height="15">
+                                                    <path
+                                                        d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
+                                                </svg>
+                                                Edit
+                                            </a>
+                                            <form id="del-form-{{ $item->id }}"
+                                                action="{{ route('admin.tahun_ajaran.destroy', $item->id) }}"
+                                                method="POST" style="display:none;">
+                                                @csrf
+                                                @method('DELETE')
+                                            </form>
+                                            <button type="button" class="btn btn--danger btn--sm"
+                                                onclick="confirmHapus('{{ $item->id }}', '{{ $item->academic_year }}', '{{ ucfirst($item->semester) }}')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                    fill="currentColor" width="15" height="15">
+                                                    <path fill-rule="evenodd"
+                                                        d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                                Hapus
+                                            </button>
+                                        @endif
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+        </div>
+    </div>
 
-function closeHapusModal() {
-    document.getElementById('hapusModal').classList.remove('active');
-    _hapusFormId = null;
-}
+    {{-- Modal Konfirmasi Hapus --}}
+    <div class="modal-overlay" id="hapusModal">
+        <div class="modal-box">
+            <div class="modal-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28"
+                    height="28">
+                    <path fill-rule="evenodd"
+                        d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+                        clip-rule="evenodd" />
+                </svg>
+            </div>
+            <p class="modal-title">Hapus Tahun Ajaran?</p>
+            <p class="modal-desc" id="hapusModalDesc"></p>
+            <div class="modal-actions">
+                <button type="button" class="btn btn--secondary" onclick="closeHapusModal()">Batal</button>
+                <button type="button" class="btn btn--danger" id="hapusConfirmBtn">Ya, Hapus</button>
+            </div>
+        </div>
+    </div>
 
-document.getElementById('hapusConfirmBtn').addEventListener('click', function () {
-    if (_hapusFormId) document.getElementById('del-form-' + _hapusFormId).submit();
-});
+    @push('scripts')
+        <script>
+            let _hapusFormId = null;
 
-document.getElementById('hapusModal').addEventListener('click', function (e) {
-    if (e.target === this) closeHapusModal();
-});
-</script>
-@endpush
+            function confirmHapus(id, tahun, semester) {
+                _hapusFormId = id;
+                document.getElementById('hapusModalDesc').textContent =
+                    'Tahun Ajaran ' + tahun + ' Semester ' + semester + ' akan dihapus secara permanen.';
+                document.getElementById('hapusModal').classList.add('active');
+            }
+
+            function closeHapusModal() {
+                document.getElementById('hapusModal').classList.remove('active');
+                _hapusFormId = null;
+            }
+
+            document.getElementById('hapusConfirmBtn').addEventListener('click', function() {
+                if (_hapusFormId) document.getElementById('del-form-' + _hapusFormId).submit();
+            });
+
+            document.getElementById('hapusModal').addEventListener('click', function(e) {
+                if (e.target === this) closeHapusModal();
+            });
+        </script>
+    @endpush
 @endsection

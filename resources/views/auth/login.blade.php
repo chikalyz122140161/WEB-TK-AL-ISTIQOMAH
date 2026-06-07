@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -110,32 +110,15 @@
             min-height: 500px;
         }
 
-        .illustration-side::before {
-            content: '';
-            position: absolute;
-            top: -50px;
-            right: -50px;
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 50%;
-        }
-
-        .illustration-side::after {
-            content: '';
-            position: absolute;
-            bottom: -30px;
-            left: -30px;
-            width: 150px;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-        }
-
         .illustration-content {
             text-align: center;
             position: relative;
             z-index: 1;
+        }
+
+        .illustration-content img {
+            width: 250px;
+            height: 300px;
         }
 
         .school-illustration {
@@ -448,15 +431,14 @@
                 max-width: 400px;
             }
 
-            .illustration-side {
-                min-height: auto;
-                padding: 32px 24px;
-            }
-
             .school-illustration {
                 width: 120px;
                 height: 120px;
                 margin-bottom: 16px;
+            }
+
+            .illustration-side {
+                padding: 14px 10px;
             }
 
             .illustration-title {
@@ -465,6 +447,7 @@
 
             .illustration-subtitle {
                 font-size: 0.9rem;
+                max-width: 400px;
             }
 
             .login-side {
@@ -506,7 +489,13 @@
             }
 
             .illustration-side {
-                padding: 24px 20px;
+                padding: 14px 10px;
+                min-height: 100px;
+            }
+
+            .illustration-side img {
+                width: 100px;
+                height: 150px;
             }
 
             .login-side {
@@ -635,90 +624,15 @@
     </style>
 </head>
 <body>
-    <!-- Background Decorations -->
-    <div class="bg-decoration circle-1"></div>
-    <div class="bg-decoration circle-2"></div>
-    <div class="bg-decoration circle-3"></div>
-    <div class="bg-decoration circle-4"></div>
-
-    <!-- Wave Bottom -->
-    <svg class="wave-bottom" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-        <path d="M0 120L60 105C120 90 240 60 360 50C480 40 600 50 720 60C840 70 960 80 1080 75C1200 70 1320 50 1380 40L1440 30V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="rgba(255,255,255,0.4)"/>
-        <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 80C1200 80 1320 70 1380 65L1440 60V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="rgba(255,255,255,0.6)"/>
-    </svg>
 
     <div class="main-container">
         <div class="login-wrapper">
             <!-- Left Side - Illustration -->
             <div class="illustration-side">
-                <!-- Decorative Shapes -->
-                <svg class="shape shape-star" viewBox="0 0 24 24" fill="white">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                </svg>
-                <svg class="shape shape-heart" viewBox="0 0 24 24" fill="white">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                </svg>
-                <svg class="shape shape-book" viewBox="0 0 24 24" fill="white">
-                    <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
-                </svg>
 
                 <div class="illustration-content">
                     <!-- School Building SVG Illustration -->
-                    <svg class="school-illustration" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Sky elements -->
-                        <circle cx="160" cy="30" r="20" fill="rgba(255,255,255,0.3)"/>
-                        <circle cx="40" cy="45" r="12" fill="rgba(255,255,255,0.25)"/>
-                        <circle cx="30" cy="25" r="8" fill="rgba(255,255,255,0.2)"/>
-                        
-                        <!-- Ground -->
-                        <ellipse cx="100" cy="185" rx="90" ry="12" fill="rgba(255,255,255,0.2)"/>
-                        
-                        <!-- Main Building -->
-                        <rect x="40" y="90" width="120" height="80" rx="4" fill="white"/>
-                        
-                        <!-- Roof -->
-                        <path d="M30 95L100 50L170 95H30Z" fill="#fff5eb"/>
-                        <path d="M40 90L100 55L160 90" stroke="#3D9B72" stroke-width="3" fill="none"/>
-                        
-                        <!-- Flag pole -->
-                        <rect x="97" y="30" width="6" height="30" fill="#3D9B72"/>
-                        <path d="M103 30L103 45L118 37.5L103 30Z" fill="#F06292"/>
-                        
-                        <!-- Windows row 1 -->
-                        <rect x="52" y="105" width="25" height="20" rx="2" fill="#FFF176"/>
-                        <rect x="87" y="105" width="25" height="20" rx="2" fill="#FFF176"/>
-                        <rect x="122" y="105" width="25" height="20" rx="2" fill="#FFF176"/>
-                        
-                        <!-- Window details -->
-                        <line x1="64.5" y1="105" x2="64.5" y2="125" stroke="white" stroke-width="2"/>
-                        <line x1="52" y1="115" x2="77" y2="115" stroke="white" stroke-width="2"/>
-                        <line x1="99.5" y1="105" x2="99.5" y2="125" stroke="white" stroke-width="2"/>
-                        <line x1="87" y1="115" x2="112" y2="115" stroke="white" stroke-width="2"/>
-                        <line x1="134.5" y1="105" x2="134.5" y2="125" stroke="white" stroke-width="2"/>
-                        <line x1="122" y1="115" x2="147" y2="115" stroke="white" stroke-width="2"/>
-                        
-                        <!-- Door -->
-                        <rect x="85" y="140" width="30" height="35" rx="15 15 0 0" fill="#3D9B72"/>
-                        <circle cx="108" cy="160" r="3" fill="#FFF176"/>
-                        
-                        <!-- Trees -->
-                        <ellipse cx="25" cy="150" rx="18" ry="25" fill="#3D9B72"/>
-                        <rect x="22" y="165" width="6" height="15" fill="#5D4037"/>
-                        <ellipse cx="175" cy="152" rx="16" ry="22" fill="#4CAF82"/>
-                        <rect x="172" y="167" width="6" height="13" fill="#5D4037"/>
-                        
-                        <!-- Small flowers -->
-                        <circle cx="55" cy="178" r="4" fill="#F06292"/>
-                        <circle cx="65" cy="180" r="3" fill="#FFF176"/>
-                        <circle cx="135" cy="179" r="4" fill="#a78bfa"/>
-                        <circle cx="145" cy="177" r="3" fill="#F06292"/>
-                        
-                        <!-- Children silhouettes -->
-                        <circle cx="70" cy="165" r="5" fill="#5D4037"/>
-                        <ellipse cx="70" cy="177" rx="4" ry="6" fill="#5D4037"/>
-                        <circle cx="130" cy="166" r="5" fill="#5D4037"/>
-                        <ellipse cx="130" cy="178" rx="4" ry="6" fill="#5D4037"/>
-                    </svg>
+                    <img src="{{ asset('assets/img/logo.png') }}" alt="logo">
 
                     <h2 class="illustration-title">Selamat Datang!</h2>
                     <p class="illustration-subtitle">Sistem Informasi Pendidikan TK Al-Istiqomah untuk memantau perkembangan anak tercinta</p>
