@@ -168,11 +168,20 @@ class PendaftaranController extends Controller
                 ->first();
 
             if ($user && $user->student) {
+                $statusMap = [
+                    'pending'  => 'pending',
+                    'active'   => 'approved',
+                    'inactive' => 'rejected',
+                ];
+
                 $registration = (object)[
-                    'nama_lengkap' => $user->student->name,
-                    'email'        => $user->email,
-                    'status'       => 'terdaftar',
-                    'created_at'   => $user->created_at,
+                    'nama_lengkap'     => $user->student->name,
+                    'email'            => $user->email,
+                    'kode_pendaftaran' => $user->student->nik,
+                    'telepon'          => $user->phone,
+                    'status'           => $statusMap[$user->status] ?? 'pending',
+                    'created_at'       => $user->created_at,
+                    'catatan_admin'    => null,
                 ];
             }
         }

@@ -134,8 +134,6 @@
             color: #3E2723;
             background: #FFFDE7;
             transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 2px;
             font-weight: 600;
         }
 
@@ -384,7 +382,7 @@
                 </svg>
             </div>
             <h1>Cek Status Pendaftaran</h1>
-            <p>Masukkan kode pendaftaran untuk melihat status</p>
+            <p>Masukkan email yang digunakan saat mendaftar</p>
         </div>
 
         @if (session('error'))
@@ -398,11 +396,11 @@
 
         <form method="GET" action="{{ route('pendaftaran.cek-status') }}">
             <div class="form-group">
-                <label>Kode Pendaftaran</label>
+                <label>Email Pendaftaran</label>
                 <div class="input-wrapper">
-                    <input type="text" name="kode" value="{{ request('kode') }}" placeholder="Masukkan kode pendaftaran" required>
+                    <input type="email" name="email" value="{{ request('email') }}" placeholder="Masukkan email pendaftaran" required>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                 </div>
             </div>
@@ -420,6 +418,13 @@
                 Daftar Baru
             </a>
         </form>
+
+        @if($registration === null && request('email'))
+            <div class="result-section" style="text-align:center;">
+                <p style="color:#d81b72;font-size:0.95rem;font-weight:700;">Data pendaftaran tidak ditemukan.</p>
+                <p style="color:#5D4037;font-size:0.85rem;margin-top:6px;">Pastikan email yang dimasukkan sudah benar.</p>
+            </div>
+        @endif
 
         @if(isset($registration))
             <div class="result-section">
