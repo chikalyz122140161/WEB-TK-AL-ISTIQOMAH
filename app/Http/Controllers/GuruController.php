@@ -399,7 +399,7 @@ class GuruController extends Controller
                 'initial' => strtoupper(mb_substr($other?->name ?? '?', 0, 1)),
                 'sub'     => ucfirst($other?->role ?? 'orangtua'),
                 'preview' => $latest ? Str::limit($latest->message, 35) : 'Belum ada pesan',
-                'waktu'   => $latest ? $latest->created_at->format('H:i') : '',
+                'waktu'   => $latest ? $latest->created_at->setTimezone('Asia/Jakarta')->format('H:i') : '',
             ];
         })->toArray();
 
@@ -427,7 +427,7 @@ class GuruController extends Controller
                 $pesan = $activeRoom->messages->map(fn($msg) => [
                     'is_mine' => $msg->sender_id === $me->id,
                     'teks'    => $msg->message,
-                    'waktu'   => $msg->created_at->format('H:i'),
+                    'waktu'   => $msg->created_at->setTimezone('Asia/Jakarta')->format('H:i'),
                     'initial' => strtoupper(mb_substr($msg->sender?->name ?? '?', 0, 1)),
                 ])->toArray();
             }

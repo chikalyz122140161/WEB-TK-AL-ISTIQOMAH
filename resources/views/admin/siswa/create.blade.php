@@ -34,7 +34,7 @@
         <h3 class="card__title">Form Data Siswa</h3>
     </div>
     <div class="card__body">
-        <form action="{{ route('admin.siswa.store') }}" method="POST" class="form">
+        <form action="{{ route('admin.siswa.store') }}" method="POST" class="form" id="siswaForm">
             @csrf
 
             <div class="form-section">
@@ -245,9 +245,13 @@
 
             <div class="form-actions">
                 <button type="reset" class="btn btn--secondary">Reset</button>
-                <button type="submit" class="btn btn--primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd"/></svg>
-                    Simpan
+                <button type="submit" class="btn btn--primary" id="submitBtn">
+                    <svg class="icon-default" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd"/></svg>
+                    <svg class="icon-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" style="display:none;">
+                        <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-dasharray="28" stroke-dashoffset="10"/>
+                    </svg>
+                    <span id="btnLabel">Simpan</span>
                 </button>
             </div>
         </form>
@@ -382,5 +386,38 @@
 }
 
 .mb-0 { margin-bottom: 0; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+#submitBtn .icon-spin { animation: spin .7s linear infinite; }
+#submitBtn:disabled { opacity: 0.75; cursor: not-allowed; }
 </style>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var form        = document.getElementById('siswaForm');
+    var submitBtn   = document.getElementById('submitBtn');
+    var btnLabel    = document.getElementById('btnLabel');
+    var iconDefault = submitBtn.querySelector('.icon-default');
+    var iconSpin    = submitBtn.querySelector('.icon-spin');
+
+    form.addEventListener('submit', function () {
+        if (submitBtn.disabled) return;
+        submitBtn.disabled        = true;
+        iconDefault.style.display = 'none';
+        iconSpin.style.display    = '';
+        btnLabel.textContent      = 'Menyimpan...';
+    });
+
+    window.addEventListener('pageshow', function (e) {
+        if (e.persisted) {
+            submitBtn.disabled        = false;
+            iconDefault.style.display = '';
+            iconSpin.style.display    = 'none';
+            btnLabel.textContent      = 'Simpan';
+        }
+    });
+});
+</script>
+@endpush

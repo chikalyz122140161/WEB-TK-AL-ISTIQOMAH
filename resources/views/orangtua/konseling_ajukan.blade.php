@@ -102,6 +102,18 @@
         transition: background .15s;
     }
     .btn-cancel:hover { background: #e5e7eb; }
+
+    .time-picker {
+        display: flex; align-items: center; gap: 6px;
+    }
+    .time-picker select {
+        flex: 1; padding: 9px 10px; font-size: 14px;
+        border: 1px solid #d1d5db; border-radius: 8px;
+        background: #fff; appearance: none; cursor: pointer;
+        color: #374151;
+    }
+    .time-picker select:focus { outline: none; border-color: #3D9B72; box-shadow: 0 0 0 3px #3D9B7220; }
+    .time-picker .tp-sep { font-weight: 700; color: #374151; }
 </style>
 @endpush
 
@@ -149,11 +161,21 @@
         </div>
         <div class="form-group">
             <label>Jam Mulai <span class="req">*</span></label>
-            <input type="time" name="waktu_mulai" required>
+            <div class="time-picker" data-name="waktu_mulai">
+                <select class="tp-h"><option value="" disabled selected>--</option></select>
+                <span class="tp-sep">:</span>
+                <select class="tp-m"><option value="" disabled selected>--</option></select>
+                <input type="hidden" name="waktu_mulai">
+            </div>
         </div>
         <div class="form-group">
             <label>Jam Selesai <span class="req">*</span></label>
-            <input type="time" name="waktu_selesai" required>
+            <div class="time-picker" data-name="waktu_selesai">
+                <select class="tp-h"><option value="" disabled selected>--</option></select>
+                <span class="tp-sep">:</span>
+                <select class="tp-m"><option value="" disabled selected>--</option></select>
+                <input type="hidden" name="waktu_selesai">
+            </div>
         </div>
         <div class="form-group form-group--full">
             <label>Topik / Permasalahan yang Ingin Dibahas <span class="req">*</span></label>
@@ -179,13 +201,51 @@
 
 @push('scripts')
 <script>
+    // ── Time picker init ──────────────────────────────────────────────
+    document.querySelectorAll('.time-picker').forEach(function (picker) {
+        var selH    = picker.querySelector('.tp-h');
+        var selM    = picker.querySelector('.tp-m');
+        var hidden  = picker.querySelector('input[type=hidden]');
+
+        for (var h = 0; h < 24; h++) {
+            var o = document.createElement('option');
+            o.value = String(h).padStart(2, '0');
+            o.textContent = String(h).padStart(2, '0');
+            selH.appendChild(o);
+        }
+        for (var m = 0; m < 60; m += 5) {
+            var o = document.createElement('option');
+            o.value = String(m).padStart(2, '0');
+            o.textContent = String(m).padStart(2, '0');
+            selM.appendChild(o);
+        }
+
+        function sync() {
+            if (selH.value && selM.value) {
+                hidden.value = selH.value + ':' + selM.value;
+            } else {
+                hidden.value = '';
+            }
+        }
+        selH.addEventListener('change', sync);
+        selM.addEventListener('change', sync);
+    });
+
+    // ── Idempotency ───────────────────────────────────────────────────
     const ajukanForm  = document.getElementById('ajukanForm');
     const submitBtn   = document.getElementById('submitBtn');
     const btnLabel    = document.getElementById('btnLabel');
     const iconDefault = submitBtn?.querySelector('.icon-default');
     const iconSpin    = submitBtn?.querySelector('.icon-spin');
 
-    ajukanForm?.addEventListener('submit', function () {
+    ajukanForm?.addEventListener('submit', function (e) {
+        var mulai   = ajukanForm.querySelector('input[name=waktu_mulai]').value;
+        var selesai = ajukanForm.querySelector('input[name=waktu_selesai]').value;
+        if (!mulai || !selesai) {
+            e.preventDefault();
+            alert('Jam mulai dan jam selesai harus diisi.');
+            return;
+        }
         if (submitBtn.disabled) return;
         submitBtn.disabled        = true;
         iconDefault.style.display = 'none';
@@ -193,7 +253,6 @@
         btnLabel.textContent      = 'Mengajukan...';
     });
 
-    // Restore saat kembali via tombol Back browser
     window.addEventListener('pageshow', function (e) {
         if (e.persisted && submitBtn) {
             submitBtn.disabled        = false;

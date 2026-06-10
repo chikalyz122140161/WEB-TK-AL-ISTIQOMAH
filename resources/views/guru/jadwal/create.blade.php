@@ -9,6 +9,10 @@
 
 @push('styles')
     <style>
+        .time-picker { display:flex; align-items:center; gap:6px; }
+        .time-picker select { flex:1; }
+        .time-picker .tp-sep { font-weight:700; color:#6b7280; flex-shrink:0; }
+
         .form-section {
             background: #fff;
             border: 1px solid #3E272320;
@@ -250,11 +254,21 @@
                     </div>
                     <div class="form-group">
                         <label>Jam Mulai</label>
-                        <input type="time" name="start_hour">
+                        <div class="time-picker">
+                            <select class="tp-h"><option value="" disabled selected>--</option></select>
+                            <span class="tp-sep">:</span>
+                            <select class="tp-m"><option value="" disabled selected>--</option></select>
+                            <input type="hidden" name="start_hour">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Jam Selesai</label>
-                        <input type="time" name="end_hour">
+                        <div class="time-picker">
+                            <select class="tp-h"><option value="" disabled selected>--</option></select>
+                            <span class="tp-sep">:</span>
+                            <select class="tp-m"><option value="" disabled selected>--</option></select>
+                            <input type="hidden" name="end_hour">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Kelas</label>
@@ -337,11 +351,21 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Jam Mulai</label>
-                        <input type="time" name="start_hour" required>
+                        <div class="time-picker">
+                            <select class="tp-h"><option value="" disabled selected>--</option></select>
+                            <span class="tp-sep">:</span>
+                            <select class="tp-m"><option value="" disabled selected>--</option></select>
+                            <input type="hidden" name="start_hour">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Jam Selesai</label>
-                        <input type="time" name="end_hour">
+                        <div class="time-picker">
+                            <select class="tp-h"><option value="" disabled selected>--</option></select>
+                            <span class="tp-sep">:</span>
+                            <select class="tp-m"><option value="" disabled selected>--</option></select>
+                            <input type="hidden" name="end_hour">
+                        </div>
                     </div>
                 </div>
 
@@ -370,6 +394,30 @@
 
 @push('scripts')
     <script>
+        document.querySelectorAll('.time-picker').forEach(function (wrap) {
+            var selH   = wrap.querySelector('.tp-h');
+            var selM   = wrap.querySelector('.tp-m');
+            var hidden = wrap.querySelector('input[type=hidden]');
+            for (var h = 0; h <= 23; h++) {
+                var v = h.toString().padStart(2, '0');
+                selH.innerHTML += '<option value="' + v + '">' + v + '</option>';
+            }
+            for (var m = 0; m <= 59; m += 5) {
+                var v = m.toString().padStart(2, '0');
+                selM.innerHTML += '<option value="' + v + '">' + v + '</option>';
+            }
+            if (hidden.value) {
+                var p = hidden.value.split(':');
+                selH.value = p[0] || '';
+                selM.value = p[1] ? p[1].substring(0, 2) : '00';
+            }
+            function sync() {
+                hidden.value = (selH.value !== '' && selM.value !== '') ? selH.value + ':' + selM.value : '';
+            }
+            selH.addEventListener('change', sync);
+            selM.addEventListener('change', sync);
+        });
+
         document.querySelectorAll('.schedule-type-tab').forEach(function(tab) {
             tab.addEventListener('click', function() {
                 document.querySelectorAll('.schedule-type-tab').forEach(function(t) {

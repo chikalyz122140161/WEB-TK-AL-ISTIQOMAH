@@ -415,14 +415,26 @@
             gap: 10px;
         }
 
-        .btn-submit:hover {
+        .btn-submit:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(76, 175, 130, 0.4);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.75;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .btn-submit svg {
             width: 22px;
             height: 22px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .btn-submit .icon-spin {
+            animation: spin .7s linear infinite;
+            display: none;
         }
 
         /* Footer */
@@ -508,7 +520,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('pendaftaran.store') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('pendaftaran.store') }}" enctype="multipart/form-data" id="pendaftaranForm">
             @csrf
 
             <!-- Data Siswa -->
@@ -841,11 +853,15 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn-submit">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <button type="submit" class="btn-submit" id="submitBtn">
+                <svg class="icon-default" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                KIRIM PENDAFTARAN
+                <svg class="icon-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" fill="none" stroke="white" stroke-width="2.5"
+                        stroke-dasharray="28" stroke-dashoffset="10"/>
+                </svg>
+                <span id="btnLabel">KIRIM PENDAFTARAN</span>
             </button>
         </form>
 
@@ -855,6 +871,34 @@
     </div>
 
     <script>
+    // ── Idempotency: tombol Kirim Pendaftaran ─────────────────────────
+    (function () {
+        var form        = document.getElementById('pendaftaranForm');
+        var submitBtn   = document.getElementById('submitBtn');
+        var btnLabel    = document.getElementById('btnLabel');
+        var iconDefault = submitBtn ? submitBtn.querySelector('.icon-default') : null;
+        var iconSpin    = submitBtn ? submitBtn.querySelector('.icon-spin')    : null;
+
+        if (form && submitBtn) {
+            form.addEventListener('submit', function () {
+                if (submitBtn.disabled) return;
+                submitBtn.disabled        = true;
+                if (iconDefault) iconDefault.style.display = 'none';
+                if (iconSpin)    iconSpin.style.display    = '';
+                if (btnLabel)    btnLabel.textContent      = 'MENGIRIM...';
+            });
+
+            window.addEventListener('pageshow', function (e) {
+                if (e.persisted) {
+                    submitBtn.disabled        = false;
+                    if (iconDefault) iconDefault.style.display = '';
+                    if (iconSpin)    iconSpin.style.display    = 'none';
+                    if (btnLabel)    btnLabel.textContent      = 'KIRIM PENDAFTARAN';
+                }
+            });
+        }
+    })();
+
     (function () {
         const formatSize = function (bytes) {
             if (bytes < 1024) return bytes + ' B';

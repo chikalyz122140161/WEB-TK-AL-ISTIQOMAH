@@ -93,6 +93,18 @@
         transition: background .15s;
     }
     .btn-cancel:hover { background: #e5e7eb; }
+
+    .time-picker {
+        display: flex; align-items: center; gap: 6px;
+    }
+    .time-picker select {
+        flex: 1; padding: 9px 10px; font-size: 14px;
+        border: 1px solid #d1d5db; border-radius: 8px;
+        background: #fff; appearance: none; cursor: pointer;
+        color: #374151;
+    }
+    .time-picker select:focus { outline: none; border-color: #3D9B72; box-shadow: 0 0 0 3px #3D9B7220; }
+    .time-picker .tp-sep { font-weight: 700; color: #374151; }
 </style>
 @endpush
 
@@ -149,11 +161,21 @@
         </div>
         <div class="form-group">
             <label>Jam Mulai <span class="req">*</span></label>
-            <input type="time" name="waktu_mulai" required value="{{ old('waktu_mulai', $wMulai) }}">
+            <div class="time-picker" data-name="waktu_mulai">
+                <select class="tp-h"><option value="" disabled selected>--</option></select>
+                <span class="tp-sep">:</span>
+                <select class="tp-m"><option value="" disabled selected>--</option></select>
+                <input type="hidden" name="waktu_mulai" value="{{ old('waktu_mulai', $wMulai) }}">
+            </div>
         </div>
         <div class="form-group">
             <label>Jam Selesai <span class="req">*</span></label>
-            <input type="time" name="waktu_selesai" required value="{{ old('waktu_selesai', $wSelesai) }}">
+            <div class="time-picker" data-name="waktu_selesai">
+                <select class="tp-h"><option value="" disabled selected>--</option></select>
+                <span class="tp-sep">:</span>
+                <select class="tp-m"><option value="" disabled selected>--</option></select>
+                <input type="hidden" name="waktu_selesai" value="{{ old('waktu_selesai', $wSelesai) }}">
+            </div>
         </div>
         <div class="form-group form-group--full">
             <label>Topik / Permasalahan yang Ingin Dibahas <span class="req">*</span></label>
@@ -172,3 +194,49 @@
 </form>
 
 @endsection
+
+@push('scripts')
+<script>
+    // ── Time picker init ──────────────────────────────────────────────
+    document.querySelectorAll('.time-picker').forEach(function (picker) {
+        var selH   = picker.querySelector('.tp-h');
+        var selM   = picker.querySelector('.tp-m');
+        var hidden = picker.querySelector('input[type=hidden]');
+
+        for (var h = 0; h < 24; h++) {
+            var o = document.createElement('option');
+            o.value = String(h).padStart(2, '0');
+            o.textContent = String(h).padStart(2, '0');
+            selH.appendChild(o);
+        }
+        for (var m = 0; m < 60; m += 5) {
+            var o = document.createElement('option');
+            o.value = String(m).padStart(2, '0');
+            o.textContent = String(m).padStart(2, '0');
+            selM.appendChild(o);
+        }
+
+        // Pre-fill from existing hidden value
+        if (hidden.value) {
+            var parts = hidden.value.split(':');
+            var hVal  = parts[0] ? String(parseInt(parts[0])).padStart(2, '0') : '';
+            var mRaw  = parts[1] ? parseInt(parts[1]) : null;
+            var mRound = mRaw !== null ? Math.round(mRaw / 5) * 5 : null;
+            if (mRound === 60) mRound = 55;
+            var mVal  = mRound !== null ? String(mRound).padStart(2, '0') : '';
+            if (hVal) selH.value = hVal;
+            if (mVal) selM.value = mVal;
+        }
+
+        function sync() {
+            if (selH.value && selM.value) {
+                hidden.value = selH.value + ':' + selM.value;
+            } else {
+                hidden.value = '';
+            }
+        }
+        selH.addEventListener('change', sync);
+        selM.addEventListener('change', sync);
+    });
+</script>
+@endpush

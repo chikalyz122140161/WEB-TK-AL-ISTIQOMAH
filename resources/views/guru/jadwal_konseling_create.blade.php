@@ -216,6 +216,20 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         .icon-spin { animation: spin .7s linear infinite; display: none; }
 
+        .time-picker {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .time-picker select {
+            flex: 1;
+        }
+        .time-picker .tp-sep {
+            font-weight: 700;
+            color: #6b7280;
+            flex-shrink: 0;
+        }
+
         .btn-cancel {
             display: inline-flex;
             align-items: center;
@@ -331,12 +345,22 @@
 
             <div class="form-group">
                 <label>Jam Mulai <span class="req">*</span></label>
-                <input type="time" name="waktu_mulai" required>
+                <div class="time-picker" data-name="waktu_mulai">
+                    <select class="tp-h"><option value="" disabled selected>--</option></select>
+                    <span class="tp-sep">:</span>
+                    <select class="tp-m"><option value="" disabled selected>--</option></select>
+                    <input type="hidden" name="waktu_mulai">
+                </div>
             </div>
 
             <div class="form-group">
                 <label>Jam Selesai <span class="req">*</span></label>
-                <input type="time" name="waktu_selesai" required>
+                <div class="time-picker" data-name="waktu_selesai">
+                    <select class="tp-h"><option value="" disabled selected>--</option></select>
+                    <span class="tp-sep">:</span>
+                    <select class="tp-m"><option value="" disabled selected>--</option></select>
+                    <input type="hidden" name="waktu_selesai">
+                </div>
             </div>
 
             <div class="form-group form-group--full">
@@ -370,6 +394,39 @@
         var CLASS_TERMS = {!! json_encode($classTerms, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!};
         var MODE = @json($mode);
 
+        // ── Time picker 24-jam ──────────────────────────────────────
+        document.querySelectorAll('.time-picker').forEach(function (wrap) {
+            var selH   = wrap.querySelector('.tp-h');
+            var selM   = wrap.querySelector('.tp-m');
+            var hidden = wrap.querySelector('input[type=hidden]');
+
+            for (var h = 0; h <= 23; h++) {
+                var v = h.toString().padStart(2, '0');
+                selH.innerHTML += '<option value="' + v + '">' + v + '</option>';
+            }
+            for (var m = 0; m <= 59; m += 5) {
+                var v = m.toString().padStart(2, '0');
+                selM.innerHTML += '<option value="' + v + '">' + v + '</option>';
+            }
+
+            var existing = hidden.value;
+            if (existing) {
+                var parts = existing.split(':');
+                selH.value = parts[0] || '';
+                selM.value = parts[1] ? parts[1].substring(0, 2) : '00';
+            }
+
+            function sync() {
+                if (selH.value !== '' && selM.value !== '') {
+                    hidden.value = selH.value + ':' + selM.value;
+                } else {
+                    hidden.value = '';
+                }
+            }
+            selH.addEventListener('change', sync);
+            selM.addEventListener('change', sync);
+        });
+
         // Idempotency: cegah double-submit
         const jadwalForm  = document.getElementById('jadwalForm');
         const submitBtn   = document.getElementById('submitBtn');
@@ -377,7 +434,14 @@
         const iconDefault = submitBtn?.querySelector('.icon-default');
         const iconSpin    = submitBtn?.querySelector('.icon-spin');
 
-        jadwalForm?.addEventListener('submit', function () {
+        jadwalForm?.addEventListener('submit', function (e) {
+            var mulai   = jadwalForm.querySelector('input[name=waktu_mulai]').value;
+            var selesai = jadwalForm.querySelector('input[name=waktu_selesai]').value;
+            if (!mulai || !selesai) {
+                e.preventDefault();
+                alert('Jam mulai dan jam selesai harus diisi.');
+                return;
+            }
             if (submitBtn.disabled) return;
             submitBtn.disabled        = true;
             iconDefault.style.display = 'none';
