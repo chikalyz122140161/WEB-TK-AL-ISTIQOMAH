@@ -1469,6 +1469,7 @@ class GuruController extends Controller
             'nis'           => $e->student->nis ?? '-',
             'jenis_kelamin' => $e->student->gender ?? 'L',
             'has_report'    => $e->report !== null,
+            'report_id'     => $e->report?->id,
         ])->values();
 
         $total      = $students->count();
@@ -1648,6 +1649,11 @@ class GuruController extends Controller
 
     public function rapotDestroy($id)
     {
-        return redirect()->route('guru.rapot.index');
+        $report = \App\Models\Report::with('studentEnrollment')->findOrFail($id);
+        $classTermId = $report->studentEnrollment->class_term_id;
+        $report->delete();
+
+        return redirect()->route('guru.rapot.show', $classTermId)
+            ->with('success', 'Rapot siswa berhasil dihapus.');
     }
 }

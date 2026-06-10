@@ -108,6 +108,57 @@
     }
     .btn-edit:hover { background: #f5e800; transform: translateY(-1px); }
     .btn-edit svg { width: 12px; height: 12px; fill: #3E2723; }
+
+    .btn-hapus {
+        display: inline-flex; align-items: center; gap: 5px;
+        background: #fee2e2; color: #dc2626;
+        padding: 6px 13px; font-size: 12px; font-weight: 700;
+        border: 1.5px solid #fca5a5; border-radius: 8px;
+        cursor: pointer; transition: background .15s, transform .15s;
+        white-space: nowrap; font-family: inherit;
+    }
+    .btn-hapus:hover { background: #fecaca; transform: translateY(-1px); }
+    .btn-hapus svg { width: 12px; height: 12px; fill: #dc2626; }
+    .action-cell { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+    .modal-overlay {
+        display: none; position: fixed; inset: 0;
+        background: rgba(0,0,0,0.45); z-index: 9999;
+        align-items: center; justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+        background: #fff; border-radius: 16px;
+        padding: 32px 28px; max-width: 360px; width: 90%;
+        text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .modal-icon {
+        width: 56px; height: 56px; border-radius: 50%;
+        background: rgba(220,38,38,0.1);
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 16px;
+    }
+    .modal-icon svg { width: 26px; height: 26px; fill: #dc2626; }
+    .modal-box h3 { font-size: 17px; font-weight: 800; color: #1c1917; margin: 0 0 8px; }
+    .modal-box p  { font-size: 13px; color: #78716c; margin: 0 0 24px; line-height: 1.5; }
+    .modal-box p strong { color: #1c1917; }
+    .modal-actions { display: flex; gap: 10px; }
+    .btn-modal-batal {
+        flex: 1; padding: 10px; border: 1.5px solid #e7e5e4;
+        border-radius: 10px; background: #fff; color: #57534e;
+        font-size: 14px; font-weight: 600; cursor: pointer;
+        font-family: inherit; transition: background .15s;
+    }
+    .btn-modal-batal:hover { background: #f5f5f4; }
+    .btn-modal-hapus {
+        flex: 1; padding: 10px; border: none;
+        border-radius: 10px; background: #dc2626; color: #fff;
+        font-size: 14px; font-weight: 700; cursor: pointer;
+        font-family: inherit; display: flex; align-items: center;
+        justify-content: center; gap: 6px; transition: background .15s;
+    }
+    .btn-modal-hapus:hover { background: #b91c1c; }
+    .btn-modal-hapus svg { width: 15px; height: 15px; fill: #fff; }
 </style>
 @endpush
 
@@ -192,17 +243,29 @@
                             @endif
                         </td>
                         <td>
+                            <div class="action-cell">
                             @if ($s['has_report'])
                                 <a href="{{ route('guru.rapot.siswa.form', [$classTerm['id'], $s['id']]) }}" class="btn-edit">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"/></svg>
                                     Edit Nilai
                                 </a>
+                                <form id="form-hapus-{{ $s['report_id'] }}"
+                                      action="{{ route('guru.rapot.destroy', $s['report_id']) }}"
+                                      method="POST" style="display:none">
+                                    @csrf @method('DELETE')
+                                </form>
+                                <button type="button" class="btn-hapus"
+                                        onclick="showHapusRapot('{{ $s['report_id'] }}', '{{ addslashes($s['nama']) }}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
+                                    Hapus
+                                </button>
                             @else
                                 <a href="{{ route('guru.rapot.siswa.form', [$classTerm['id'], $s['id']]) }}" class="btn-input">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
                                     Input Nilai
                                 </a>
                             @endif
+                            </div>
                         </td>
                     </tr>
                 @empty
@@ -215,4 +278,48 @@
             </tbody>
         </table>
     </div>
+
+{{-- Modal Hapus Rapot --}}
+<div class="modal-overlay" id="modalHapusRapot">
+    <div class="modal-box">
+        <div class="modal-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
+        </div>
+        <h3>Hapus Rapot?</h3>
+        <p>Apakah Anda yakin ingin menghapus rapot <strong id="modalNamaSiswa"></strong>? Tindakan ini tidak dapat dibatalkan.</p>
+        <div class="modal-actions">
+            <button type="button" class="btn-modal-batal" onclick="closeHapusRapot()">Batal</button>
+            <button type="button" class="btn-modal-hapus" id="btnKonfirmasiHapus">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/></svg>
+                Ya, Hapus
+            </button>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    var _hapusFormId = null;
+
+    function showHapusRapot(reportId, nama) {
+        _hapusFormId = 'form-hapus-' + reportId;
+        document.getElementById('modalNamaSiswa').textContent = nama;
+        document.getElementById('modalHapusRapot').classList.add('active');
+    }
+
+    function closeHapusRapot() {
+        document.getElementById('modalHapusRapot').classList.remove('active');
+        _hapusFormId = null;
+    }
+
+    document.getElementById('btnKonfirmasiHapus').addEventListener('click', function () {
+        if (_hapusFormId) document.getElementById(_hapusFormId).submit();
+    });
+
+    document.getElementById('modalHapusRapot').addEventListener('click', function (e) {
+        if (e.target === this) closeHapusRapot();
+    });
+</script>
+@endpush
+
 @endsection
