@@ -25,6 +25,10 @@ use App\Models\ChatRoom;
 use App\Models\ChatMessage;
 use App\Models\PrivateCounselingSchedule;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\KonselingBaruMail;
+use App\Mail\KonselingStatusMail;
+use App\Models\User;
 
 class GuruController extends Controller
 {
@@ -121,12 +125,42 @@ class GuruController extends Controller
             'end_hour'      => $request->waktu_selesai,
             'topic'         => $request->topik,
             'status'        => 'pending',
+            'source'        => 'guru',
         ];
+
+        $namaGuru  = auth()->user()->name;
+        $classTerm = ClassTerm::with('class')->find($request->class_term_id);
+        $namaKelas = $classTerm?->class?->name ?? '-';
+        $waktu     = $request->waktu_mulai . ' - ' . $request->waktu_selesai;
 
         if ($request->mode === 'kelas') {
             PrivateCounselingSchedule::create(array_merge($base, ['student_id' => null]));
             $msg = 'Jadwal konseling per kelas berhasil dibuat.';
             Activity::log("membuat jadwal konseling per kelas pada {$request->tanggal}");
+
+            try {
+                $enrollments = StudentEnrollment::with(['student.user'])
+                    ->where('class_term_id', $request->class_term_id)
+                    ->get();
+
+                foreach ($enrollments as $enrollment) {
+                    $parentUser = $enrollment->student?->user ?? null;
+                    if ($parentUser && $parentUser->email) {
+                        Mail::to($parentUser->email)->send(new KonselingBaruMail(
+                            namaOrtu:  $parentUser->name,
+                            namaSiswa: $enrollment->student->name,
+                            namaGuru:  $namaGuru,
+                            namaKelas: $namaKelas,
+                            tanggal:   $request->tanggal,
+                            waktu:     $waktu,
+                            topik:     $request->topik,
+                            tipe:      'per_kelas',
+                        ));
+                    }
+                }
+            } catch (\Exception $e) {
+                \Log::warning('Gagal kirim email konseling baru per kelas: ' . $e->getMessage());
+            }
         } else {
             $request->validate(['siswa_id' => 'required|exists:student,id']);
             $studentRecord = Student::findOrFail($request->siswa_id);
@@ -134,6 +168,24 @@ class GuruController extends Controller
             PrivateCounselingSchedule::create(array_merge($base, ['student_id' => $studentRecord->user_id]));
             $msg = 'Jadwal konseling berhasil dibuat.';
             Activity::log("membuat jadwal konseling untuk {$studentRecord->name} pada {$request->tanggal}");
+
+            try {
+                $parentUser = $studentRecord->user;
+                if ($parentUser && $parentUser->email) {
+                    Mail::to($parentUser->email)->send(new KonselingBaruMail(
+                        namaOrtu:  $parentUser->name,
+                        namaSiswa: $studentRecord->name,
+                        namaGuru:  $namaGuru,
+                        namaKelas: $namaKelas,
+                        tanggal:   $request->tanggal,
+                        waktu:     $waktu,
+                        topik:     $request->topik,
+                        tipe:      'per_siswa',
+                    ));
+                }
+            } catch (\Exception $e) {
+                \Log::warning('Gagal kirim email konseling baru per siswa: ' . $e->getMessage());
+            }
         }
 
         return redirect()->route('guru.jadwal_konseling')->with('success', $msg);
@@ -264,13 +316,57 @@ class GuruController extends Controller
 
     public function jadwalKonselingSetuju(Request $request, $id)
     {
-        PrivateCounselingSchedule::findOrFail($id)->update(['status' => 'approved']);
+        $schedule = PrivateCounselingSchedule::with(['student', 'childStudent', 'teacher'])
+            ->findOrFail($id);
+        $schedule->update(['status' => 'approved']);
+
+        if ($schedule->source === 'orangtua' && $schedule->student_id) {
+            try {
+                $parentUser = $schedule->student;
+                if ($parentUser && $parentUser->email) {
+                    Mail::to($parentUser->email)->send(new KonselingStatusMail(
+                        namaOrtu:  $parentUser->name,
+                        namaSiswa: $schedule->childStudent?->name ?? '-',
+                        namaGuru:  $schedule->teacher?->name ?? '-',
+                        tanggal:   $schedule->date?->format('Y-m-d') ?? '-',
+                        waktu:     trim(($schedule->start_hour ?? '') . ' - ' . ($schedule->end_hour ?? '')),
+                        topik:     $schedule->topic ?? '-',
+                        status:    'disetujui',
+                    ));
+                }
+            } catch (\Exception $e) {
+                \Log::warning('Gagal kirim email status konseling: ' . $e->getMessage());
+            }
+        }
+
         return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal konseling disetujui.');
     }
 
     public function jadwalKonselingTolak(Request $request, $id)
     {
-        PrivateCounselingSchedule::findOrFail($id)->update(['status' => 'rejected']);
+        $schedule = PrivateCounselingSchedule::with(['student', 'childStudent', 'teacher'])
+            ->findOrFail($id);
+        $schedule->update(['status' => 'rejected']);
+
+        if ($schedule->source === 'orangtua' && $schedule->student_id) {
+            try {
+                $parentUser = $schedule->student;
+                if ($parentUser && $parentUser->email) {
+                    Mail::to($parentUser->email)->send(new KonselingStatusMail(
+                        namaOrtu:  $parentUser->name,
+                        namaSiswa: $schedule->childStudent?->name ?? '-',
+                        namaGuru:  $schedule->teacher?->name ?? '-',
+                        tanggal:   $schedule->date?->format('Y-m-d') ?? '-',
+                        waktu:     trim(($schedule->start_hour ?? '') . ' - ' . ($schedule->end_hour ?? '')),
+                        topik:     $schedule->topic ?? '-',
+                        status:    'ditolak',
+                    ));
+                }
+            } catch (\Exception $e) {
+                \Log::warning('Gagal kirim email status konseling: ' . $e->getMessage());
+            }
+        }
+
         return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal konseling ditolak.');
     }
 

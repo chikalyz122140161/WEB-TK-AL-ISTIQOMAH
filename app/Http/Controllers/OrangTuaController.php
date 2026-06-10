@@ -16,6 +16,8 @@ use App\Models\ChatMessage;
 use App\Models\PrivateCounselingSchedule;
 use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\KonselingPengajuanMail;
 
 class OrangTuaController extends Controller
 {
@@ -921,6 +923,22 @@ class OrangTuaController extends Controller
         ]);
 
         Activity::log("mengajukan jadwal konseling untuk siswa {$student->name} pada {$request->tanggal}");
+
+        try {
+            $guru = User::find($request->teacher_id);
+            if ($guru && $guru->email) {
+                Mail::to($guru->email)->send(new KonselingPengajuanMail(
+                    namaGuru:  $guru->name,
+                    namaOrtu:  $user->name,
+                    namaSiswa: $student->name,
+                    tanggal:   $request->tanggal,
+                    waktu:     $request->waktu_mulai . ' - ' . $request->waktu_selesai,
+                    topik:     $request->topik,
+                ));
+            }
+        } catch (\Exception $e) {
+            \Log::warning('Gagal kirim email pengajuan konseling: ' . $e->getMessage());
+        }
 
         return redirect()->route('orangtua.konseling')->with('success', 'Konseling berhasil diajukan!');
     }
