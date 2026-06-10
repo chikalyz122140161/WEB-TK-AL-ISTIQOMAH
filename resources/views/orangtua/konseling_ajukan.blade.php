@@ -85,6 +85,15 @@
     }
     .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(76,175,130,0.4); }
     .btn-submit svg { width: 16px; height: 16px; fill: currentColor; }
+    .btn-submit:disabled {
+        opacity: .55; cursor: not-allowed;
+        transform: none; box-shadow: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .btn-submit .icon-spin {
+        animation: spin .7s linear infinite;
+        display: none;
+    }
     .btn-cancel {
         display: inline-flex; align-items: center;
         background: #f3f4f6; color: #374151;
@@ -111,7 +120,7 @@
     </div>
 </div>
 
-<form action="{{ route('orangtua.ajukan_konseling') }}" method="POST" class="form-card">
+<form action="{{ route('orangtua.ajukan_konseling') }}" method="POST" class="form-card" id="ajukanForm">
     @csrf
     <h3 class="form-card__title">Form Pengajuan Konseling</h3>
 
@@ -155,11 +164,43 @@
 
     <div class="form-actions">
         <a href="{{ route('orangtua.konseling') }}" class="btn-cancel">Batal</a>
-        <button type="submit" class="btn-submit">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clip-rule="evenodd"/></svg>
-            Ajukan Konseling
+        <button type="submit" class="btn-submit" id="submitBtn">
+            <svg class="icon-default" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clip-rule="evenodd"/></svg>
+            <svg class="icon-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9" fill="none" stroke="white" stroke-width="2.5"
+                    stroke-dasharray="28" stroke-dashoffset="10"/>
+            </svg>
+            <span id="btnLabel">Ajukan Konseling</span>
         </button>
     </div>
 </form>
 
 @endsection
+
+@push('scripts')
+<script>
+    const ajukanForm  = document.getElementById('ajukanForm');
+    const submitBtn   = document.getElementById('submitBtn');
+    const btnLabel    = document.getElementById('btnLabel');
+    const iconDefault = submitBtn?.querySelector('.icon-default');
+    const iconSpin    = submitBtn?.querySelector('.icon-spin');
+
+    ajukanForm?.addEventListener('submit', function () {
+        if (submitBtn.disabled) return;
+        submitBtn.disabled        = true;
+        iconDefault.style.display = 'none';
+        iconSpin.style.display    = '';
+        btnLabel.textContent      = 'Mengajukan...';
+    });
+
+    // Restore saat kembali via tombol Back browser
+    window.addEventListener('pageshow', function (e) {
+        if (e.persisted && submitBtn) {
+            submitBtn.disabled        = false;
+            iconDefault.style.display = '';
+            iconSpin.style.display    = 'none';
+            btnLabel.textContent      = 'Ajukan Konseling';
+        }
+    });
+</script>
+@endpush

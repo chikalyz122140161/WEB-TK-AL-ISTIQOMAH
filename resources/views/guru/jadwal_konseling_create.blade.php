@@ -200,11 +200,21 @@
             box-shadow: 0 4px 12px rgba(76, 175, 130, 0.4);
         }
 
+        .btn-submit:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
         .btn-submit svg {
             width: 16px;
             height: 16px;
             fill: currentColor;
         }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .icon-spin { animation: spin .7s linear infinite; display: none; }
 
         .btn-cancel {
             display: inline-flex;
@@ -279,7 +289,7 @@
         </div>
     </div>
 
-    <form action="{{ route('guru.store_jadwal_konseling') }}" method="POST" class="form-card">
+    <form action="{{ route('guru.store_jadwal_konseling') }}" method="POST" class="form-card" id="jadwalForm">
         @csrf
         <h3 class="form-card__title">Form Buat Jadwal Konseling</h3>
 
@@ -338,13 +348,17 @@
 
         <div class="form-actions">
             <a href="{{ route('guru.jadwal_konseling') }}" class="btn-cancel">Batal</a>
-            <button type="submit" class="btn-submit">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <button type="submit" class="btn-submit" id="submitBtn">
+                <svg class="icon-default" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path fill-rule="evenodd"
                         d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z"
                         clip-rule="evenodd" />
                 </svg>
-                Simpan Jadwal
+                <svg class="icon-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" fill="none" stroke="white" stroke-width="2.5"
+                        stroke-dasharray="28" stroke-dashoffset="10"/>
+                </svg>
+                <span id="btnLabel">Simpan Jadwal</span>
             </button>
         </div>
     </form>
@@ -355,6 +369,30 @@
     <script>
         var CLASS_TERMS = {!! json_encode($classTerms, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!};
         var MODE = @json($mode);
+
+        // Idempotency: cegah double-submit
+        const jadwalForm  = document.getElementById('jadwalForm');
+        const submitBtn   = document.getElementById('submitBtn');
+        const btnLabel    = document.getElementById('btnLabel');
+        const iconDefault = submitBtn?.querySelector('.icon-default');
+        const iconSpin    = submitBtn?.querySelector('.icon-spin');
+
+        jadwalForm?.addEventListener('submit', function () {
+            if (submitBtn.disabled) return;
+            submitBtn.disabled        = true;
+            iconDefault.style.display = 'none';
+            iconSpin.style.display    = '';
+            btnLabel.textContent      = 'Menyimpan...';
+        });
+
+        window.addEventListener('pageshow', function (e) {
+            if (e.persisted && submitBtn) {
+                submitBtn.disabled        = false;
+                iconDefault.style.display = '';
+                iconSpin.style.display    = 'none';
+                btnLabel.textContent      = 'Simpan Jadwal';
+            }
+        });
 
         function updateSiswa() {
             var ctId = document.getElementById('selClassTerm').value;

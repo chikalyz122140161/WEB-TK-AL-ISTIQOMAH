@@ -468,6 +468,10 @@
             fill: #fff;
         }
 
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         /* ── New Chat Modal ── */
         #newChatModal .modal-box {
             width: 360px;
@@ -645,15 +649,20 @@
                 </div>
 
                 {{-- Input --}}
-                <form class="cw__foot" method="POST" action="{{ route('guru.kirim_chat') }}">
+                <form class="cw__foot" method="POST" action="{{ route('guru.kirim_chat') }}" id="chatForm">
                     @csrf
                     <input type="hidden" name="room_id" value="{{ $aktifId }}">
                     <input class="cw__input" type="text" name="pesan" placeholder="Ketik pesan..." autocomplete="off"
                         required id="msgInput">
-                    <button type="submit" class="cw__send">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <button type="submit" class="cw__send" id="sendBtn">
+                        <svg id="iconSend" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path
                                 d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+                        </svg>
+                        <svg id="iconLoading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                            style="display:none;animation:spin .7s linear infinite;">
+                            <circle cx="12" cy="12" r="9" fill="none" stroke="white" stroke-width="2.5"
+                                stroke-dasharray="28" stroke-dashoffset="10" />
                         </svg>
                     </button>
                 </form>
@@ -725,11 +734,42 @@
         const body = document.getElementById('chatBody');
         if (body) body.scrollTop = body.scrollHeight;
 
-        // Enter to send
-        document.getElementById('msgInput')?.addEventListener('keydown', function(e) {
+        // Idempotency: cegah double-submit tombol kirim
+        const chatForm  = document.getElementById('chatForm');
+        const sendBtn   = document.getElementById('sendBtn');
+        const iconSend  = document.getElementById('iconSend');
+        const iconLoad  = document.getElementById('iconLoading');
+        const msgInput  = document.getElementById('msgInput');
+
+        function lockSend() {
+            if (!sendBtn || sendBtn.disabled) return false;
+            sendBtn.disabled  = true;
+            msgInput.readOnly = true;
+            iconSend.style.display = 'none';
+            iconLoad.style.display = '';
+            return true;
+        }
+
+        chatForm?.addEventListener('submit', function(e) {
+            if (!msgInput?.value.trim()) return;
+            if (!lockSend()) e.preventDefault();
+        });
+
+        // Enter to send — ikut proteksi lock
+        msgInput?.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                this.closest('form').submit();
+                if (this.value.trim()) chatForm?.requestSubmit();
+            }
+        });
+
+        // Restore saat kembali via tombol Back browser
+        window.addEventListener('pageshow', function(e) {
+            if (e.persisted && sendBtn) {
+                sendBtn.disabled  = false;
+                if (msgInput) msgInput.readOnly = false;
+                if (iconSend) iconSend.style.display = '';
+                if (iconLoad) iconLoad.style.display = 'none';
             }
         });
 
