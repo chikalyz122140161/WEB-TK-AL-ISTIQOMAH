@@ -541,86 +541,6 @@
             }
         }
 
-        /* Demo Credentials Styles */
-        .demo-credentials {
-            background: linear-gradient(135deg, #4CAF8220 0%, #4CAF8220 100%);
-            border: 1px solid #4CAF8230;
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .demo-title {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #3E2723;
-            margin-bottom: 0.5rem;
-        }
-
-        .demo-list {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin-bottom: 0.5rem;
-        }
-
-        .demo-item {
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-            background: white;
-            border: 1px solid #3E272330;
-            border-radius: 6px;
-            padding: 0.35rem 0.6rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.75rem;
-        }
-
-        .demo-item:hover {
-            border-color: #3E2723;
-            background: #4CAF8220;
-        }
-
-        .demo-role {
-            font-weight: 600;
-            font-size: 0.65rem;
-            padding: 0.15rem 0.4rem;
-            border-radius: 4px;
-        }
-
-        .demo-role.admin {
-            background: #4CAF8230;
-            color: #2E8B60;
-        }
-
-        .demo-role.guru {
-            background: #FFF176;
-            color: #3E2723;
-        }
-
-        .demo-role.ortu {
-            background: #FFFDE7;
-            color: #d81b72;
-        }
-
-        .demo-email {
-            color: #3E2723;
-        }
-
-        .demo-password {
-            font-size: 0.75rem;
-            color: #5D4037;
-            margin: 0;
-        }
-
-        .demo-password strong {
-            color: #3E2723;
-            font-family: monospace;
-            background: #FFFDE7;
-            padding: 0.1rem 0.4rem;
-            border-radius: 4px;
-        }
     </style>
 </head>
 <body>
@@ -651,25 +571,6 @@
                     <p class="login-subtitle">Masuk ke akun Anda</p>
                 </div>
 
-                <!-- Demo Credentials -->
-                <div class="demo-credentials">
-                    <p class="demo-title">Demo Login:</p>
-                    <div class="demo-list">
-                        <div class="demo-item" onclick="fillCredentials('admin@tkalistiqomah.sch.id')">
-                            <span class="demo-role admin">Admin</span>
-                            <span class="demo-email">admin@tkalistiqomah.sch.id</span>
-                        </div>
-                        <div class="demo-item" onclick="fillCredentials('reita.wigianti@tkalistiqomah.sch.id')">
-                            <span class="demo-role guru">Guru</span>
-                            <span class="demo-email">reita.wigianti@tkalistiqomah.sch.id</span>
-                        </div>
-                        <div class="demo-item" onclick="fillCredentials('ortu1@tkalistiqomah.sch.id')">
-                            <span class="demo-role ortu">Ortu</span>
-                            <span class="demo-email">ortu1@tkalistiqomah.sch.id</span>
-                        </div>
-                    </div>
-                    <p class="demo-password">Password: <strong>password</strong></p>
-                </div>
 
                 @if ($errors->any())
                     <div class="error-message">
@@ -751,12 +652,5 @@
         </div>
     </div>
 
-    <script>
-    function fillCredentials(email) {
-        document.querySelector('input[name="email"]').value = email;
-        document.querySelector('input[name="password"]').value = 'password';
-        document.querySelector('input[name="email"]').focus();
-    }
-    </script>
 </body>
 </html>
