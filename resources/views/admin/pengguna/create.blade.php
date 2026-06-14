@@ -85,7 +85,7 @@
 
                         <div class="combobox__dropdown" id="siswa-dropdown" style="display:none;">
                             <div class="combobox__list" id="siswa-list">
-                                @foreach($siswaOrphan as $s)
+                                @foreach($siswaList as $s)
                                     <div class="combobox__item"
                                         data-value="{{ $s->id }}"
                                         data-label="[TK {{ $s->kelas }}] {{ $s->name }}{{ $s->nomor_induk ? ' (No. Induk: '.$s->nomor_induk.')' : '' }}"
@@ -96,6 +96,9 @@
                                         @if($s->nomor_induk)
                                             <span class="combobox__item-nis">No. {{ $s->nomor_induk }}</span>
                                         @endif
+                                        @if($s->user_id)
+                                            <span class="combobox__item-badge">Terhubung</span>
+                                        @endif
                                     </div>
                                 @endforeach
                             </div>
@@ -103,7 +106,7 @@
                         </div>
                     </div>
 
-                    <small class="form-hint">Hanya menampilkan siswa yang belum memiliki akun orang tua.</small>
+                    <small class="form-hint">Siswa berlabel <strong>Terhubung</strong> sudah memiliki akun orang tua — memilihnya akan memindahkan relasi ke akun ini.</small>
                 </div>
             </div>
             
@@ -289,8 +292,13 @@
     border-radius: 4px;
     white-space: nowrap;
 }
-.combobox__item-nama { flex: 1; font-weight: 500; color: #3E2723; }
-.combobox__item-nis  { font-size: 0.75rem; color: #795548; white-space: nowrap; }
+.combobox__item-nama  { flex: 1; font-weight: 500; color: #3E2723; }
+.combobox__item-nis   { font-size: 0.75rem; color: #795548; white-space: nowrap; }
+.combobox__item-badge {
+    font-size: 0.7rem; font-weight: 600;
+    padding: 0.15rem 0.5rem; border-radius: 4px;
+    background: rgba(76,175,130,0.15); color: #2E8B60; white-space: nowrap;
+}
 
 .combobox__empty {
     padding: 0.75rem 1rem;
@@ -354,8 +362,9 @@ document.addEventListener('DOMContentLoaded', function () {
         items.forEach(i => i.classList.remove('active'));
         item.classList.add('active');
 
+        currentQuery = '';
         closeDropdown();
-        filterItems(''); // reset filter
+        filterItems('');
     }
 
     // ── Klik item ────────────────────────────────────────────
@@ -366,16 +375,20 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // currentQuery memisahkan teks yang diketik user dari label item yang dipilih
+    let currentQuery = '';
+
     // ── Input search ─────────────────────────────────────────
     searchInput.addEventListener('input', function () {
-        hiddenInput.value = ''; // reset pilihan saat mengetik ulang
+        hiddenInput.value      = '';
         clearBtn.style.display = 'none';
-        filterItems(this.value);
+        currentQuery           = this.value;
+        filterItems(currentQuery);
         openDropdown();
     });
 
     searchInput.addEventListener('focus', function () {
-        filterItems(this.value);
+        filterItems(currentQuery);
         openDropdown();
     });
 
@@ -388,6 +401,7 @@ document.addEventListener('DOMContentLoaded', function () {
     clearBtn.addEventListener('click', function () {
         hiddenInput.value      = '';
         searchInput.value      = '';
+        currentQuery           = '';
         this.style.display     = 'none';
         items.forEach(i => i.classList.remove('active'));
         filterItems('');

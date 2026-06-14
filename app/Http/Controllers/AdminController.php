@@ -107,10 +107,9 @@ class AdminController extends Controller
     
     public function penggunaCreate()
     {
-        $siswaOrphan = Student::whereNull('user_id')
-            ->orderBy('kelas')->orderBy('name')
-            ->get(['id', 'name', 'kelas', 'nomor_induk', 'nama_ibu', 'nama_ayah']);
-        return view('admin.pengguna.create', compact('siswaOrphan'));
+        $siswaList = Student::orderBy('kelas')->orderBy('name')
+            ->get(['id', 'name', 'kelas', 'nomor_induk', 'nama_ibu', 'nama_ayah', 'user_id']);
+        return view('admin.pengguna.create', compact('siswaList'));
     }
 
     public function penggunaStore(Request $request)
@@ -158,10 +157,7 @@ class AdminController extends Controller
 
         $siswaTerhubung = Student::where('user_id', $user->id)->first(['id', 'name', 'kelas', 'nomor_induk', 'nama_ibu', 'nama_ayah']);
 
-        $siswaList = Student::where(function ($q) use ($user) {
-                $q->whereNull('user_id')->orWhere('user_id', $user->id);
-            })
-            ->orderBy('kelas')->orderBy('name')
+        $siswaList = Student::orderBy('kelas')->orderBy('name')
             ->get(['id', 'name', 'kelas', 'nomor_induk', 'nama_ibu', 'nama_ayah', 'user_id']);
 
         return view('admin.pengguna.edit', compact('pengguna', 'siswaTerhubung', 'siswaList'));

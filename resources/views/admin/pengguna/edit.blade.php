@@ -133,7 +133,7 @@
                         </div>
                     </div>
 
-                    <small class="form-hint">Menampilkan siswa yang belum memiliki akun orang tua, termasuk siswa yang sudah terhubung dengan akun ini.</small>
+                    <small class="form-hint">Siswa berlabel <strong>Terhubung</strong> sudah memiliki akun orang tua — memilihnya akan memindahkan relasi ke akun ini.</small>
                 </div>
             </div>
 
@@ -372,9 +372,13 @@ document.addEventListener('DOMContentLoaded', function () {
         emptyMsg.style.display = count === 0 ? 'block' : 'none';
     }
 
+    // currentQuery memisahkan teks yang diketik user dari label item yang dipilih
+    let currentQuery = '';
+
     function selectItem(item) {
         hiddenInput.value        = item.dataset.value;
         searchInput.value        = item.dataset.label;
+        currentQuery             = '';
         clearBtn.style.display   = 'inline';
         items.forEach(i => i.classList.remove('active'));
         item.classList.add('active');
@@ -393,12 +397,13 @@ document.addEventListener('DOMContentLoaded', function () {
         searchInput.addEventListener('input', function () {
             hiddenInput.value      = '';
             clearBtn.style.display = 'none';
-            filterItems(this.value);
+            currentQuery           = this.value;
+            filterItems(currentQuery);
             openDropdown();
         });
 
         searchInput.addEventListener('focus', function () {
-            filterItems(this.value);
+            filterItems(currentQuery);
             openDropdown();
         });
 
@@ -411,6 +416,7 @@ document.addEventListener('DOMContentLoaded', function () {
         clearBtn.addEventListener('click', function () {
             hiddenInput.value      = '';
             searchInput.value      = '';
+            currentQuery           = '';
             this.style.display     = 'none';
             items.forEach(i => i.classList.remove('active'));
             filterItems('');
