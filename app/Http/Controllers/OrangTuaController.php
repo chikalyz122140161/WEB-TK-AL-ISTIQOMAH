@@ -470,16 +470,22 @@ class OrangTuaController extends Controller
             'studentEnrollment.classTerm.class',
             'studentEnrollment.classTerm.academicTerm',
         ])->findOrFail($id);
+
+        $at = $report->studentEnrollment->classTerm->academicTerm ?? null;
+        $ct = $report->studentEnrollment->classTerm ?? null;
+        $student = $report->studentEnrollment->student ?? null;
+
         $rapot = [
             'id'             => $report->id,
-            'tahun_ajaran'   => $report->studentEnrollment->classTerm->academicTerm->academic_year ?? '-',
-            'semester'       => ucfirst($report->studentEnrollment->classTerm->academicTerm->semester ?? '-'),
-            'kelas'          => $report->studentEnrollment->classTerm->class->name ?? '-',
+            'tahun_ajaran'   => $at?->academic_year ?? '-',
+            'semester'       => ucfirst($at?->semester ?? '-'),
+            'kelas'          =>  $ct?->class?->name ?? '-',
             'tanggal_terbit' => $report->created_at->translatedFormat('d F Y'),
             'siswa'          => [
                 'nama' => $student->name ?? '-',
                 'nis'  => $student->nis  ?? '-',
             ],
+            'guru'           => 'Bu ' . ($student->teacher->name ?? 'Tidak Diketahui') . ', S.Pd',
             'nilai'          => [
                 'agama_moral'              => 'BSH',
                 'agama_moral_deskripsi'    => 'Ahmad memahami nilai-nilai agama dengan baik. Ia selalu berdoa sebelum dan sesudah kegiatan serta menunjukkan sikap sopan santun.',
