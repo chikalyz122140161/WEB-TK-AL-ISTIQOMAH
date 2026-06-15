@@ -465,17 +465,21 @@ class OrangTuaController extends Controller
     
     public function rapotDownload($id)
     {
+        $report = Report::with([
+            'studentEnrollment.student',
+            'studentEnrollment.classTerm.class',
+            'studentEnrollment.classTerm.academicTerm',
+        ])->findOrFail($id);
         $rapot = [
-            'id'             => $id,
-            'tahun_ajaran'   => '2025/2026',
-            'semester'       => 'Ganjil',
-            'kelas'          => 'TK A',
-            'tanggal_terbit' => '20 Desember 2025',
+            'id'             => $report->id,
+            'tahun_ajaran'   => $report->studentEnrollment->classTerm->academicTerm->academic_year ?? '-',
+            'semester'       => ucfirst($report->studentEnrollment->classTerm->academicTerm->semester ?? '-'),
+            'kelas'          => $report->studentEnrollment->classTerm->class->name ?? '-',
+            'tanggal_terbit' => $report->created_at->translatedFormat('d F Y'),
             'siswa'          => [
-                'nama' => 'Ahmad Fauzi',
-                'nis'  => '20240001',
+                'nama' => $student->name ?? '-',
+                'nis'  => $student->nis  ?? '-',
             ],
-            'guru'           => 'Bu Siti, S.Pd',
             'nilai'          => [
                 'agama_moral'              => 'BSH',
                 'agama_moral_deskripsi'    => 'Ahmad memahami nilai-nilai agama dengan baik. Ia selalu berdoa sebelum dan sesudah kegiatan serta menunjukkan sikap sopan santun.',
