@@ -1,3 +1,5 @@
+"model untuk data siswa. Fungsinya adalah menyimpan informasi lengkap setiap siswa, termasuk: nama, gender, NIS, NISN, tempat lahir, tanggal lahir, NIK, alamat, telepon, agama, urutan anak, jumlah saudara, suku bangsa, riwayat penyakit, berat badan, tinggi badan, dan nama panggilan. Setiap siswa terhubung ke akun user login-nya, data orang tua/wali, dokumen-dokumen siswa, riwayat kelas yang pernah diikuti, dan jadwal konseling pribadi. Jadi sistem tahu data lengkap siswa, siapa orang tuanya, dokumen apa saja yang dimiliki, pernah di kelas mana, dan jadwal konseling apa saja."
+
 <?php
 
 namespace App\Models;
@@ -21,6 +23,8 @@ class Student extends Model
         'ethnicity', 'illness_history', 'weight', 'height', 'nickname',
     ];
 
+    // Function ini mengatur tipe data otomatis pada field model.
+    // Jadi saat data dibaca dari database, Laravel langsung mengubahnya ke tipe yang sesuai seperti tanggal, angka, atau boolean.
     protected function casts(): array
     {
         return [
@@ -32,26 +36,36 @@ class Student extends Model
         ];
     }
 
+    // Function ini menjelaskan hubungan data ini dengan akun user.
+    // Dengan relasi ini, sistem bisa mengambil akun login yang terhubung ke data tersebut.
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    // Function ini menjelaskan bahwa satu siswa bisa memiliki beberapa data orang tua atau wali.
+    // Data yang dimaksud bisa berupa ayah, ibu, atau wali.
     public function parents()
     {
         return $this->hasMany(Parents::class, 'student_id');
     }
 
+    // Function ini menjelaskan bahwa satu siswa bisa memiliki beberapa dokumen.
+    // Contohnya dokumen akta kelahiran, kartu keluarga, atau foto.
     public function files()
     {
         return $this->hasMany(StudentFile::class, 'student_id');
     }
 
+    // Function ini menjelaskan riwayat kelas yang pernah atau sedang diikuti siswa.
+    // Relasi ini penting untuk mengetahui siswa berada di kelas dan tahun ajaran mana.
     public function enrollments()
     {
         return $this->hasMany(StudentEnrollment::class, 'student_id');
     }
 
+    // Function ini menjelaskan daftar jadwal konseling pribadi yang terkait dengan data ini.
+    // Jadwal ini bisa dibuat oleh guru atau diajukan oleh orang tua.
     public function privateCounselingSchedules()
     {
         return $this->hasMany(PrivateCounselingSchedule::class, 'student_id');

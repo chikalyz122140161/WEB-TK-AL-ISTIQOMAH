@@ -11,6 +11,8 @@ class DummyAuth
     /**
      * Handle an incoming request.
      */
+    // Function ini menjalankan proses utama saat command atau middleware dipanggil oleh Laravel.
+    // Isinya menentukan langkah yang harus dilakukan sistem pada proses tersebut.
     public function handle(Request $request, Closure $next): Response
     {
         if (!auth()->check()) {

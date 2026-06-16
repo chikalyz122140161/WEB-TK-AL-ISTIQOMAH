@@ -20,6 +20,8 @@ class Activity extends Model
     /**
      * Buat entri activity log baru. Prefix otomatis dengan nama + role user yang login.
      */
+    // Function ini dipakai untuk mencatat aktivitas penting yang terjadi di sistem.
+    // Catatan ini biasanya ditampilkan di dashboard sebagai riwayat aktivitas terbaru.
     public static function log(string $description): self
     {
         $user = Auth::user();

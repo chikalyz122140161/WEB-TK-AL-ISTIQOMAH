@@ -14,6 +14,8 @@ class BackupDatabase extends Command
 
     protected $description = 'Membuat backup file SQL dari database TK Al-Istiqomah';
 
+    // Function ini menjalankan proses utama saat command atau middleware dipanggil oleh Laravel.
+    // Isinya menentukan langkah yang harus dilakukan sistem pada proses tersebut.
     public function handle(DatabaseBackupService $service): int
     {
         $this->info('Memulai backup database...');
@@ -34,6 +36,8 @@ class BackupDatabase extends Command
         return self::SUCCESS;
     }
 
+    // Function ini menghapus file backup lama ketika jumlah backup sudah terlalu banyak.
+    // Tujuannya agar penyimpanan tidak penuh oleh file lama.
     protected function pruneOldBackups(DatabaseBackupService $service, int $keep): void
     {
         $backups = $service->list();

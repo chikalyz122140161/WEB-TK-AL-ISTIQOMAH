@@ -1,3 +1,5 @@
+"jadwal konseling pribadi atau BK pribadi. Fungsinya adalah mencatat jadwal pertemuan konseling antara siswa dan guru BK. Setiap jadwal menyimpan: siswa yang dikonseling, guru BK yang mengajar, tanggal dan waktu konseling, topik/masalah yang dibicarakan, status (sudah/belum/batal), dan sumbernya (dari guru atau orang tua). File ini menghubungkan ke siswa, guru, dan kelas-tahun ajaran. Jadi sistem tahu pertemuan konseling pribadi siapa dengan siapa, kapan, dan tentang apa"
+
 <?php
 
 namespace App\Models;
@@ -26,28 +28,36 @@ class PrivateCounselingSchedule extends Model
         'source',
     ];
 
+    // Function ini mengatur tipe data otomatis pada field model.
+    // Jadi saat data dibaca dari database, Laravel langsung mengubahnya ke tipe yang sesuai seperti tanggal, angka, atau boolean.
     protected function casts(): array
     {
         return ['date' => 'date'];
     }
 
-    // student_id FK references user.id (the orang tua's user account)
+    // Function ini menjelaskan hubungan data ini dengan data siswa.
+    // Relasi ini dipakai saat sistem perlu mengetahui siswa yang terkait dengan data tersebut.
     public function student()
     {
         return $this->belongsTo(User::class, 'student_id');
     }
 
-    // actual child/student record found via user_id = student_id
+    // Function ini menghubungkan jadwal konseling dengan data siswa anak.
+    // Relasi ini dipakai ketika jadwal konseling perlu menampilkan nama siswa, bukan hanya akun orang tua.
     public function childStudent()
     {
         return $this->hasOne(Student::class, 'user_id', 'student_id');
     }
 
+    // Function ini menghubungkan data ini dengan user guru.
+    // Dengan relasi ini sistem bisa menampilkan siapa guru yang bertanggung jawab.
     public function teacher()
     {
         return $this->belongsTo(User::class, 'teacher_id');
     }
 
+    // Function ini menjelaskan hubungan data ini dengan satu class term.
+    // Dari relasi ini sistem bisa mengetahui kelas dan semester yang sedang dipakai.
     public function classTerm()
     {
         return $this->belongsTo(ClassTerm::class, 'class_term_id');

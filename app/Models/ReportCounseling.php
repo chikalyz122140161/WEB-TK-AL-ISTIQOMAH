@@ -1,3 +1,5 @@
+"model untuk nilai konseling/BK dalam rapor siswa. Fungsinya adalah menghubungkan satu jenis konseling ke rapor siswa tertentu. Jadi jika rapor siswa berisi nilai untuk 3 jenis konseling (misalnya: Kedisiplinan, Kejujuran, Tanggung Jawab), file ini mencatat setiap konseling tersebut. File ini juga menghubungkan ke nilai-nilai detail setiap aspek konseling itu. Jadi sistem tahu konseling apa saja yang ada di rapor, dan nilai aspek apa saja dari setiap konseling tersebut."
+
 <?php
 
 namespace App\Models;
@@ -16,16 +18,22 @@ class ReportCounseling extends Model
 
     protected $fillable = ['report_id', 'counseling_id'];
 
+    // Function ini menghubungkan data ini dengan rapot siswa.
+    // Relasi ini dipakai untuk mengambil atau menyimpan hasil rapot.
     public function report()
     {
         return $this->belongsTo(Report::class, 'report_id');
     }
 
+    // Function ini menghubungkan data ini dengan satu jenis konseling.
+    // Dengan relasi ini sistem bisa mengambil nama konseling dan aspek penilaiannya.
     public function counseling()
     {
         return $this->belongsTo(Counseling::class, 'counseling_id');
     }
 
+    // Function ini menjelaskan daftar nilai atau skor yang terkait dengan data ini.
+    // Relasi ini dipakai untuk membaca hasil penilaian siswa.
     public function scores()
     {
         return $this->hasMany(ReportCounselingScore::class, 'report_counseling_id');

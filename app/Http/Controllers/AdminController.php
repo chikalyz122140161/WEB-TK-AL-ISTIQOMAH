@@ -1,3 +1,5 @@
+" [AdminController.php](c:/Users/yesav/Documents/WEB-TK-AL-ISTIQOMAH/app/Http/Controllers/AdminController.php) adalah file yang mengatur hampir semua fitur khusus admin di aplikasi TK Al-Istiqomah. Sederhananya, file ini menjadi “pusat kendali admin” untuk mengelola data penting sekolah, seperti dashboard, pengguna, siswa, pendaftaran siswa baru, tahun ajaran, kelas, mata pelajaran, ekstrakurikuler, konseling, aktivitas tahun ajaran, kenaikan siswa, data DAPODIK, dan backup database. Setiap function di dalamnya biasanya mewakili satu aksi, misalnya menampilkan daftar data, membuka form tambah/edit, menyimpan data baru, memperbarui data, menghapus data, menerima atau menolak pendaftaran, sampai memproses kenaikan siswa. Jadi kalau dosen bertanya, kamu bisa menjelaskan bahwa AdminController bertugas menerima perintah dari halaman admin, mengambil atau menyimpan data ke database melalui model, lalu mengirim hasilnya kembali ke tampilan admin."
+
 <?php
 namespace App\Http\Controllers;
 
@@ -28,7 +30,8 @@ use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
-    // DASHBOARD
+    // Function ini menyiapkan data ringkasan untuk halaman dashboard.
+    // Data yang ditampilkan biasanya berupa jumlah, statistik, dan aktivitas terbaru.
     public function dashboard(\App\Services\ActivityFeedService $activityFeed)
     {
         // Total Siswa = student yang akun user-nya sudah diterima (active)
@@ -61,7 +64,8 @@ class AdminController extends Controller
         return view('admin.dashboard', compact('totalSiswa', 'totalGuru', 'orangTerdaftar', 'totalKelas', 'aktivitas', 'statistik'));
     }
     
-    // KELOLA PENGGUNA
+    // Function ini menampilkan daftar data pada halaman utama fitur ini.
+    // data diambil dari database lalu dikirim ke view untuk ditampilkan dalam tabel atau kartu.
     public function penggunaIndex(Request $request)
     {
         $roleMap = [
@@ -105,6 +109,8 @@ class AdminController extends Controller
         return view('admin.pengguna.index', compact('pengguna'));
     }
     
+    // Function ini menampilkan form tambah data untuk fitur ini.
+    // Form tersebut dipakai user untuk mengisi data baru sebelum disimpan.
     public function penggunaCreate()
     {
         $siswaList = Student::orderBy('kelas')->orderBy('name')
@@ -112,6 +118,8 @@ class AdminController extends Controller
         return view('admin.pengguna.create', compact('siswaList'));
     }
 
+    // Function ini memvalidasi input dari form lalu menyimpan data baru ke database.
+    // Jika berhasil, sistem mengarahkan user kembali dengan pesan sukses.
     public function penggunaStore(Request $request)
     {
         $request->validate([
@@ -143,6 +151,8 @@ class AdminController extends Controller
             ->with('success', 'Pengguna berhasil ditambahkan!');
     }
     
+    // Function ini mengambil data lama berdasarkan id lalu menampilkannya di form edit.
+    // Tujuannya agar user bisa melihat dan mengubah data yang sudah ada.
     public function penggunaEdit($id)
     {
         $user = User::findOrFail($id);
@@ -163,6 +173,8 @@ class AdminController extends Controller
         return view('admin.pengguna.edit', compact('pengguna', 'siswaTerhubung', 'siswaList'));
     }
 
+    // Function ini memvalidasi input dari form edit lalu memperbarui data di database.
+    // Data lama diganti dengan data baru yang dikirim user.
     public function penggunaUpdate(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -204,6 +216,8 @@ class AdminController extends Controller
         return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil diupdate!');
     }
 
+    // Function ini menghapus data yang dipilih oleh user.
+    // Setelah proses selesai, sistem biasanya kembali ke halaman daftar data.
     public function penggunaDestroy($id)
     {
         $user = User::findOrFail($id);
@@ -215,7 +229,8 @@ class AdminController extends Controller
         return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil dihapus!');
     }
     
-    // KELOLA SISWA
+    // Function ini menampilkan daftar data pada halaman utama fitur ini.
+    // Biasanya data diambil dari database lalu dikirim ke view untuk ditampilkan dalam tabel atau kartu.
     public function siswaIndex(Request $request)
     {
         $siswa = Student::with(['parents', 'user', 'enrollments.classTerm.class', 'enrollments.classTerm.academicTerm'])
@@ -267,6 +282,8 @@ class AdminController extends Controller
         return view('admin.siswa.index', compact('siswa', 'classTermOptions', 'kelasList'));
     }
 
+    // Function ini menjalankan logika {siswaUpdateClassTerm} pada file ini.
+    // Secara umum function ini membantu controller, model, atau service menyelesaikan tugas tertentu di aplikasi.
     public function siswaUpdateClassTerm(Request $request, $id)
     {
         $request->validate(['class_term_id' => 'required|exists:class_term,id']);
@@ -287,11 +304,15 @@ class AdminController extends Controller
         return redirect()->route('admin.siswa.index')->with('success', 'Kelas siswa berhasil diperbarui.');
     }
 
+    // Function ini menampilkan form tambah data untuk fitur ini.
+    // Form tersebut dipakai user untuk mengisi data baru sebelum disimpan.
     public function siswaCreate()
     {
         return view('admin.siswa.create');
     }
 
+    // Function ini memvalidasi input dari form lalu menyimpan data baru ke database.
+    // Jika berhasil, sistem mengarahkan user kembali dengan pesan sukses.
     public function siswaStore(Request $request)
     {
         $request->validate([
@@ -354,6 +375,8 @@ class AdminController extends Controller
         return redirect()->route('admin.siswa.index')->with('success', 'Data siswa berhasil ditambahkan!');
     }
 
+    // Function ini mengambil data lama berdasarkan id lalu menampilkannya di form edit.
+    // Tujuannya agar user bisa melihat dan mengubah data yang sudah ada.
     public function siswaEdit($id)
     {
         $student = Student::with(['parents', 'user', 'files'])->findOrFail($id);
@@ -410,6 +433,8 @@ class AdminController extends Controller
         return view('admin.siswa.edit', compact('siswa'));
     }
 
+    // Function ini memvalidasi input dari form edit lalu memperbarui data di database.
+    // Data lama diganti dengan data baru yang dikirim user.
     public function siswaUpdate(Request $request, $id)
     {
         $student = Student::with(['parents', 'user'])->findOrFail($id);
@@ -493,6 +518,8 @@ class AdminController extends Controller
             ->with('success', "Data siswa {$student->name} berhasil diperbarui!");
     }
 
+    // Function ini menghapus data yang dipilih oleh user.
+    // Setelah proses selesai, sistem biasanya kembali ke halaman daftar data.
     public function siswaDestroy($id)
     {
         $student = Student::findOrFail($id);
@@ -511,7 +538,8 @@ class AdminController extends Controller
             ->with('success', "Data siswa {$nama} berhasil dihapus!");
     }
     
-    // BACKUP DATABASE
+    // Function ini menampilkan daftar data pada halaman utama fitur ini.
+    // Biasanya data diambil dari database lalu dikirim ke view untuk ditampilkan dalam tabel atau kartu.
     public function backupIndex(DatabaseBackupService $service)
     {
         $backups = collect($service->list())->map(function ($b) {
@@ -528,6 +556,8 @@ class AdminController extends Controller
         return view('admin.backup.index', compact('backups'));
     }
 
+    // Function ini menampilkan form tambah data untuk fitur ini.
+    // Form tersebut dipakai user untuk mengisi data baru sebelum disimpan.
     public function backupCreate(Request $request, DatabaseBackupService $service)
     {
         try {
@@ -541,6 +571,8 @@ class AdminController extends Controller
         }
     }
 
+    // Function ini memvalidasi input dari form lalu menyimpan data baru ke database.
+    // Jika berhasil, sistem mengarahkan user kembali dengan pesan sukses.
     public function backupRestore(Request $request, DatabaseBackupService $service)
     {
         $data = $request->validate([
@@ -563,6 +595,8 @@ class AdminController extends Controller
         }
     }
 
+    // Function ini menghapus data atau file yang dipilih.
+    // Function ini dipakai ketika user ingin membersihkan data yang tidak diperlukan.
     public function backupDelete($filename, DatabaseBackupService $service)
     {
         if ($service->delete($filename)) {
@@ -573,6 +607,8 @@ class AdminController extends Controller
             ->with('error', "File backup tidak ditemukan: {$filename}");
     }
 
+    // Function ini menyiapkan file atau laporan agar bisa diunduh user.
+    // File yang dimaksud bisa berupa backup, PDF, atau dokumen lain.
     public function backupDownload($filename, DatabaseBackupService $service)
     {
         $path = $service->path($filename);
@@ -585,7 +621,8 @@ class AdminController extends Controller
         ]);
     }
     
-    // KELOLA PENDAFTARAN
+    // Function ini mengubah kode status menjadi label yang mudah dibaca.
+    // Dengan begitu tampilan tidak menampilkan kode mentah dari database.
     private function statusLabel(string $status): string
     {
         return match($status) {
@@ -595,6 +632,8 @@ class AdminController extends Controller
         };
     }
 
+    // Function ini mengubah kode jenis kelamin menjadi tulisan yang mudah dipahami.
+    // Contohnya kode L dan P dibuat menjadi label laki-laki atau perempuan.
     private function genderLabel(?string $gender): string
     {
         return match($gender) {
@@ -604,6 +643,8 @@ class AdminController extends Controller
         };
     }
 
+    // Function ini mengubah kode agama menjadi tulisan yang mudah dibaca.
+    // Label ini dipakai saat menampilkan data siswa di halaman admin atau export.
     private function religionLabel(?string $religion): string
     {
         return match($religion) {
@@ -617,6 +658,8 @@ class AdminController extends Controller
         };
     }
 
+    // Function ini menyusun data pendaftaran menjadi format yang siap ditampilkan.
+    // Data dari user, siswa, orang tua, dan dokumen dirapikan menjadi satu array.
     private function buildPendaftaranRow(User $u): array
     {
         $s      = $u->student;
@@ -680,6 +723,8 @@ class AdminController extends Controller
         ];
     }
 
+    // Function ini menampilkan daftar data pada halaman utama fitur ini.
+    // Biasanya data diambil dari database lalu dikirim ke view untuk ditampilkan dalam tabel atau kartu.
     public function pendaftaranIndex()
     {
         $users = User::where('role', 'orangtua')
@@ -702,6 +747,8 @@ class AdminController extends Controller
         ));
     }
 
+    // Function ini menampilkan detail data yang dipilih berdasarkan id.
+    // Data detail biasanya lebih lengkap daripada halaman daftar.
     public function pendaftaranShow($id)
     {
         $user = User::with(['student.parents', 'student.files'])->findOrFail($id);
@@ -713,6 +760,8 @@ class AdminController extends Controller
         return view('admin.pendaftaran.show', compact('pendaftaran', 'kelasList', 'academicTermList'));
     }
 
+    // Function ini menyetujui pengajuan atau data yang sedang diproses.
+    // Setelah disetujui, status data berubah agar bisa digunakan pada proses berikutnya.
     public function pendaftaranTerima(Request $request, $id)
     {
         $request->validate([
@@ -744,6 +793,8 @@ class AdminController extends Controller
             ->with('success', "Pendaftaran {$user->student?->name} telah diterima. Akun orang tua sekarang aktif.");
     }
 
+    // Function ini menolak pengajuan atau data yang sedang diproses.
+    // Setelah ditolak, status data berubah dan user mendapatkan informasi hasil prosesnya.
     public function pendaftaranTolak(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -755,13 +806,16 @@ class AdminController extends Controller
             ->with('success', "Pendaftaran {$user->student?->name} telah ditolak.");
     }
     
-    // KELOLA TAHUN AJARAN
+    // Function ini menampilkan daftar data pada halaman utama fitur ini.
+    // Biasanya data diambil dari database lalu dikirim ke view untuk ditampilkan dalam tabel atau kartu.
     public function tahunAjaranIndex()
     {
         $data = AcademicTerm::orderBy('academic_year')->orderBy('semester')->get();
         return view('admin.tahun_ajaran.index', compact('data'));
     }
 
+    // Function ini menampilkan detail data yang dipilih berdasarkan id.
+    // Data detail biasanya lebih lengkap daripada halaman daftar.
     public function tahunAjaranShow($id)
     {
         $academicTerm = AcademicTerm::with([
@@ -775,6 +829,8 @@ class AdminController extends Controller
         return view('admin.tahun_ajaran.show', compact('academicTerm', 'availableClasses'));
     }
 
+    // Function ini memvalidasi input dari form lalu menyimpan data baru ke database.
+    // Jika berhasil, sistem mengarahkan user kembali dengan pesan sukses.
     public function tahunAjaranClassTermStore(Request $request, $id)
     {
         $request->validate([
@@ -802,6 +858,8 @@ class AdminController extends Controller
             ->with('success', 'Kelas berhasil ditambahkan ke tahun ajaran ini.');
     }
 
+    // Function ini menghapus data yang dipilih oleh user.
+    // Setelah proses selesai, sistem biasanya kembali ke halaman daftar data.
     public function tahunAjaranClassTermDestroy($id, $classTermId)
     {
         $classTerm = ClassTerm::where('id', $classTermId)
@@ -819,11 +877,15 @@ class AdminController extends Controller
             ->with('success', 'Kelas berhasil dihapus dari tahun ajaran ini.');
     }
 
+    // Function ini menampilkan form tambah data untuk fitur ini.
+    // Form tersebut dipakai user untuk mengisi data baru sebelum disimpan.
     public function tahunAjaranCreate()
     {
         return view('admin.tahun_ajaran.create');
     }
 
+    // Function ini memvalidasi input dari form lalu menyimpan data baru ke database.
+    // Jika berhasil, sistem mengarahkan user kembali dengan pesan sukses.
     public function tahunAjaranStore(Request $request)
     {
         $request->validate([
@@ -844,12 +906,16 @@ class AdminController extends Controller
             ->with('success', "Tahun Ajaran {$request->academic_year} Semester " . ucfirst($request->semester) . " berhasil ditambahkan.");
     }
 
+    // Function ini mengambil data lama berdasarkan id lalu menampilkannya di form edit.
+    // Tujuannya agar user bisa melihat dan mengubah data yang sudah ada.
     public function tahunAjaranEdit($id)
     {
         $item = AcademicTerm::findOrFail($id);
         return view('admin.tahun_ajaran.edit', compact('item'));
     }
 
+    // Function ini memvalidasi input dari form edit lalu memperbarui data di database.
+    // Data lama diganti dengan data baru yang dikirim user.
     public function tahunAjaranUpdate(Request $request, $id)
     {
         $request->validate([
@@ -871,6 +937,8 @@ class AdminController extends Controller
             ->with('success', "Tahun Ajaran {$item->academic_year} Semester " . ucfirst($item->semester) . " berhasil diperbarui.");
     }
 
+    // Function ini menghapus data yang dipilih oleh user.
+    // Setelah proses selesai, sistem biasanya kembali ke halaman daftar data.
     public function tahunAjaranDestroy($id)
     {
         $item = AcademicTerm::findOrFail($id);
@@ -883,20 +951,23 @@ class AdminController extends Controller
             ->with('success', "Tahun Ajaran {$label} berhasil dihapus.");
     }
 
-    // ═══════════════════════════════════════════════════════
-    // KELOLA KELAS
-    // ═══════════════════════════════════════════════════════
+    // Function ini menampilkan daftar data pada halaman utama fitur ini.
+    // Biasanya data diambil dari database lalu dikirim ke view untuk ditampilkan dalam tabel atau kartu.
     public function kelasIndex()
     {
         $kelas = Classroom::orderBy('name')->get();
         return view('admin.kelas.index', compact('kelas'));
     }
 
+    // Function ini menampilkan form tambah data untuk fitur ini.
+    // Form tersebut dipakai user untuk mengisi data baru sebelum disimpan.
     public function kelasCreate()
     {
         return view('admin.kelas.create');
     }
 
+    // Function ini memvalidasi input dari form lalu menyimpan data baru ke database.
+    // Jika berhasil, sistem mengarahkan user kembali dengan pesan sukses.
     public function kelasStore(Request $request)
     {
         $request->validate([
@@ -915,12 +986,16 @@ class AdminController extends Controller
             ->with('success', "Kelas {$request->nama} berhasil ditambahkan.");
     }
 
+    // Function ini mengambil data lama berdasarkan id lalu menampilkannya di form edit.
+    // Tujuannya agar user bisa melihat dan mengubah data yang sudah ada.
     public function kelasEdit($id)
     {
         $kelas = Classroom::findOrFail($id);
         return view('admin.kelas.edit', compact('kelas'));
     }
 
+    // Function ini memvalidasi input dari form edit lalu memperbarui data di database.
+    // Data lama diganti dengan data baru yang dikirim user.
     public function kelasUpdate(Request $request, $id)
     {
         $kelas = Classroom::findOrFail($id);
@@ -941,6 +1016,8 @@ class AdminController extends Controller
             ->with('success', "Kelas {$request->nama} berhasil diperbarui.");
     }
 
+    // Function ini menghapus data yang dipilih oleh user.
+    // Setelah proses selesai, sistem biasanya kembali ke halaman daftar data.
     public function kelasDestroy($id)
     {
         $kelas = Classroom::findOrFail($id);
@@ -953,9 +1030,8 @@ class AdminController extends Controller
             ->with('success', "Kelas {$nama} berhasil dihapus.");
     }
 
-    // ═══════════════════════════════════════════════════════
-    // KELOLA EKSTRAKURIKULER (DUMMY)
-    // ═══════════════════════════════════════════════════════
+    // Function ini menyiapkan data contoh untuk kebutuhan tampilan sementara.
+    // Data ini biasanya dipakai saat fitur belum sepenuhnya memakai data asli dari database.
     private function dummyEkstrakurikuler()
     {
         return [
@@ -997,17 +1073,23 @@ class AdminController extends Controller
         ];
     }
 
+    // Function ini menampilkan daftar data pada halaman utama fitur ini.
+    // Biasanya data diambil dari database lalu dikirim ke view untuk ditampilkan dalam tabel atau kartu.
     public function ekstrakurikulerIndex()
     {
         $ekstrakurikuler = Extracurricular::with('assessments')->orderBy('name')->get();
         return view('admin.ekstrakurikuler.index', compact('ekstrakurikuler'));
     }
 
+    // Function ini menampilkan form tambah data untuk fitur ini.
+    // Form tersebut dipakai user untuk mengisi data baru sebelum disimpan.
     public function ekstrakurikulerCreate()
     {
         return view('admin.ekstrakurikuler.create');
     }
 
+    // Function ini memvalidasi input dari form lalu menyimpan data baru ke database.
+    // Jika berhasil, sistem mengarahkan user kembali dengan pesan sukses.
     public function ekstrakurikulerStore(Request $request)
     {
         $request->validate([
@@ -1032,12 +1114,16 @@ class AdminController extends Controller
             ->with('success', "Ekstrakurikuler {$request->nama} berhasil ditambahkan.");
     }
 
+    // Function ini mengambil data lama berdasarkan id lalu menampilkannya di form edit.
+    // Tujuannya agar user bisa melihat dan mengubah data yang sudah ada.
     public function ekstrakurikulerEdit($id)
     {
         $ekstrakurikuler = Extracurricular::with('assessments')->findOrFail($id);
         return view('admin.ekstrakurikuler.edit', compact('ekstrakurikuler'));
     }
 
+    // Function ini memvalidasi input dari form edit lalu memperbarui data di database.
+    // Data lama diganti dengan data baru yang dikirim user.
     public function ekstrakurikulerUpdate(Request $request, $id)
     {
         $request->validate([
@@ -1065,6 +1151,8 @@ class AdminController extends Controller
             ->with('success', "Ekstrakurikuler {$request->nama} berhasil diperbarui.");
     }
 
+    // Function ini menghapus data yang dipilih oleh user.
+    // Setelah proses selesai, sistem biasanya kembali ke halaman daftar data.
     public function ekstrakurikulerDestroy($id)
     {
         $ekskul = Extracurricular::findOrFail($id);
@@ -1081,20 +1169,23 @@ class AdminController extends Controller
             ->with('success', "Ekstrakurikuler {$nama} berhasil dihapus.");
     }
 
-    // ═══════════════════════════════════════════════════════
-    // KELOLA KONSELING (DUMMY)
-    // ═══════════════════════════════════════════════════════
+    // Function ini menampilkan daftar data pada halaman utama fitur ini.
+    // Biasanya data diambil dari database lalu dikirim ke view untuk ditampilkan dalam tabel atau kartu.
     public function konselingIndex()
     {
         $konseling = Counseling::with('assessments')->orderBy('name')->get();
         return view('admin.konseling.index', compact('konseling'));
     }
 
+    // Function ini menampilkan form tambah data untuk fitur ini.
+    // Form tersebut dipakai user untuk mengisi data baru sebelum disimpan.
     public function konselingCreate()
     {
         return view('admin.konseling.create');
     }
 
+    // Function ini memvalidasi input dari form lalu menyimpan data baru ke database.
+    // Jika berhasil, sistem mengarahkan user kembali dengan pesan sukses.
     public function konselingStore(Request $request)
     {
         $request->validate([
@@ -1119,12 +1210,16 @@ class AdminController extends Controller
             ->with('success', "Konseling {$request->nama} berhasil ditambahkan.");
     }
 
+    // Function ini mengambil data lama berdasarkan id lalu menampilkannya di form edit.
+    // Tujuannya agar user bisa melihat dan mengubah data yang sudah ada.
     public function konselingEdit($id)
     {
         $konseling = Counseling::with('assessments')->findOrFail($id);
         return view('admin.konseling.edit', compact('konseling'));
     }
 
+    // Function ini memvalidasi input dari form edit lalu memperbarui data di database.
+    // Data lama diganti dengan data baru yang dikirim user.
     public function konselingUpdate(Request $request, $id)
     {
         $request->validate([
@@ -1152,6 +1247,8 @@ class AdminController extends Controller
             ->with('success', "Konseling {$request->nama} berhasil diperbarui.");
     }
 
+    // Function ini menghapus data yang dipilih oleh user.
+    // Setelah proses selesai, sistem biasanya kembali ke halaman daftar data.
     public function konselingDestroy($id)
     {
         $konseling = Counseling::findOrFail($id);
@@ -1168,20 +1265,23 @@ class AdminController extends Controller
             ->with('success', "Konseling {$nama} berhasil dihapus.");
     }
 
-    // ═══════════════════════════════════════════════════════
-    // KELOLA MATA PELAJARAN (DUMMY)
-    // ═══════════════════════════════════════════════════════
+    // Function ini menampilkan daftar data pada halaman utama fitur ini.
+    // Biasanya data diambil dari database lalu dikirim ke view untuk ditampilkan dalam tabel atau kartu.
     public function mataPelajaranIndex()
     {
         $mataPelajaran = Subject::orderBy('name')->get();
         return view('admin.mata_pelajaran.index', compact('mataPelajaran'));
     }
 
+    // Function ini menampilkan form tambah data untuk fitur ini.
+    // Form tersebut dipakai user untuk mengisi data baru sebelum disimpan.
     public function mataPelajaranCreate()
     {
         return view('admin.mata_pelajaran.create');
     }
 
+    // Function ini memvalidasi input dari form lalu menyimpan data baru ke database.
+    // Jika berhasil, sistem mengarahkan user kembali dengan pesan sukses.
     public function mataPelajaranStore(Request $request)
     {
         $request->validate([
@@ -1196,12 +1296,16 @@ class AdminController extends Controller
             ->with('success', "Mata pelajaran {$request->nama} berhasil ditambahkan.");
     }
 
+    // Function ini mengambil data lama berdasarkan id lalu menampilkannya di form edit.
+    // Tujuannya agar user bisa melihat dan mengubah data yang sudah ada.
     public function mataPelajaranEdit($id)
     {
         $mataPelajaran = Subject::findOrFail($id);
         return view('admin.mata_pelajaran.edit', compact('mataPelajaran'));
     }
 
+    // Function ini memvalidasi input dari form edit lalu memperbarui data di database.
+    // Data lama diganti dengan data baru yang dikirim user.
     public function mataPelajaranUpdate(Request $request, $id)
     {
         $mataPelajaran = Subject::findOrFail($id);
@@ -1218,6 +1322,8 @@ class AdminController extends Controller
             ->with('success', "Mata pelajaran {$request->nama} berhasil diperbarui.");
     }
 
+    // Function ini menghapus data yang dipilih oleh user.
+    // Setelah proses selesai, sistem biasanya kembali ke halaman daftar data.
     public function mataPelajaranDestroy($id)
     {
         $mataPelajaran = Subject::findOrFail($id);
@@ -1230,10 +1336,8 @@ class AdminController extends Controller
             ->with('success', "Mata pelajaran {$nama} berhasil dihapus.");
     }
 
-    // ═══════════════════════════════════════════════════════
-    // KELOLA AKTIVITAS TAHUN AJARAN
-    // Mengaitkan mata pelajaran, ekstrakurikuler, konseling ke class_term (tahun ajaran)
-    // ═══════════════════════════════════════════════════════
+    // Function ini menampilkan daftar data pada halaman utama fitur ini.
+    // Biasanya data diambil dari database lalu dikirim ke view untuk ditampilkan dalam tabel atau kartu.
     public function aktivitasTahunAjaranIndex()
     {
         $academicTerms = AcademicTerm::withCount('classTerms')
@@ -1241,6 +1345,8 @@ class AdminController extends Controller
         return view('admin.aktivitas_tahun_ajaran.index', compact('academicTerms'));
     }
 
+    // Function ini menampilkan detail data yang dipilih berdasarkan id.
+    // Data detail biasanya lebih lengkap daripada halaman daftar.
     public function aktivitasTahunAjaranShow($id)
     {
         $academicTerm = AcademicTerm::with([
@@ -1252,6 +1358,8 @@ class AdminController extends Controller
         return view('admin.aktivitas_tahun_ajaran.show', compact('academicTerm'));
     }
 
+    // Function ini mengambil data lama berdasarkan id lalu menampilkannya di form edit.
+    // Tujuannya agar user bisa melihat dan mengubah data yang sudah ada.
     public function aktivitasTahunAjaranEdit($id)
     {
         $classTerm = ClassTerm::with([
@@ -1274,6 +1382,8 @@ class AdminController extends Controller
         ));
     }
 
+    // Function ini memvalidasi input dari form edit lalu memperbarui data di database.
+    // Data lama diganti dengan data baru yang dikirim user.
     public function aktivitasTahunAjaranUpdate(Request $request, $id)
     {
         $classTerm = ClassTerm::with('academicTerm', 'class')->findOrFail($id);
@@ -1313,9 +1423,8 @@ class AdminController extends Controller
             ->with('success', "Aktivitas kelas {$classTerm->class?->name} berhasil diperbarui.");
     }
 
-    // ═══════════════════════════════════════════════════════
-    // REKAP DATA DAPODIK
-    // ═══════════════════════════════════════════════════════
+    // Function ini menampilkan daftar data pada halaman utama fitur ini.
+    // Biasanya data diambil dari database lalu dikirim ke view untuk ditampilkan dalam tabel atau kartu.
     public function dapodikIndex(Request $request)
     {
         // Daftar academic term untuk dropdown
@@ -1412,6 +1521,8 @@ class AdminController extends Controller
         ));
     }
 
+    // Function ini mengexport data dari sistem ke format file.
+    // Biasanya data disusun menjadi Excel agar bisa dibuka di luar aplikasi.
     public function dapodikExport(Request $request)
     {
         $termId = $request->input('academic_term_id');
@@ -1434,6 +1545,8 @@ class AdminController extends Controller
     // KENAIKAN SISWA
     // ═══════════════════════════════════════════════════════
 
+    // Function ini menampilkan daftar data pada halaman utama fitur ini.
+    // Biasanya data diambil dari database lalu dikirim ke view untuk ditampilkan dalam tabel atau kartu.
     public function kenaikanIndex()
     {
         $classTerms = ClassTerm::with(['class', 'academicTerm', 'enrollments'])
@@ -1459,6 +1572,8 @@ class AdminController extends Controller
         return view('admin.kenaikan.index', compact('grouped'));
     }
 
+    // Function ini menampilkan informasi detail dari data yang dipilih.
+    // Tujuannya agar user bisa melihat isi data secara lebih lengkap.
     public function kenaikanDetail($id)
     {
         $ct = ClassTerm::with([
@@ -1501,6 +1616,8 @@ class AdminController extends Controller
         return view('admin.kenaikan.detail', compact('classTerm', 'history'));
     }
 
+    // Function ini menampilkan detail data yang dipilih berdasarkan id.
+    // Data detail biasanya lebih lengkap daripada halaman daftar.
     public function kenaikanShow($id)
     {
         $ct = ClassTerm::with([
@@ -1545,6 +1662,8 @@ class AdminController extends Controller
         return view('admin.kenaikan.show', compact('classTerm', 'siswaList', 'classTermOptions'));
     }
 
+    // Function ini memproses data sesuai pilihan atau aksi dari user.
+    // Biasanya function ini mengubah status dan membuat data lanjutan di database.
     public function kenaikanProses(Request $request, $id)
     {
         $request->validate([

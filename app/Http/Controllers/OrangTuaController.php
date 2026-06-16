@@ -1,3 +1,4 @@
+"[OrangTuaController.php](c:/Users/yesav/Documents/WEB-TK-AL-ISTIQOMAH/app/Http/Controllers/OrangTuaController.php) adalah file yang mengatur semua fitur yang digunakan oleh orang tua atau wali murid. Sederhananya, controller ini mengambil data anak yang terhubung dengan akun orang tua yang sedang login, lalu menampilkannya di halaman orang tua, seperti dashboard, presensi anak, laporan perkembangan, jadwal pembelajaran dan kegiatan, rapot, report mingguan, grafik perkembangan, chat dengan guru, serta pengajuan jadwal konseling. Jadi, ketika orang tua membuka menu di aplikasi, file ini bertugas mengambil data yang sesuai dari database, memastikan data yang tampil adalah data anaknya sendiri, lalu mengirimkannya ke tampilan agar orang tua bisa memantau perkembangan anak dengan mudah."
 <?php
 namespace App\Http\Controllers;
 
@@ -21,6 +22,8 @@ use App\Mail\KonselingPengajuanMail;
 
 class OrangTuaController extends Controller
 {
+    // Function ini mengambil data siswa yang terhubung dengan user atau fitur terkait.
+    // Data siswa ini kemudian dipakai untuk menampilkan presensi, rapot, jadwal, atau laporan.
     private function getStudentData(): array
     {
         $s = Student::first();
@@ -31,7 +34,8 @@ class OrangTuaController extends Controller
         ] : ['id' => 1, 'nama' => '-', 'class' => '-'];
     }
 
-    // Dashboard Orang Tua
+    // Function ini menyiapkan data ringkasan untuk halaman dashboard.
+    // Data yang ditampilkan biasanya berupa jumlah, statistik, dan aktivitas terbaru.
     public function dashboard()
     {
         $user    = auth()->user();
@@ -103,7 +107,8 @@ class OrangTuaController extends Controller
         ));
     }
 
-    // Presensi Siswa
+    // Function ini mengelola atau menampilkan data kehadiran siswa.
+    // Data yang diproses biasanya berupa hadir, izin, sakit, atau alpa.
     public function presensi(Request $request)
     {
         $user    = auth()->user();
@@ -191,6 +196,8 @@ class OrangTuaController extends Controller
         ));
     }
 
+    // Function ini menentukan tahun akademik berdasarkan bulan dan tahun ajaran.
+    // Ini penting karena satu tahun ajaran biasanya melewati dua tahun kalender.
     private function yearForMonth(int $month, string $academicYear): int
     {
         $parts = explode('/', $academicYear);
@@ -200,7 +207,8 @@ class OrangTuaController extends Controller
         return now()->year;
     }
 
-    // Laporan Perkembangan
+    // Function ini mengelola atau menampilkan data laporan.
+    // Laporan dipakai untuk melihat hasil administrasi atau perkembangan siswa.
     public function laporan(Request $request)
     {
         $student = $this->getStudentData();
@@ -215,6 +223,8 @@ class OrangTuaController extends Controller
         return view('orangtua.laporan', compact('student', 'laporanList'));
     }
 
+    // Function ini menampilkan informasi detail dari data yang dipilih.
+    // Tujuannya agar user bisa melihat isi data secara lebih lengkap.
     public function laporanDetail($id)
     {
         $student = $this->getStudentData();
@@ -233,12 +243,15 @@ class OrangTuaController extends Controller
         return view('orangtua.laporan_detail', compact('report', 'student', 'teacher'));
     }
 
-    // Jadwal
+    // Function ini mengelola atau menampilkan data jadwal sesuai kebutuhan fitur.
+    // Jadwal bisa berupa pembelajaran, kegiatan, atau konseling.
     public function jadwal(Request $request)
     {
         return redirect()->route('orangtua.jadwal.pembelajaran');
     }
 
+    // Function ini mengambil data siswa yang terhubung dengan user atau fitur terkait.
+    // Data siswa ini kemudian dipakai untuk menampilkan presensi, rapot, jadwal, atau laporan.
     private function getStudentClassTerms(): array
     {
         $user    = auth()->user();
@@ -261,6 +274,8 @@ class OrangTuaController extends Controller
         return ['student' => $student, 'classTerms' => $classTerms];
     }
 
+    // Function ini mengelola atau menampilkan data jadwal sesuai kebutuhan fitur.
+    // Jadwal bisa berupa pembelajaran, kegiatan, atau konseling.
     public function jadwalPembelajaran(Request $request)
     {
         ['student' => $student, 'classTerms' => $classTerms] = $this->getStudentClassTerms();
@@ -297,6 +312,8 @@ class OrangTuaController extends Controller
         ));
     }
 
+    // Function ini mengelola atau menampilkan data jadwal sesuai kebutuhan fitur.
+    // Jadwal bisa berupa pembelajaran, kegiatan, atau konseling.
     public function jadwalKegiatan(Request $request)
     {
         ['student' => $student, 'classTerms' => $classTerms] = $this->getStudentClassTerms();
@@ -343,7 +360,8 @@ class OrangTuaController extends Controller
     }
 
 
-    // Rapot Semester
+    // Function ini mengelola atau menampilkan data rapot siswa.
+    // Rapot berisi hasil pembelajaran, ekstrakurikuler, konseling, dan informasi kehadiran.
     public function rapot(Request $request)
     {
         $user    = auth()->user();
@@ -377,6 +395,8 @@ class OrangTuaController extends Controller
         return view('orangtua.rapot', compact('student', 'rapotList'));
     }
     
+    // Function ini menampilkan informasi detail dari data yang dipilih.
+    // Tujuannya agar user bisa melihat isi data secara lebih lengkap.
     public function rapotDetail($id)
     {
         $report = Report::with([
@@ -463,6 +483,8 @@ class OrangTuaController extends Controller
         return view('orangtua.rapot_detail', compact('rapot'));
     }
     
+    // Function ini menyiapkan file atau laporan agar bisa diunduh user.
+    // File yang dimaksud bisa berupa backup, PDF, atau dokumen lain.
     public function rapotDownload($id)
     {
         $report = Report::with([
@@ -518,7 +540,8 @@ class OrangTuaController extends Controller
         return $pdf->download($filename);
     }
 
-    // Laporan Mingguan BK
+    // Function ini menjalankan logika {reportMingguan} pada file ini.
+    // Secara umum function ini membantu controller, model, atau service menyelesaikan tugas tertentu di aplikasi.
     public function reportMingguan(Request $request)
     {
         $user    = auth()->user();
@@ -623,7 +646,8 @@ class OrangTuaController extends Controller
         ));
     }
 
-    // Grafik Perkembangan
+    // Function ini menyiapkan data grafik perkembangan siswa.
+    // Data nilai diolah agar bisa ditampilkan dalam bentuk visual di halaman.
     public function grafik()
     {
         $user    = auth()->user();
@@ -707,7 +731,8 @@ class OrangTuaController extends Controller
         return view('orangtua.grafik', compact('payload'));
     }
 
-    // Chat
+    // Function ini menampilkan halaman chat beserta daftar percakapan.
+    // Sistem mengambil ruang chat, pesan, dan lawan bicara user yang sedang login.
     public function chat(Request $request)
     {
         $me     = auth()->user();
@@ -781,6 +806,8 @@ class OrangTuaController extends Controller
         return view('orangtua.chat', compact('kontak', 'aktif', 'aktifId', 'pesan', 'targetUsers'));
     }
 
+    // Function ini membuka ruang chat yang sudah ada atau membuat ruang chat baru.
+    // Tujuannya agar dua user bisa langsung mulai berkomunikasi di ruang yang sama.
     public function openOrCreateRoom(Request $request)
     {
         $request->validate(['target_user_id' => 'required|exists:user,id']);
@@ -804,6 +831,8 @@ class OrangTuaController extends Controller
         return redirect()->route('orangtua.chat', ['room' => $room->id]);
     }
 
+    // Function ini menampilkan halaman chat beserta daftar percakapan.
+    // Sistem mengambil ruang chat, pesan, dan lawan bicara user yang sedang login.
     public function kirimChat(Request $request)
     {
         $request->validate([
@@ -825,7 +854,8 @@ class OrangTuaController extends Controller
         return redirect()->route('orangtua.chat', ['room' => $room->id]);
     }
 
-    // Konseling
+    // Function ini mengelola atau menampilkan data konseling siswa.
+    // Data konseling dipakai untuk pengajuan, persetujuan, dan pemantauan perkembangan siswa.
     public function konseling()
     {
         $user    = auth()->user();
@@ -871,6 +901,8 @@ class OrangTuaController extends Controller
         return view('orangtua.konseling', compact('jadwalKonseling', 'student'));
     }
 
+    // Function ini mengambil class term aktif dari siswa yang sedang diproses.
+    // Class term aktif dipakai untuk mengetahui kelas dan semester siswa saat ini.
     private function getActiveClassTerm(Student $student): array
     {
         $enrollment = \App\Models\StudentEnrollment::where('student_id', $student->id)
@@ -888,6 +920,8 @@ class OrangTuaController extends Controller
         return ['id' => $ct?->id, 'label' => $label];
     }
 
+    // Function ini mengelola atau menampilkan data konseling siswa.
+    // Data konseling dipakai untuk pengajuan, persetujuan, dan pemantauan perkembangan siswa.
     public function konselingAjukanForm()
     {
         $user    = auth()->user();
@@ -904,6 +938,8 @@ class OrangTuaController extends Controller
         return view('orangtua.konseling_ajukan', compact('guruBK', 'student', 'activeCt'));
     }
 
+    // Function ini mengelola atau menampilkan data konseling siswa.
+    // Data konseling dipakai untuk pengajuan, persetujuan, dan pemantauan perkembangan siswa.
     public function ajukanKonseling(Request $request)
     {
         $request->validate([
@@ -953,6 +989,8 @@ class OrangTuaController extends Controller
         return redirect()->route('orangtua.konseling')->with('success', 'Konseling berhasil diajukan!');
     }
 
+    // Function ini mengelola atau menampilkan data konseling siswa.
+    // Data konseling dipakai untuk pengajuan, persetujuan, dan pemantauan perkembangan siswa.
     public function konselingEditForm($id)
     {
         $user    = auth()->user();
@@ -991,6 +1029,8 @@ class OrangTuaController extends Controller
         return view('orangtua.konseling_edit', compact('jadwal', 'guruBK', 'student', 'activeCt'));
     }
 
+    // Function ini memvalidasi input dari form edit lalu memperbarui data di database.
+    // Data lama diganti dengan data baru yang dikirim user.
     public function konselingUpdate(Request $request, $id)
     {
         $request->validate([
@@ -1022,6 +1062,8 @@ class OrangTuaController extends Controller
         return redirect()->route('orangtua.konseling')->with('success', 'Pengajuan konseling berhasil diperbarui!');
     }
 
+    // Function ini membatalkan data atau pengajuan yang masih boleh dibatalkan.
+    // Status data biasanya diubah agar tidak lagi dianggap aktif.
     public function konselingBatal($id)
     {
         $user    = auth()->user();

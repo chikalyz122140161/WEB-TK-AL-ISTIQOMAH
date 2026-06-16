@@ -16,11 +16,15 @@ class ExtracurricularAssessment extends Model
 
     protected $fillable = ['extracurricular_id', 'name'];
 
+    // Function ini menghubungkan data ini dengan satu ekstrakurikuler.
+    // Dengan relasi ini sistem bisa mengambil nama dan aspek penilaian ekstrakurikuler.
     public function extracurricular()
     {
         return $this->belongsTo(Extracurricular::class, 'extracurricular_id');
     }
 
+    // Function ini menjelaskan daftar nilai atau skor yang terkait dengan data ini.
+    // Relasi ini dipakai untuk membaca hasil penilaian siswa.
     public function scores()
     {
         return $this->hasMany(ReportExtracurricularScore::class, 'extracurricular_assessment_id');

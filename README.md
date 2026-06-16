@@ -1,59 +1,144 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Informasi TK AL-ISTIQOMAH
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem Informasi Terpadu untuk Taman Kanak-Kanak AL-ISTIQOMAH yang dirancang untuk mengelola data siswa, pendaftaran, pembelajaran, penilaian, dan komunikasi antara sekolah dan orang tua.
 
-## About Laravel
+## Deskripsi Sistem
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Sistem ini adalah aplikasi web berbasis Laravel yang membantu mengelola seluruh operasional sekolah TK AL-ISTIQOMAH, mulai dari pendaftaran siswa baru, pengaturan kelas, penilaian pembelajaran, hingga distribusi rapor kepada orang tua.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Fitur Utama
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. **Pendaftaran Siswa Baru**
+- Form pendaftaran online untuk calon siswa
+- Pengumpulan data lengkap siswa dan orang tua
+- Upload dokumen pendaftaran (akta, kartu keluarga, dll)
+- Tracking status pendaftaran
+- Verifikasi admin terhadap pendaftaran
 
-## Learning Laravel
+### 2. **Manajemen Data Siswa**
+- Penyimpanan data lengkap siswa (biodata, kesehatan, keluarga)
+- Data orang tua/wali (ayah, ibu, wali)
+- Riwayat kelas siswa
+- Dokumen dan file siswa
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 3. **Pengaturan Kelas & Pembelajaran**
+- Pengelolaan kelas dan tahun ajaran
+- Daftar siswa per kelas
+- Pengaturan mata pelajaran per kelas
+- Pengaturan ekstrakurikuler per kelas
+- Pengaturan konseling/BK per kelas
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 4. **Penilaian & Rapor**
+- Pencatatan presensi siswa
+- Penilaian mata pelajaran dengan dokumentasi foto
+- Penilaian ekstrakurikuler
+- Penilaian konseling/BK dengan aspek-aspek perkembangan
+- Pembuatan rapor semester otomatis
+- Pembuatan rapor perkembangan siswa
 
-## Laravel Sponsors
+### 5. **Konseling Pribadi**
+- Penjadwalan konseling pribadi antara siswa dan guru BK
+- Pencatatan topik konseling
+- Tracking status konseling
+- Pelacakan asal permohonan konseling (guru atau orang tua)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 6. **Komunikasi & Notifikasi**
+- Sistem notifikasi untuk pengguna
+- Jadwal kegiatan sekolah
+- Chat dan messaging antar pengguna
 
-### Premium Partners
+## Komponen Sistem
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### User & Akun
+- **User** - Akun login dengan role (admin, guru, orang tua, siswa)
 
-## Contributing
+### Data Dasar
+- **Student** - Data siswa
+- **Parents** - Data orang tua/wali
+- **StudentFile** - Dokumen/file siswa
+- **StudentEnrollment** - Pendaftaran siswa di kelas tertentu
+- **Registration** - Data pendaftaran calon siswa baru
+- **DokumenPendaftaran** - Dokumen yang diupload saat pendaftaran
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Pengaturan Pembelajaran
+- **AcademicTerm** - Tahun ajaran dan semester
+- **Classroom** - Data kelas
+- **ClassTerm** - Gabungan kelas dengan tahun ajaran
+- **ClassTermSubject** - Mata pelajaran di kelas tertentu
+- **ClassTermExtracurricular** - Ekstrakurikuler di kelas tertentu
+- **ClassTermCounseling** - Konseling/BK di kelas tertentu
 
-## Code of Conduct
+### Jadwal
+- **ClassSchedule** - Jadwal pelajaran rutin
+- **ActivitySchedule** - Jadwal kegiatan/acara sekolah
+- **Schedule** - Jadwal umum siswa dan guru
+- **PrivateCounselingSchedule** - Jadwal konseling pribadi
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Kehadiran
+- **Presence** - Data presensi/kehadiran siswa
 
-## Security Vulnerabilities
+### Pembelajaran
+- **Subject** - Mata pelajaran
+- **Extracurricular** - Jenis ekstrakurikuler
+- **ExtracurricularAssessment** - Aspek penilaian ekstrakurikuler
+- **Counseling** - Jenis konseling/BK
+- **CounselingAssessment** - Aspek penilaian konseling
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Rapor & Penilaian
+- **Report** - Rapor siswa per semester
+- **ReportSubject** - Nilai mata pelajaran di rapor
+- **ReportSubjectImage** - Foto/bukti pembelajaran di rapor
+- **ReportExtracurricular** - Nilai ekstrakurikuler di rapor
+- **ReportExtracurricularScore** - Skor detail ekstrakurikuler
+- **ReportCounseling** - Nilai konseling/BK di rapor
+- **ReportCounselingScore** - Skor detail konseling
+- **SemesterReport** - Rapor perkembangan siswa (PAUD/TK)
 
-## License
+### Komunikasi
+- **Notification** - Notifikasi untuk pengguna
+- **Chat** - Percakapan antara pengguna
+- **ChatRoom** - Ruang chat
+- **ChatMessage** - Pesan dalam chat
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Alur Kerja Sistem
+
+### 1. Pendaftaran
+```
+Calon Siswa → Isi Form Registrasi → Upload Dokumen → Admin Verifikasi → Diterima
+```
+
+### 2. Pembelajaran
+```
+Tahun Ajaran → Buat Kelas → Tentukan Mapel, Ekskul, BK → Daftar Siswa → Mulai Pembelajaran
+```
+
+### 3. Penilaian
+```
+Guru Input Presensi → Guru Input Nilai Mapel → Guru Input Nilai Ekskul → Guru Input Nilai BK → Rapor Terbentuk
+```
+
+### 4. Distribusi Rapor
+```
+Sistem Buat Rapor → Orang Tua Lihat di Aplikasi → Orang Tua Download/Print
+```
+
+## Teknologi yang Digunakan
+
+- **Backend**: Laravel (PHP Framework)
+- **Database**: MySQL/MariaDB
+- **Frontend**: HTML, CSS, JavaScript, Blade Templating
+- **Build Tool**: Vite
+
+
+
+## Role & Hak Akses
+
+- **Admin** - Mengelola semua data sistem, verifikasi pendaftaran
+- **Guru** - Input nilai, absensi, jadwal, konseling
+- **Orang Tua** - Lihat rapor anak, lihat jadwal, komunikasi dengan guru
+- **Siswa** - Lihat rapor, lihat jadwal
+
+## Kontak & Support
+
+TK AL-ISTIQOMAH  
+Untuk pertanyaan teknis, hubungi tim pengembang sistem.

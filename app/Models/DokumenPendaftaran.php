@@ -17,6 +17,8 @@ class DokumenPendaftaran extends Model
         'path',
     ];
 
+    // Function ini menghubungkan dokumen dengan data pendaftaran.
+    // Dengan relasi ini sistem tahu dokumen tersebut milik pendaftaran siapa.
     public function registration()
     {
         return $this->belongsTo(Registration::class);

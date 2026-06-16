@@ -1,3 +1,5 @@
+"model untuk dokumen/file siswa. Fungsinya adalah menyimpan berkas-berkas penting siswa seperti fotokopi akta kelahiran, kartu keluarga, foto siswa, sertifikat vaksin, atau dokumen lainnya. Setiap file menyimpan: siswa siapa, tipe dokumen apa (akta, kartu keluarga, foto, dll), dan di mana file itu disimpan (path/lokasi file). File ini menghubungkan setiap dokumen ke siswa. Jadi sistem tahu dokumen apa saja yang dimiliki setiap siswa dan di mana file-file itu tersimpan."
+
 <?php
 
 namespace App\Models;
@@ -16,6 +18,8 @@ class StudentFile extends Model
 
     protected $fillable = ['student_id', 'type', 'path'];
 
+    // Function ini menjelaskan hubungan data ini dengan data siswa.
+    // Relasi ini dipakai saat sistem perlu mengetahui siswa yang terkait dengan data tersebut.
     public function student()
     {
         return $this->belongsTo(Student::class, 'student_id');

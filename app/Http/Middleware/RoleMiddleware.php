@@ -13,6 +13,8 @@ class RoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
+    // Function ini menjalankan proses utama saat command atau middleware dipanggil oleh Laravel.
+    // Isinya menentukan langkah yang harus dilakukan sistem pada proses tersebut.
     public function handle(Request $request, Closure $next, string $role): Response
     {
         if (!auth()->check()) {

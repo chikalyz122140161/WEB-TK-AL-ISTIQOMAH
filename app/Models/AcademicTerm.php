@@ -16,6 +16,8 @@ class AcademicTerm extends Model
 
     protected $fillable = ['academic_year', 'semester', 'status'];
 
+    // Function ini menjelaskan hubungan data ini dengan class term.
+    // Class term adalah gabungan kelas dengan tahun ajaran atau semester tertentu.
     public function classTerms()
     {
         return $this->hasMany(ClassTerm::class, 'academic_term_id');

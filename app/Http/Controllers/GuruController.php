@@ -1,3 +1,4 @@
+"[GuruController.php](c:/Users/yesav/Documents/WEB-TK-AL-ISTIQOMAH/app/Http/Controllers/GuruController.php) adalah file yang mengatur semua fitur yang digunakan oleh guru di aplikasi ini. Sederhananya, controller ini menjadi pusat kerja guru untuk mengelola kegiatan belajar dan perkembangan siswa, seperti melihat dashboard guru, mengisi presensi/kehadiran siswa, membuat jadwal pembelajaran dan kegiatan, membuat atau mengatur jadwal konseling, melakukan chat dengan orang tua, mengisi laporan perkembangan, melihat grafik perkembangan, serta membuat dan mengedit rapot siswa. Jadi, ketika guru membuka menu tertentu, sistem akan memanggil function di file ini untuk mengambil data dari database, memproses input guru, menyimpan perubahan, lalu menampilkan hasilnya kembali ke halaman guru."
 <?php
 namespace App\Http\Controllers;
 
@@ -32,12 +33,16 @@ use App\Models\User;
 
 class GuruController extends Controller
 {
+    // Function ini membuat label tahun ajaran dan semester agar mudah ditampilkan.
+    // Contohnya data tahun ajaran dan semester digabung menjadi satu tulisan ringkas.
     private function academicTermLabel($at): string
     {
         if (!$at) return '-';
         return trim(($at->academic_year ?? '') . ' ' . ucfirst($at->semester ?? ''));
     }
 
+    // Function ini mengelola atau menampilkan data jadwal sesuai kebutuhan fitur.
+    // Jadwal bisa berupa pembelajaran, kegiatan, atau konseling.
     private function buildClassTermsForJadwal(): array
     {
         return ClassTerm::with(['class', 'academicTerm', 'enrollments.student'])
@@ -59,6 +64,8 @@ class GuruController extends Controller
             })->toArray();
     }
 
+    // Function ini mengubah data jadwal konseling menjadi array yang siap ditampilkan di view.
+    // Format ini memudahkan halaman membaca tanggal, waktu, status, dan nama siswa.
     private function scheduleToArray(PrivateCounselingSchedule $s): array
     {
         $isKelas   = is_null($s->student_id);
@@ -89,7 +96,8 @@ class GuruController extends Controller
         ];
     }
 
-    // Jadwal Konseling
+    // Function ini mengelola atau menampilkan data jadwal sesuai kebutuhan fitur.
+    // Jadwal bisa berupa pembelajaran, kegiatan, atau konseling.
     public function jadwalKonseling(Request $request)
     {
         $bulanTahun = $request->get('bulan_tahun', date('Y-m'));
@@ -106,6 +114,8 @@ class GuruController extends Controller
         return view('guru.jadwal_konseling', compact('jadwal', 'bulan', 'bulanTahun'));
     }
 
+    // Function ini mengelola atau menampilkan data jadwal sesuai kebutuhan fitur.
+    // Jadwal bisa berupa pembelajaran, kegiatan, atau konseling.
     public function storeJadwalKonseling(Request $request)
     {
         $request->validate([
@@ -191,6 +201,8 @@ class GuruController extends Controller
         return redirect()->route('guru.jadwal_konseling')->with('success', $msg);
     }
 
+    // Function ini mengelola atau menampilkan data jadwal sesuai kebutuhan fitur.
+    // Jadwal bisa berupa pembelajaran, kegiatan, atau konseling.
     public function jadwalKonselingCreateSiswa()
     {
         $classTerms = $this->buildClassTermsForJadwal();
@@ -200,6 +212,8 @@ class GuruController extends Controller
         ]);
     }
 
+    // Function ini mengelola atau menampilkan data jadwal sesuai kebutuhan fitur.
+    // Jadwal bisa berupa pembelajaran, kegiatan, atau konseling.
     public function jadwalKonselingCreateKelas()
     {
         $classTerms = $this->buildClassTermsForJadwal();
@@ -209,6 +223,8 @@ class GuruController extends Controller
         ]);
     }
 
+    // Function ini mengelola atau menampilkan data jadwal sesuai kebutuhan fitur.
+    // Jadwal bisa berupa pembelajaran, kegiatan, atau konseling.
     private function getDummyJadwalKonseling(): array
     {
         // tipe: 'per_siswa' | 'per_kelas' | 'pengajuan'
@@ -281,6 +297,8 @@ class GuruController extends Controller
         return collect($data)->keyBy('id')->all();
     }
 
+    // Function ini menampilkan detail data yang dipilih berdasarkan id.
+    // Data detail biasanya lebih lengkap daripada halaman daftar.
     public function jadwalKonselingShow($id)
     {
         $s = PrivateCounselingSchedule::with(['student', 'childStudent', 'classTerm.class', 'classTerm.academicTerm'])
@@ -289,6 +307,8 @@ class GuruController extends Controller
         return view('guru.jadwal_konseling_show', compact('jadwal'));
     }
 
+    // Function ini mengambil data lama berdasarkan id lalu menampilkannya di form edit.
+    // Tujuannya agar user bisa melihat dan mengubah data yang sudah ada.
     public function jadwalKonselingEdit($id)
     {
         $s = PrivateCounselingSchedule::with(['student', 'childStudent', 'classTerm.class', 'classTerm.academicTerm'])
@@ -297,6 +317,8 @@ class GuruController extends Controller
         return view('guru.jadwal_konseling_edit', compact('jadwal'));
     }
 
+    // Function ini memvalidasi input dari form edit lalu memperbarui data di database.
+    // Data lama diganti dengan data baru yang dikirim user.
     public function jadwalKonselingUpdate(Request $request, $id)
     {
         $request->validate([
@@ -314,6 +336,8 @@ class GuruController extends Controller
         return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal berhasil diperbarui.');
     }
 
+    // Function ini menyetujui pengajuan atau data yang sedang diproses.
+    // Setelah disetujui, status data berubah agar bisa digunakan pada proses berikutnya.
     public function jadwalKonselingSetuju(Request $request, $id)
     {
         $schedule = PrivateCounselingSchedule::with(['student', 'childStudent', 'teacher'])
@@ -342,6 +366,8 @@ class GuruController extends Controller
         return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal konseling disetujui.');
     }
 
+    // Function ini menolak pengajuan atau data yang sedang diproses.
+    // Setelah ditolak, status data berubah dan user mendapatkan informasi hasil prosesnya.
     public function jadwalKonselingTolak(Request $request, $id)
     {
         $schedule = PrivateCounselingSchedule::with(['student', 'childStudent', 'teacher'])
@@ -370,13 +396,16 @@ class GuruController extends Controller
         return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal konseling ditolak.');
     }
 
+    // Function ini membatalkan data atau pengajuan yang masih boleh dibatalkan.
+    // Status data biasanya diubah agar tidak lagi dianggap aktif.
     public function jadwalKonselingBatalkan(Request $request, $id)
     {
         PrivateCounselingSchedule::findOrFail($id)->update(['status' => 'canceled']);
         return redirect()->route('guru.jadwal_konseling')->with('success', 'Jadwal konseling dibatalkan.');
     }
 
-    // Chat
+    // Function ini menampilkan halaman chat beserta daftar percakapan.
+    // Sistem mengambil ruang chat, pesan, dan lawan bicara user yang sedang login.
     public function chat(Request $request)
     {
         $me     = auth()->user();
@@ -452,6 +481,8 @@ class GuruController extends Controller
         return view('guru.chat', compact('kontak', 'aktif', 'aktifId', 'pesan', 'orangtua'));
     }
 
+    // Function ini membuka ruang chat yang sudah ada atau membuat ruang chat baru.
+    // Tujuannya agar dua user bisa langsung mulai berkomunikasi di ruang yang sama.
     public function openOrCreateRoom(Request $request)
     {
         $request->validate(['target_user_id' => 'required|exists:user,id']);
@@ -471,6 +502,8 @@ class GuruController extends Controller
         return redirect()->route('guru.chat', ['room' => $room->id]);
     }
 
+    // Function ini menampilkan halaman chat beserta daftar percakapan.
+    // Sistem mengambil ruang chat, pesan, dan lawan bicara user yang sedang login.
     public function kirimChat(Request $request)
     {
         $request->validate([
@@ -496,6 +529,8 @@ class GuruController extends Controller
      * Bangun semua dummy laporan perkembangan dari dataset grafik.
      * Setiap (semester Ã— siswa Ã— minggu) jadi satu laporan dengan id deterministic.
      */
+    // Function ini mengelola atau menampilkan data laporan.
+    // Laporan dipakai untuk melihat hasil administrasi atau perkembangan siswa.
     private function buildDummyLaporanList()
     {
         $ds   = $this->dummyGrafikDataset();
@@ -569,7 +604,8 @@ class GuruController extends Controller
         return $rows;
     }
 
-    // Laporan Perkembangan BK
+    // Function ini mengelola atau menampilkan data laporan.
+    // Laporan dipakai untuk melihat hasil administrasi atau perkembangan siswa.
     public function laporan(Request $request)
     {
         $classTerms = ClassTerm::with(['class', 'academicTerm'])->get()->map(fn($ct) => [
@@ -656,6 +692,8 @@ class GuruController extends Controller
         ]);
     }
 
+    // Function ini menampilkan detail data yang dipilih berdasarkan id.
+    // Data detail biasanya lebih lengkap daripada halaman daftar.
     public function laporanBkShow($id)
     {
         $week = (int) request()->input('week');
@@ -728,6 +766,8 @@ class GuruController extends Controller
         return view('guru.laporan_detail', ['laporan' => $laporan]);
     }
 
+    // Function ini mengambil data lama berdasarkan id lalu menampilkannya di form edit.
+    // Tujuannya agar user bisa melihat dan mengubah data yang sudah ada.
     public function laporanBkEdit($id)
     {
         $week = (int) request()->input('week');
@@ -785,6 +825,8 @@ class GuruController extends Controller
         return view('guru.laporan_edit', ['laporan' => $laporan]);
     }
 
+    // Function ini memvalidasi input dari form edit lalu memperbarui data di database.
+    // Data lama diganti dengan data baru yang dikirim user.
     public function laporanBkUpdate(Request $request, $id)
     {
         $request->validate([
@@ -830,6 +872,8 @@ class GuruController extends Controller
         return redirect()->route('guru.laporan_bk')->with('success', 'Laporan perkembangan berhasil diperbarui.');
     }
 
+    // Function ini menyiapkan data grafik perkembangan siswa.
+    // Data nilai diolah agar bisa ditampilkan dalam bentuk visual di halaman.
     private function dummyGrafikDataset()
     {
         return [
@@ -891,7 +935,8 @@ class GuruController extends Controller
         ];
     }
 
-    // Grafik Perkembangan
+    // Function ini menyiapkan data grafik perkembangan siswa.
+    // Data nilai diolah agar bisa ditampilkan dalam bentuk visual di halaman.
     public function grafik()
     {
         // ── 1. Load ClassTerms: semesters, kelas, siswa, counselings ───
@@ -1041,7 +1086,8 @@ class GuruController extends Controller
         return view('guru.grafik', compact('grafikPayload'));
     }
 
-    // Input Perkembangan
+    // Function ini menampilkan form untuk input perkembangan siswa.
+    // Guru menggunakan form ini untuk mengisi penilaian atau catatan perkembangan.
     public function inputPerkembangan()
     {
         $ctModels = ClassTerm::with([
@@ -1083,6 +1129,8 @@ class GuruController extends Controller
         return view('guru.input_perkembangan', compact('daftarSiswa', 'classTerms', 'counselingByCt'));
     }
 
+    // Function ini menampilkan form untuk input perkembangan siswa.
+    // Guru menggunakan form ini untuk mengisi penilaian atau catatan perkembangan.
     public function storeInputPerkembangan(Request $request)
     {
         $request->validate([
@@ -1144,7 +1192,8 @@ class GuruController extends Controller
             ->with('success', "Perkembangan minggu ke-{$week} berhasil disimpan.");
     }
 
-    // Dashboard Guru
+    // Function ini menyiapkan data ringkasan untuk halaman dashboard.
+    // Data yang ditampilkan biasanya berupa jumlah, statistik, dan aktivitas terbaru.
     public function dashboard(Request $request)
     {
         $now = now();
@@ -1236,7 +1285,8 @@ class GuruController extends Controller
         ));
     }
 
-    // Kehadiran Siswa
+    // Function ini menampilkan daftar data pada halaman utama fitur ini.
+    // Biasanya data diambil dari database lalu dikirim ke view untuk ditampilkan dalam tabel atau kartu.
     public function kehadiranIndex(Request $request)
     {
         $classTerms = ClassTerm::with(['class', 'academicTerm'])
@@ -1276,6 +1326,8 @@ class GuruController extends Controller
         ));
     }
 
+    // Function ini memvalidasi input dari form lalu menyimpan data baru ke database.
+    // Jika berhasil, sistem mengarahkan user kembali dengan pesan sukses.
     public function kehadiranStore(Request $request)
     {
         $request->validate([
@@ -1304,6 +1356,8 @@ class GuruController extends Controller
         ])->with('success', 'Kehadiran berhasil disimpan.');
     }
 
+    // Function ini mengambil data lama berdasarkan id lalu menampilkannya di form edit.
+    // Tujuannya agar user bisa melihat dan mengubah data yang sudah ada.
     public function kehadiranEdit($id)
     {
         $presence = Presence::with('studentEnrollment.student', 'studentEnrollment.classTerm.class', 'studentEnrollment.classTerm.academicTerm')
@@ -1312,6 +1366,8 @@ class GuruController extends Controller
         return view('guru.kehadiran.edit', compact('presence'));
     }
 
+    // Function ini memvalidasi input dari form edit lalu memperbarui data di database.
+    // Data lama diganti dengan data baru yang dikirim user.
     public function kehadiranUpdate(Request $request, $id)
     {
         $presence = Presence::findOrFail($id);
@@ -1334,7 +1390,8 @@ class GuruController extends Controller
         ])->with('success', 'Kehadiran berhasil diperbarui.');
     }
 
-    // Laporan Administrasi
+    // Function ini menampilkan daftar data pada halaman utama fitur ini.
+    // Biasanya data diambil dari database lalu dikirim ke view untuk ditampilkan dalam tabel atau kartu.
     public function laporanIndex(Request $request)
     {
         // Dummy data siswa
@@ -1358,13 +1415,16 @@ class GuruController extends Controller
         return view('guru.laporan.index', compact('siswaList', 'laporanList'));
     }
 
+    // Function ini membuat data laporan berdasarkan input user.
+    // Hasil generate kemudian ditampilkan atau disimpan agar bisa dipakai lagi.
     public function laporanGenerate(Request $request)
     {
         // Dummy - redirect with success
         return redirect()->route('guru.laporan.index')->with('success', 'Laporan berhasil di-generate.');
     }
 
-    // Kelola Jadwal
+    // Function ini menampilkan daftar data pada halaman utama fitur ini.
+    // Biasanya data diambil dari database lalu dikirim ke view untuk ditampilkan dalam tabel atau kartu.
     public function jadwalIndex(Request $request)
     {
         $classTerms          = ClassTerm::with(['class', 'academicTerm'])->orderBy('created_at', 'desc')->get();
@@ -1395,12 +1455,16 @@ class GuruController extends Controller
         ));
     }
 
+    // Function ini menampilkan form tambah data untuk fitur ini.
+    // Form tersebut dipakai user untuk mengisi data baru sebelum disimpan.
     public function jadwalCreate()
     {
         $classTerms = ClassTerm::with(['class', 'academicTerm'])->orderBy('created_at', 'desc')->get();
         return view('guru.jadwal.create', compact('classTerms'));
     }
 
+    // Function ini memvalidasi input dari form lalu menyimpan data baru ke database.
+    // Jika berhasil, sistem mengarahkan user kembali dengan pesan sukses.
     public function jadwalStore(Request $request)
     {
         if ($request->jenis_jadwal === 'kegiatan') {
@@ -1445,6 +1509,8 @@ class GuruController extends Controller
         return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil ditambahkan.');
     }
 
+    // Function ini mengambil data lama berdasarkan id lalu menampilkannya di form edit.
+    // Tujuannya agar user bisa melihat dan mengubah data yang sudah ada.
     public function jadwalEdit(Request $request, $id)
     {
         $jenis      = $request->query('jenis', 'kegiatan');
@@ -1459,6 +1525,8 @@ class GuruController extends Controller
         return view('guru.jadwal.edit', compact('jadwal', 'classTerms', 'jenis'));
     }
 
+    // Function ini memvalidasi input dari form edit lalu memperbarui data di database.
+    // Data lama diganti dengan data baru yang dikirim user.
     public function jadwalUpdate(Request $request, $id)
     {
         $jenis = $request->input('jenis_jadwal', 'kegiatan');
@@ -1505,6 +1573,8 @@ class GuruController extends Controller
         return redirect()->route('guru.jadwal.index')->with('success', 'Jadwal berhasil diperbarui.');
     }
 
+    // Function ini menghapus data yang dipilih oleh user.
+    // Setelah proses selesai, sistem biasanya kembali ke halaman daftar data.
     public function jadwalDestroy(Request $request, $id)
     {
         $activity = ActivitySchedule::find($id);
@@ -1523,7 +1593,8 @@ class GuruController extends Controller
             ->with('success', 'Jadwal berhasil dihapus.');
     }
 
-    // Rapot Semester
+    // Function ini menampilkan daftar data pada halaman utama fitur ini.
+    // Biasanya data diambil dari database lalu dikirim ke view untuk ditampilkan dalam tabel atau kartu.
     public function rapotIndex()
     {
         $classTerms = ClassTerm::with(['class', 'academicTerm', 'enrollments.report'])->get();
@@ -1545,6 +1616,8 @@ class GuruController extends Controller
         return view('guru.rapot.index', compact('grouped'));
     }
 
+    // Function ini menampilkan detail data yang dipilih berdasarkan id.
+    // Data detail biasanya lebih lengkap daripada halaman daftar.
     public function rapotShow($classTermId)
     {
         $ct = ClassTerm::with(['class', 'academicTerm'])->findOrFail($classTermId);
@@ -1574,6 +1647,8 @@ class GuruController extends Controller
         return view('guru.rapot.show', compact('classTerm', 'students', 'sudahRapot', 'total'));
     }
 
+    // Function ini mengelola atau menampilkan data rapot siswa.
+    // Rapot berisi hasil pembelajaran, ekstrakurikuler, konseling, dan informasi kehadiran.
     public function rapotSiswaForm($classTermId, $studentId)
     {
         $ct         = ClassTerm::with(['class', 'academicTerm'])->findOrFail($classTermId);
@@ -1652,6 +1727,8 @@ class GuruController extends Controller
         ]);
     }
 
+    // Function ini mengelola atau menampilkan data rapot siswa.
+    // Rapot berisi hasil pembelajaran, ekstrakurikuler, konseling, dan informasi kehadiran.
     public function rapotSiswaSave(Request $request, $classTermId, $studentId)
     {
         $enrollment = StudentEnrollment::where('class_term_id', $classTermId)
@@ -1723,26 +1800,36 @@ class GuruController extends Controller
             ->with('success', 'Nilai rapot berhasil disimpan.');
     }
 
+    // Function ini menampilkan form tambah data untuk fitur ini.
+    // Form tersebut dipakai user untuk mengisi data baru sebelum disimpan.
     public function rapotCreate()
     {
         return redirect()->route('guru.rapot.index');
     }
 
+    // Function ini memvalidasi input dari form lalu menyimpan data baru ke database.
+    // Jika berhasil, sistem mengarahkan user kembali dengan pesan sukses.
     public function rapotStore(Request $request)
     {
         return redirect()->route('guru.rapot.index');
     }
 
+    // Function ini mengambil data lama berdasarkan id lalu menampilkannya di form edit.
+    // Tujuannya agar user bisa melihat dan mengubah data yang sudah ada.
     public function rapotEdit($id)
     {
         return redirect()->route('guru.rapot.show', $id);
     }
 
+    // Function ini memvalidasi input dari form edit lalu memperbarui data di database.
+    // Data lama diganti dengan data baru yang dikirim user.
     public function rapotUpdate(Request $request, $id)
     {
         return redirect()->route('guru.rapot.index');
     }
 
+    // Function ini menghapus data yang dipilih oleh user.
+    // Setelah proses selesai, sistem biasanya kembali ke halaman daftar data.
     public function rapotDestroy($id)
     {
         $report = \App\Models\Report::with('studentEnrollment')->findOrFail($id);

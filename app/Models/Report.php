@@ -1,3 +1,4 @@
+"Model untuk data rapor siswa. Fungsinya adalah menyimpan satu rapor lengkap untuk satu siswa di satu kelas dan semester tertentu. Rapor ini terhubung ke enrollment siswa (informasi siswa di kelas mana, semester mana), dan kemudian rapor ini menampung semua nilai siswa dari tiga kategori: mata pelajaran, ekstrakurikuler, dan konseling/BK. Jadi sistem tahu rapor siapa, untuk kelas berapa, dan nilai-nilai apa saja yang ada di dalamnya."
 <?php
 
 namespace App\Models;
@@ -16,21 +17,29 @@ class Report extends Model
 
     protected $fillable = ['student_enrollment_id'];
 
+    // Function ini menghubungkan data rapot atau presensi dengan enrollment siswa.
+    // Enrollment menunjukkan siswa berada di kelas dan semester tertentu.
     public function studentEnrollment()
     {
         return $this->belongsTo(StudentEnrollment::class, 'student_enrollment_id');
     }
 
+    // Function ini menjelaskan daftar mata pelajaran yang terhubung dengan data ini.
+    // Relasi ini dipakai saat mengatur aktivitas belajar atau mengisi rapot.
     public function subjects()
     {
         return $this->hasMany(ReportSubject::class, 'report_id');
     }
 
+    // Function ini menjelaskan daftar ekstrakurikuler yang terhubung dengan data ini.
+    // Relasi ini dipakai untuk pengaturan ekskul dan penilaian rapot.
     public function extracurriculars()
     {
         return $this->hasMany(ReportExtracurricular::class, 'report_id');
     }
 
+    // Function ini menjelaskan daftar konseling atau BK yang terhubung dengan data ini.
+    // Relasi ini dipakai untuk penilaian perkembangan siswa.
     public function counselings()
     {
         return $this->hasMany(ReportCounseling::class, 'report_id');

@@ -1,3 +1,5 @@
+"[PendaftaranController.php](c:/Users/yesav/Documents/WEB-TK-AL-ISTIQOMAH/app/Http/Controllers/PendaftaranController.php) adalah file yang mengatur proses pendaftaran siswa baru secara online. Sederhananya, controller ini menampilkan form pendaftaran, menerima data calon siswa dan orang tua, memvalidasi agar data yang wajib diisi tidak kosong atau salah format, lalu menyimpan data tersebut ke beberapa tabel seperti akun orang tua, data siswa, data ayah/ibu/wali, dan dokumen pendaftaran seperti akta, kartu keluarga, serta foto. Akun orang tua yang dibuat dari pendaftaran awalnya berstatus `pending`, sehingga belum bisa langsung dipakai sebelum diproses oleh admin. File ini juga menyediakan fitur untuk menampilkan halaman sukses dan mengecek status pendaftaran berdasarkan email orang tua"
+
 <?php
 
 namespace App\Http\Controllers;
@@ -12,11 +14,15 @@ use Illuminate\Support\Facades\Hash;
 
 class PendaftaranController extends Controller
 {
+    // Function ini menampilkan form untuk membuat data baru.
+    // Biasanya form ini diisi oleh user sebelum data disimpan ke database.
     public function create()
     {
         return view('pendaftaran.create');
     }
 
+    // Function ini memvalidasi data dari form lalu menyimpannya ke database.
+    // Jika proses berhasil, user biasanya diarahkan kembali dengan pesan sukses.
     public function store(Request $request)
     {
         $request->validate([
@@ -152,11 +158,15 @@ class PendaftaranController extends Controller
         return redirect()->route('pendaftaran.success')->with('registration_id', $request->nik);
     }
 
+    // Function ini menampilkan halaman berhasil setelah proses selesai.
+    // Halaman ini memberi tanda bahwa data sudah berhasil diproses oleh sistem.
     public function success()
     {
         return view('pendaftaran.success');
     }
 
+    // Function ini mengecek status pendaftaran berdasarkan data yang dimasukkan user.
+    // Hasilnya ditampilkan agar calon orang tua tahu apakah pendaftaran masih pending, diterima, atau ditolak.
     public function cekStatus(Request $request)
     {
         $registration = null;

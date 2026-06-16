@@ -11,6 +11,8 @@ class DatabaseBackupService
 {
     protected string $backupPath;
 
+    // Function ini menyiapkan data awal yang dibutuhkan oleh class.
+    // Biasanya dipakai agar data bisa langsung tersedia saat email, service, atau export dijalankan.
     public function __construct()
     {
         $this->backupPath = storage_path('app/private/backups');
@@ -20,6 +22,8 @@ class DatabaseBackupService
         }
     }
 
+    // Function ini mengambil lokasi folder tempat file backup database disimpan.
+    // Lokasi ini dipakai saat membuat, membaca, mengunduh, atau menghapus backup.
     public function backupPath(): string
     {
         return $this->backupPath;
@@ -28,6 +32,8 @@ class DatabaseBackupService
     /**
      * Create a new SQL dump file. Returns the filename.
      */
+    // Function ini menampilkan form untuk membuat data baru.
+    // Biasanya form ini diisi oleh user sebelum data disimpan ke database.
     public function create(string $source = 'manual'): string
     {
         $database = DB::getDatabaseName();
@@ -67,6 +73,8 @@ class DatabaseBackupService
     /**
      * Restore database from a backup file.
      */
+    // Function ini mengembalikan database menggunakan file backup yang dipilih.
+    // Proses ini membaca isi file SQL lalu menjalankannya kembali ke database.
     public function restore(string $filename): void
     {
         $fullPath = $this->backupPath . DIRECTORY_SEPARATOR . basename($filename);
@@ -106,6 +114,8 @@ class DatabaseBackupService
      *
      * @return array<int, array{filename:string,path:string,size:int,size_human:string,created_at:Carbon,source:string}>
      */
+    // Function ini mengambil daftar file backup database yang tersedia.
+    // Data file disusun agar bisa ditampilkan di halaman backup admin.
     public function list(): array
     {
         if (! File::isDirectory($this->backupPath)) {
@@ -129,6 +139,8 @@ class DatabaseBackupService
         })->all();
     }
 
+    // Function ini menghapus file backup yang dipilih.
+    // Penghapusan dilakukan ketika file backup sudah tidak diperlukan lagi.
     public function delete(string $filename): bool
     {
         $fullPath = $this->backupPath . DIRECTORY_SEPARATOR . basename($filename);
@@ -140,6 +152,8 @@ class DatabaseBackupService
         return File::delete($fullPath);
     }
 
+    // Function ini mencari path lengkap dari file backup tertentu.
+    // Jika file tidak ditemukan, function mengembalikan nilai kosong agar sistem tidak salah mengambil file.
     public function path(string $filename): ?string
     {
         $fullPath = $this->backupPath . DIRECTORY_SEPARATOR . basename($filename);
@@ -148,6 +162,8 @@ class DatabaseBackupService
 
     // ─── Internal helpers ──────────────────────────────────────────────
 
+    // Function ini menulis informasi awal ke file backup database.
+    // Header membantu mengenali database, sumber backup, dan waktu backup dibuat.
     protected function writeHeader($handle, string $database, string $source): void
     {
         $now = Carbon::now()->toDateTimeString();
@@ -160,6 +176,8 @@ class DatabaseBackupService
     }
 
     /** @return array<int, string> */
+    // Function ini mengambil daftar tabel yang ada di database.
+    // Daftar ini dipakai saat sistem membuat backup seluruh isi database.
     protected function getTables(): array
     {
         $rows = DB::select('SHOW TABLES');
@@ -167,6 +185,8 @@ class DatabaseBackupService
         return array_map(fn($r) => $r->{$key} ?? array_values((array) $r)[0], $rows);
     }
 
+    // Function ini menulis struktur dan isi satu tabel ke file backup.
+    // Dengan cara ini data database bisa disimpan dalam bentuk perintah SQL.
     protected function dumpTable($handle, string $table): void
     {
         fwrite($handle, "-- ---------- Table: {$table} ----------\n");
@@ -194,6 +214,8 @@ class DatabaseBackupService
         fwrite($handle, "\n");
     }
 
+    // Function ini mengubah nilai database menjadi format SQL yang aman ditulis.
+    // Tujuannya agar teks, angka, null, dan karakter khusus tidak merusak file backup.
     protected function quoteValue($value): string
     {
         if ($value === null) {
@@ -213,6 +235,8 @@ class DatabaseBackupService
     }
 
     /** @return array<int, string> */
+    // Function ini memecah isi file SQL menjadi beberapa perintah.
+    // Setiap perintah kemudian bisa dijalankan saat proses restore database.
     protected function splitStatements(string $sql): array
     {
         $statements = [];
@@ -256,6 +280,8 @@ class DatabaseBackupService
         return $statements;
     }
 
+    // Function ini mengubah ukuran file dari byte menjadi format yang mudah dibaca.
+    // Contohnya ukuran file ditampilkan sebagai KB atau MB.
     protected function humanSize(int $bytes): string
     {
         $units = ['B', 'KB', 'MB', 'GB'];
@@ -268,6 +294,8 @@ class DatabaseBackupService
         return number_format($size, $i === 0 ? 0 : 2, ',', '.') . ' ' . $units[$i];
     }
 
+    // Function ini membaca header file backup untuk mengetahui asal backup.
+    // Informasi ini membantu admin membedakan backup manual dan otomatis.
     protected function detectSource(string $fullPath): string
     {
         $first = @file_get_contents($fullPath, false, null, 0, 512);

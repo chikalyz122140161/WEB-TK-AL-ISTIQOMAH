@@ -1,3 +1,5 @@
+"model untuk rapor semester siswa (PAUD/TK). Fungsinya adalah menyimpan penilaian lengkap siswa dalam satu semester untuk berbagai aspek perkembangan: agama-moral, fisik-motorik, kognitif, bahasa, sosial-emosional, dan seni. Setiap aspek memiliki skor dan deskripsi. File ini juga mencatat kehadiran siswa (hadir, izin, sakit, alpa), catatan guru, dan rekomendasi guru. Ada juga dua fungsi khusus: satu untuk mengubah kode nilai (BB, MB, BSH, BSB) menjadi label yang mudah dipahami, dan satu lagi untuk mengubahnya menjadi warna yang berbeda agar visual rapor lebih jelas. Jadi sistem tahu perkembangan siswa dari berbagai aspek dan seberapa sering siswa hadir"
+
 <?php
 
 namespace App\Models;
@@ -40,17 +42,22 @@ class SemesterReport extends Model
         'tanggal_terbit' => 'date',
     ];
 
+    // Function ini menjelaskan hubungan data ini dengan data siswa.
+    // Relasi ini dipakai saat sistem perlu mengetahui siswa yang terkait dengan data tersebut.
     public function student()
     {
         return $this->belongsTo(Student::class);
     }
 
+    // Function ini menghubungkan data ini dengan user guru.
+    // Dengan relasi ini sistem bisa menampilkan siapa guru yang bertanggung jawab.
     public function teacher()
     {
         return $this->belongsTo(User::class, 'teacher_id');
     }
 
-    // Helper untuk mendapatkan label nilai
+    // Function ini mengubah kode nilai rapot menjadi tulisan yang lebih mudah dipahami.
+    // Contohnya kode seperti BB, MB, BSH, atau BSB dibuat menjadi label penilaian.
     public static function getNilaiLabel($nilai)
     {
         return match($nilai) {
@@ -62,7 +69,8 @@ class SemesterReport extends Model
         };
     }
 
-    // Helper untuk warna badge
+    // Function ini menentukan warna tampilan berdasarkan nilai rapot.
+    // Tujuannya agar nilai lebih mudah dibedakan secara visual di halaman.
     public static function getNilaiColor($nilai)
     {
         return match($nilai) {

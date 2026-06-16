@@ -12,6 +12,8 @@ class PerkembanganSiswaMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    // Function ini menyiapkan data awal yang dibutuhkan oleh class.
+    // Biasanya dipakai agar data bisa langsung tersedia saat email, service, atau export dijalankan.
     public function __construct(
         public string $namaSiswa,
         public string $namaOrtu,
@@ -24,6 +26,8 @@ class PerkembanganSiswaMail extends Mailable
         public array  $hasilPenilaian, // [['aspek' => ..., 'konseling' => ..., 'level' => ...]]
     ) {}
 
+    // Function ini mengatur informasi dasar email seperti subjek.
+    // Bagian ini menentukan bagaimana email dikenali oleh penerima.
     public function envelope(): Envelope
     {
         return new Envelope(
@@ -31,6 +35,8 @@ class PerkembanganSiswaMail extends Mailable
         );
     }
 
+    // Function ini menentukan template email yang akan dipakai.
+    // Data yang sudah disiapkan akan dikirim ke view email untuk ditampilkan.
     public function content(): Content
     {
         return new Content(

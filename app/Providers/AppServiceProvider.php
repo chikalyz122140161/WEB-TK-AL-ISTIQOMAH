@@ -10,6 +10,8 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
+    // Function ini menjalankan logika {register} pada file ini.
+    // Secara umum function ini membantu controller, model, atau service menyelesaikan tugas tertentu di aplikasi.
     public function register(): void
     {
         //
@@ -18,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
+    // Function ini menjalankan logika {boot} pada file ini.
+    // Secara umum function ini membantu controller, model, atau service menyelesaikan tugas tertentu di aplikasi.
     public function boot(): void
     {
         Carbon::setLocale('id');

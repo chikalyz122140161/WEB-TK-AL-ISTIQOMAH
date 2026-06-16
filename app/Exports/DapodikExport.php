@@ -19,11 +19,15 @@ class DapodikExport implements FromCollection, ShouldAutoSize, WithStyles, WithE
 {
     private string $academicTermId;
 
+    // Function ini menyiapkan data awal yang dibutuhkan oleh class.
+    // Biasanya dipakai agar data bisa langsung tersedia saat email, service, atau export dijalankan.
     public function __construct(string $academicTermId)
     {
         $this->academicTermId = $academicTermId;
     }
 
+    // Function ini menyiapkan kumpulan data yang akan diexport.
+    // Data dari database disusun menjadi format yang siap masuk ke file Excel.
     public function collection()
     {
         // Header rows nanti diisi di registerEvents() — di sini hanya data per kelas
@@ -82,12 +86,16 @@ class DapodikExport implements FromCollection, ShouldAutoSize, WithStyles, WithE
         return $rows;
     }
 
+    // Function ini mengatur gaya tampilan file Excel.
+    // Contohnya mengatur header, ukuran kolom, atau tampilan tabel agar lebih rapi.
     public function styles(Worksheet $sheet)
     {
         // Will be styled via AfterSheet event
         return [];
     }
 
+    // Function ini mendaftarkan event tambahan saat proses export berjalan.
+    // Biasanya dipakai untuk mengatur tampilan Excel setelah data selesai dibuat.
     public function registerEvents(): array
     {
         return [

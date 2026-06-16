@@ -12,6 +12,8 @@ class ActivityFeedService
      *
      * @return array<int, array{type:string,title:string,subtitle:?string,time:string,time_raw:Carbon,icon:string,color:string}>
      */
+    // Function ini mengambil daftar aktivitas terbaru dari sistem.
+    // Data tersebut biasanya ditampilkan di dashboard sebagai ringkasan kegiatan terakhir.
     public function recent(int $limit = 5): array
     {
         return Activity::orderByDesc('created_at')
@@ -39,6 +41,8 @@ class ActivityFeedService
      *
      * @return array{0:string,1:?string}
      */
+    // Function ini memecah deskripsi aktivitas menjadi judul dan keterangan singkat.
+    // Tujuannya agar aktivitas lebih rapi saat ditampilkan di dashboard.
     private function splitTitle(string $desc): array
     {
         if (str_contains($desc, ' — ')) {
@@ -48,6 +52,8 @@ class ActivityFeedService
         return [$desc, null];
     }
 
+    // Function ini memilih ikon yang sesuai dengan jenis aktivitas.
+    // Ikon membantu user memahami jenis aktivitas secara cepat.
     private function pickIcon(string $desc): string
     {
         $d = mb_strtolower($desc);
@@ -71,6 +77,8 @@ class ActivityFeedService
         };
     }
 
+    // Function ini memilih warna tampilan berdasarkan jenis aktivitas.
+    // Warna dipakai agar daftar aktivitas lebih mudah dibaca dan dibedakan.
     private function pickColor(string $desc): string
     {
         $d = mb_strtolower($desc);
@@ -82,6 +90,8 @@ class ActivityFeedService
         };
     }
 
+    // Function ini mengubah waktu aktivitas menjadi format yang mudah dibaca.
+    // Contohnya waktu asli dibuat menjadi keterangan seperti beberapa menit lalu atau beberapa hari lalu.
     private function relativeTime(?Carbon $time): string
     {
         if (! $time) return '-';

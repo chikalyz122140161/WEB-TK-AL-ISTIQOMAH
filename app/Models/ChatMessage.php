@@ -18,11 +18,15 @@ class ChatMessage extends Model
 
     protected $casts = ['isRead' => 'boolean'];
 
+    // Function ini menghubungkan pesan dengan ruang chat.
+    // Dengan relasi ini pesan bisa dikelompokkan ke percakapan yang benar.
     public function chatRoom()
     {
         return $this->belongsTo(ChatRoom::class, 'chat_room_id');
     }
 
+    // Function ini menghubungkan pesan dengan user pengirim.
+    // Relasi ini dipakai untuk membedakan pesan milik sendiri dan pesan dari lawan bicara.
     public function sender()
     {
         return $this->belongsTo(\App\Models\User::class, 'sender_id');
