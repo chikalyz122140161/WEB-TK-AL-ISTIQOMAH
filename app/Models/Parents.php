@@ -1,5 +1,3 @@
-"data orang tua atau wali siswa. Fungsinya adalah menyimpan informasi lengkap tentang orang tua, seperti: nama, pekerjaan, pendidikan, tempat lahir, dan tanggal lahir. Setiap orang tua terhubung dengan satu siswa tertentu. File ini juga mencatat kategori orang tua (apakah ayah, ibu, atau wali). Jadi sistem tahu data lengkap orang tua masing-masing siswa."
-
 <?php
 
 namespace App\Models;

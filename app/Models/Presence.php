@@ -1,4 +1,3 @@
-"Data kehadiran atau presensi siswa. Fungsinya adalah mencatat siswa mana yang hadir atau tidak pada tanggal tertentu. Setiap presensi menyimpan: siswa yang dicatat, tanggal kehadiran, status kehadiran (hadir/sakit/izin/alpa), dan keterangan tambahan. File ini menghubungkan presensi ke enrollment siswa (data siswa di kelas mana pada semester mana). Jadi sistem tahu rekam jejak kehadiran setiap siswa"
 <?php
 
 namespace App\Models;

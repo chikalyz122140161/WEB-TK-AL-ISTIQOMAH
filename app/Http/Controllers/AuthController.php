@@ -1,4 +1,3 @@
-"[AuthController.php](c:/Users/yesav/Documents/WEB-TK-AL-ISTIQOMAH/app/Http/Controllers/AuthController.php) adalah file yang mengatur proses masuk dan keluar pengguna dari aplikasi. Sederhananya, file ini menangani halaman login, mengecek apakah email dan password yang dimasukkan benar, memastikan akun pengguna sudah berstatus aktif, lalu mengarahkan pengguna ke dashboard sesuai rolenya, yaitu admin, guru, atau orang tua. Jika akun belum aktif atau password salah, pengguna akan dikembalikan ke halaman login dengan pesan error. File ini juga mengatur proses logout, yaitu menghapus session login agar pengguna benar-benar keluar dari sistem."
 <?php
 
 namespace App\Http\Controllers;

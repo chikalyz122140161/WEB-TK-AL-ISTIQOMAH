@@ -1,4 +1,3 @@
-"Model untuk data rapor siswa. Fungsinya adalah menyimpan satu rapor lengkap untuk satu siswa di satu kelas dan semester tertentu. Rapor ini terhubung ke enrollment siswa (informasi siswa di kelas mana, semester mana), dan kemudian rapor ini menampung semua nilai siswa dari tiga kategori: mata pelajaran, ekstrakurikuler, dan konseling/BK. Jadi sistem tahu rapor siapa, untuk kelas berapa, dan nilai-nilai apa saja yang ada di dalamnya."
 <?php
 
 namespace App\Models;

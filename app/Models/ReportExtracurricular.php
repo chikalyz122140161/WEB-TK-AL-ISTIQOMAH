@@ -1,5 +1,3 @@
-"model untuk nilai ekstrakurikuler dalam rapor siswa. Fungsinya adalah menghubungkan satu jenis ekstrakurikuler ke rapor siswa tertentu. Jadi jika rapor siswa berisi nilai untuk 2-3 ekstrakurikuler (misalnya: Olahraga, Seni, Musik), file ini mencatat setiap ekstrakurikuler tersebut. File ini juga menghubungkan ke nilai-nilai detail setiap aspek ekstrakurikuler itu. Jadi sistem tahu ekstrakurikuler apa saja yang ada di rapor, dan nilai aspek apa saja dari setiap ekstrakurikuler tersebut."
-
 <?php
 
 namespace App\Models;

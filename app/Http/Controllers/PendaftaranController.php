@@ -1,5 +1,3 @@
-"[PendaftaranController.php](c:/Users/yesav/Documents/WEB-TK-AL-ISTIQOMAH/app/Http/Controllers/PendaftaranController.php) adalah file yang mengatur proses pendaftaran siswa baru secara online. Sederhananya, controller ini menampilkan form pendaftaran, menerima data calon siswa dan orang tua, memvalidasi agar data yang wajib diisi tidak kosong atau salah format, lalu menyimpan data tersebut ke beberapa tabel seperti akun orang tua, data siswa, data ayah/ibu/wali, dan dokumen pendaftaran seperti akta, kartu keluarga, serta foto. Akun orang tua yang dibuat dari pendaftaran awalnya berstatus `pending`, sehingga belum bisa langsung dipakai sebelum diproses oleh admin. File ini juga menyediakan fitur untuk menampilkan halaman sukses dan mengecek status pendaftaran berdasarkan email orang tua"
-
 <?php
 
 namespace App\Http\Controllers;

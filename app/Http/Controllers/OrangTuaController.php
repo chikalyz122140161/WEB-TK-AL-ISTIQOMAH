@@ -1,4 +1,3 @@
-"[OrangTuaController.php](c:/Users/yesav/Documents/WEB-TK-AL-ISTIQOMAH/app/Http/Controllers/OrangTuaController.php) adalah file yang mengatur semua fitur yang digunakan oleh orang tua atau wali murid. Sederhananya, controller ini mengambil data anak yang terhubung dengan akun orang tua yang sedang login, lalu menampilkannya di halaman orang tua, seperti dashboard, presensi anak, laporan perkembangan, jadwal pembelajaran dan kegiatan, rapot, report mingguan, grafik perkembangan, chat dengan guru, serta pengajuan jadwal konseling. Jadi, ketika orang tua membuka menu di aplikasi, file ini bertugas mengambil data yang sesuai dari database, memastikan data yang tampil adalah data anaknya sendiri, lalu mengirimkannya ke tampilan agar orang tua bisa memantau perkembangan anak dengan mudah."
 <?php
 namespace App\Http\Controllers;
 

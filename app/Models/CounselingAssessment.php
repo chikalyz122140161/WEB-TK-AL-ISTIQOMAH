@@ -1,4 +1,3 @@
-" aspek-aspek penilaian konseling. Fungsinya adalah menyimpan detail apa saja yang akan dinilai dalam setiap jenis konseling. Contohnya, konseling ada aspek "Kedisiplinan", "Kejujuran", "Tanggung Jawab", dan lainnya. File ini menghubungkan setiap aspek ke jenis konseling dan ke nilai-nilai siswa. Jadi sistem tahu aspek apa yang akan dinilai dan nilai siapa saja yang sudah diinput untuk setiap aspek."
 <?php
 
 namespace App\Models;

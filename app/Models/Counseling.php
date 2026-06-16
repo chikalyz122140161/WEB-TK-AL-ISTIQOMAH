@@ -1,4 +1,3 @@
-"jenis-jenis konseling (BK). Fungsinya adalah menyimpan nama konseling apa saja yang ada di sekolah. Konseling ini memiliki aspek-aspek penilaian yang digunakan guru untuk memberi nilai kepada siswa. File ini juga menghubungkan konseling ke kelas-tahun ajaran (untuk tahu konseling apa yang diajarkan di kelas mana) dan ke rapor (untuk menyimpan nilai BK siswa). Jadi sistem tahu ada konseling apa, dinilai dengan cara apa, dan nilai siapa saja yang sudah diinput"
 <?php
 
 namespace App\Models;

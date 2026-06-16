@@ -1,4 +1,3 @@
-" data pendaftaran calon siswa baru. Fungsinya adalah menyimpan semua informasi dari formulir pendaftaran, termasuk: data siswa (nama, NIK, tanggal lahir, alamat, kesehatan), data orang tua (ayah, ibu, wali dengan nama, pekerjaan, pendidikan, telepon), dan data administrasi (kode pendaftaran, status, catatan admin). File ini juga menghubungkan ke dokumen-dokumen yang diupload calon siswa (seperti fotokopi akta, kartu keluarga, dll). Jadi sistem tahu data lengkap calon siswa dan berkas apa saja yang sudah diupload."
 <?php
 namespace App\Models;
 

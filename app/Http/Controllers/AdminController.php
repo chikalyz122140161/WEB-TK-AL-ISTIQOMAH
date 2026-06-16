@@ -1,5 +1,3 @@
-" [AdminController.php](c:/Users/yesav/Documents/WEB-TK-AL-ISTIQOMAH/app/Http/Controllers/AdminController.php) adalah file yang mengatur hampir semua fitur khusus admin di aplikasi TK Al-Istiqomah. Sederhananya, file ini menjadi “pusat kendali admin” untuk mengelola data penting sekolah, seperti dashboard, pengguna, siswa, pendaftaran siswa baru, tahun ajaran, kelas, mata pelajaran, ekstrakurikuler, konseling, aktivitas tahun ajaran, kenaikan siswa, data DAPODIK, dan backup database. Setiap function di dalamnya biasanya mewakili satu aksi, misalnya menampilkan daftar data, membuka form tambah/edit, menyimpan data baru, memperbarui data, menghapus data, menerima atau menolak pendaftaran, sampai memproses kenaikan siswa. Jadi kalau dosen bertanya, kamu bisa menjelaskan bahwa AdminController bertugas menerima perintah dari halaman admin, mengambil atau menyimpan data ke database melalui model, lalu mengirim hasilnya kembali ke tampilan admin."
-
 <?php
 namespace App\Http\Controllers;
 

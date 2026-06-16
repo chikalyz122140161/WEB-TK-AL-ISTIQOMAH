@@ -1,4 +1,3 @@
-"model untuk akun login pengguna sistem. Fungsinya adalah menyimpan data akun setiap pengguna (guru, admin, orang tua, siswa), termasuk: nama, email, password, telepon, role (peran/jabatan), status, dan status kelulusan. File ini punya fitur keamanan: password disembunyikan saat ditampilkan (menggunakan $hidden), dan password otomatis dienkripsi aman (hashed). File ini juga menghubungkan akun user ke data siswa (jika user adalah siswa) dan ke jadwal konseling yang ditangani (jika user adalah guru). Jadi sistem tahu siapa saja yang login, peran mereka apa, dan data apa saja yang terkait dengan akun mereka."
 <?php
 
 namespace App\Models;

@@ -1,4 +1,3 @@
-"[GuruController.php](c:/Users/yesav/Documents/WEB-TK-AL-ISTIQOMAH/app/Http/Controllers/GuruController.php) adalah file yang mengatur semua fitur yang digunakan oleh guru di aplikasi ini. Sederhananya, controller ini menjadi pusat kerja guru untuk mengelola kegiatan belajar dan perkembangan siswa, seperti melihat dashboard guru, mengisi presensi/kehadiran siswa, membuat jadwal pembelajaran dan kegiatan, membuat atau mengatur jadwal konseling, melakukan chat dengan orang tua, mengisi laporan perkembangan, melihat grafik perkembangan, serta membuat dan mengedit rapot siswa. Jadi, ketika guru membuka menu tertentu, sistem akan memanggil function di file ini untuk mengambil data dari database, memproses input guru, menyimpan perubahan, lalu menampilkan hasilnya kembali ke halaman guru."
 <?php
 namespace App\Http\Controllers;
 

@@ -1,4 +1,3 @@
-"model untuk mata pelajaran sekolah. Fungsinya adalah menyimpan nama-nama mata pelajaran yang ada di sekolah, seperti Matematika, Bahasa Indonesia, IPA, IPS, Bahasa Inggris, dan lainnya. File ini menghubungkan setiap mata pelajaran ke kelas-tahun ajaran (untuk tahu mata pelajaran apa yang diajarkan di kelas mana) dan ke rapor (untuk menyimpan nilai mata pelajaran setiap siswa). Jadi sistem tahu ada mata pelajaran apa saja, diajarkan di kelas mana, dan nilai siapa saja untuk setiap mata pelajaran itu."
 <?php
 
 namespace App\Models;

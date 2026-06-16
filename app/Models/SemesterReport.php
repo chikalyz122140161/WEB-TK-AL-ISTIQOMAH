@@ -1,5 +1,3 @@
-"model untuk rapor semester siswa (PAUD/TK). Fungsinya adalah menyimpan penilaian lengkap siswa dalam satu semester untuk berbagai aspek perkembangan: agama-moral, fisik-motorik, kognitif, bahasa, sosial-emosional, dan seni. Setiap aspek memiliki skor dan deskripsi. File ini juga mencatat kehadiran siswa (hadir, izin, sakit, alpa), catatan guru, dan rekomendasi guru. Ada juga dua fungsi khusus: satu untuk mengubah kode nilai (BB, MB, BSH, BSB) menjadi label yang mudah dipahami, dan satu lagi untuk mengubahnya menjadi warna yang berbeda agar visual rapor lebih jelas. Jadi sistem tahu perkembangan siswa dari berbagai aspek dan seberapa sering siswa hadir"
-
 <?php
 
 namespace App\Models;

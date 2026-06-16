@@ -1,4 +1,3 @@
-" membantu sistem memahami setiap pesan berasal dari siapa dan ditujukan kepada siapa."
 <?php
 namespace App\Models;
 

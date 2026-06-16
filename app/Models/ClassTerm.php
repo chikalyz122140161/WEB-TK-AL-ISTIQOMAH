@@ -1,4 +1,3 @@
-"menghubungkan informasi kelas (seperti kelas A, B, C) dengan tahun ajaran tertentu. File ini juga menghubungkan ke data-data lain seperti jadwal pelajaran, siswa yang terdaftar, mata pelajaran, ekstrakurikuler, dan konseling. Jadi, satu file ini membuat semuanya terorganisir dan mudah diatur"
 <?php
 
 namespace App\Models;

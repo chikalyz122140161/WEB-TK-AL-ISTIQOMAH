@@ -1,4 +1,3 @@
-"model untuk nilai detail setiap aspek ekstrakurikuler. Fungsinya adalah menyimpan nilai/skor siswa untuk satu aspek ekstrakurikuler tertentu. Contohnya, jika siswa mengikuti ekstrakurikuler Olahraga dengan aspek penilaian "Keterampilan" dan "Kerja Sama", file ini mencatat berapa level/skor siswa itu untuk setiap aspek (seperti level 1, 2, 3, atau 4). File ini menghubungkan ke ekstrakurikuler-nya dan aspek penilaiannya. Jadi sistem tahu siswa mendapat nilai berapa untuk aspek apa, dan masuk ke rapor ekstrakurikuler mana."
 <?php
 
 namespace App\Models;

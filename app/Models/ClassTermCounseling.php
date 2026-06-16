@@ -1,4 +1,3 @@
-"menghubungkan konseling dengan kelas dan tahun ajaran. membuat catatan bahwa konseling apa saja yang diajarkan di kelas tertentu pada tahun ajaran tertentu. File ini hanya menghubungkan dua data: kelas-tahun ajaran dan jenis konseling. Jadi sistemnya tahu konseling apa yang tersedia untuk setiap kelas"
 <?php
 
 namespace App\Models;

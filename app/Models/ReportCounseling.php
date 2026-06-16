@@ -1,5 +1,3 @@
-"model untuk nilai konseling/BK dalam rapor siswa. Fungsinya adalah menghubungkan satu jenis konseling ke rapor siswa tertentu. Jadi jika rapor siswa berisi nilai untuk 3 jenis konseling (misalnya: Kedisiplinan, Kejujuran, Tanggung Jawab), file ini mencatat setiap konseling tersebut. File ini juga menghubungkan ke nilai-nilai detail setiap aspek konseling itu. Jadi sistem tahu konseling apa saja yang ada di rapor, dan nilai aspek apa saja dari setiap konseling tersebut."
-
 <?php
 
 namespace App\Models;

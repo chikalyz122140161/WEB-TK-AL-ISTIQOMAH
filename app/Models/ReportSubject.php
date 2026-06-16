@@ -1,6 +1,3 @@
-"odel untuk mata pelajaran dalam rapor siswa. Fungsinya adalah menghubungkan satu mata pelajaran ke rapor siswa tertentu. Jadi jika rapor siswa berisi nilai untuk 5-6 mata pelajaran (misalnya: Matematika, Bahasa Indonesia, IPA, IPS, Bahasa Inggris), file ini mencatat setiap mata pelajaran tersebut. File ini juga menghubungkan ke gambar-gambar atau bukti pembelajaran mata pelajaran itu. Jadi sistem tahu mata pelajaran apa saja yang ada di rapor, dan ada gambar/bukti apa saja untuk setiap mata pelajaran tersebut.
-
-"
 <?php
 
 namespace App\Models;

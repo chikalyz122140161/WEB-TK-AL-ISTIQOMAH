@@ -1,4 +1,3 @@
-"menghubungkan mata pelajaran dengan kelas dan tahun ajaran. Fungsinya adalah membuat catatan mata pelajaran apa saja yang diajarkan di kelas tertentu pada tahun ajaran tertentu. File ini menghubungkan dua data: kelas-tahun ajaran dan mata pelajaran. Jadi sistem tahu pelajaran apa (seperti Matematika, Bahasa Indonesia, IPA) yang diajarkan di setiap kelas."
 <?php
 
 namespace App\Models;

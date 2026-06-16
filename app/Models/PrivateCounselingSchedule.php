@@ -1,5 +1,3 @@
-"jadwal konseling pribadi atau BK pribadi. Fungsinya adalah mencatat jadwal pertemuan konseling antara siswa dan guru BK. Setiap jadwal menyimpan: siswa yang dikonseling, guru BK yang mengajar, tanggal dan waktu konseling, topik/masalah yang dibicarakan, status (sudah/belum/batal), dan sumbernya (dari guru atau orang tua). File ini menghubungkan ke siswa, guru, dan kelas-tahun ajaran. Jadi sistem tahu pertemuan konseling pribadi siapa dengan siapa, kapan, dan tentang apa"
-
 <?php
 
 namespace App\Models;

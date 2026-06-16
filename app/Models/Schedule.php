@@ -1,5 +1,3 @@
-"model untuk jadwal kegiatan siswa dan guru. Fungsinya adalah menyimpan jadwal-jadwal tertentu, bisa jadwal les tambahan, jadwal konseling pribadi, atau jadwal kegiatan lain antara siswa dan guru. Setiap jadwal menyimpan: siswa siapa, guru siapa, tipe jadwal apa (les, konseling, dll), kapan tanggalnya, dan deskripsi/keterangan jadwal. File ini menghubungkan siswa dan guru. Jadi sistem tahu ada jadwal apa saja antara siswa dan guru mana"
-
 <?php
 namespace App\Models;
 

@@ -1,4 +1,3 @@
-"menghubungkan ekstrakurikuler dengan kelas dan tahun ajaran. Fungsinya adalah membuat catatan ekstrakurikuler apa saja yang tersedia di kelas tertentu pada tahun ajaran tertentu. File ini menghubungkan dua data: kelas-tahun ajaran dan jenis ekstrakurikuler. Jadi sistem tahu kegiatan ekstrakurikuler apa (seperti olahraga, seni, musik) yang bisa diikuti siswa di setiap kelas."
 <?php
 
 namespace App\Models;

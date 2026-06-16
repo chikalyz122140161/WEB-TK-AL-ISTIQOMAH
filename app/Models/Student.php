@@ -1,5 +1,3 @@
-"model untuk data siswa. Fungsinya adalah menyimpan informasi lengkap setiap siswa, termasuk: nama, gender, NIS, NISN, tempat lahir, tanggal lahir, NIK, alamat, telepon, agama, urutan anak, jumlah saudara, suku bangsa, riwayat penyakit, berat badan, tinggi badan, dan nama panggilan. Setiap siswa terhubung ke akun user login-nya, data orang tua/wali, dokumen-dokumen siswa, riwayat kelas yang pernah diikuti, dan jadwal konseling pribadi. Jadi sistem tahu data lengkap siswa, siapa orang tuanya, dokumen apa saja yang dimiliki, pernah di kelas mana, dan jadwal konseling apa saja."
-
 <?php
 
 namespace App\Models;

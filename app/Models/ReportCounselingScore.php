@@ -1,5 +1,3 @@
-
-"model untuk nilai detail setiap aspek konseling. Fungsinya adalah menyimpan nilai/skor siswa untuk satu aspek konseling tertentu. Contohnya, jika aspek konseling adalah "Kedisiplinan", file ini mencatat berapa level/skor siswa itu (seperti level 1, 2, 3, atau 4), kapan diberi nilai (tanggal dan minggu ke berapa). File ini menghubungkan ke konseling-nya dan aspek penilaiannya. Jadi sistem tahu siswa mendapat nilai berapa untuk aspek apa, kapan diberikan, dan masuk ke rapor konseling mana"
 <?php
 
 namespace App\Models;
